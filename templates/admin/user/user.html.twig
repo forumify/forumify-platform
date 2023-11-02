@@ -1,0 +1,11 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}
+    user {{ user.username }}
+{% endblock %}
+{% block body %}
+    {% include '@Forumify/admin/components/simple_form.html.twig' with {
+        title: user.username,
+        form: form,
+        cancelPath: path('forumify_admin_user_list')
+    } only %}
+{% endblock %}

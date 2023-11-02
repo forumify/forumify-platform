@@ -1,0 +1,15 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}
+    {% if role is defined %}
+        role {{ role.title }}
+    {% else %}
+        create role
+    {% endif %}
+{% endblock %}
+{% block body %}
+    {% include '@Forumify/admin/components/simple_form.html.twig' with {
+        title: role is defined ? role.title : 'create_role'|trans,
+        form: form,
+        cancelPath: path('forumify_admin_role_list')
+    } only %}
+{% endblock %}

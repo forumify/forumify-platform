@@ -1,0 +1,53 @@
+<div class="form-row">
+    {% if form is defined %}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+    {% endif %}
+    <div class="markdown-wysiwyg" {{ stimulus_controller('markdown') }}>
+        <div class="flex gap-2 pt-2 pb-2">
+            <button
+                type="button"
+                class="btn-editor"
+                {{ stimulus_action('markdown', 'toggleSource') }}
+            >
+                {{ 'source'|trans }}
+            </button>
+            <button
+                type="button"
+                class="btn-editor"
+                {{ stimulus_action('markdown', 'toolbarCommand') }}
+                data-command="toggleStrongCommand"
+            >
+                <i class="ph ph-text-b"></i>
+            </button>
+            <button
+                type="button"
+                class="btn-editor"
+                {{ stimulus_action('markdown', 'toolbarCommand') }}
+                data-command="toggleEmphasisCommand"
+            >
+                <i class="ph ph-text-italic"></i>
+            </button>
+            <button
+                type="button"
+                class="btn-editor"
+                {{ stimulus_action('markdown', 'toolbarCommand') }}
+                data-command="toggleStrikethroughCommand"
+            >
+                <i class="ph ph-text-strikethrough"></i>
+            </button>
+        </div>
+        <div class="markdown markdown-editor" {{ stimulus_target('markdown', 'markdownEditor') }}>
+        </div>
+        <div class="source-editor d-none" {{ stimulus_target('markdown', 'sourceEditor') }}>
+            {% if form is defined %}
+                {{- form_widget(form, { attr: { 'data-markdown-target': 'input' } }) -}}
+            {% else %}
+                <textarea {{ stimulus_target('markdown', 'input') }}></textarea>
+            {% endif %}
+        </div>
+    </div>
+    {% if form is defined %}
+        {{- form_help(form) -}}
+    {% endif %}
+</div>

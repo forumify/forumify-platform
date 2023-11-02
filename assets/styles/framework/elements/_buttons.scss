@@ -1,0 +1,90 @@
+@mixin btn {
+    display: inline-flex;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: ease-in-out 150ms;
+    height: 40px;
+    white-space: nowrap;
+    overflow: hidden;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.03);
+        transition: ease-in-out 150ms;
+    }
+
+    i {
+        margin-right: var(--spacing-2);
+        font-size: 20px;
+    }
+}
+
+@mixin btn-contained {
+    @include btn;
+    padding: 0 var(--spacing-4);
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+}
+
+.btn-primary {
+    @include btn-contained;
+    color: var(--c-primary-text);
+    background-color: var(--c-primary);
+
+    &:hover {
+        color: var(--c-primary-text);
+        background-color: var(--c-primary-accent);
+    }
+}
+
+.btn-cta {
+    @include btn-contained;
+    color: var(--c-call-to-action-text);
+    background-color: var(--c-call-to-action);
+
+    &:hover {
+        color: var(--c-call-to-action-text);
+        background-color: var(--c-call-to-action-accent);
+    }
+}
+
+.btn-outlined {
+    @include btn-contained;
+    color: var(--c-primary);
+    border: 2px solid var(--border-color);
+
+    &:hover {
+        color: var(--c-primary-accent);
+        border-color: var(--c-primary-accent);
+        background-color: transparent;
+    }
+}
+
+.btn-link {
+    @include btn;
+    align-items: center;
+    justify-content: start;
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: 8px;
+}
+
+.menu .btn-link {
+    width: 100%;
+    border-radius: 0;
+}
+
+.btn-small {
+    height: 30px;
+    padding: var(--spacing-1) var(--spacing-2);
+}
+
+.btn-icon {
+    i {
+        margin-right: 0;
+    }
+}

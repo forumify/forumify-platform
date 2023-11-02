@@ -1,0 +1,12 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block body %}
+    <h1>{{ 'create_topic'|trans }}</h1>
+    <div class="box">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="flex justify-center">
+            <button class="btn-primary" type="submit">{{ 'post'|trans }}</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

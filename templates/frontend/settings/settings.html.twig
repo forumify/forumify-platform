@@ -1,0 +1,26 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block title_page %}Settings{% endblock %}
+{% block body %}
+    <div class="box">
+        {{ form_start(form) }}
+        <h2>Profile</h2>
+        {{ form_row(form.newAvatar) }}
+
+        <h2>{{ 'user_notification_settings_type.label'|trans }}</h2>
+        {% set notifications = form.notificationSettings %}
+        <div class="mt-2 mb-2">
+            <h4 class="mb-2">{{ 'user_notification_settings_type.auto_subscribe'|trans }}</h4>
+            {{ form_row(notifications.autoSubscribeToOwnTopics) }}
+            {{ form_row(notifications.autoSubscribeToTopics) }}
+        </div>
+        <div>
+            <h4 class="mb-2">{{ 'user_notification_settings_type.email_on'|trans }}</h4>
+            {{ form_row(notifications.emailOnMessage) }}
+            {{ form_row(notifications.emailOnNotification) }}
+        </div>
+        <div class="flex justify-center">
+            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

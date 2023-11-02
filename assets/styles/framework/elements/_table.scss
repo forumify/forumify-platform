@@ -1,0 +1,45 @@
+table {
+    @include box-shadow;
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--c-elevation-1);
+}
+
+thead {
+    border-bottom: var(--border);
+
+    th {
+        text-align: left;
+        padding: var(--spacing-2);
+    }
+
+    tr:first-child th {
+        padding-bottom: 0;
+    }
+
+    tr:last-child th {
+        padding-top: 0;
+    }
+}
+
+tbody {
+    tr {
+        background-color: rgba(0, 0, 0, 0);
+        transition: background-color ease-in 100ms;
+    }
+
+    tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.03);
+        transition: background-color ease-in 100ms;
+    }
+
+    tr:not(.disabled):hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        transition: background-color ease-in 100ms;
+    }
+
+    td {
+        text-align: left;
+        padding: var(--spacing-2);
+    }
+}

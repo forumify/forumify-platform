@@ -1,0 +1,14 @@
+<div class="breadcrumbs text-small">
+    {% if entity is null %}
+        <span class="text-secondary">{{ 'index'|trans|capitalize }}</span>
+    {% else %}
+        <a href="{{ path('forumify_forum_forum') }}">{{ 'index'|trans|capitalize }}</a> &gt;
+    {% endif %}
+    {% for entry in this.entries %}
+        {% if not loop.last %}
+            <a href="{{ path('forumify_forum_forum', { slug: entry.slug }) }}">{{ entry }}</a> &gt;
+        {% else %}
+            <span class="text-secondary">{{ entry }}</span>
+        {% endif %}
+    {% endfor %}
+</div>

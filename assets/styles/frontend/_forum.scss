@@ -1,0 +1,240 @@
+.forum-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+.forum {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-4);
+
+    + * {
+        margin-top: var(--spacing-4);
+    }
+}
+
+.forum-image {
+    width: 64px;
+    height: 64px;
+    display: none;
+
+    @include min-width-sm {
+        display: block;
+    }
+}
+
+.forum-content {
+    flex-grow: 1;
+}
+
+.forum-last-comment {
+    width: calc(1 / 4) * 100%;
+    flex-direction: row;
+    gap: var(--spacing-2);
+    display: none;
+
+    @include min-width-md {
+        display: flex;
+    }
+}
+
+.forum-subforums {
+    display: none;
+
+    a + * {
+        margin-left: var(--spacing-2);
+    }
+
+    @include min-width-sm {
+        display: block;
+    }
+}
+
+.forum-actions {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.pagination-selected-page {
+    @extend .text-black;
+    padding: var(--spacing-1) var(--spacing-2);
+    background-color: var(--border-color);
+}
+
+.topic-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.topic-row + * {
+    margin-top: var(--spacing-6);
+}
+
+.topic-row-content {
+    width: 100%;
+
+    @include min-width-md {
+        width: 75%;
+    }
+}
+
+.topic-row-last-comment {
+    display: none;
+    width: 25%;
+
+    @include min-width-md {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+.topic {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: var(--spacing-6);
+}
+
+.topic-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+
+    @include min-width-md {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    img {
+        margin-right: var(--spacing-4);
+        width: 48px;
+        height: 48px;
+    }
+}
+
+.comment {
+    display: none;
+    padding: var(--spacing-4) 0;
+    min-height: 120px;
+
+    @include min-width-md {
+        display: flex;
+    }
+
+    .comment-author {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        width: calc(1 / 6) * 100%;
+        border-right: var(--border);
+        padding: var(--spacing-4) 0;
+
+        img {
+            width: 48px;
+            height: 48px;
+            margin-bottom: var(--spacing-2);
+        }
+    }
+
+    .comment-content {
+        width: calc(5 / 6) * 100%;
+        padding: var(--spacing-4) 0 var(--spacing-4) var(--spacing-4);
+    }
+
+    .comment-toolbar {
+        opacity: 0;
+    }
+
+    &:hover {
+        .comment-toolbar {
+            opacity: 1;
+        }
+    }
+}
+
+.comment-mobile {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) 0;
+
+    @include min-width-md {
+        display: none;
+    }
+}
+
+.messenger {
+    display: flex;
+    gap: var(--spacing-4);
+}
+
+.thread-list {
+    width: 25%;
+}
+
+.thread-row {
+    width: 100%;
+    height: 60px;
+    overflow: hidden;
+    margin-left: calc(var(--spacing-4) * -1);
+}
+
+.thread-title {
+    max-height: 40px;
+    overflow: hidden;
+}
+
+.thread-active {
+    background-color: var(--c-elevation-2);
+}
+
+.thread-row-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+}
+
+.thread {
+    width: 75%;
+}
+
+.thread-header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+}
+
+.thread-participant a {
+    gap: var(--spacing-2);
+}
+
+.thread-participant + * {
+    margin-left: var(--spacing-3);
+    padding-left: var(--spacing-3);
+    border-left: var(--border);
+}
+
+.message {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+}
+
+.message + * {
+    margin-top: var(--spacing-2);
+}
+
+.no-thread-selected {
+    text-align: center;
+    margin: var(--spacing-4) 0;
+}
+
+.profile-avatar {
+    text-align: right;
+    border-right: var(--border);
+}

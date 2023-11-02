@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {% block head %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>{% block title %}{% endblock %}</title>
+    {% endblock %}
+</head>
+{% apply inline_css(source('@Forumify/emails/style.css')) %}
+    <body>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
+        <tr>
+            <td>&nbsp;</td>
+            <td class="container">
+                <div class="header">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td class="content-block">
+                                <img height="128px" width="auto" src="{{ absolute_url(asset('storage/assets/' ~ setting('forum.logo'))) }}" alt="logo">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="content">
+                    <table role="presentation" class="main">
+                        <tr>
+                            <td class="wrapper">
+                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td>
+                                            {% block body %}
+                                            {% endblock %}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="footer">
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td class="content-block">
+                                    Don't like these emails? <a href="{{ absolute_url(path('forumify_core_settings')) }}">Manage email preferences</a>.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="content-block powered-by">
+                                    Powered by <a href="https://forumify.net">forumify.net</a>.
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+    </body>
+{% endapply %}
+</html>

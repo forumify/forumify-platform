@@ -1,0 +1,37 @@
+$navigationWidth: 250px;
+
+.navigation {
+    @include box-shadow;
+    height: 100vh;
+    width: $navigationWidth;
+    background-color: var(--c-elevation-1);
+    position: fixed;
+    z-index: 999;
+}
+
+.navigation-section {
+    display: flex;
+    flex-direction: column;
+    border-bottom: var(--border);
+}
+
+.navigation-row {
+    display: flex;
+    align-items: center;
+    padding-left: var(--spacing-4);
+    height: 60px;
+    border-radius: 0;
+    .logo {
+        width: 32px;
+        height: 32px;
+        margin-right: var(--spacing-2);
+    }
+
+    i {
+        width: var(--spacing-6);
+    }
+}
+
+main {
+    margin-left: $navigationWidth;
+}

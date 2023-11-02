@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="{{ app.locale }}">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+            admin |
+            {% if block('title_page') is not empty %}
+                {% block title_page %}{% endblock %}
+                -
+            {% endif %}
+            forumify
+        {% endblock %}
+    </title>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('build/images/forumify.svg') }}">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('admin') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('admin') }}
+    {% endblock %}
+</head>
+<body>
+<div class="flex">
+    <nav class="navigation">
+        {% block navigation %}
+            <div class="navigation-section">
+                <div class="navigation-row">
+                    <img class="logo" src="{{ asset('build/images/forumify.svg') }}" alt="logo">
+                    <span>forumify</span>
+                </div>
+            </div>
+            <div class="navigation-section">
+                {% include '@Forumify/admin/components/navigation.html.twig' %}
+            </div>
+        {% endblock %}
+    </nav>
+    <main class="flex flex-col flex-grow">
+        {% block flashbag %}
+            {% set flashes = app.flashes %}
+            {% if flashes is not empty %}
+                <div class="flex flex-col gap-2 mb-4">
+                    {% for type, messages in flashes %}
+                        <div class="alert alert-{{ type }}">
+                            {% for message in messages %}
+                                <p>{{ message|trans }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endblock %}
+        {% block body_wrapper %}
+            <div class="responsive mt-4">
+                {% block body %}{% endblock %}
+            </div>
+        {% endblock %}
+    </main>
+</div>
+</body>
+</html>

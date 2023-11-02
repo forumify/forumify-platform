@@ -1,0 +1,36 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {{ form_start(form) }}
+    <table>
+        <thead>
+        <tr>
+            <th>{{ 'role'|trans }}</th>
+            {% for permission in permissions %}
+                <th class="text-center">{{ permission|humanize|capitalize }}</th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for role in roles|filter(r => r.roleName != 'ROLE_SUPER_ADMIN') %}
+            <tr>
+                <td>{{ role.title }}</td>
+                {% for permission in permissions %}
+                    <td class="text-center">{{ form_widget(form[permission ~ '__' ~ role.id]) }}</td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div class="d-none">
+        {{ form_rest(form) }}
+    </div>
+    <div class="mt-4 flex justify-center items-center gap-2">
+        <button class="btn-primary" type="submit">
+            {{ 'save'|trans }}
+        </button>
+        <a class="btn-outlined" href="{{ path(aclParameters.returnPath, aclParameters.returnParameters) }}">
+            {{ 'cancel'|trans }}
+        </a>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

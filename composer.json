@@ -1,0 +1,88 @@
+{
+    "name": "forumify/forumify-platform",
+    "type": "symfony-bundle",
+    "license": "OSL-3.0",
+    "version": "0.1.0",
+    "require": {
+        "php": ">=8.2",
+        "ext-ctype": "*",
+        "ext-dom": "*",
+        "ext-iconv": "*",
+        "cebe/markdown": "^1.2",
+        "doctrine/doctrine-bundle": "^2.10",
+        "doctrine/doctrine-migrations-bundle": "^3.2",
+        "doctrine/orm": "^2.15",
+        "firebase/php-jwt": "^6.8",
+        "league/flysystem-bundle": "^3.1",
+        "phpdocumentor/reflection-docblock": "^5.3",
+        "phpstan/phpdoc-parser": "^1.22",
+        "stof/doctrine-extensions-bundle": "*",
+        "symfony/amazon-mailer": "6.3.*",
+        "symfony/asset": "6.3.*",
+        "symfony/console": "6.3.*",
+        "symfony/doctrine-messenger": "6.3.*",
+        "symfony/dotenv": "6.3.*",
+        "symfony/expression-language": "6.3.*",
+        "symfony/flex": "^2",
+        "symfony/form": "6.3.*",
+        "symfony/framework-bundle": "6.3.*",
+        "symfony/http-client": "6.3.*",
+        "symfony/intl": "6.3.*",
+        "symfony/mailer": "6.3.*",
+        "symfony/mime": "6.3.*",
+        "symfony/monolog-bundle": "^3.0",
+        "symfony/notifier": "6.3.*",
+        "symfony/process": "6.3.*",
+        "symfony/property-access": "6.3.*",
+        "symfony/property-info": "6.3.*",
+        "symfony/rate-limiter": "6.3.*",
+        "symfony/runtime": "6.3.*",
+        "symfony/security-bundle": "6.3.*",
+        "symfony/serializer": "6.3.*",
+        "symfony/stimulus-bundle": "^2.9",
+        "symfony/string": "6.3.*",
+        "symfony/translation": "6.3.*",
+        "symfony/twig-bundle": "6.3.*",
+        "symfony/ux-autocomplete": "^2.10",
+        "symfony/ux-live-component": "^2.10",
+        "symfony/ux-twig-component": "^2.9",
+        "symfony/validator": "6.3.*",
+        "symfony/web-link": "6.3.*",
+        "symfony/webpack-encore-bundle": "^2.0",
+        "symfony/yaml": "6.3.*",
+        "twig/cssinliner-extra": "^3.7",
+        "twig/extra-bundle": "^3.7",
+        "twig/string-extra": "^3.7",
+        "twig/twig": "^2.12|^3.0"
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "phpunit/phpunit": "^9.5",
+        "symfony/browser-kit": "6.3.*",
+        "symfony/css-selector": "6.3.*",
+        "symfony/debug-bundle": "6.3.*",
+        "symfony/maker-bundle": "^1.0",
+        "symfony/phpunit-bridge": "^6.3",
+        "symfony/stopwatch": "6.3.*",
+        "symfony/web-profiler-bundle": "6.3.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Forumify\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "replace": {
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
+        "symfony/polyfill-php73": "*",
+        "symfony/polyfill-php74": "*",
+        "symfony/polyfill-php80": "*",
+        "symfony/polyfill-php81": "*"
+    }
+}

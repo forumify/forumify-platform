@@ -1,0 +1,8 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/simple_form.html.twig' with {
+        title: 'create_sub_forum'|trans,
+        form: form,
+        cancelPath: path('forumify_admin_forum', parent is null ? {} : { slug: parent.slug })
+    } %}
+{% endblock %}

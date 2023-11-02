@@ -1,0 +1,4 @@
+forumify:
+  name_prefix: forumify_
+  resource: ./routes/routes.yaml
+  type: yaml

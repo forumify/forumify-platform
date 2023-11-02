@@ -1,0 +1,55 @@
+{% set visibleForums = forums|filter(forum => can('view', forum)) %}
+{% if visibleForums is not empty %}
+    <div class="card">
+        {% if title is defined %}
+            <div class="card-title">
+                <h3 class="text-subtitle">{{ title }}</h3>
+            </div>
+        {% endif %}
+        <ul class="card-body">
+            {% for forum in visibleForums %}
+                {% set link = path('forumify_forum_forum', { slug: forum.slug }) %}
+                <li class="forum">
+                    {# TODO: Re-add #}
+                    {# <div class="forum-image"> #}
+                    {#     <img src="https://via.placeholder.com/64x64" alt="logo"> #}
+                    {# </div> #}
+                    <div class="forum-content">
+                        <a href="{{ link }}">
+                            <h4>{{ forum.title }}</h4>
+                        </a>
+                        <div>
+                            <p class="mb-2">{{ forum.content|striptags }}</p>
+                            <div class="forum-subforums">
+                                {% for subforum in forum.children|filter(subforum => can('view', subforum)) %}
+                                    <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">
+                                        {{ subforum.title }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% if forum.lastComment %}
+                        {% set lastComment = forum.lastComment %}
+                        {% set topic = lastComment.topic %}
+                        <div class="forum-last-comment">
+                            {% include '@Forumify/components/avatar.html.twig' with {
+                                user: lastComment.createdBy
+                            } only %}
+                            <div class="flex flex-col">
+                                <a href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}">
+                                    {{ topic.title }}
+                                </a>
+                                <span>
+                                {{ 'created_by'|trans({
+                                    author: '<a href="' ~ path('forumify_forum_profile', { username: lastComment.createdBy.username }) ~ '">' ~ lastComment.createdBy.username ~ '</a>'
+                                })|raw }}
+                            </span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}

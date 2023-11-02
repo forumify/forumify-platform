@@ -1,0 +1,48 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    <div class="mb-4">
+        {% if forum is not null %}
+            {% set slug = forum.parent is not null ? forum.parent.slug : null %}
+            <a class="btn-link btn-small" href="{{ path('forumify_admin_forum', { slug: slug }) }}">
+                <i class="ph ph-arrow-left"></i>
+                {{ forum.parent.title ?? 'index'|trans }}
+            </a>
+        {% else %}
+            <h4>{{ 'index'|trans }}</h4>
+        {% endif %}
+    </div>
+
+    {% if form is not null %}
+        <div class="box mb-6">
+            {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn-primary">{{ 'save'|trans }}</button>
+            {{ form_end(form) }}
+        </div>
+    {% endif %}
+
+    <div class="flex flex-col gap-4">
+        {% for group in groups %}
+            {% include '@Forumify/admin/forum/parts/group.html.twig' with {
+                group: group,
+                forum: forum,
+                children: group.forums
+            } only %}
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        {% include '@Forumify/admin/forum/parts/group.html.twig' with {
+            group: null,
+            forum: forum,
+            children: ungroupedForums
+        } only %}
+    </div>
+
+    <div class="box mt-4">
+        <a href="{{ path('forumify_admin_forum_group_create', { parent: forum ? forum.id : null }) }}">
+            <i class="ph ph-plus"></i>
+            {{ 'create_forum_group'|trans }}
+        </a>
+    </div>
+{% endblock %}

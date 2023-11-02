@@ -1,0 +1,18 @@
+{% extends '@Forumify/emails/base.html.twig' %}
+{% block title %}
+    {{ message.thread.title }}
+{% endblock %}
+{% block body %}
+    <h2>{{ message.thread.title }}</h2>
+    <hr>
+    <div class="content-block">
+        {% set authorLink = absolute_url(path('forumify_forum_profile', { username: message.createdBy.username })) %}
+        <p><a href="{{ authorLink }}">{{ message.createdBy.username }}</a> replied:</p>
+        <p>{{ message.content|markdown }}</p>
+    </div>
+    <hr>
+    {% include '@Forumify/emails/components/button.html.twig' with {
+        href: path('forumify_forum_messenger_thread', { id: message.thread.id }),
+        label: 'notification.message_view'|trans,
+    } only %}
+{% endblock %}

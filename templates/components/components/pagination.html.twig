@@ -1,0 +1,36 @@
+{% if this.result.count > this.result.size %}
+    <div class="{{ class|default('') }}">
+        <div>
+            {% set lastPage = range(1, this.result.count, this.result.size)|keys|last + 1 %}
+            {% set visiblePages = ((this.result.page - 3)..this.result.page)|merge((this.result.page + 1)..(this.result.page + 3))|filter(page => page > 0 and page <= lastPage) %}
+
+            {% block pagination_first_page %}
+                {% if 1 not in visiblePages %}
+                    <a class="btn-link btn-small" data-action="live#action" data-action-name="setPage(page=1)">1</a>
+                    {% if visiblePages|first - 1 != 1 %}
+                        ...
+                    {% endif %}
+                {% endif %}
+            {% endblock %}
+
+            {% block pagination_pages %}
+                {% for page in visiblePages %}
+                    {% if page == this.result.page %}
+                        <span class="pagination-selected-page">{{ page }}</span>
+                    {% else %}
+                        <a class="btn-link btn-small" data-action="live#action" data-action-name="setPage(page={{ page }})">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endblock %}
+
+            {% block pagination_last_page %}
+                {% if lastPage not in visiblePages %}
+                    {% if lastPage - 1 != visiblePages|last %}
+                        ...
+                    {% endif %}
+                    <a class="btn-link btn-small" data-action="live#action" data-action-name="setPage(page={{ lastPage }})">{{ lastPage }}</a>
+                {% endif %}
+            {% endblock %}
+        </div>
+    </div>
+{% endif %}

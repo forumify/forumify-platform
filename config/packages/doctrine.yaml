@@ -1,0 +1,27 @@
+doctrine:
+    orm:
+        mappings:
+            gedmo_tree:
+                type: annotation
+                prefix: Gedmo\Tree\Entity
+                dir: '%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity'
+                alias: GedmoTree
+                is_bundle: false
+            forumify_core:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Core/Entity'
+                prefix: Forumify\Core\Entity
+                alias: ForumifyCore
+            forumify_forum:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Forum/Entity'
+                prefix: Forumify\Forum\Entity
+                alias: ForumifyForum
+            forumify_page:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Page/Entity'
+                prefix: Forumify\Page\Entity
+                alias: ForumifyPage

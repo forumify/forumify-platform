@@ -1,0 +1,25 @@
+{% set menuItems = menu is defined ? menu.entries : admin_menu.entries %}
+{% for menuItem in menuItems %}
+    {% if menuItem is instanceof('Forumify\\Core\\MenuBuilder\\MenuItem') %}
+        <a class="btn-link navigation-row" href="{{ menuItem.location }}">
+            {% if menuItem.options.icon is defined %}
+                <i class="{{ menuItem.options.icon }}"></i>
+            {% endif %}
+            {{ menuItem.label }}
+        </a>
+    {% else %}
+        <div {{ stimulus_controller('menu') }} data-placement="right-start">
+            <a class="btn-link navigation-row" {{ stimulus_target('menu', 'openButton') }}>
+                {% if menuItem.options.icon is defined %}
+                    <i class="{{ menuItem.options.icon }}"></i>
+                {% endif %}
+                {{ menuItem.label }}
+            </a>
+            <div class="menu" {{ stimulus_target('menu', 'menu') }}>
+                {% include '@Forumify/admin/components/navigation.html.twig' with {
+                    menu: menuItem
+                } only %}
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

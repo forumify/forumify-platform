@@ -1,0 +1,23 @@
+<div {{ attributes }}>
+    {% block container %}
+        <div class="card">
+            {% block pagination_top %}
+                {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-title' } %}
+            {% endblock %}
+            {% block list %}
+                <ul class="card-body">
+                    {% for item in this.result.data %}
+                        {% block row %}
+                        {% endblock %}
+                    {% else %}
+                        {% block empty %}
+                        {% endblock %}
+                    {% endfor %}
+                </ul>
+            {% endblock %}
+            {% block pagination_bottom %}
+                {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-footer' } %}
+            {% endblock %}
+        </div>
+    {% endblock %}
+</div>

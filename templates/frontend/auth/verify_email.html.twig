@@ -1,0 +1,28 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block title_page %}
+    Verify email
+{% endblock %}
+{% block body %}
+    <div class="box">
+        <div class="text-center">
+            <p>
+                {{ 'email_verification.greeting'|trans({ username: user.username }) }}
+            </p>
+            <p>
+                {{ 'email_verification.no_email'|trans }}
+            </p>
+            {% if error is defined %}
+                <div class="alert alert-error mt-4">
+                    <p>{{ ('email_verification.error.' ~ error)|trans }}</p>
+                    <p>{{ 'email_verification.error.retry'|trans }}</p>
+
+                </div>
+            {% endif %}
+        </div>
+        <div class="flex justify-center mt-4">
+            <a class="btn-primary" href="{{ path('forumify_core_verify_email_resend') }}">
+                {{ 'resend_email_verification'|trans }}
+            </a>
+        </div>
+    </div>
+{% endblock %}

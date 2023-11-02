@@ -1,0 +1,22 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block header %}
+{% endblock %}
+{% block body %}
+    <div class="auth-container">
+        <div class="auth-website-logo">
+            <img src="{{ asset('storage/assets/' ~ setting('forum.logo')) }}" alt="logo">
+        </div>
+        <div class="box">
+            <div class="auth-actions">
+                <a href="{{ path('forumify_forum_forum') }}">
+                    <i class="ph ph-arrow-left"></i>
+                    Back
+                </a>
+            </div>
+            <h2 class="auth-title">
+                {% block form_title %}{% endblock %}
+            </h2>
+            {% block form %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

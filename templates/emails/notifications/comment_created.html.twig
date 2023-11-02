@@ -1,0 +1,16 @@
+{% extends '@Forumify/emails/base.html.twig' %}
+{% block title %}
+    {{ 'notification.comment_title'|trans({ topic: comment.topic.title }) }}
+{% endblock %}
+{% block body %}
+    <h2>{{ 'notification.comment_topic'|trans({ topic: comment.topic.title }) }}</h2>
+    <hr>
+    <div class="content-block">
+        <p>{{ comment.content|u.truncate(400, '...', false)|markdown }}</p>
+    </div>
+    <hr>
+    {% include '@Forumify/emails/components/button.html.twig' with {
+        href: path('forumify_forum_topic', { slug: comment.topic.slug }),
+        label: 'notification.comment_view'|trans,
+    } only %}
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends '@Forumify/components/list.html.twig' %}
+
+{% block container %}
+    <div class="messenger">
+        <div class="thread-list">
+            {{ parent() }}
+        </div>
+        <div class="thread">
+            {% if this.selectedThread is not null %}
+                <div class="card mb-4">
+                    <div class="thread-header card-title justify-start p-4">
+                        {% include '@Forumify/components/avatar.html.twig' with {
+                            user: this.selectedThread.createdBy
+                        } only %}
+                        <div>
+                            <h3>{{ this.selectedThread.title }}</h3>
+                            <div class="text-small text-secondary">
+                                Sent by {{ this.selectedThread.createdBy.username }} at {{ 'date_short_time_short'|trans({ date: this.selectedThread.createdAt }) }}
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="thread-participants card-body flex items-center">
+                        {% for participant in this.selectedThread.participants %}
+                            <li class="thread-participant">
+                                <a class="flex items-center" href="{{ path('forumify_forum_profile', { username: participant.username }) }}">
+                                    {% include '@Forumify/components/avatar.html.twig' with {
+                                        user: participant,
+                                        className: 'avatar-sm'
+                                    } only %}
+                                    {{ participant.username }}
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {{ component('MessageList', { lastPageFirst: true, threadId: this.selectedThread.id }) }}
+            {% else %}
+                <div class="no-thread-selected">
+                    {{ 'select_message_thread'|trans }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block pagination_top %}
+    <div class="card-title flex justify-between items-center">
+        <span>{{ 'inbox'|trans }}</span>
+        <a class="btn-primary btn-icon" href="{{ path('forumify_forum_messenger_thread_create') }}">
+            <i class="ph ph-paper-plane-tilt"></i>
+        </a>
+    </div>
+    {{ parent() }}
+{% endblock %}
+
+{% block row %}
+    <a
+        class="btn-link thread-row {% if this.selectedThread is not null and this.selectedThread.id == item.id %}thread-active{% endif %}"
+        data-action="live#action"
+        data-action-name="setSelectedThread(threadId={{ item.id }})"
+    >
+        <div class="thread-row-inner">
+            {% include '@Forumify/components/avatar.html.twig' with {
+                user: item.createdBy,
+            } only %}
+            <div>
+                <div class="flex flex-col">
+                    <span class="thread-title">{{ item.title }}</span>
+                    <span class="text-small text-secondary">{{ 'date_short_time_short'|trans({ date: item.createdAt }) }}</span>
+                </div>
+            </div>
+        </div>
+    </a>
+{% endblock %}
+
+{% block empty %}
+    {{ 'no_messages'|trans }}
+{% endblock %}

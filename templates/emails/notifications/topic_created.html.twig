@@ -1,0 +1,17 @@
+{% extends '@Forumify/emails/base.html.twig' %}
+{% block title %}
+    {{ topic.title }}
+{% endblock %}
+{% block body %}
+    <h2>{{ 'notification.topic_forum'|trans({ forum: topic.forum.title }) }}</h2>
+    <hr>
+    <div class="content-block">
+        <h1>{{ topic.title }}</h1>
+        <p>{{ topic.comments.first.content|u.truncate(400, '...', false)|markdown }}</p>
+    </div>
+    <hr>
+    {% include '@Forumify/emails/components/button.html.twig' with {
+        href: path('forumify_forum_topic', { slug: topic.slug }),
+        label: 'notification.topic_view'|trans,
+    } only %}
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block title_page %}
+    {{- topic.title -}}
+{% endblock %}
+{% block meta_tags %}
+    {{ parent() }}
+    {% set description = topic.comments.first.content|u.truncate(200, '...', false).trim()|markdown|striptags %}
+    <meta property="description" content="{{ description }}">
+    <meta property="og:description" content="{{ description }}">
+    <meta property="twitter:description" content="{{ description }}">
+{% endblock %}
+{% block body %}
+    {{ component('Breadcrumbs', { entity: topic }) }}
+    <div class="topic">
+        <div class="box topic-header">
+            <div class="flex flex-row items-start">
+                {% include '@Forumify/components/avatar.html.twig' with {
+                    user: topic.createdBy
+                } only %}
+                <div>
+                    <h2>{{ topic.title }}</h2>
+                    <div class="text-small">
+                        {{ 'created_by'|trans({
+                            author: '<a href="' ~ path('forumify_forum_profile', { username: topic.createdBy.username }) ~ '">' ~ topic.createdBy.username ~ '</a>'
+                        })|raw }},
+                        {{ 'date_time_short'|trans({ date: topic.createdAt }) }}
+                    </div>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                {{ component('SubscribeButton', {
+                    entityId: topic.id,
+                    subscriptionType: constant('Forumify\\Forum\\Notification\\CommentCreatedNotificationType::TYPE')
+                }) }}
+                {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
+                    <div {{ stimulus_controller('menu') }} data-placement="bottom-end">
+                        <a class="btn-outlined btn-icon" {{ stimulus_target('menu', 'openButton') }}>
+                            <i class="ph ph-wrench"></i>
+                        </a>
+                        <div class="menu" {{ stimulus_target('menu', 'menu') }}>
+                            <a class="btn-link" href="{{ path('forumify_forum_topic_edit', { slug: topic.slug }) }}">
+                                <i class="ph ph-pencil-simple-line"></i>
+                                Edit
+                            </a>
+                            <a class="btn-link" href="{{ path('forumify_forum_topic_delete', { slug: topic.slug }) }}">
+                                <i class="ph ph-x"></i>
+                                Delete
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="comment-list">
+            {{ component('CommentList', { topic: topic }) }}
+        </div>
+        {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentCreate').value) %}
+            <div class="box">
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <div class="flex justify-center">
+                    <button class="btn-primary" type="submit">{{ 'create_comment'|trans }}</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        {% endif %}
+    </div>
+    <div id="comment-edit-prototype" class="d-none">
+        {% include '@Forumify/form/type/markdown.html.twig' with {} only %}
+        <div class="flex justify-center items-center gap-2">
+            <button id="comment-edit-save" type="button" class="btn-primary">{{ 'save'|trans }}</button>
+            <button id="comment-edit-cancel" type="button" class="btn-outlined">{{ 'cancel'|trans }}</button>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends '@Forumify/emails/base.html.twig' %}
+{% block body %}
+    <p>Hello {{ user.username }},</p>
+    <p>Please verify your email by clicking the button below. Please note that this link is only valid for 24 hours.</p>
+    {% set link = absolute_url(path('forumify_core_verify_email', { token: token })) %}
+    {% include '@Forumify/emails/components/button.html.twig' with {
+        href: link,
+        label: 'Verify'
+    } only %}
+    <p>Or by using this link:</p>
+    {{ link }}
+{% endblock %}

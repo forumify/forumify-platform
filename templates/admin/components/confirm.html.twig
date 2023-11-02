@@ -1,0 +1,17 @@
+<div class="box">
+    <h2 class="text-subtitle flex justify-center items-center mb-4">
+        <i class="ph ph-warning"></i> {{ 'warning'|trans }}!
+    </h2>
+    {% if warningText is defined %}
+        <p>{{ warningText }}</p>
+    {% endif %}
+    <p>{{ 'warning_continue'|trans }}</p>
+    <div class="flex justify-center items-center gap-2">
+        <a href="{{ confirmPath }}" class="btn-primary">
+            {{ confirmText is defined ? confirmText : 'confirm'|trans }}
+        </a>
+        <a href="{{ cancelPath }}" class="btn-outlined">
+            {{ cancelText is defined ? cancelText : 'cancel'|trans }}
+        </a>
+    </div>
+</div>

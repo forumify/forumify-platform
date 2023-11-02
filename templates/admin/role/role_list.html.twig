@@ -1,0 +1,53 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}
+    roles
+{% endblock %}
+{% block body %}
+    <table>
+        <thead>
+        <tr>
+            <th>{{ 'role'|trans }}</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th><input type="text"></th>
+            <th class="text-right">
+                <a
+                    class="btn-primary btn-icon"
+                    href="{{ path('forumify_admin_role_create') }}"
+                >
+                    <i class="ph ph-plus"></i>
+                </a>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for role in roles %}
+            <tr class="{{ role.system ? ' disabled' : '' }}">
+                <td>
+                    <p>{{ role.title }}</p>
+                    <p class="text-small">{{ role.description }}</p>
+                </td>
+                <td class="text-right">
+                    {% if not role.system %}
+                        <a
+                            class="btn-link btn-icon btn-small"
+                            href="{{ path('forumify_admin_role', { id: role.id }) }}"
+                        >
+                            <i class="ph ph-pencil-simple-line"></i>
+                        </a>
+                        <a
+                            class="btn-link btn-icon btn-small"
+                            href="{{ path('forumify_admin_role_delete', { id: role.id }) }}"
+                        >
+                            <i class="ph ph-x"></i>
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            {{ 'no_entries'|trans }}
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

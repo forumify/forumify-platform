@@ -1,0 +1,13 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block title_page %}Editing {{ topic.title }}{% endblock %}
+{% block body %}
+<div class="box">
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div class="flex justify-center gap-2">
+        <a class="btn-outlined" href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}">{{ 'cancel'|trans }}</a>
+        <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+    </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

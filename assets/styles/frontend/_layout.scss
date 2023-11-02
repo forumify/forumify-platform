@@ -1,0 +1,34 @@
+.header {
+    @include box-shadow;
+    background-color: var(--c-elevation-1);
+    border-bottom: 1px solid var(--c-border);
+    margin-bottom: var(--spacing-6);
+    position: relative;
+}
+
+.header-navigation {
+    display: flex;
+    margin-left: var(--spacing-10);
+}
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    font-weight: 200;
+    color: var(--c-text-primary);
+    padding: var(--spacing-3) 0;
+
+    img {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+.header-menu {
+    gap: var(--spacing-2);
+
+    img {
+        width: 32px;
+        height: 32px;
+    }
+}

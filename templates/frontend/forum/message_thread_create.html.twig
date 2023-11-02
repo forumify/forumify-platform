@@ -1,0 +1,17 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block body %}
+    <div class="breadcrumbs text-small">
+        <a href="{{ path('forumify_forum_messenger') }}">{{ 'back'|trans|capitalize }}</a>
+    </div>
+    <div class="box">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="flex justify-center">
+            <button class="btn-primary">
+                <i class="ph ph-paper-plane-tilt"></i>
+                {{ 'create_message_thread'|trans }}
+            </button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

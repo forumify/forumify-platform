@@ -1,0 +1,35 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    <table>
+        <thead>
+        <tr>
+            <th>{{ 'username'|trans }}</th>
+            <th>{{ 'email'|trans }}</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th><input type="text"></th>
+            <th><input type="text"></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td class="text-right">
+                    <a
+                        class="btn-link btn-icon btn-small"
+                        href="{{ path('forumify_admin_user', { username: user.username }) }}"
+                    >
+                        <i class="ph ph-pencil-simple-line"></i>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            {{ 'no_entries'|trans }}
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

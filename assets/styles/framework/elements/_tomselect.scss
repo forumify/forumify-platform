@@ -1,0 +1,95 @@
+.ts-wrapper {
+    position: relative;
+}
+
+.ts-wrapper.single {
+    .item {
+        padding: var(--spacing-2);
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        height: 24px;
+    }
+
+    &.full {
+        input {
+            display: none;
+        }
+    }
+
+    &:not(.full) {
+        .clear-button {
+            display: none;
+        }
+    }
+
+    .clear-button {
+        height: 24px;
+        cursor: pointer;
+        background-color: var(--c-secondary);
+        border-left: var(--border);
+        color: var(--c-secondary-text);
+        padding: var(--spacing-2);
+        font-weight: 700;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+}
+
+.ts-wrapper.multi {
+    .ts-control {
+        flex-wrap: wrap;
+        gap: var(--spacing-2);
+        align-items: baseline;
+    }
+}
+
+.ts-hidden-accessible {
+    width: 1px;
+    height: 1px;
+    border: none;
+    position: absolute;
+    visibility: hidden;
+}
+
+.ts-control {
+    display: flex;
+
+    .item {
+        border-radius: 8px;
+        padding: var(--spacing-2) 0 var(--spacing-2) var(--spacing-2);
+        background-color: var(--c-secondary);
+        color: var(--c-secondary-text);
+        display: flex;
+        align-items: center;
+
+        a.remove {
+            border-left: var(--border);
+            color: var(--c-secondary-text);
+            padding: var(--spacing-2);
+            margin-left: var(--spacing-2);
+            margin-top: calc(var(--spacing-2) * -1);
+            margin-bottom: calc(var(--spacing-2) * -1);
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+    }
+}
+
+.ts-dropdown {
+    @include box-shadow;
+    position: absolute;
+    width: 100%;
+    overflow: hidden;
+    background-color: var(--c-elevation-2);
+    max-height: 200px;
+    overflow-y: auto;
+
+    .ts-dropdown-content {
+        display: flex;
+        flex-direction: column;
+
+        .option {
+            @extend .btn-link;
+        }
+    }
+}

@@ -1,0 +1,61 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block title_page %}{{ user.username }}{% endblock %}
+{% block body %}
+    <div class="mt-6 mb-6 flex flex-row items-start justify-center">
+        <div class="profile-avatar w-50 pr-3 mr-3">
+            {% include '@Forumify/components/avatar.html.twig' with {
+                user: user,
+                className: 'avatar-lg',
+            } only %}
+        </div>
+        <div class="w-50">
+            <h2 class="flex items-center gap-4 mb-2">
+                {{ user.username }}
+                {% if app.user is not null %}
+                    {% if app.user.id != user.id %}
+                        {{ component('SubscribeButton', {
+                            entityId: user.id,
+                            subscriptionType: 'user_follow',
+                            subscribeIcon: '',
+                            subscribeLabel: 'follow',
+                            unsubscribeIcon: '',
+                            unsubscribeLabel: 'unfollow',
+                            buttonClass: 'btn-outlined'
+                        }) }}
+                    {% endif %}
+                {% endif %}
+            </h2>
+            <p class="mb-2">
+                <span class="text-bold">{{ topicCount }}</span> topics
+                <span class="text-bold ml-4">{{ commentCount }}</span> comments
+            </p>
+            <p class="mb-4">
+                <span class="text-bold">{{ followerCount }}</span> followers
+                <span class="text-bold ml-4">{{ followingCount }}</span> following
+            </p>
+            <p class="text-small">Registered: {{ user.createdAt|date('d M Y') }}</p>
+            <p class="text-small">Last login: {{ user.lastLogin is not null ? user.lastLogin|date('d M Y') : 'never' }}</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-title">
+            {{ 'activity'|trans }}
+        </div>
+        <div class="card-body">
+            <ul>
+                {% for comment in comments|filter(comment => can('view', comment.topic.forum)) %}
+                    <li class="flex flex-col items-start pb-4">
+                        {% if comment is instanceof('Forumify\\Forum\\Entity\\Comment') %}
+                            <a class="pb-1" href="{{ path('forumify_forum_topic', { slug: comment.topic.slug }) }}">
+                                {{ comment.topic.title }}
+                            </a>
+                            {{ comment.content|striptags|markdown|striptags|u.truncate(100, '...', false) }}
+                        {% endif %}
+                    </li>
+                {% else %}
+                    {{ 'no_activity'|trans }}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

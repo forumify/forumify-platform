@@ -1,0 +1,25 @@
+.alert {
+    padding: var(--spacing-4);
+    font-weight: 500;
+}
+
+.alert-success {
+    color: var(--c-success-text);
+    background-color: var(--c-success);
+}
+
+.alert-info {
+    color: var(--c-info-text);
+    background-color: var(--c-info);
+}
+
+.alert-warning {
+    color: var(--c-warning-text);
+    background-color: var(--c-warning);
+}
+
+.alert-error {
+    color: var(--c-error-text);
+    background-color: var(--c-error);
+}
+

@@ -1,0 +1,15 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body_wrapper %}
+    {{ component('PageBrowser', {
+        page: page
+    }) }}
+    <div class="page-editor">
+        {% if page is not null %}
+            {% include '@Forumify/admin/components/simple_form.html.twig' with {
+                form: form,
+            } only %}
+        {% else %}
+            {{ 'select_page'|trans }}
+        {% endif %}
+    </div>
+{% endblock %}

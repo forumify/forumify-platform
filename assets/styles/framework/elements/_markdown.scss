@@ -1,0 +1,54 @@
+.markdown {
+    h1, h2, h3, h4, h5, h6 {
+        margin: var(--spacing-4) 0 var(--spacing-2);
+    }
+
+    h1 {
+        margin-bottom: var(--spacing-8);
+    }
+
+    h2 {
+        margin-bottom: var(--spacing-6)
+    }
+
+    p, ul, ol {
+        line-height: 1.4rem;
+    }
+
+    p {
+        margin-bottom: var(--spacing-2);
+    }
+
+    ul {
+        list-style-type: disc;
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+    ul li {
+        list-style-type: circle;
+        margin-left: var(--spacing-6);
+    }
+
+    ol li {
+        list-style-type: decimal;
+        margin-left: var(--spacing-6);
+    }
+
+    code {
+        font-size: 16px;
+    }
+
+    pre {
+        line-height: 1.2rem;
+        background-color: var(--c-elevation-2);
+        padding: var(--spacing-4);
+
+        code {
+            display: block;
+            width: 100%;
+        }
+    }
+}

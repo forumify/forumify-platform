@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="{{ app.locale }}">
+<head>
+    {% set logo %}
+        {%- if setting('forum.logo') -%}
+            {{ asset('storage/assets/' ~ setting('forum.logo')) }}
+        {%- else -%}
+            {{ asset('build/images/forumify.svg') }}
+        {% endif %}
+    {% endset %}
+
+    {% block meta_tags %}
+        {%- set title -%}
+            {% apply spaceless %}
+                {%- if block('title_page') is not empty -%}
+                    {%- block title_page -%}{%- endblock -%}
+                    {{- ' - ' -}}
+                {%- endif -%}
+                {{- setting('forum.title') -}}
+            {% endapply %}
+        {%- endset -%}
+        {% set absolute_request_url = absolute_url(app.request.requestUri) %}
+        {% set absolute_logo = absolute_url(logo) %}
+
+        {# Generic #}
+        <title>{% block title %}{{ title }}{% endblock %}</title>
+        <meta charset="UTF-8">
+        <meta name="title" content="{{ title }}">
+        <meta name="image" content="{{ absolute_logo }}">
+
+        {# OpenGraph #}
+        <meta property="og:type" content="website">
+        <meta property="og:url" content={{ absolute_request_url }}>
+        <meta property="og:title" content="{{ title }}">
+        <meta property="og:image" content="{{ absolute_logo }}">
+
+        {# Twitter #}
+        <meta property="twitter:url" content="{{ absolute_request_url }}">
+        <meta property="twitter:title" content="{{ title }}">
+        <meta property="twitter:image" content="{{ absolute_logo }}">
+    {% endblock %}
+    {% block icon %}
+        <link rel="icon" href="{{ logo }}">
+    {% endblock %}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('frontend') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('frontend') }}
+    {% endblock %}
+</head>
+<body>
+{% block header %}
+    <header class="header">
+        <div class="responsive flex">
+            <a href="{{ path('forumify_core_index') }}" class="header-logo">
+                {% if setting('forum.logo') %}
+                    <img src="{{ asset('storage/assets/' ~ setting('forum.logo')) }}" alt="logo">
+                {% endif %}
+                <span class="ml-2">{{ setting('forum.title') }}</span>
+            </a>
+            <div class="flex-grow flex flex-row items-center justify-between">
+                <nav class="header-navigation">
+                    {% include '@Forumify/frontend/components/navigation.html.twig' %}
+                </nav>
+                {% if app.user is not null %}
+                    <div class="flex flex-row">
+                        <div {{ stimulus_controller('menu') }} data-placement="bottom-end">
+                            <a class="btn-link header-menu" {{ stimulus_target('menu', 'openButton') }}>
+                                {% include '@Forumify/components/avatar.html.twig' with {
+                                    user: app.user,
+                                } only %}
+                                <span>{{ app.user.username }}</span>
+                            </a>
+                            <div class="menu" {{ stimulus_target('menu', 'menu') }}>
+                                <a class="btn-link" href="{{ path('forumify_forum_profile', { username: app.user.username }) }}">
+                                    <i class="ph ph-user"></i>
+                                    Profile
+                                </a>
+                                <a class="btn-link" href="{{ path('forumify_forum_messenger') }}">
+                                    <i class="ph ph-chat-dots"></i>
+                                    Messages
+                                </a>
+                                {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
+                                    <hr>
+                                    <a class="btn-link" href="{{ path('forumify_admin_dashboard') }}" target="_blank">
+                                        <i class="ph ph-wrench"></i>
+                                        Admin
+                                    </a>
+                                {% endif %}
+                                <hr>
+                                <a class="btn-link" href="{{ path('forumify_core_settings') }}">
+                                    <i class="ph ph-faders-horizontal"></i>
+                                    Settings
+                                </a>
+                                <a class="btn-link" href="{{ path('forumify_core_logout') }}">
+                                    <i class="ph ph-sign-out"></i>
+                                    {{ 'logout'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                        {# TODO: re-add for notifications #}
+                        {#                      <div> #}
+                        {#                          <a class="btn-link btn-icon"> #}
+                        {#                              <i class="ph ph-bell-ringing"></i> #}
+                        {#                          </a> #}
+                        {#                      </div> #}
+                    </div>
+                {% else %}
+                    <a class="btn-link" href="{{ path('forumify_core_login', { '_target_path': app.request.requestUri }) }}">
+                        <i class="ph ph-sign-in"></i>
+                        {{ 'login'|trans }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+{% endblock %}
+{% block unverified_user_warning %}
+    {% if app.user is not null and app.user.emailVerified == false %}
+        <div class="responsive flex flex-col gap-2 mb-4">
+            <div class="alert alert-warning">
+                {{ 'email_verification.not_verified'|trans }}
+                <a class="text-underline" href="{{ path('forumify_core_verify_email') }}">{{ 'email_verification.verify'|trans }}</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block flashbag %}
+    {% set flashes = app.flashes %}
+    {% if flashes is not empty %}
+        <div class="responsive flex flex-col gap-2 mb-4">
+            {% for type, messages in flashes %}
+                <div class="alert alert-{{ type }}">
+                    {% for message in messages %}
+                        <p>{{ message|trans }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
+{% block body_wrapper %}
+    <main class="responsive">
+        {% block body %}{% endblock %}
+    </main>
+{% endblock %}
+<footer class="mt-10">
+    <p class="text-small">
+        <!-- Modifying, hiding, or removing this section is forbidden. See LICENSE.md for more information. -->
+        Powered by <a href="https://forumify.net">forumify</a>
+    </p>
+</footer>
+</body>
+</html>

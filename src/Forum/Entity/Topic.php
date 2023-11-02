@@ -1,0 +1,100 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Forumify\Forum\Entity;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Forumify\Core\Entity\BlameableEntityTrait;
+use Forumify\Core\Entity\IdentifiableEntityTrait;
+use Forumify\Core\Entity\SluggableEntityTrait;
+use Forumify\Core\Entity\TimestampableEntityTrait;
+use Forumify\Forum\Repository\TopicRepository;
+
+#[ORM\Entity(repositoryClass: TopicRepository::class)]
+class Topic implements SubscribableInterface
+{
+    use IdentifiableEntityTrait;
+    use BlameableEntityTrait;
+    use TimestampableEntityTrait;
+    use SluggableEntityTrait;
+
+    #[ORM\Column]
+    private string $title;
+
+    #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'topics')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private Forum $forum;
+
+    #[ORM\OneToMany(mappedBy: 'topic', targetEntity: Comment::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
+    private Collection $comments;
+
+    #[ORM\ManyToOne(targetEntity: Comment::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?Comment $lastComment = null;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getTitle();
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    public function getForum(): Forum
+    {
+        return $this->forum;
+    }
+
+    public function setForum(Forum $forum): void
+    {
+        $this->forum = $forum;
+    }
+
+    public function getParent(): Forum
+    {
+        return $this->getForum();
+    }
+
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function setComments(Collection|array $comments): void
+    {
+        $this->comments = $comments instanceof Collection
+            ? $comments
+            : new ArrayCollection($comments);
+    }
+
+    public function addComment(Comment $comment): void
+    {
+        $this->comments->add($comment);
+    }
+
+    public function getLastComment(): ?Comment
+    {
+        return $this->lastComment;
+    }
+
+    public function setLastComment(?Comment $lastComment): void
+    {
+        $this->lastComment = $lastComment;
+    }
+}

@@ -1,0 +1,63 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block title_page %}
+    {{- forum is not null ? forum.title : 'forum' -}}
+{% endblock %}
+{% block meta_tags %}
+    {{ parent() }}
+    {% if forum is not null %}
+        {% set description = forum.content|striptags|trim %}
+        <meta property="description" content="{{ description }}">
+        <meta property="og:description" content="{{ description }}">
+        <meta property="twitter:description" content="{{ description }}">
+    {% endif %}
+{% endblock %}
+{% block body %}
+    {{ component('Breadcrumbs', { entity: forum }) }}
+    {% if forum is not null %}
+        <div class="card mb-4">
+            <div class="card-title">
+                <h1>{{ forum.title }}</h1>
+                <div class="forum-actions">
+                    {{ component('SubscribeButton', {
+                        entityId: forum.id,
+                        subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
+                    }) }}
+                    {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::TopicCreate').value) %}
+                        <div>
+                            <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
+                                <i class="ph ph-chats"></i>
+                                {{ 'create_topic'|trans }}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card-body">
+                {{ forum.content|raw }}
+            </div>
+        </div>
+    {% endif %}
+    <div class="forum-list">
+        {% for group in groups %}
+            {% if can('view', group) %}
+                {% include '@Forumify/frontend/forum/forum_group.html.twig' with {
+                    title: group.title,
+                    forums: group.forums
+                } %}
+            {% endif %}
+        {% endfor %}
+        {% if ungroupedForums is not empty %}
+            {% include '@Forumify/frontend/forum/forum_group.html.twig' with {
+                forums: ungroupedForums
+            } %}
+        {% endif %}
+    </div>
+
+    {% if forum is not null and forum.topics is not empty %}
+        <div class="mt-6">
+            {{ component('TopicList', { forum: forum }) }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+
