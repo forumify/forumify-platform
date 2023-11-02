@@ -50,8 +50,6 @@ class ForumifyBundle extends AbstractBundle
         $environment = $container->env();
         $configDir = $this->getConfigDir();
 
-        $container->import($configDir . '/routes.yaml');
-
         $container->import($configDir . '/services.yaml');
         $container->import($configDir . '/{services}_' . $environment . '.yaml');
     }

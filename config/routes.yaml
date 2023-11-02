@@ -1,4 +1,20 @@
-forumify:
-  name_prefix: forumify_
-  resource: ./routes/routes.yaml
-  type: yaml
+core:
+  resource: ../src/Core/Controller
+  type: attribute
+  name_prefix: core_
+
+admin:
+  resource: ../src/Admin/Controller
+  type: attribute
+  name_prefix: admin_
+  prefix: admin/
+
+forum:
+  resource: ../src/Forum/Controller
+  type: attribute
+  name_prefix: forum_
+
+page:
+  resource: ../src/Page/Controller
+  type: attribute
+  name_prefix: page_
