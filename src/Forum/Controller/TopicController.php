@@ -15,8 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class TopicController extends AbstractController
 {
     #[Route('/topic/{slug}', name: 'topic')]
-    public function __invoke(Topic $topic, Request $request, CreateCommentService $commentService): Response
-    {
+    public function __invoke(
+        Topic $topic,
+        Request $request,
+        CreateCommentService $commentService
+    ): Response {
         $form = $this->createForm(CommentType::class, options: [
             'label' => false,
         ]);

@@ -7,7 +7,7 @@ namespace Forumify\Forum\Component;
 use Forumify\Core\Entity\HierarchicalInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent(template: '@Forumify/components/breadcrumbs.html.twig')]
+#[AsTwigComponent(template: '@Forumify/components/breadcrumbs.html.twig', name: 'Breadcrumbs')]
 class Breadcrumbs
 {
     public ?HierarchicalInterface $entity = null;

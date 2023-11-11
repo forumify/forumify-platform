@@ -14,7 +14,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: '@Forumify/components/subscribe_button.html.twig')]
+#[AsLiveComponent(template: '@Forumify/components/subscribe_button.html.twig', name: 'SubscribeButton')]
 class SubscribeButton
 {
     use DefaultActionTrait;

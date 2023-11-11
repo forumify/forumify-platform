@@ -21,7 +21,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: '@Forumify/components/message_thread_list.html.twig')]
+#[AsLiveComponent(template: '@Forumify/components/message_thread_list.html.twig', name: 'MessageThreadList')]
 class MessageThreadList extends AbstractList
 {
     use DefaultActionTrait;

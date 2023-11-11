@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Admin\Components;
 
 use Forumify\Page\Entity\Page;
-use Forumify\Page\Form\PageType;
 use Forumify\Page\Repository\PageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -18,7 +17,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 
-#[AsLiveComponent(template: '@Forumify/admin/components/page_browser.html.twig')]
+#[AsLiveComponent(template: '@Forumify/admin/components/page_browser.html.twig', name: 'PageBrowser')]
 class PageBrowser extends AbstractController
 {
     #[LiveProp(writable: true)]

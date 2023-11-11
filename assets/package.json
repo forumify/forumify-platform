@@ -1,7 +1,41 @@
 {
-    "name": "@forumify/platform",
+    "name": "@forumify/forumify-platform",
     "description": "Frontend assets for forumify",
-    "dependencies": {
+    "version": "0.1.0",
+    "symfony": {
+        "controllers": {
+            "comment_edit": {
+                "main": "dist/comment_edit_controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {}
+            },
+            "markdown": {
+                "main": "dist/markdown_controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {}
+            },
+            "menu": {
+                "main": "dist/menu_controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {}
+            }
+        },
+        "importmap": {
+            "@milkdown/core": "^7.3.0",
+            "@milkdown/plugin-listener": "^7.3.0",
+            "@milkdown/plugin-upload": "^7.3.0",
+            "@milkdown/preset-commonmark": "^7.3.0",
+            "@milkdown/preset-gfm": "^7.3.0",
+            "@milkdown/theme-nord": "^7.3.0",
+            "@milkdown/utils": "^7.3.0",
+            "@phosphor-icons/web": "^2.0.3",
+            "@popperjs/core": "^2.11.8"
+        }
+    },
+    "peerDependencies": {
         "@milkdown/core": "^7.3.0",
         "@milkdown/plugin-listener": "^7.3.0",
         "@milkdown/plugin-upload": "^7.3.0",
@@ -11,23 +45,5 @@
         "@milkdown/utils": "^7.3.0",
         "@phosphor-icons/web": "^2.0.3",
         "@popperjs/core": "^2.11.8"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.17.0",
-        "@babel/preset-env": "^7.16.0",
-        "@hotwired/stimulus": "^3.0.0",
-        "@symfony/stimulus-bridge": "^3.2.0",
-        "@symfony/ux-autocomplete": "file:vendor/symfony/ux-autocomplete/assets",
-        "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
-        "@symfony/webpack-encore": "^4.0.0",
-        "autoprefixer": "^10.4.14",
-        "core-js": "^3.23.0",
-        "file-loader": "^6.0.0",
-        "regenerator-runtime": "^0.13.9",
-        "sass": "^1.63.4",
-        "sass-loader": "^13.0.0",
-        "tom-select": "^2.2.2",
-        "webpack": "^5.74.0",
-        "webpack-cli": "^4.10.0"
     }
 }

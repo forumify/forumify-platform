@@ -11,7 +11,7 @@ use Forumify\Forum\Repository\TopicRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-#[AsLiveComponent(template: '@Forumify/components/topic_list.html.twig')]
+#[AsLiveComponent(template: '@Forumify/components/topic_list.html.twig', name: 'TopicList')]
 class TopicList extends AbstractList
 {
     #[LiveProp]
