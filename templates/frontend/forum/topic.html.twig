@@ -33,11 +33,11 @@
                     subscriptionType: constant('Forumify\\Forum\\Notification\\CommentCreatedNotificationType::TYPE')
                 }) }}
                 {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
-                    <div {{ stimulus_controller('menu') }} data-placement="bottom-end">
-                        <a class="btn-outlined btn-icon" {{ stimulus_target('menu', 'openButton') }}>
+                    <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+                        <a class="btn-outlined btn-icon" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
                             <i class="ph ph-wrench"></i>
                         </a>
-                        <div class="menu" {{ stimulus_target('menu', 'menu') }}>
+                        <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
                             <a class="btn-link" href="{{ path('forumify_forum_topic_edit', { slug: topic.slug }) }}">
                                 <i class="ph ph-pencil-simple-line"></i>
                                 Edit

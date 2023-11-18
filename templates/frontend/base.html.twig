@@ -5,7 +5,7 @@
         {%- if setting('forum.logo') -%}
             {{ asset('storage/assets/' ~ setting('forum.logo')) }}
         {%- else -%}
-            {{ asset('build/images/forumify.svg') }}
+            {{ asset('bundles/forumify/images/forumify.svg') }}
         {% endif %}
     {% endset %}
 
@@ -54,9 +54,7 @@
     <header class="header">
         <div class="responsive flex">
             <a href="{{ path('forumify_core_index') }}" class="header-logo">
-                {% if setting('forum.logo') %}
-                    <img src="{{ asset('storage/assets/' ~ setting('forum.logo')) }}" alt="logo">
-                {% endif %}
+                <img src="{{ logo }}" alt="logo">
                 <span class="ml-2">{{ setting('forum.title') }}</span>
             </a>
             <div class="flex-grow flex flex-row items-center justify-between">
@@ -65,14 +63,14 @@
                 </nav>
                 {% if app.user is not null %}
                     <div class="flex flex-row">
-                        <div {{ stimulus_controller('menu') }} data-placement="bottom-end">
-                            <a class="btn-link header-menu" {{ stimulus_target('menu', 'openButton') }}>
+                        <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+                            <a class="btn-link header-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
                                 {% include '@Forumify/components/avatar.html.twig' with {
                                     user: app.user,
                                 } only %}
                                 <span>{{ app.user.username }}</span>
                             </a>
-                            <div class="menu" {{ stimulus_target('menu', 'menu') }}>
+                            <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
                                 <a class="btn-link" href="{{ path('forumify_forum_profile', { username: app.user.username }) }}">
                                     <i class="ph ph-user"></i>
                                     Profile

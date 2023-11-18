@@ -3,19 +3,19 @@
         {{- form_label(form) -}}
         {{- form_errors(form) -}}
     {% endif %}
-    <div class="markdown-wysiwyg" {{ stimulus_controller('markdown') }}>
+    <div class="markdown-wysiwyg" {{ stimulus_controller('forumify/forumify-platform/markdown') }}>
         <div class="flex gap-2 pt-2 pb-2">
             <button
                 type="button"
                 class="btn-editor"
-                {{ stimulus_action('markdown', 'toggleSource') }}
+                {{ stimulus_action('forumify/forumify-platform/markdown', 'toggleSource') }}
             >
                 {{ 'source'|trans }}
             </button>
             <button
                 type="button"
                 class="btn-editor"
-                {{ stimulus_action('markdown', 'toolbarCommand') }}
+                {{ stimulus_action('forumify/forumify-platform/markdown', 'toolbarCommand') }}
                 data-command="toggleStrongCommand"
             >
                 <i class="ph ph-text-b"></i>
@@ -23,7 +23,7 @@
             <button
                 type="button"
                 class="btn-editor"
-                {{ stimulus_action('markdown', 'toolbarCommand') }}
+                {{ stimulus_action('forumify/forumify-platform/markdown', 'toolbarCommand') }}
                 data-command="toggleEmphasisCommand"
             >
                 <i class="ph ph-text-italic"></i>
@@ -31,19 +31,19 @@
             <button
                 type="button"
                 class="btn-editor"
-                {{ stimulus_action('markdown', 'toolbarCommand') }}
+                {{ stimulus_action('forumify/forumify-platform/markdown', 'toolbarCommand') }}
                 data-command="toggleStrikethroughCommand"
             >
                 <i class="ph ph-text-strikethrough"></i>
             </button>
         </div>
-        <div class="markdown markdown-editor" {{ stimulus_target('markdown', 'markdownEditor') }}>
+        <div class="markdown markdown-editor" {{ stimulus_target('forumify/forumify-platform/markdown', 'markdownEditor') }}>
         </div>
-        <div class="source-editor d-none" {{ stimulus_target('markdown', 'sourceEditor') }}>
+        <div class="source-editor d-none" {{ stimulus_target('forumify/forumify-platform/markdown', 'sourceEditor') }}>
             {% if form is defined %}
-                {{- form_widget(form, { attr: { 'data-markdown-target': 'input' } }) -}}
+                {{- form_widget(form, { attr: { 'data-forumify--forumify-platform--markdown-target': 'input' } }) -}}
             {% else %}
-                <textarea {{ stimulus_target('markdown', 'input') }}></textarea>
+                <textarea {{ stimulus_target('forumify/forumify-platform/markdown', 'input') }}></textarea>
             {% endif %}
         </div>
     </div>

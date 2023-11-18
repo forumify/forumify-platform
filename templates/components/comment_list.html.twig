@@ -33,7 +33,7 @@
                 <span>{{ 'date_time_short'|trans({ date: item.createdAt }) }}</span>
                 <div class="comment-toolbar">
                     {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
-                        <a class="btn-link btn-small btn-icon text-secondary" {{ stimulus_controller('comment_edit', {
+                        <a class="btn-link btn-small btn-icon text-secondary" {{ stimulus_controller('forumify/forumify-platform/comment_edit', {
                             id: item.id,
                             content: item.content,
                             updateUrl: path('forumify_forum_comment_edit', { id: item.id })
