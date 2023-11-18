@@ -7,11 +7,19 @@ export default class extends Controller {
     updateUrl: String,
   }
 
+  initialize() {
+    this.isEditing = false;
+  }
+
   connect() {
     this.element.addEventListener('click', this.enableEdit.bind(this));
   }
 
   enableEdit() {
+    if (this.isEditing) {
+      return;
+    }
+
     const prototype = document.getElementById('comment-edit-prototype');
     const contentWrapper = document.querySelector(`#comment-${this.idValue} .comment-content`);
     const originalContent = contentWrapper.querySelector('.markdown');
@@ -28,6 +36,7 @@ export default class extends Controller {
     const closeEditor = () => {
       editor.remove();
       originalContent.classList.remove('d-none');
+      this.isEditing = false;
     }
 
     editor.querySelector('#comment-edit-save').addEventListener('click', () => {
@@ -41,6 +50,7 @@ export default class extends Controller {
 
     editor.querySelector('#comment-edit-cancel').addEventListener('click', closeEditor);
 
+    this.isEditing = true;
     contentWrapper.appendChild(editor);
   }
 }

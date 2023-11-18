@@ -24,6 +24,7 @@
             }
         },
         "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
             "@milkdown/core": "^7.3.0",
             "@milkdown/plugin-listener": "^7.3.0",
             "@milkdown/plugin-upload": "^7.3.0",
@@ -36,6 +37,7 @@
         }
     },
     "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
         "@milkdown/core": "^7.3.0",
         "@milkdown/plugin-listener": "^7.3.0",
         "@milkdown/plugin-upload": "^7.3.0",
@@ -45,5 +47,8 @@
         "@milkdown/utils": "^7.3.0",
         "@phosphor-icons/web": "^2.0.3",
         "@popperjs/core": "^2.11.8"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
     }
 }
