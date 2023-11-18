@@ -20,6 +20,17 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class ForumifyBundle extends AbstractBundle
 {
+    /** @inheritDoc */
+    public function prependExtension(ContainerConfigurator $container, ContainerBuilder $builder): void
+    {
+        $environment = $container->env();
+        $configDir = $this->getConfigDir();
+
+        $container->import($configDir . '/parameters.yaml');
+        $container->import($configDir . '/{parameters}_' . $environment . '.yaml');
+    }
+
+    /** @inheritDoc */
     public function build(ContainerBuilder $container): void
     {
         $environment = (string)$container->getParameter('kernel.environment');

@@ -23,10 +23,10 @@ class Role
     private string $description = '';
 
     #[ORM\Column(type: 'boolean')]
-    private bool $administrator;
+    private bool $administrator = false;
 
     #[ORM\Column(type: 'boolean')]
-    private bool $moderator;
+    private bool $moderator = false;
 
     #[ORM\Column(name: '`system`', type: 'boolean')]
     private bool $system = false;
