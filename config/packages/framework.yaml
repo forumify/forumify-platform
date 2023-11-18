@@ -1,0 +1,7 @@
+framework:
+    assets:
+        packages:
+            forumify.avatar:
+                base_path: '%forumify.avatar.storage.path%'
+            forumify.asset:
+                base_path: '%forumify.asset.storage.path%'

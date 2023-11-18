@@ -1,0 +1,3 @@
+twig:
+    form_themes:
+        - '@Forumify/form/theme.html.twig'

@@ -1,0 +1,3 @@
+parameters:
+    forumify.asset.storage.path: '/storage/assets'
+    forumify.avatar.storage.path: '/storage/avatars'

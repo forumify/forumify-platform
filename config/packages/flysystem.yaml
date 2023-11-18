@@ -1,0 +1,13 @@
+flysystem:
+    storages:
+        # Used for general assets such as dynamic theme resources, logos and other configurable assets.
+        asset.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/public%forumify.asset.storage.path%'
+
+        # Used for profile avatars. These assets are uploaded by users.
+        avatar.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/public%forumify.avatar.storage.path%'
