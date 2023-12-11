@@ -24,6 +24,8 @@ abstract class AbstractEmailNotificationType implements NotificationTypeInterfac
             ->isEmailOnNotification();
     }
 
+    abstract public function getEmailTemplate(Notification $notification): string;
+
     public function handleNotification(Notification $notification): void
     {
         if (!$this->shouldSendEmail($notification)) {
@@ -34,8 +36,8 @@ abstract class AbstractEmailNotificationType implements NotificationTypeInterfac
         $email = (new TemplatedEmail())
             ->from('noreply@forumify.net')
             ->to(new Address($recipient->getEmail(), $recipient->getUsername()))
-            ->subject($this->getSubject())
-            ->htmlTemplate($this->getTemplate())
+            ->subject($this->getTitle($notification))
+            ->htmlTemplate($this->getEmailTemplate($notification))
             ->context($notification->getContext());
 
         try {

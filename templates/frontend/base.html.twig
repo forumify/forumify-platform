@@ -97,12 +97,7 @@
                                 </a>
                             </div>
                         </div>
-                        {# TODO: re-add for notifications #}
-                        {#                      <div> #}
-                        {#                          <a class="btn-link btn-icon"> #}
-                        {#                              <i class="ph ph-bell-ringing"></i> #}
-                        {#                          </a> #}
-                        {#                      </div> #}
+                        {{ component('Notifications') }}
                     </div>
                 {% else %}
                     <a class="btn-link" href="{{ path('forumify_core_login', { '_target_path': app.request.requestUri }) }}">

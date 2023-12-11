@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Notification;
 
+use Forumify\Core\Entity\Notification;
 use Forumify\Core\Notification\AbstractEmailNotificationType;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -24,13 +25,23 @@ class TopicCreatedNotificationType extends AbstractEmailNotificationType
         return self::TYPE;
     }
 
-    public function getTemplate(): string
-    {
-        return '@Forumify/emails/notifications/topic_created.html.twig';
-    }
-
-    public function getSubject(): string
+    public function getTitle(Notification $notification): string
     {
         return $this->translator->trans('notification.topic_created');
+    }
+
+    public function getDescription(Notification $notification): string
+    {
+        // TODO: Implement getDescription() method.
+    }
+
+    public function getImage(Notification $notification): string
+    {
+        // TODO: Implement getImage() method.
+    }
+
+    public function getEmailTemplate(Notification $notification): string
+    {
+        return '@Forumify/emails/notifications/topic_created.html.twig';
     }
 }

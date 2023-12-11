@@ -1,0 +1,31 @@
+<div {{ attributes }} data-poll="delay(5000)|$render">
+    <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+        <a class="btn-link btn-icon" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+            {% set unseenCount = this.unseenCount %}
+            <i class="ph ph-bell-ringing"></i>{{ unseenCount }}
+        </a>
+        <ul class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+            {% set notifications = this.notifications %}
+            {% for notification in notifications %}
+                {% set notificationType = this.notificationType(notification) %}
+                <li class="p-3 flex gap-2 notification">
+                    <img width="48px" height="48px" src="{{ notificationType.image(notification) }}" alt="">
+                    <div>
+                        <p class="text-subtitle">{{ notificationType.title(notification) }}</p>
+                        <p class="text-small">{{ notificationType.description(notification) }}</p>
+                    </div>
+                </li>
+            {% else %}
+                <div class="flex justify-center p-6">
+                    {{ 'no_notifications'|trans }}
+                </div>
+            {% endfor %}
+            {% if unseenCount > notifications|length %}
+                <hr>
+                <li class="p-3 flex justify-center">
+                    <a href="">See all notifications</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

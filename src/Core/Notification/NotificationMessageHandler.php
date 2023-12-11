@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Notification;
 
+use Forumify\Core\Repository\NotificationRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Translation\LocaleSwitcher;
 
@@ -11,7 +12,7 @@ use Symfony\Component\Translation\LocaleSwitcher;
 class NotificationMessageHandler
 {
     public function __construct(
-        private readonly NotificationService $notificationService,
+        private readonly NotificationRepository $notificationRepository,
         private readonly NotificationTypeCollection $notificationTypeCollection,
         private readonly LocaleSwitcher $localeSwitcher,
     ) {
@@ -22,7 +23,7 @@ class NotificationMessageHandler
      */
     public function __invoke(NotificationMessage $message): void
     {
-        $notification = $this->notificationService->fetchNotification($message->getNotificationId());
+        $notification = $this->notificationRepository->find($message->getNotificationId());
         if ($notification === null) {
             throw new NotificationHandlerException("Unable to find notification with id '{$message->getNotificationId()}'.");
         }

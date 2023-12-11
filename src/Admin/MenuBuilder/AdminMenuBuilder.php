@@ -25,15 +25,8 @@ class AdminMenuBuilder implements AdminMenuBuilderInterface
             'icon' => 'ph ph-gear',
         ]));
 
-        $menu->addItem(new Menu('Security', [
-            'icon' => 'ph ph-shield-chevron',
-        ], [
-            new MenuItem('Users', $this->urlGenerator->generate('forumify_admin_user_list'), [
-                'icon' => 'ph ph-user-list',
-            ]),
-            new MenuItem('Roles', $this->urlGenerator->generate('forumify_admin_role_list'), [
-                'icon' => 'ph ph-lock-key',
-            ]),
+        $menu->addItem(new MenuItem('Users', $this->urlGenerator->generate('forumify_admin_user_list'), [
+            'icon' => 'ph ph-user-list',
         ]));
 
         $menu->addItem(new MenuItem('Forums', $this->urlGenerator->generate('forumify_admin_forum'), [
@@ -42,6 +35,17 @@ class AdminMenuBuilder implements AdminMenuBuilderInterface
 
         $menu->addItem(new MenuItem('Pages', $this->urlGenerator->generate('forumify_admin_page'), [
             'icon' => 'ph ph-files',
+        ]));
+
+        $menu->addItem(new Menu('Settings', [
+            'icon' => 'ph ph-wrench'
+        ], [
+            new MenuItem('Reactions', $this->urlGenerator->generate('forumify_admin_reaction_list'), [
+                'icon' => 'ph ph-smiley-wink'
+            ]),
+            new MenuItem('Roles', $this->urlGenerator->generate('forumify_admin_role_list'), [
+                'icon' => 'ph ph-lock-key',
+            ]),
         ]));
     }
 }

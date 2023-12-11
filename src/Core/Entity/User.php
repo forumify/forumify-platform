@@ -36,6 +36,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private string $password;
 
+    #[ORM\Column(length: 32)]
+    private string $displayName;
+
     /**
      * ISO 639-1 representation of the user's language
      */
@@ -128,6 +131,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): void
     {
         $this->password = $password;
+    }
+
+    public function getDisplayName(): string
+    {
+        return $this->displayName ?: $this->getUsername();
+    }
+
+    public function setDisplayName(string $displayName): void
+    {
+        $this->displayName = $displayName;
     }
 
     public function getLanguage(): string

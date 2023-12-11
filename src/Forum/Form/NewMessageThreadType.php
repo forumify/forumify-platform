@@ -49,6 +49,8 @@ class NewMessageThreadType extends AbstractType
 
         return $er->createQueryBuilder('u')
             ->andWhere('u.username NOT LIKE :currentUsername')
+            ->andWhere('u.banned = 0')
+            ->andWhere('u.emailVerified = 1')
             ->setParameter('currentUsername', $loggedInUser->getUserIdentifier());
     }
 }

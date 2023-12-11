@@ -41,7 +41,7 @@ class SettingsType extends AbstractType
                 ],
             ])
             ->add('enable_registrations', CheckboxType::class, [
-                'data'=> (bool)$this->settingRepository->get('core.enable_registrations'),
+                'data' => (bool)$this->settingRepository->get('core.enable_registrations'),
                 'required' => false,
             ]);
     }

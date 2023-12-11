@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\HierarchicalInterface;
@@ -24,6 +25,9 @@ class Comment implements SubscribableInterface
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Topic $topic;
 
+    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: CommentReaction::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $reactions;
+
     public function getContent(): string
     {
         return $this->content;
@@ -42,6 +46,16 @@ class Comment implements SubscribableInterface
     public function setTopic(Topic $topic): void
     {
         $this->topic = $topic;
+    }
+
+    public function getReactions(): Collection
+    {
+        return $this->reactions;
+    }
+
+    public function setReactions(Collection $reactions): void
+    {
+        $this->reactions = $reactions;
     }
 
     public function getParent(): ?HierarchicalInterface

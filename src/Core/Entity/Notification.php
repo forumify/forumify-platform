@@ -22,6 +22,9 @@ class Notification
     #[ORM\Column(type: 'json')]
     private array $context;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $seen = false;
+
     public function __construct(string $type, User $recipient, array $context = [])
     {
         $this->type = $type;
@@ -57,5 +60,15 @@ class Notification
     public function setContext(array $context): void
     {
         $this->context = $context;
+    }
+
+    public function isSeen(): bool
+    {
+        return $this->seen;
+    }
+
+    public function setSeen(bool $seen): void
+    {
+        $this->seen = $seen;
     }
 }

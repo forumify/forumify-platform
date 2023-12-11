@@ -24,15 +24,19 @@ class CreateUserService
     ) {
     }
 
-    public function createUser(NewUser $newUser): User
+    public function createUser(NewUser $newUser, bool $requireValidation = true): User
     {
         $user = new User();
         $user->setUsername($newUser->getUsername());
+        $user->setDisplayName($newUser->getUsername());
         $user->setEmail($newUser->getEmail());
         $user->setPassword($this->passwordHasher->hashPassword($user, $newUser->getPassword()));
+        $user->setEmailVerified(!$requireValidation);
         $this->userRepository->save($user);
 
-        $this->emailVerificationService->sendEmailVerificationEmail($user);
+        if ($requireValidation) {
+            $this->emailVerificationService->sendEmailVerificationEmail($user);
+        }
 
         return $user;
     }

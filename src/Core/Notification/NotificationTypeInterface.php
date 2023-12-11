@@ -11,9 +11,11 @@ interface NotificationTypeInterface
 {
     public function getType(): string;
 
-    public function getTemplate(): string;
+    public function getTitle(Notification $notification): string;
 
-    public function getSubject(): string;
+    public function getDescription(Notification $notification): string;
+
+    public function getImage(Notification $notification): string;
 
     /**
      * @throws NotificationHandlerException
