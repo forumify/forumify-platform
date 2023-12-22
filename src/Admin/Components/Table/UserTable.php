@@ -5,27 +5,31 @@ declare(strict_types=1);
 namespace Forumify\Admin\Components\Table;
 
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
-use Forumify\Forum\Entity\Reaction;
-use Forumify\Forum\Repository\ReactionRepository;
+use Forumify\Core\Entity\User;
+use Forumify\Core\Repository\UserRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
-#[AsLiveComponent('ReactionTable', '@Forumify/components/table/table.html.twig')]
-class ReactionTable extends AbstractDoctrineTable
+#[AsLiveComponent('UserTable', '@Forumify/components/table/table.html.twig')]
+class UserTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        ReactionRepository $reactionRepository,
+        UserRepository $userRepository
     ) {
-        parent::__construct($reactionRepository);
+        parent::__construct($userRepository);
     }
 
     protected function buildTable(): void
     {
         $this
             ->addColumn([
-                'name' => 'name',
-                'field' => 'name',
+                'name' => 'username',
+                'field' => 'username',
+            ])
+            ->addColumn([
+                'name' => 'email',
+                'field' => 'email'
             ])
             ->addColumn([
                 'name' => 'actions',
@@ -36,9 +40,9 @@ class ReactionTable extends AbstractDoctrineTable
             ]);
     }
 
-    protected function renderActionColumn($_, Reaction $reaction): string
+    protected function renderActionColumn($_, User $user): string
     {
-        $editUrl = $this->urlGenerator->generate('forumify_admin_reaction', ['id' => $reaction->getId()]);
+        $editUrl = $this->urlGenerator->generate('forumify_admin_user', ['username' => $user->getUsername()]);
         return '<a class="btn-link btn-icon btn-small" href="' . $editUrl . '"><i class="ph ph-pencil-simple-line"></i></a>';
     }
 }

@@ -3,14 +3,31 @@
         <thead>
         <tr>
             {% for col in this.columns %}
-                <th>{{ col.label ?? col.name|capitalize }}</th>
+                <th>
+                    <div class="flex justify-start items-center">
+                        {% set label = col.label ?? col.name|capitalize %}
+                        {% if col.sortable %}
+                            {{ label }}
+                            {% set sort = this.sort[col.name] ?? null %}
+                            <a
+                                class="ml-1 btn-link btn-small btn-icon"
+                                data-action="live#action"
+                                data-action-name="toggleSort(column={{ col.name }})"
+                            >
+                                <i class="ph ph-{{ sort == 'ASC' ? 'arrow-up' : (sort == 'DESC' ? 'arrow-down' : 'arrows-vertical') }}"></i>
+                            </a>
+                        {% else %}
+                            {{ label }}
+                        {% endif %}
+                    </div>
+                </th>
             {% endfor %}
         </tr>
         <tr>
             {% for col in this.columns %}
                 {% if col.searchable %}
                     <th>
-                        <input data-model="debounce(500)|search.{{ col.name }}">
+                        <input data-model="debounce(300)|search.{{ col.name }}">
                     </th>
                 {% endif %}
             {% endfor %}

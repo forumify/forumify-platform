@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RoleController extends AbstractController
 {
-    #[Route('/role/{id}', 'role')]
+    #[Route('/role/{id<\d+>}', 'role')]
     public function __invoke(Role $role, Request $request, RoleRepository $roleRepository): Response
     {
         $form = $this->createForm(RoleType::class, $role);

@@ -93,11 +93,15 @@ email_verification:
         expired: 'Your verification link has expired.'
         invalid_token: 'Your verification code is invalid.'
         retry: 'Please try again using the button below.'
+users: 'Users'
+roles: 'Roles'
 role: 'Role'
 create_role: 'Create role'
 role_type:
     administrator: 'Administrators are granted access to the admin panel. Administrators are not automatically moderators, and access to resources still needs to be configured seperately.'
     moderator: 'Moderators gain certain perks on the frontend, such as being able to edit and delete resources that they have access to. They do not have access to the admin panel.'
+reactions: 'Reactions'
+settings: 'Settings'
 no_entries: 'There are no records to display.'
 error:
     unknown: 'An unknown error occurred.'

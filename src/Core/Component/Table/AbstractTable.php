@@ -25,6 +25,9 @@ abstract class AbstractTable
     #[LiveProp(writable: true)]
     public array $search = [];
 
+    #[LiveProp]
+    public array $sort = [];
+
     /** @var array<array> */
     private array $columns = [];
     private ?TableResult $result = null;
@@ -32,7 +35,7 @@ abstract class AbstractTable
 
     abstract protected function buildTable(): void;
 
-    abstract protected function getData(int $limit, int $offset, array $search): array;
+    abstract protected function getData(int $limit, int $offset, array $search, array $sort): array;
 
     abstract protected function getTotalCount(array $search): int;
 
@@ -52,6 +55,16 @@ abstract class AbstractTable
     public function setLimit(#[LiveArg] int $limit): void
     {
         $this->limit = $limit;
+    }
+
+    #[LiveAction]
+    public function toggleSort(#[LiveArg] string $column): void
+    {
+        $this->sort[$column] = match ($this->sort[$column] ?? null) {
+            null => 'ASC',
+            'ASC' => 'DESC',
+            'DESC' => null,
+        };
     }
 
     #[PreMount]
@@ -88,12 +101,15 @@ abstract class AbstractTable
 
         $limit = $this->limit;
         $offset = ($this->page - 1) * $limit;
-        $data = $this->getData($limit, $offset, $this->search);
+        $search = array_filter($this->search);
+        $sort = array_filter($this->sort);
+
+        $data = $this->getData($limit, $offset, $search, $sort);
         $rows = $this->transformData($data);
 
         $this->result = new TableResult(
             $rows,
-            $this->getTotalCount($this->search),
+            $this->getTotalCount($search),
         );
         return $this->result;
     }
@@ -108,10 +124,10 @@ abstract class AbstractTable
             foreach ($this->getColumns() as $column) {
                 $columnData = $column['field'] !== null
                     ? $propertyAccessor->getValue($rowData, $column['field'])
-                    : $rowData;
+                    : null;
 
                 if ($column['renderer'] !== null) {
-                    $columnData = $column['renderer']($columnData);
+                    $columnData = $column['renderer']($columnData, $rowData);
                 }
 
                 $row[$column['name']] = $columnData;

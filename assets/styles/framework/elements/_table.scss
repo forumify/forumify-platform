@@ -9,16 +9,7 @@ thead {
     border-bottom: var(--border);
 
     th {
-        text-align: left;
         padding: var(--spacing-2);
-    }
-
-    tr:first-child th {
-        padding-bottom: 0;
-    }
-
-    tr:last-child th {
-        padding-top: 0;
     }
 }
 
