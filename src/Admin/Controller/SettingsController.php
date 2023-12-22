@@ -4,50 +4,29 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Controller;
 
-use Forumify\Admin\Form\SettingsType;
-use Forumify\Core\Repository\SettingRepository;
-use Forumify\Core\Service\MediaService;
-use League\Flysystem\FilesystemOperator;
+use Forumify\Core\MenuBuilder\Menu;
+use Forumify\Core\MenuBuilder\MenuItem;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SettingsController extends AbstractController
 {
     #[Route('/settings', 'settings')]
-    public function __invoke(
-        Request $request,
-        SettingRepository $settingRepository,
-        MediaService $mediaService,
-        FilesystemOperator $assetStorage,
-        FilesystemOperator $avatarStorage,
-    ): Response {
-        $form = $this->createForm(SettingsType::class);
+    public function __invoke(UrlGeneratorInterface $urlGenerator): Response
+    {
+        $menu = new Menu();
+        $menu->addItem(new MenuItem('Roles', $urlGenerator->generate('forumify_admin_role_list'), [
+            'icon' => 'ph ph-lock-key'
+        ]));
+        $menu->addItem(new MenuItem('Reactions', $urlGenerator->generate('forumify_admin_reaction_list'), [
+            'icon' => 'ph ph-smiley-wink'
+        ]));
 
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $settings = [];
-
-            $settings['forum.title'] = $data['title'];
-            $settings['core.enable_registrations'] = (string)$data['enable_registrations'];
-
-            if ($data['logo'] !== null) {
-                $settings['forum.logo'] = $mediaService->saveToFilesystem($assetStorage, $data['logo']);
-            }
-
-            if ($data['default_avatar'] !== null) {
-                $settings['forum.default_avatar'] = $mediaService->saveToFilesystem($avatarStorage, $data['default_avatar']);
-            }
-
-            $settingRepository->setBulk($settings);
-
-            $this->addFlash('success', 'flashes.settings_saved');
-        }
-
+        $menu->sortByLabel();
         return $this->render('@Forumify/admin/settings/settings.html.twig', [
-            'form' => $form->createView(),
+            'settingMenuItems' => $menu->getEntries(),
         ]);
     }
 }

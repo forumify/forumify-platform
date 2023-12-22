@@ -1,7 +1,18 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block body %}
-    {% include '@Forumify/admin/components/simple_form.html.twig' with {
-        form: form,
-        title: 'settings'|trans,
-    } only %}
+    <h2>{{ 'settings'|trans }}</h2>
+    <div class="box mt-4">
+        <ul class="flex gap-4">
+            {% for item in settingMenuItems %}
+                <a class="setting" href="{{ item.location }}">
+                    <div class="setting-icon">
+                        <i class="{{ item.options.icon }}"></i>
+                    </div>
+                    <p class="setting-label pt-2">
+                        {{ item.label }}
+                    </p>
+                </a>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

@@ -31,4 +31,10 @@ class Menu
     {
         return array_values($this->items);
     }
+
+    public function sortByLabel(): void
+    {
+        $labels = array_map(static fn (Menu|MenuItem $child) => $child->label, $this->items);
+        array_multisort($labels, SORT_ASC, $this->items);
+    }
 }

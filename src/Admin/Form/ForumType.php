@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Form;
 
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;

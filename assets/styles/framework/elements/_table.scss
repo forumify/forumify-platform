@@ -43,3 +43,17 @@ tbody {
         padding: var(--spacing-2);
     }
 }
+
+tfoot {
+    tr {
+        td {
+            padding: var(--spacing-2);
+        }
+    }
+}
+
+.pagination-selected-page {
+    @extend .text-black;
+    padding: var(--spacing-1) var(--spacing-2);
+    background-color: var(--border-color);
+}

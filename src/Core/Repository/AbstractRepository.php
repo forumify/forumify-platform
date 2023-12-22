@@ -23,11 +23,17 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
     public function save(object $entity, bool $flush = true): void
     {
-        $this->getEntityManager()->persist($entity);
+        $em = $this->getEntityManager();
+        $em->persist($entity);
 
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $em->flush();
         }
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
     }
 
     public function saveAll(array $entities, bool $flush = true): void
@@ -43,10 +49,11 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
     public function remove(object $entity, bool $flush = true): void
     {
-        $this->getEntityManager()->remove($entity);
+        $em = $this->getEntityManager();
+        $em->remove($entity);
 
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $em->flush();
         }
     }
 }

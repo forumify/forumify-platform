@@ -42,7 +42,7 @@ class CreateUserCommand extends Command
         $newUser = new NewUser();
         $newUser->setUsername($io->ask('Username'));
         $newUser->setEmail($io->ask('Email'));
-        $newUser->setPassword($io->askHidden('Password'));
+        $newUser->setPassword($io->askHidden('Password (min. 8 characters)'));
 
         $errors = $this->validator->validate($newUser);
         if ($errors->count() > 0) {

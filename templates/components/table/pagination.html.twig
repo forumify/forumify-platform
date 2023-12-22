@@ -1,0 +1,43 @@
+{#
+template variables:
+    currentPage: int
+    limit: int
+    totalCount: int
+    rows: array
+#}
+{% if totalCount > limit %}
+    <tr>
+        <td colspan="{{ rows[0] is defined ? rows[0]|length : 1 }}">
+            {% set lastPage = range(1, totalCount, limit)|keys|last + 1 %}
+            {% set visiblePages = ((currentPage - 3)..currentPage)|merge((currentPage + 1)..(currentPage + 3))|filter(p => p > 0 and p <= lastPage) %}
+
+            {% block pagination_first_page %}
+                {% if 1 not in visiblePages %}
+                    <a class="btn-link btn-small" data-action="live#action" data-action-name="setPage(page=1)">1</a>
+                    {% if visiblePages|first - 1 != 1 %}
+                        ...
+                    {% endif %}
+                {% endif %}
+            {% endblock %}
+
+            {% block pagination_pages %}
+                {% for page in visiblePages %}
+                    {% if page == currentPage %}
+                        <span class="pagination-selected-page">{{ page }}</span>
+                    {% else %}
+                        <a class="btn-link btn-small" data-action="live#action" data-action-name="setPage(page={{ page }})">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+            {% endblock %}
+
+            {% block pagination_last_page %}
+                {% if lastPage not in visiblePages %}
+                    {% if lastPage - 1 != visiblePages|last %}
+                        ...
+                    {% endif %}
+                    <a class="btn-link btn-small" data-action="live#action" data-action-name="setPage(page={{ lastPage }})">{{ lastPage }}</a>
+                {% endif %}
+            {% endblock %}
+        </td>
+    </tr>
+{% endif %}

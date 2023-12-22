@@ -1,0 +1,44 @@
+<div {{ attributes }}>
+    <table>
+        <thead>
+        <tr>
+            {% for col in this.columns %}
+                <th>{{ col.label ?? col.name|capitalize }}</th>
+            {% endfor %}
+        </tr>
+        <tr>
+            {% for col in this.columns %}
+                {% if col.searchable %}
+                    <th>
+                        <input data-model="debounce(500)|search.{{ col.name }}">
+                    </th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in this.result.rows %}
+            <tr>
+                {% for col in row %}
+                    <td {{ loop.last ? 'class="text-right"' : '' }}>{{ col|raw }}</td>
+                {% endfor %}
+            </tr>
+        {% else %}
+            <tr>
+                <td>
+                    {{ 'no_entries'|trans }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        {% include '@Forumify/components/table/pagination.html.twig' with {
+            rows: this.result.rows,
+            totalCount: this.result.totalCount,
+            limit: this.limit,
+            currentPage: this.page
+        } only %}
+        </tfoot>
+    </table>
+</div>
+

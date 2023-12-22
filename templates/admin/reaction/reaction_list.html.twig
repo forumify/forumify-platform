@@ -3,5 +3,6 @@
     reactions
 {% endblock %}
 {% block body %}
-
+    <h2 class="mb-4">{{ 'reactions'|trans }}</h2>
+    {{ component('ReactionTable') }}
 {% endblock %}

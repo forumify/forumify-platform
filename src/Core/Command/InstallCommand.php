@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Command;
 
+use Forumify\Core\Repository\SettingRepository;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -14,6 +15,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 #[AsCommand('forumify:platform:install')]
 class InstallCommand extends Command
 {
+    public function __construct(private readonly SettingRepository $settingRepository)
+    {
+        parent::__construct();
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new CommandIO($input, $output);
@@ -21,8 +27,7 @@ class InstallCommand extends Command
 
         $application = $this->getApplication();
         if ($application === null) {
-            $io->error('Unable to create sub-commands. Quitting...');
-            return Command::FAILURE;
+            return $this->fail($io, 'Unable to create sub-commands. Quitting...');
         }
 
         $result = $this->runSubcommand($application, $output, new ArrayInput([
@@ -52,9 +57,16 @@ class InstallCommand extends Command
             $io->warning([
                 'Unable to create admin user. There was probably some output above as to why.',
                 'You will need an admin user to configure your forum.',
-                'Try manually running "php bin/console forumify:platform:create-user --admin"'
+                'Try manually running "php bin/console forumify:platform:create-user --admin"',
             ]);
         }
+
+        $io->section('Website configuration');
+        $settings = [];
+        $settings['forum.title'] = $io->ask('Forum name');
+        $this->settingRepository->setBulk($settings);
+
+        $io->writeln('Settings stored.');
 
         $io->success('forumify configured successfully!');
         return Command::SUCCESS;
