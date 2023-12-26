@@ -60,6 +60,12 @@ abstract class AbstractTable
     #[LiveAction]
     public function toggleSort(#[LiveArg] string $column): void
     {
+        foreach (array_keys($this->sort) as $existingSort) {
+            if ($existingSort !== $column) {
+                unset($this->sort[$existingSort]);
+            }
+        }
+
         $this->sort[$column] = match ($this->sort[$column] ?? null) {
             null => 'ASC',
             'ASC' => 'DESC',

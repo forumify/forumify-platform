@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Command;
 
-use Forumify\Core\Form\NewUser;
+use Forumify\Core\Form\DTO\NewUser;
 use Forumify\Core\Repository\RoleRepository;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\CreateUserService;

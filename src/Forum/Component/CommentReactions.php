@@ -1,0 +1,92 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Forumify\Forum\Component;
+
+use Forumify\Core\Entity\User;
+use Forumify\Forum\Entity\Comment;
+use Forumify\Forum\Entity\CommentReaction;
+use Forumify\Forum\Repository\CommentReactionRepository;
+use Forumify\Forum\Repository\ReactionRepository;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+#[AsLiveComponent('CommentReactions', '@Forumify/frontend/components/comment_reactions.html.twig')]
+class CommentReactions
+{
+    use DefaultActionTrait;
+
+    #[LiveProp]
+    public Comment $comment;
+
+    public function __construct(
+        private readonly CommentReactionRepository $commentReactionRepository,
+        private readonly ReactionRepository $reactionRepository,
+        private readonly Security $security
+    ) {
+    }
+
+    #[LiveAction]
+    public function toggleReaction(#[LiveArg] int $reactionId): void
+    {
+        /** @var User $user */
+        $user = $this->security->getUser();
+        if ($user === null) {
+            return;
+        }
+
+        $reaction = $this->reactionRepository->find($reactionId);
+        $commentReaction = $this->commentReactionRepository->findOneBy([
+            'comment' => $this->comment,
+            'reaction' => $reaction,
+            'user' => $user,
+        ]);
+
+        if ($commentReaction !== null) {
+            $this->commentReactionRepository->remove($commentReaction);
+            return;
+        }
+
+        $commentReaction = new CommentReaction($this->comment, $user, $reaction);
+        $this->commentReactionRepository->save($commentReaction);
+    }
+
+    public function getGroupedReactions(): array
+    {
+        $qb = $this->commentReactionRepository->createQueryBuilder('cr');
+        $qb
+            ->select('r.id', 'r.name', 'r.image', 'COUNT(cr.id) AS count')
+            ->join('cr.reaction', 'r')
+            ->where('cr.comment = :commentId')
+            ->groupBy('r.id')
+            ->setParameter('commentId', $this->comment->getId());
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function hasUserReacted(int $reactionId): bool
+    {
+        /** @var User $user */
+        $user = $this->security->getUser();
+        if ($user === null) {
+            return false;
+        }
+
+        $qb = $this->commentReactionRepository->createQueryBuilder('cr');
+        $qb
+            ->select('COUNT(cr.id)')
+            ->where('cr.comment = :commentId')
+            ->andWhere('cr.user = :userId')
+            ->andWhere('cr.reaction = :reactionId')
+            ->setParameter('commentId', $this->comment->getId())
+            ->setParameter('userId', $user->getId())
+            ->setParameter('reactionId', $reactionId);
+
+        return $qb->getQuery()->getSingleScalarResult() > 0;
+    }
+}

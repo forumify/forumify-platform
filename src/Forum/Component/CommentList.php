@@ -11,7 +11,7 @@ use Forumify\Forum\Repository\CommentRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-#[AsLiveComponent(template: '@Forumify/components/comment_list.html.twig', name: 'CommentList')]
+#[AsLiveComponent(name: 'CommentList', template: '@Forumify/frontend/components/comment_list.html.twig')]
 class CommentList extends AbstractList
 {
     #[LiveProp]

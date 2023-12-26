@@ -39,6 +39,11 @@ class ReactionTable extends AbstractDoctrineTable
     protected function renderActionColumn($_, Reaction $reaction): string
     {
         $editUrl = $this->urlGenerator->generate('forumify_admin_reaction', ['id' => $reaction->getId()]);
-        return '<a class="btn-link btn-icon btn-small" href="' . $editUrl . '"><i class="ph ph-pencil-simple-line"></i></a>';
+        $deleteUrl = $this->urlGenerator->generate('forumify_admin_reaction_delete', ['id' => $reaction->getId()]);
+
+        return "
+            <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>
+            <a class='btn-link btn-icon btn-small' href='$deleteUrl'><i class='ph ph-x'></i></a>
+        ";
     }
 }

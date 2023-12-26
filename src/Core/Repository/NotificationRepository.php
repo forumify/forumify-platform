@@ -7,6 +7,7 @@ namespace Forumify\Core\Repository;
 use Doctrine\Persistence\ManagerRegistry;
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Notification\NotificationContextSerializer;
+use RuntimeException;
 
 class NotificationRepository extends AbstractRepository
 {
@@ -50,11 +51,15 @@ class NotificationRepository extends AbstractRepository
 
     public function save(object $entity, bool $flush = true): void
     {
-        if ($entity instanceof Notification) {
-            $serializedContext = $this->contextSerializer->serialize($entity->getContext());
-            $entity->setContext($serializedContext);
+        if (!$entity instanceof Notification) {
+            throw new RuntimeException(self::class . ' can only be used for ' . Notification::class);
         }
 
+        $context = $entity->getContext();
+        $serializedContext = $this->contextSerializer->serialize($context);
+        $entity->setContext($serializedContext);
+
         parent::save($entity, $flush);
+        $entity->setContext($context);
     }
 }

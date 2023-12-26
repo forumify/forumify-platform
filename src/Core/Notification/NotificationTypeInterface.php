@@ -17,6 +17,8 @@ interface NotificationTypeInterface
 
     public function getImage(Notification $notification): string;
 
+    public function getUrl(Notification $notification): string;
+
     /**
      * @throws NotificationHandlerException
      */

@@ -16,7 +16,8 @@ class ReactionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver):void
     {
         $resolver->setDefaults([
-            'data_class' => Reaction::class
+            'data_class' => Reaction::class,
+            'image_required' => false,
         ]);
     }
 
@@ -26,7 +27,7 @@ class ReactionType extends AbstractType
             ->add('name')
             ->add('newImage', FileType::class, [
                 'mapped' => false,
-                'required' => false,
+                'required' => $options['image_required'],
                 'help' => 'Recommended size is 64x64.',
                 'constraints' => [
                     new Assert\Image(

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Form;
 
+use Forumify\Core\Form\DTO\NewUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;

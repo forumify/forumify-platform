@@ -1,0 +1,3 @@
+doctrine_migrations:
+    migrations_paths:
+        'ForumifyDoctrineMigrations': '%kernel.project_dir%/vendor/forumify/forumify-platform/migrations'

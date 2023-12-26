@@ -10,6 +10,7 @@ use Forumify\Core\Repository\SettingRepository;
 use Forumify\Forum\Entity\Message;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function Symfony\Component\String\u;
@@ -22,6 +23,7 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
         private readonly TranslatorInterface $translator,
         private readonly Packages $packages,
         private readonly SettingRepository $settingRepository,
+        private readonly UrlGeneratorInterface $urlGenerator,
         MailerInterface $mailer
     ) {
         parent::__construct($mailer);
@@ -42,11 +44,9 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
 
     public function getDescription(Notification $notification): string
     {
-        $message = u($this->getMessage($notification)->getContent())
+        return u($this->getMessage($notification)?->getContent() ?? '')
             ->truncate(200, '...', false)
             ->toString();
-
-        return $message;
     }
 
     public function getImage(Notification $notification): string
@@ -54,7 +54,20 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
         $avatar = $this->getMessage($notification)?->getCreatedBy()?->getAvatar();
         $url = $avatar ?? $this->settingRepository->get('forum.default_avatar');
 
-        return $this->packages->getUrl($url, 'forumify.avatar');
+        return empty($url)
+            ? ''
+            : $this->packages->getUrl($url, 'forumify.avatar');
+    }
+
+    public function getUrl(Notification $notification): string
+    {
+        $message = $this->getMessage($notification);
+        if ($message === null) {
+            return '';
+        }
+
+        $thread = $message->getThread();
+        return $this->urlGenerator->generate('forumify_forum_messenger_thread', ['id' => $thread->getId()]);
     }
 
     private function getMessage(Notification $notification): ?Message

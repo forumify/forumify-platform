@@ -5,15 +5,9 @@ declare(strict_types=1);
 namespace Forumify\Core\Service;
 
 use Forumify\Core\Entity\User;
-use Forumify\Core\Form\NewUser;
-use Forumify\Core\Repository\SettingRepository;
+use Forumify\Core\Form\DTO\NewUser;
 use Forumify\Core\Repository\UserRepository;
-use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CreateUserService
 {

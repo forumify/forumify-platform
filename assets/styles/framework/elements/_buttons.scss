@@ -65,6 +65,17 @@
     }
 }
 
+.btn-outlined-highlighted {
+    @include btn-contained;
+    color: var(--c-primary);
+    border: 2px solid var(--c-primary-accent);
+
+    &:hover {
+        color: var(--c-primary-accent);
+        background-color: transparent;
+    }
+}
+
 .btn-link {
     @include btn;
     align-items: center;

@@ -51,7 +51,7 @@ class RoleTable extends AbstractDoctrineTable
             return '';
         }
 
-        $editUrl = $this->urlGenerator->generate('forumify_admin_reaction', ['id' => $role->getId()]);
+        $editUrl = $this->urlGenerator->generate('forumify_admin_role', ['id' => $role->getId()]);
         $deleteUrl = $this->urlGenerator->generate('forumify_admin_role_delete', ['id' => $role->getId()]);
 
         return "

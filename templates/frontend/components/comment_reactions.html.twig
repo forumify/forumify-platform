@@ -1,0 +1,19 @@
+<div
+    class="flex gap-1 justify-end"
+    {{ attributes.defaults(stimulus_controller('forumify/forumify-platform/comment_reactions')) }}
+    data-poll="delay(5000)|$render"
+>
+    {% for reaction in this.groupedReactions %}
+        <a
+            class="btn-small {{ this.userReacted(reaction.id) ? 'btn-outlined-highlighted' : 'btn-outlined' }}"
+            data-action="live#action"
+            data-action-name="toggleReaction(reactionId={{ reaction.id }})"
+        >
+            <img class="mr-1" width="16px" height="16px" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="">
+            {{ reaction.count }}
+        </a>
+    {% endfor %}
+    <a class="btn-small btn-outlined btn-icon">
+        <i class="ph ph-smiley"></i>
+    </a>
+</div>

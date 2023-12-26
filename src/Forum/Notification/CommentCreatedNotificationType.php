@@ -32,12 +32,17 @@ class CommentCreatedNotificationType extends AbstractEmailNotificationType
 
     public function getDescription(Notification $notification): string
     {
-        // TODO: Implement getDescription() method.
+        return '';
     }
 
     public function getImage(Notification $notification): string
     {
-        // TODO: Implement getImage() method.
+        return '';
+    }
+
+    public function getUrl(Notification $notification): string
+    {
+        return '';
     }
 
     public function getEmailTemplate(Notification $notification): string

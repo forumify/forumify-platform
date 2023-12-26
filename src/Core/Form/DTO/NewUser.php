@@ -3,7 +3,7 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Core\Form;
+namespace Forumify\Core\Form\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -17,7 +17,6 @@ class NewUser
 
     #[Assert\Length(min: 8)]
     private string $password;
-
 
     public function getUsername(): string
     {

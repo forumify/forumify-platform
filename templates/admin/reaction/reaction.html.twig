@@ -1,14 +1,14 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block title_page %}
-    {% if reaction is defined %}
+    {% if reaction is not null %}
         Reaction {{ reaction.name }}
     {% else %}
-        Create Reaction
+        {{ 'create_reaction'|trans }}
     {% endif %}
 {% endblock %}
 {% block body %}
     {% include '@Forumify/admin/components/simple_form.html.twig' with {
-        title: reaction is defined ? reaction.name : 'create_reaction'|trans,
+        title: reaction is not null ? reaction.name : 'create_reaction'|trans,
         form: form,
         cancelPath: path('forumify_admin_reaction_list')
     } only %}

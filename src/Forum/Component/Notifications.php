@@ -10,6 +10,7 @@ use Forumify\Core\Notification\NotificationTypeInterface;
 use Forumify\Core\Repository\NotificationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent('Notifications', '@Forumify/frontend/components/notifications.html.twig')]
@@ -17,19 +18,36 @@ class Notifications extends AbstractController
 {
     use DefaultActionTrait;
 
+    /** @var array<Notification>|null  */
+    private ?array $notifications = null;
+
     public function __construct(
         private readonly NotificationRepository $notificationRepository,
         private readonly NotificationTypeCollection $notificationTypeCollection
     ) {
     }
 
+    #[LiveAction]
+    public function markAsRead(): void
+    {
+        foreach ($this->getNotifications() as $notification) {
+            $notification->setSeen(true);
+        }
+        $this->notificationRepository->saveAll($this->notifications);
+    }
+
     public function getNotifications(): array
     {
-        return $this->notificationRepository->findBy(
+        if ($this->notifications !== null) {
+            return $this->notifications;
+        }
+
+        $this->notifications = $this->notificationRepository->findBy(
             ['recipient' => $this->getUser()],
             ['seen' => 'ASC', 'createdAt' => 'DESC'],
             10
         );
+        return $this->notifications;
     }
 
     public function getUnseenCount(): int
