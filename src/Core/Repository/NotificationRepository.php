@@ -31,9 +31,7 @@ class NotificationRepository extends AbstractRepository
             return null;
         }
 
-        $deserializedContext = $this->contextSerializer->deserialize($notification->getContext());
-        $notification->setContext($deserializedContext);
-
+        $this->deserializeContext($notification);
         return $notification;
     }
 
@@ -42,11 +40,16 @@ class NotificationRepository extends AbstractRepository
         /** @var array<Notification> $notifications */
         $notifications = parent::findBy($criteria, $orderBy, $limit, $offset);
         foreach ($notifications as $notification) {
-            $deserializedContext = $this->contextSerializer->deserialize($notification->getContext());
-            $notification->setContext($deserializedContext);
+            $this->deserializeContext($notification);
         }
 
         return $notifications;
+    }
+
+    private function deserializeContext(Notification $notification): void
+    {
+        $deserializedContext = $this->contextSerializer->deserialize($notification->getContext());
+        $notification->setDeserializedContext($deserializedContext);
     }
 
     public function save(object $entity, bool $flush = true): void
@@ -55,11 +58,8 @@ class NotificationRepository extends AbstractRepository
             throw new RuntimeException(self::class . ' can only be used for ' . Notification::class);
         }
 
-        $context = $entity->getContext();
-        $serializedContext = $this->contextSerializer->serialize($context);
+        $serializedContext = $this->contextSerializer->serialize($entity->getContext());
         $entity->setContext($serializedContext);
-
         parent::save($entity, $flush);
-        $entity->setContext($context);
     }
 }

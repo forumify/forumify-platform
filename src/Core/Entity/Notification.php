@@ -25,6 +25,8 @@ class Notification
     #[ORM\Column(type: 'boolean')]
     private bool $seen = false;
 
+    private ?array $deserializedContext = null;
+
     public function __construct(string $type, User $recipient, array $context = [])
     {
         $this->type = $type;
@@ -60,6 +62,16 @@ class Notification
     public function setContext(array $context): void
     {
         $this->context = $context;
+    }
+
+    public function getDeserializedContext(): ?array
+    {
+        return $this->deserializedContext;
+    }
+
+    public function setDeserializedContext(array $deserializedContext): void
+    {
+        $this->deserializedContext = $deserializedContext;
     }
 
     public function isSeen(): bool

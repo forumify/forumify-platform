@@ -72,7 +72,7 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
 
     private function getMessage(Notification $notification): ?Message
     {
-        $message = $notification->getContext()['message'] ?? null;
+        $message = $notification->getDeserializedContext()['message'] ?? null;
         if (!$message instanceof Message) {
             return null;
         }
