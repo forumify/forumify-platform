@@ -24,6 +24,9 @@ class CommentReactions
     #[LiveProp]
     public Comment $comment;
 
+    #[LiveProp(writable: true)]
+    public string $reactionSearch = '';
+
     public function __construct(
         private readonly CommentReactionRepository $commentReactionRepository,
         private readonly ReactionRepository $reactionRepository,
@@ -32,7 +35,7 @@ class CommentReactions
     }
 
     #[LiveAction]
-    public function toggleReaction(#[LiveArg] int $reactionId): void
+    public function toggleReaction(#[LiveArg] int $reactionId, #[LiveArg] bool $allowRemove = true): void
     {
         /** @var User $user */
         $user = $this->security->getUser();
@@ -48,7 +51,9 @@ class CommentReactions
         ]);
 
         if ($commentReaction !== null) {
-            $this->commentReactionRepository->remove($commentReaction);
+            if ($allowRemove) {
+                $this->commentReactionRepository->remove($commentReaction);
+            }
             return;
         }
 
@@ -56,17 +61,27 @@ class CommentReactions
         $this->commentReactionRepository->save($commentReaction);
     }
 
+    public function getReactions(): array
+    {
+        return $this->reactionRepository
+            ->createQueryBuilder('r')
+            ->where('r.name LIKE :search')
+            ->setParameter('search', '%' . $this->reactionSearch . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getGroupedReactions(): array
     {
-        $qb = $this->commentReactionRepository->createQueryBuilder('cr');
-        $qb
+        return $this->commentReactionRepository
+            ->createQueryBuilder('cr')
             ->select('r.id', 'r.name', 'r.image', 'COUNT(cr.id) AS count')
             ->join('cr.reaction', 'r')
             ->where('cr.comment = :commentId')
             ->groupBy('r.id')
-            ->setParameter('commentId', $this->comment->getId());
-
-        return $qb->getQuery()->getResult();
+            ->setParameter('commentId', $this->comment->getId())
+            ->getQuery()
+            ->getResult();
     }
 
     public function hasUserReacted(int $reactionId): bool
@@ -77,16 +92,18 @@ class CommentReactions
             return false;
         }
 
-        $qb = $this->commentReactionRepository->createQueryBuilder('cr');
-        $qb
+        $count = $this->commentReactionRepository
+            ->createQueryBuilder('cr')
             ->select('COUNT(cr.id)')
             ->where('cr.comment = :commentId')
             ->andWhere('cr.user = :userId')
             ->andWhere('cr.reaction = :reactionId')
             ->setParameter('commentId', $this->comment->getId())
             ->setParameter('userId', $user->getId())
-            ->setParameter('reactionId', $reactionId);
+            ->setParameter('reactionId', $reactionId)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-        return $qb->getQuery()->getSingleScalarResult() > 0;
+        return $count > 0;
     }
 }

@@ -10,12 +10,6 @@
                 "enabled": true,
                 "autoimport": {}
             },
-            "comment_reactions": {
-                "main": "dist/comment_reactions_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
             "markdown": {
                 "main": "dist/markdown_controller.js",
                 "fetch": "eager",
@@ -56,6 +50,7 @@
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "@symfony/ux-live-component": "file:../vendor/symfony/ux-live-component/assets"
+        "@symfony/ux-live-component": "file:../vendor/symfony/ux-live-component/assets",
+        "core-js": "^3.34.0"
     }
 }

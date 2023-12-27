@@ -19,8 +19,12 @@
                         <img width="48px" height="48px" src="{{ notificationType.image(notification) }}" alt="">
                     {% endif %}
                     <div>
-                        <p class="text-subtitle {% if not notification.seen %}text-bold{% endif %}">{{ notificationType.title(notification) }}</p>
-                        <p class="text-small">{{ notificationType.description(notification) }}</p>
+                        <p class="text-subtitle {% if not notification.seen %}text-bold{% endif %}">
+                            {{ notificationType.title(notification) }}
+                        </p>
+                        <p class="text-small">
+                            {{ notificationType.description(notification) }}
+                        </p>
                     </div>
                 </li>
             {% else %}

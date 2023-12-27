@@ -58,6 +58,10 @@
     flex-grow: 1;
 }
 
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
 @for $i from 0 to 5 {
     .w-#{$i * 25} {
         width: #{$i * 25%};

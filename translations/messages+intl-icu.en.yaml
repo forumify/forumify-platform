@@ -59,7 +59,7 @@ warning_continue: 'Are you sure you want to continue?'
 confirm: 'Confirm'
 cancel: 'Cancel'
 select_page: 'Select or create a page to start editing.'
-search_page: 'Type to search'
+search: 'Type to search'
 page_delete_warning: 'You are about to delete page "{title}".'
 save: 'Save'
 flashes:

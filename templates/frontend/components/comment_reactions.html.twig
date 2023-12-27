@@ -1,19 +1,31 @@
-<div
-    class="flex gap-1 justify-end"
-    {{ attributes.defaults(stimulus_controller('forumify/forumify-platform/comment_reactions')) }}
-    data-poll="delay(5000)|$render"
->
+<div class="flex gap-1 justify-end" {{ attributes }} data-poll="delay(30000)|$render">
     {% for reaction in this.groupedReactions %}
         <a
             class="btn-small {{ this.userReacted(reaction.id) ? 'btn-outlined-highlighted' : 'btn-outlined' }}"
             data-action="live#action"
             data-action-name="toggleReaction(reactionId={{ reaction.id }})"
         >
-            <img class="mr-1" width="16px" height="16px" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="">
+            <img class="reaction mr-1" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="">
             {{ reaction.count }}
         </a>
     {% endfor %}
-    <a class="btn-small btn-outlined btn-icon">
-        <i class="ph ph-smiley"></i>
-    </a>
+    <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+        <a class="btn-small btn-outlined btn-icon" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+            <i class="ph ph-smiley"></i>
+        </a>
+        <div class="reactions-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+            <input type="text" placeholder="{{ 'search'|trans }}" data-model="reactionSearch">
+            <div class="flex flex-wrap gap-2 mt-2">
+                {% for reaction in this.reactions %}
+                    <button
+                        class="btn-small btn-link"
+                        data-action="live#action"
+                        data-action-name="toggleReaction(reactionId={{ reaction.id }}, allowRemove=0)"
+                    >
+                        <img class="reaction" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="">
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 </div>
