@@ -40,6 +40,11 @@ class UserTable extends AbstractDoctrineTable
     protected function renderActionColumn($_, User $user): string
     {
         $editUrl = $this->urlGenerator->generate('forumify_admin_user', ['username' => $user->getUsername()]);
-        return '<a class="btn-link btn-icon btn-small" href="' . $editUrl . '"><i class="ph ph-pencil-simple-line"></i></a>';
+        $deleteUrl = $this->urlGenerator->generate('forumify_admin_user_delete', ['username' => $user->getUsername()]);
+
+        return "
+            <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>
+            <a class='btn-link btn-icon btn-small' href='$deleteUrl'><i class='ph ph-x'></i></a>
+        ";
     }
 }

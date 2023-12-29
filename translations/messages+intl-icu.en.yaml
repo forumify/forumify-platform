@@ -96,6 +96,8 @@ email_verification:
         invalid_token: 'Your verification code is invalid.'
         retry: 'Please try again using the button below.'
 users: 'Users'
+user:
+    delete_warning: 'You are about to delete "{username}".'
 roles: 'Roles'
 role: 'Role'
 create_role: 'Create role'

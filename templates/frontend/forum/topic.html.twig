@@ -54,14 +54,14 @@
         <div class="comment-list">
             {{ component('CommentList', { topic: topic }) }}
         </div>
-        {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentCreate').value) %}
+        {% if commentForm is not null %}
             <div class="box">
-                {{ form_start(form) }}
-                {{ form_widget(form) }}
+                {{ form_start(commentForm) }}
+                {{ form_widget(commentForm) }}
                 <div class="flex justify-center">
                     <button class="btn-primary" type="submit">{{ 'create_comment'|trans }}</button>
                 </div>
-                {{ form_end(form) }}
+                {{ form_end(commentForm) }}
             </div>
         {% endif %}
     </div>

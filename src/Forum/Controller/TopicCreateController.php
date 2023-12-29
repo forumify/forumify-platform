@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Controller;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Form\NewTopicType;
@@ -18,12 +17,14 @@ class TopicCreateController extends AbstractController
 {
     #[Route('/forum/{id}/topic/create', name: 'topic_create', requirements: ['forumId' => '\d+'])]
     public function __invoke(
-        Request $request,
         Forum $forum,
-        EntityManagerInterface $em,
+        Request $request,
         CreateTopicService $createTopicService,
     ): Response {
-        $this->denyAccessUnlessGranted(VoterAttribute::TopicCreate->value);
+        $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
+            'permission' => 'create_topic',
+            'entity' => $forum,
+        ]);
 
         $form = $this->createForm(NewTopicType::class);
         $form->handleRequest($request);

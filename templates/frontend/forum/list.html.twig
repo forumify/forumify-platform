@@ -22,7 +22,7 @@
                         entityId: forum.id,
                         subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
                     }) }}
-                    {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::TopicCreate').value) %}
+                    {% if can('create_topic', forum) %}
                         <div>
                             <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
                                 <i class="ph ph-chats"></i>

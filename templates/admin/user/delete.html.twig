@@ -1,8 +1,8 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block body %}
     {% include '@Forumify/admin/components/confirm.html.twig' with {
-        warningText: 'user.delete_warning'|trans({ title: forum.title }),
+        warningText: 'user.delete_warning'|trans({ username: user.username }),
         confirmPath: path('forumify_admin_user_delete', { username: user.username, confirmed: 1 }),
-        cancelPath: path('forumify_admin_user_list') })
+        cancelPath: path('forumify_admin_user_list')
     } only %}
 {% endblock %}

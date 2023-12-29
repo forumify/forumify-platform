@@ -182,7 +182,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
 
     public function getACLPermissions(): array
     {
-        return ['view', 'create_topic'];
+        return ['view', 'create_topic', 'create_comment'];
     }
 
     public function getACLParameters(): ACLParameters

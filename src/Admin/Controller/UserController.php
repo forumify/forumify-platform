@@ -49,7 +49,7 @@ class UserController extends AbstractController
     public function delete(User $user, Request $request): Response
     {
         if (!$request->get('confirmed')) {
-            return  $this->render('@Forumify/admin/user/edit.html.twig', [
+            return  $this->render('@Forumify/admin/user/delete.html.twig', [
                 'user' => $user,
             ]);
         }
