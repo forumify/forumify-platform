@@ -23,12 +23,10 @@ class ReactionTable extends AbstractDoctrineTable
     protected function buildTable(): void
     {
         $this
-            ->addColumn([
-                'name' => 'name',
+            ->addColumn('name', [
                 'field' => 'name',
             ])
-            ->addColumn([
-                'name' => 'actions',
+            ->addColumn('actions', [
                 'label' => '',
                 'searchable' => false,
                 'sortable' => false,

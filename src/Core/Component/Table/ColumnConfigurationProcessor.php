@@ -21,10 +21,6 @@ class ColumnConfigurationProcessor
         $root = $treebuilder->getRootNode();
         $root
             ->children()
-                ->scalarNode('name')
-                    ->isRequired()
-                    ->cannotBeEmpty()
-                ->end()
                 ->scalarNode('label')
                     ->defaultNull()
                 ->end()

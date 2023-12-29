@@ -23,13 +23,11 @@ class RoleTable extends AbstractDoctrineTable
     protected function buildTable(): void
     {
         $this
-            ->addColumn([
-                'name' => 'title',
+            ->addColumn('title', [
                 'field' => 'title',
                 'renderer' => [$this, 'renderTitleColumn'],
             ])
-            ->addColumn([
-                'name' => 'actions',
+            ->addColumn('actions', [
                 'label' => '',
                 'searchable' => false,
                 'sortable' => false,

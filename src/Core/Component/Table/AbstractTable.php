@@ -76,17 +76,16 @@ abstract class AbstractTable
     #[PreMount]
     public function populateSearchModel(): void
     {
-        foreach ($this->getColumns() as $column) {
+        foreach ($this->getColumns() as $name => $column) {
             if ($column['searchable']) {
-                $columnName = $column['name'];
-                $this->search[$columnName] = $this->search[$columnName] ?? '';
+                $this->search[$name] = $this->search[$name] ?? '';
             }
         }
     }
 
-    protected function addColumn(array $column): static
+    protected function addColumn(string $name, array $column): static
     {
-        $this->columns[] = $this->columnConfigurationProcessor->process($column);
+        $this->columns[$name] = $this->columnConfigurationProcessor->process($column);
         return $this;
     }
 
@@ -127,7 +126,7 @@ abstract class AbstractTable
         $rows = [];
         foreach ($data as $rowData) {
             $row = [];
-            foreach ($this->getColumns() as $column) {
+            foreach ($this->getColumns() as $name => $column) {
                 $columnData = $column['field'] !== null
                     ? $propertyAccessor->getValue($rowData, $column['field'])
                     : null;
@@ -136,7 +135,7 @@ abstract class AbstractTable
                     $columnData = $column['renderer']($columnData, $rowData);
                 }
 
-                $row[$column['name']] = $columnData;
+                $row[$name] = $columnData;
             }
             $rows[] = $row;
         }

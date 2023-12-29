@@ -2,17 +2,17 @@
     <table>
         <thead>
         <tr>
-            {% for col in this.columns %}
+            {% for colName, col in this.columns %}
                 <th>
                     <div class="flex justify-start items-center">
-                        {% set label = col.label ?? col.name|capitalize %}
+                        {% set label = col.label ?? colName|capitalize %}
                         {% if col.sortable %}
                             {{ label }}
-                            {% set sort = this.sort[col.name] ?? null %}
+                            {% set sort = this.sort[colName] ?? null %}
                             <a
                                 class="ml-1 btn-link btn-small btn-icon"
                                 data-action="live#action"
-                                data-action-name="toggleSort(column={{ col.name }})"
+                                data-action-name="toggleSort(column={{ colName }})"
                             >
                                 <i class="ph ph-{{ sort == 'ASC' ? 'arrow-up' : (sort == 'DESC' ? 'arrow-down' : 'arrows-vertical') }}"></i>
                             </a>
@@ -24,10 +24,10 @@
             {% endfor %}
         </tr>
         <tr>
-            {% for col in this.columns %}
+            {% for colName, col in this.columns %}
                 {% if col.searchable %}
                     <th>
-                        <input data-model="debounce(300)|search.{{ col.name }}">
+                        <input data-model="debounce(300)|search.{{ colName }}">
                     </th>
                 {% endif %}
             {% endfor %}
@@ -36,8 +36,8 @@
         <tbody>
         {% for row in this.result.rows %}
             <tr>
-                {% for col in row %}
-                    <td {{ loop.last ? 'class="text-right"' : '' }}>{{ col|raw }}</td>
+                {% for value in row %}
+                    <td {{ loop.last ? 'class="text-right"' : '' }}>{{ value|raw }}</td>
                 {% endfor %}
             </tr>
         {% else %}

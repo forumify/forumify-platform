@@ -23,16 +23,13 @@ class UserTable extends AbstractDoctrineTable
     protected function buildTable(): void
     {
         $this
-            ->addColumn([
-                'name' => 'username',
+            ->addColumn('username', [
                 'field' => 'username',
             ])
-            ->addColumn([
-                'name' => 'email',
+            ->addColumn('email', [
                 'field' => 'email'
             ])
-            ->addColumn([
-                'name' => 'actions',
+            ->addColumn('actions', [
                 'label' => '',
                 'searchable' => false,
                 'sortable' => false,
