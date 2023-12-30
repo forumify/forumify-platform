@@ -36,7 +36,7 @@
             "@popperjs/core": "^2.11.8"
         }
     },
-    "peerDependencies": {
+    "dependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@milkdown/core": "^7.3.0",
         "@milkdown/plugin-listener": "^7.3.0",
