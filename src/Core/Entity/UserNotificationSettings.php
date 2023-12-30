@@ -11,6 +11,7 @@ class UserNotificationSettings
 {
     #[ORM\Id]
     #[ORM\OneToOne(inversedBy: 'notificationSettings', targetEntity: User::class)]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private User $user;
 
     #[ORM\Column(type: 'boolean')]

@@ -1,0 +1,92 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ForumifyDoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+final class Version20231230203522 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return 'cascade user deletion';
+    }
+
+    public function up(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526C16FE72E1');
+        $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526CDE12AB56');
+        $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526C16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526CDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE comment_reaction DROP FOREIGN KEY FK_B99364F1813C7171');
+        $this->addSql('ALTER TABLE comment_reaction DROP FOREIGN KEY FK_B99364F1A76ED395');
+        $this->addSql('ALTER TABLE comment_reaction ADD CONSTRAINT FK_B99364F1813C7171 FOREIGN KEY (reaction_id) REFERENCES reaction (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE comment_reaction ADD CONSTRAINT FK_B99364F1A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE message DROP FOREIGN KEY FK_B6BD307F16FE72E1');
+        $this->addSql('ALTER TABLE message DROP FOREIGN KEY FK_B6BD307FDE12AB56');
+        $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307F16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307FDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE message_thread DROP FOREIGN KEY FK_607D18C16FE72E1');
+        $this->addSql('ALTER TABLE message_thread DROP FOREIGN KEY FK_607D18CDE12AB56');
+        $this->addSql('ALTER TABLE message_thread ADD CONSTRAINT FK_607D18C16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE message_thread ADD CONSTRAINT FK_607D18CDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE page DROP FOREIGN KEY FK_140AB620DE12AB56');
+        $this->addSql('ALTER TABLE page DROP FOREIGN KEY FK_140AB62016FE72E1');
+        $this->addSql('ALTER TABLE page ADD CONSTRAINT FK_140AB620DE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE page ADD CONSTRAINT FK_140AB62016FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE reaction DROP FOREIGN KEY FK_A4D707F716FE72E1');
+        $this->addSql('ALTER TABLE reaction DROP FOREIGN KEY FK_A4D707F7DE12AB56');
+        $this->addSql('ALTER TABLE reaction ADD CONSTRAINT FK_A4D707F716FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE reaction ADD CONSTRAINT FK_A4D707F7DE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE topic DROP FOREIGN KEY FK_9D40DE1B16FE72E1');
+        $this->addSql('ALTER TABLE topic DROP FOREIGN KEY FK_9D40DE1BDE12AB56');
+        $this->addSql('ALTER TABLE topic ADD CONSTRAINT FK_9D40DE1B16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE topic ADD CONSTRAINT FK_9D40DE1BDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE user DROP FOREIGN KEY FK_8D93D649DE12AB56');
+        $this->addSql('ALTER TABLE user DROP FOREIGN KEY FK_8D93D64916FE72E1');
+        $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D649DE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D64916FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE user_notification_settings DROP FOREIGN KEY FK_7051D51EA76ED395');
+        $this->addSql('ALTER TABLE user_notification_settings ADD CONSTRAINT FK_7051D51EA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON DELETE CASCADE');
+    }
+
+    public function down(Schema $schema): void
+    {
+        $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526CDE12AB56');
+        $this->addSql('ALTER TABLE comment DROP FOREIGN KEY FK_9474526C16FE72E1');
+        $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526CDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE comment ADD CONSTRAINT FK_9474526C16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE comment_reaction DROP FOREIGN KEY FK_B99364F1A76ED395');
+        $this->addSql('ALTER TABLE comment_reaction DROP FOREIGN KEY FK_B99364F1813C7171');
+        $this->addSql('ALTER TABLE comment_reaction ADD CONSTRAINT FK_B99364F1A76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE comment_reaction ADD CONSTRAINT FK_B99364F1813C7171 FOREIGN KEY (reaction_id) REFERENCES reaction (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE message DROP FOREIGN KEY FK_B6BD307FDE12AB56');
+        $this->addSql('ALTER TABLE message DROP FOREIGN KEY FK_B6BD307F16FE72E1');
+        $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307FDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE message ADD CONSTRAINT FK_B6BD307F16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE message_thread DROP FOREIGN KEY FK_607D18CDE12AB56');
+        $this->addSql('ALTER TABLE message_thread DROP FOREIGN KEY FK_607D18C16FE72E1');
+        $this->addSql('ALTER TABLE message_thread ADD CONSTRAINT FK_607D18CDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE message_thread ADD CONSTRAINT FK_607D18C16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE page DROP FOREIGN KEY FK_140AB620DE12AB56');
+        $this->addSql('ALTER TABLE page DROP FOREIGN KEY FK_140AB62016FE72E1');
+        $this->addSql('ALTER TABLE page ADD CONSTRAINT FK_140AB620DE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE page ADD CONSTRAINT FK_140AB62016FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE reaction DROP FOREIGN KEY FK_A4D707F7DE12AB56');
+        $this->addSql('ALTER TABLE reaction DROP FOREIGN KEY FK_A4D707F716FE72E1');
+        $this->addSql('ALTER TABLE reaction ADD CONSTRAINT FK_A4D707F7DE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE reaction ADD CONSTRAINT FK_A4D707F716FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE topic DROP FOREIGN KEY FK_9D40DE1BDE12AB56');
+        $this->addSql('ALTER TABLE topic DROP FOREIGN KEY FK_9D40DE1B16FE72E1');
+        $this->addSql('ALTER TABLE topic ADD CONSTRAINT FK_9D40DE1BDE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE topic ADD CONSTRAINT FK_9D40DE1B16FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE user DROP FOREIGN KEY FK_8D93D649DE12AB56');
+        $this->addSql('ALTER TABLE user DROP FOREIGN KEY FK_8D93D64916FE72E1');
+        $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D649DE12AB56 FOREIGN KEY (created_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE user ADD CONSTRAINT FK_8D93D64916FE72E1 FOREIGN KEY (updated_by) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+        $this->addSql('ALTER TABLE user_notification_settings DROP FOREIGN KEY FK_7051D51EA76ED395');
+        $this->addSql('ALTER TABLE user_notification_settings ADD CONSTRAINT FK_7051D51EA76ED395 FOREIGN KEY (user_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
+    }
+}

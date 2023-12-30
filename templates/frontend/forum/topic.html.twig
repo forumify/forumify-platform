@@ -20,9 +20,10 @@
                 <div>
                     <h2>{{ topic.title }}</h2>
                     <div class="text-small">
-                        {{ 'created_by'|trans({
-                            author: '<a href="' ~ path('forumify_forum_profile', { username: topic.createdBy.username }) ~ '">' ~ topic.createdBy.username ~ '</a>'
-                        })|raw }},
+                        {% set author %}
+                            {% include '@Forumify/components/username.html.twig' with { user: topic.createdBy } only %}
+                        {% endset %}
+                        {{ 'created_by'|trans({ author: author })|raw }},
                         {{ 'date_time_short'|trans({ date: topic.createdAt }) }}
                     </div>
                 </div>

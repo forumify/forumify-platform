@@ -1,5 +1,6 @@
 index: 'index'
 created_by: 'By {author}'
+deleted: 'Deleted'
 date_time_short: '{date, date} at {date, time, short}'
 date_short_time_short: '{date, date, short} {date, time, short}'
 post: 'Post'

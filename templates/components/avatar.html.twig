@@ -1,4 +1,6 @@
-{% set avatar = user.avatar is not empty ? user.avatar : setting('forum.default_avatar') %}
+{% set avatar = (user is not null and user.avatar is not empty) ? user.avatar : setting('forum.default_avatar') %}
 {% if avatar is not empty %}
     <img class="avatar {{ className ?? '' }}" src="{{ asset(avatar, 'forumify.avatar') }}" alt="">
+{% else %}
+    <div class="avatar">&nbsp;</div>
 {% endif %}

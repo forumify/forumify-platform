@@ -11,20 +11,20 @@ trait BlameableEntityTrait
 {
     #[Gedmo\Blameable(on: 'create')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn('created_by')]
+    #[ORM\JoinColumn('created_by', onDelete: 'SET NULL')]
     private ?User $createdBy = null;
 
     #[Gedmo\Blameable(on: 'update')]
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn('updated_by')]
+    #[ORM\JoinColumn('updated_by', onDelete: 'SET NULL')]
     private ?User $updatedBy = null;
 
-    public function getCreatedBy(): User
+    public function getCreatedBy(): ?User
     {
         return $this->createdBy;
     }
 
-    public function setCreatedBy(User $createdBy): void
+    public function setCreatedBy(?User $createdBy): void
     {
         $this->createdBy = $createdBy;
     }

@@ -6,21 +6,20 @@
                 <h4>{{ item.title }}</h4>
             </a>
             <p>
-                {{ 'created_by'|trans({
-                    author: '<a href="' ~ path('forumify_forum_profile', { username: item.createdBy.username }) ~ '">' ~ item.createdBy.username ~ '</a>'
-                })|raw }}
+                {% set author %}
+                    {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
+                {% endset %}
+                {{ 'created_by'|trans({ author: author })|raw }}
             </p>
         </div>
         {% if item.comments is not empty %}
             {% set lastComment = item.comments.last %}
             <div class="topic-row-last-comment">
                 <div class="mr-2">
-                    {% include '@Forumify/components/avatar.html.twig' with {
-                        user: lastComment.createdBy
-                    } only %}
+                    {% include '@Forumify/components/avatar.html.twig' with { user: lastComment.createdBy } only %}
                 </div>
                 <div>
-                    <a href="{{ path('forumify_forum_profile', { username: lastComment.createdBy.username }) }}">{{ lastComment.createdBy.username }}</a>
+                    {% include '@Forumify/components/username.html.twig' with { user: lastComment.createdBy } only %}
                     <p class="text-small">{{ 'date_time_short'|trans({ date: lastComment.createdAt }) }}</p>
                 </div>
             </div>

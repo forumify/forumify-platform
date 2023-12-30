@@ -5,9 +5,7 @@
         {% include '@Forumify/components/avatar.html.twig' with {user: item.createdBy } only %}
         <div>
             <div>
-                <a href="{{ path('forumify_forum_profile', { username: item.createdBy.username }) }}">
-                    {{ item.createdBy.username }}
-                </a>
+                {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
                 <span class="text-small text-secondary">
                     {{ 'date_short_time_short'|trans({ date: item.createdAt }) }}
                 </span>
@@ -20,10 +18,8 @@
     {# Desktop view #}
     <li id="comment-{{ item.id }}" class="comment">
         <div class="comment-author">
-            {% include '@Forumify/components/avatar.html.twig' with {user: item.createdBy } only %}
-            <a href="{{ path('forumify_forum_profile', { username: item.createdBy.username }) }}">
-                {{ item.createdBy.username }}
-            </a>
+            {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
+            {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
         </div>
         <div class="comment-content">
             <div class="text-small text-secondary flex justify-between items-end">

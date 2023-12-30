@@ -8,5 +8,5 @@ use Forumify\Core\Entity\User;
 
 interface SubscribableInterface extends HierarchicalInterface
 {
-    public function getCreatedBy(): User;
+    public function getCreatedBy(): ?User;
 }

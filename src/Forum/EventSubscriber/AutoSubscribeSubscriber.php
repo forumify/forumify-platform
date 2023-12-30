@@ -28,7 +28,7 @@ class AutoSubscribeSubscriber implements EventSubscriberInterface
     public function subscribeOnTopicCreated(TopicCreatedEvent $createdEvent): void
     {
         $user = $createdEvent->getTopic()->getCreatedBy();
-        if (!$user->getNotificationSettings()->isAutoSubscribeToOwnTopics()) {
+        if ($user === null || !$user->getNotificationSettings()->isAutoSubscribeToOwnTopics()) {
             return;
         }
 
@@ -48,7 +48,7 @@ class AutoSubscribeSubscriber implements EventSubscriberInterface
         }
 
         $user = $comment->getCreatedBy();
-        if (!$user->getNotificationSettings()->isAutoSubscribeToTopics()) {
+        if ($user === null || !$user->getNotificationSettings()->isAutoSubscribeToTopics()) {
             return;
         }
 

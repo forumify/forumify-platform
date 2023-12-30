@@ -49,7 +49,8 @@ class MessageService
         $this->messageRepository->save($message);
 
         foreach ($thread->getParticipants() as $participant) {
-            if ($message->getCreatedBy()->getUserIdentifier() === $participant->getUserIdentifier()) {
+            $sender = $message->getCreatedBy();
+            if ($sender === null || $sender->getUserIdentifier() === $participant->getUserIdentifier()) {
                 continue;
             }
 

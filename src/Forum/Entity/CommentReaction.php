@@ -17,9 +17,13 @@ class CommentReaction
         #[ORM\ManyToOne(Comment::class, inversedBy: 'reactions')]
         #[ORM\JoinColumn(onDelete: 'CASCADE')]
         private readonly Comment $comment,
+
         #[ORM\ManyToOne(User::class)]
+        #[ORM\JoinColumn(onDelete: 'CASCADE')]
         private readonly User $user,
+
         #[ORM\ManyToOne(Reaction::class)]
+        #[ORM\JoinColumn(onDelete: 'CASCADE')]
         private readonly Reaction $reaction
     ) {
     }
