@@ -66,7 +66,7 @@ class ACLController extends AbstractController
         }
 
         return $this->render('@Forumify/admin/acl/acl.html.twig', [
-            'form' => $form,
+            'form' => $form->createView(),
             'permissions' => $permissions,
             'roles' => $roles,
             'aclParameters' => $aclParameters,
