@@ -1,0 +1,28 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}Plugins{% endblock %}
+{% block body %}
+    <ul>
+        {% for metadata in pluginMetadatas %}
+            <div class="box flex{{ loop.last ? '' : ' mb-4' }}">
+                <div class="w-75">
+                    <div class="mb-2">
+                        <h3>{{ metadata.name }}</h3>
+                        <p>{{ metadata.description }}</p>
+                    </div>
+                    <p>
+                        {% if metadata.homepage %}
+                            <a href="{{ metadata.homepage }}" target="_blank">{{ 'created_by'|trans({ author:metadata.author }) }}</a>
+                        {% else %}
+                            {{ 'created_by'|trans({ author:metadata.author }) }}
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="w-25 flex justify-end">
+                    {% if metadata.settingsRoute %}
+                        <a class="btn-outlined btn-icon" href="{{ path(metadata.settingsRoute) }}"><i class="ph ph-wrench"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </ul>
+{% endblock %}
