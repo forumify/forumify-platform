@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Plugin\Routing;
 
-use App\Kernel;
-use Forumify\Plugin\PluginInterface;
+use Forumify\Plugin\Service\LoadedPluginService;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -16,7 +15,7 @@ class PluginRouteLoader extends Loader
 {
     private const ROUTE_LOCATION = '/config/routes.yaml';
 
-    public function __construct(private readonly Kernel $kernel)
+    public function __construct(private readonly LoadedPluginService $pluginService)
     {
         parent::__construct();
     }
@@ -30,13 +29,9 @@ class PluginRouteLoader extends Loader
     {
         $routeCollection = new RouteCollection();
 
-        foreach ($this->kernel->getBundles() as $bundle) {
-            if (!$bundle instanceof PluginInterface) {
-                continue;
-            }
-
-            if ($this->bundleHasRoutes($bundle)) {
-                $this->loadBundleRoutes($bundle, $routeCollection);
+        foreach ($this->pluginService->getLoadedPlugins() as $plugin) {
+            if ($this->bundleHasRoutes($plugin)) {
+                $this->loadBundleRoutes($plugin, $routeCollection);
             }
         }
 
