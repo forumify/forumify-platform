@@ -1,14 +1,18 @@
 {% if title is defined %}
-    <h1 class="mb-4">{{ title }}</h1>
+    {% block form_title %}
+        <h1 class="mb-4">{{ title }}</h1>
+    {% endblock %}
 {% endif %}
 <div class="box">
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <div class="flex justify-center items-center gap-2">
-        <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
-        {% if cancelPath is defined %}
-            <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
-        {% endif %}
-    </div>
-    {{ form_end(form) }}
+    {% block form %}
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="flex justify-center items-center gap-2">
+            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+            {% if cancelPath is defined %}
+                <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+            {% endif %}
+        </div>
+        {{ form_end(form) }}
+    {% endblock %}
 </div>

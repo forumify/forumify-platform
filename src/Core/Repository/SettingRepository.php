@@ -65,6 +65,15 @@ class SettingRepository extends AbstractRepository
         $this->invalidateSettingsCache();
     }
 
+    public function unset(string $key): void
+    {
+        $setting = $this->find($key);
+        if ($setting !== null) {
+            $this->remove($setting);
+            $this->invalidateSettingsCache();
+        }
+    }
+
     private function invalidateSettingsCache(): void
     {
         try {
