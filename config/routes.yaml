@@ -1,20 +1,7 @@
-core:
-  resource: ../src/Core/Controller
-  type: attribute
-  name_prefix: core_
+forumify:
+    resource: routes/forumify.yaml
+    name_prefix: forumify_
 
-admin:
-  resource: ../src/Admin/Controller
-  type: attribute
-  name_prefix: admin_
-  prefix: admin/
-
-forum:
-  resource: ../src/Forum/Controller
-  type: attribute
-  name_prefix: forum_
-
-page:
-  resource: ../src/Page/Controller
-  type: attribute
-  name_prefix: page_
+plugin_routes:
+    resource: .
+    type: forumify_plugin
