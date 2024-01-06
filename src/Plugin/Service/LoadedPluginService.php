@@ -6,24 +6,22 @@ namespace Forumify\Plugin\Service;
 
 use App\Kernel;
 use Forumify\Plugin\PluginInterface;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 class LoadedPluginService
 {
-    public function __construct(private readonly Kernel $kernel) { }
+    public function __construct(private readonly Kernel $kernel)
+    {
+    }
 
     /**
-     * @return array<PluginInterface>
+     * @return array<BundleInterface&PluginInterface>
      */
     public function getLoadedPlugins(): array
     {
-        $plugins = [];
-        foreach ($this->kernel->getBundles() as $name => $bundle) {
-            $bundleClass = $bundle->getNamespace() . '\\' . $name;
-            $bundleObj = new $bundleClass();
-            if ($bundleObj instanceof PluginInterface) {
-                $plugins[] = $bundleObj;
-            }
-        }
-        return $plugins;
+        return array_filter(
+            $this->kernel->getBundles(),
+            static fn (BundleInterface $bundle) => $bundle instanceof PluginInterface
+        );
     }
 }
