@@ -11,7 +11,7 @@ use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\EmailVerificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class EmailVerificationController extends AbstractController
 {
