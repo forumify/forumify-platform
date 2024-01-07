@@ -41,6 +41,10 @@ class ConfigurationController extends AbstractController
                 $settings['forum.default_avatar'] = $mediaService->saveToFilesystem($avatarStorage, $data['default_avatar']);
             }
 
+            $settings['core.recaptcha.enabled'] = (string)$data['enable_recaptcha'];
+            $settings['core.recaptcha.site_key'] = $data['recaptcha_site_key'];
+            $settings['core.recaptcha.site_secret'] = $data['recaptcha_site_secret'];
+
             $settingRepository->setBulk($settings);
 
             $this->addFlash('success', 'flashes.settings_saved');

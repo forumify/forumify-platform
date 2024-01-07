@@ -2,12 +2,32 @@
 {% block title %}{{ parent() }} - Register{% endblock %}
 {% block form_title %}Register{% endblock %}
 {% block form %}
-    {{ form_start(form) }}
+    {{ form_start(form, { attr: { id: 'registration-form' } }) }}
     {{ form_widget(form) }}
     <div class="flex justify-center">
-        <button class="btn-primary" type="submit">
-            <i class="ph ph-sign-in"></i>{{ 'register'|trans }}
-        </button>
+        {% if setting('core.recaptcha.enabled') %}
+            <button
+                class="btn-primary g-recaptcha"
+                data-sitekey="{{ setting('core.recaptcha.site_key') }}"
+                data-callback='onRegister'
+                data-action='register'
+            >
+                <i class="ph ph-sign-in"></i>{{ 'register'|trans }}
+            </button>
+        {% else %}
+            <button class="btn-primary" type="submit">
+                <i class="ph ph-sign-in"></i>{{ 'register'|trans }}
+            </button>
+        {% endif %}
     </div>
     {{ form_end(form) }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script type="text/javascript">
+        function onRegister() {
+            document.getElementById('registration-form').submit();
+        }
+    </script>
 {% endblock %}

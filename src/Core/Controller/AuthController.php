@@ -7,7 +7,7 @@ namespace Forumify\Core\Controller;
 use Forumify\Core\Form\RegisterType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\CreateUserService;
-use Forumify\Core\Service\EmailVerificationService;
+use Forumify\Core\Service\RecaptchaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,6 +41,7 @@ class AuthController extends AbstractController
         CreateUserService $createUserService,
         Security $security,
         SettingRepository $settingRepository,
+        RecaptchaService $recaptchaService,
     ): Response {
         if (!$settingRepository->get('core.enable_registrations')) {
             $this->addFlash('error', 'flashes.registration_disabled');
@@ -50,6 +51,15 @@ class AuthController extends AbstractController
         $form = $this->createForm(RegisterType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($settingRepository->get('core.recaptcha.enabled')) {
+                $score = $recaptchaService->verifyRequest($request);
+                if ($score < 0.8) {
+                    // most likely a bot
+                    $this->addFlash('error', 'flashes.bot_detected');
+                    return $this->redirectToRoute('forumify_core_register');
+                }
+            }
+
             $user = $createUserService->createUser($form->getData());
             $security->login($user);
             return $this->redirectToRoute('forumify_core_verify_email');

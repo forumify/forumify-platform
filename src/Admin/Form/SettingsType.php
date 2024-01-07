@@ -43,6 +43,21 @@ class SettingsType extends AbstractType
             ->add('enable_registrations', CheckboxType::class, [
                 'data' => (bool)$this->settingRepository->get('core.enable_registrations'),
                 'required' => false,
+            ])
+            ->add('enable_recaptcha', CheckboxType::class, [
+                'data' => (bool)$this->settingRepository->get('core.recaptcha.enabled'),
+                'required' => false,
+                'label' => 'Enable Google reCAPTCHA',
+                'help' => 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>',
+                'help_html' => true,
+            ])
+            ->add('recaptcha_site_key', TextType::class, [
+                'data' => $this->settingRepository->get('core.recaptcha.site_key'),
+                'label' => 'reCAPTCHA site key'
+            ])
+            ->add('recaptcha_site_secret', TextType::class, [
+                'data' => $this->settingRepository->get('core.recaptcha.site_secret'),
+                'label' => 'reCAPTCHA site secret'
             ]);
     }
 }
