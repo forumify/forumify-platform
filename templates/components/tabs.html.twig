@@ -1,0 +1,10 @@
+<div class="tablist" {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
+    <div class="tabs" role="tablist" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}>
+        {% block tabHeaders %}
+        {% endblock %}
+    </div>
+    <div {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
+        {% block tabBodies %}
+        {% endblock %}
+    </div>
+</div>

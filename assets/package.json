@@ -21,6 +21,12 @@
                 "fetch": "eager",
                 "enabled": true,
                 "autoimport": {}
+            },
+            "tabs": {
+                "main": "dist/tabs_controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {}
             }
         },
         "importmap": {
