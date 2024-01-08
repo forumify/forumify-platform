@@ -7,7 +7,9 @@
     <hr>
     <div class="content-block">
         <h1>{{ topic.title }}</h1>
-        <p>{{ topic.comments.first.content|u.truncate(400, '...', false)|markdown }}</p>
+        {% if topic.comments.first %}
+            <p>{{ topic.comments.first.content|u.truncate(400, '...', false)|markdown }}</p>
+        {% endif %}
     </div>
     <hr>
     {% include '@Forumify/emails/components/button.html.twig' with {

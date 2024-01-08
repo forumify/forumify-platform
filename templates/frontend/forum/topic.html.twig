@@ -4,10 +4,12 @@
 {% endblock %}
 {% block meta_tags %}
     {{ parent() }}
-    {% set description = topic.comments.first.content|u.truncate(200, '...', false).trim()|markdown|striptags %}
-    <meta property="description" content="{{ description }}">
-    <meta property="og:description" content="{{ description }}">
-    <meta property="twitter:description" content="{{ description }}">
+    {% if topic.comments.first %}
+        {% set description = topic.comments.first.content|u.truncate(200, '...', false).trim()|markdown|striptags %}
+        <meta property="description" content="{{ description }}">
+        <meta property="og:description" content="{{ description }}">
+        <meta property="twitter:description" content="{{ description }}">
+    {% endif %}
 {% endblock %}
 {% block body %}
     {{ component('Breadcrumbs', { entity: topic }) }}

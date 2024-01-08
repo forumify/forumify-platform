@@ -22,7 +22,12 @@ class CommentDeleteController extends AbstractController
     {
         $this->denyAccessUnlessGranted(VoterAttribute::CommentDelete->value, $comment);
 
+        $topic = $comment->getTopic();
         $this->commentRepository->remove($comment);
+
+        if ($topic->getComments()->isEmpty()) {
+            return $this->redirectToRoute('forumify_forum_topic_delete', ['slug' => $topic->getSlug()]);
+        }
 
         $this->addFlash('success', 'flashes.comment_removed');
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $comment->getTopic()->getSlug()]);

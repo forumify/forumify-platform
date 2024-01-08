@@ -24,10 +24,12 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script src="https://www.google.com/recaptcha/api.js"></script>
-    <script type="text/javascript">
-        function onRegister() {
-            document.getElementById('registration-form').submit();
-        }
-    </script>
+    {% if setting('core.recaptcha.enabled') %}
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script type="text/javascript">
+            function onRegister() {
+                document.getElementById('registration-form').submit();
+            }
+        </script>
+    {% endif %}
 {% endblock %}
