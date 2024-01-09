@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="card-body">
-                {{ forum.content|raw }}
+                {{ forum.content|raw|nl2br }}
             </div>
         </div>
     {% endif %}

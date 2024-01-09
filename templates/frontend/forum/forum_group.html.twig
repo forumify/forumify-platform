@@ -10,16 +10,12 @@
             {% for forum in visibleForums %}
                 {% set link = path('forumify_forum_forum', { slug: forum.slug }) %}
                 <li class="forum">
-                    {# TODO: Re-add #}
-                    {# <div class="forum-image"> #}
-                    {#     <img src="https://via.placeholder.com/64x64" alt="logo"> #}
-                    {# </div> #}
                     <div class="forum-content">
                         <a href="{{ link }}">
                             <h4>{{ forum.title }}</h4>
                         </a>
                         <div>
-                            <p class="mb-2">{{ forum.content|striptags }}</p>
+                            <p class="mb-2">{{ forum.content|striptags|nl2br }}</p>
                             <div class="forum-subforums">
                                 {% for subforum in forum.children|filter(subforum => can('view', subforum)) %}
                                     <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">

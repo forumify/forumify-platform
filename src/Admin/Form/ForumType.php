@@ -37,7 +37,10 @@ class ForumType extends AbstractType
 
         $builder
             ->add('title', TextType::class)
-            ->add('content', TextareaType::class)
+            ->add('content', TextareaType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
             ->add('group', EntityType::class, [
                 'class' => ForumGroup::class,
                 'choice_label' => 'title',

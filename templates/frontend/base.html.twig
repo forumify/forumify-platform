@@ -51,99 +51,103 @@
     {% endblock %}
 </head>
 <body>
-{% block header %}
-    <header class="header">
-        <div class="responsive flex">
-            <a href="{{ path('forumify_core_index') }}" class="header-logo">
-                <img src="{{ logo }}" alt="logo">
-                <span class="ml-2">{{ setting('forum.title') }}</span>
-            </a>
-            <div class="flex-grow flex flex-row items-center justify-between">
-                <nav class="header-navigation">
-                    {% include '@Forumify/frontend/components/navigation.html.twig' %}
-                </nav>
-                {% if app.user is not null %}
-                    <div class="flex flex-row">
-                        <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
-                            <a class="btn-link header-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
-                                {% include '@Forumify/components/avatar.html.twig' with {
-                                    user: app.user,
-                                } only %}
-                                <span>{{ app.user.username }}</span>
-                            </a>
-                            <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
-                                <a class="btn-link" href="{{ path('forumify_forum_profile', { username: app.user.username }) }}">
-                                    <i class="ph ph-user"></i>
-                                    Profile
-                                </a>
-                                <a class="btn-link" href="{{ path('forumify_forum_messenger') }}">
-                                    <i class="ph ph-chat-dots"></i>
-                                    Messages
-                                </a>
-                                {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
-                                    <hr>
-                                    <a class="btn-link" href="{{ path('forumify_admin_dashboard') }}" target="_blank">
-                                        <i class="ph ph-wrench"></i>
-                                        Admin
-                                    </a>
-                                {% endif %}
-                                <hr>
-                                <a class="btn-link" href="{{ path('forumify_core_settings') }}">
-                                    <i class="ph ph-faders-horizontal"></i>
-                                    Settings
-                                </a>
-                                <a class="btn-link" href="{{ path('forumify_core_logout') }}">
-                                    <i class="ph ph-sign-out"></i>
-                                    {{ 'logout'|trans }}
-                                </a>
-                            </div>
-                        </div>
-                        {{ component('Notifications') }}
-                    </div>
-                {% else %}
-                    <a class="btn-link" href="{{ path('forumify_core_login', { '_target_path': app.request.requestUri }) }}">
-                        <i class="ph ph-sign-in"></i>
-                        {{ 'login'|trans }}
+{% block base %}
+    {% block header %}
+        <header class="header">
+            <div class="responsive flex">
+                {% block header_logo %}
+                    <a href="{{ path('forumify_core_index') }}" class="header-logo">
+                        <img src="{{ logo }}" alt="logo">
+                        <span class="ml-2">{{ setting('forum.title') }}</span>
                     </a>
-                {% endif %}
-            </div>
-        </div>
-    </header>
-{% endblock %}
-{% block unverified_user_warning %}
-    {% if app.user is not null and app.user.emailVerified == false %}
-        <div class="responsive flex flex-col gap-2 mb-4">
-            <div class="alert alert-warning">
-                {{ 'email_verification.not_verified'|trans }}
-                <a class="text-underline" href="{{ path('forumify_core_verify_email') }}">{{ 'email_verification.verify'|trans }}</a>
-            </div>
-        </div>
-    {% endif %}
-{% endblock %}
-{% block flashbag %}
-    {% set flashes = app.flashes %}
-    {% if flashes is not empty %}
-        <div class="responsive flex flex-col gap-2 mb-4">
-            {% for type, messages in flashes %}
-                <div class="alert alert-{{ type }}">
-                    {% for message in messages %}
-                        <p>{{ message|trans }}</p>
-                    {% endfor %}
+                {% endblock %}
+                <div class="flex-grow flex flex-row items-center justify-between">
+                    <nav class="header-navigation">
+                        {% include '@Forumify/frontend/components/navigation.html.twig' %}
+                    </nav>
+                    {% if app.user is not null %}
+                        <div class="flex flex-row">
+                            <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+                                <a class="btn-link header-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+                                    {% include '@Forumify/components/avatar.html.twig' with {
+                                        user: app.user,
+                                    } only %}
+                                    <span>{{ app.user.username }}</span>
+                                </a>
+                                <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+                                    <a class="btn-link" href="{{ path('forumify_forum_profile', { username: app.user.username }) }}">
+                                        <i class="ph ph-user"></i>
+                                        Profile
+                                    </a>
+                                    <a class="btn-link" href="{{ path('forumify_forum_messenger') }}">
+                                        <i class="ph ph-chat-dots"></i>
+                                        Messages
+                                    </a>
+                                    {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
+                                        <hr>
+                                        <a class="btn-link" href="{{ path('forumify_admin_dashboard') }}" target="_blank">
+                                            <i class="ph ph-wrench"></i>
+                                            Admin
+                                        </a>
+                                    {% endif %}
+                                    <hr>
+                                    <a class="btn-link" href="{{ path('forumify_core_settings') }}">
+                                        <i class="ph ph-faders-horizontal"></i>
+                                        Settings
+                                    </a>
+                                    <a class="btn-link" href="{{ path('forumify_core_logout') }}">
+                                        <i class="ph ph-sign-out"></i>
+                                        {{ 'logout'|trans }}
+                                    </a>
+                                </div>
+                            </div>
+                            {{ component('Notifications') }}
+                        </div>
+                    {% else %}
+                        <a class="btn-link" href="{{ path('forumify_core_login', { '_target_path': app.request.requestUri }) }}">
+                            <i class="ph ph-sign-in"></i>
+                            {{ 'login'|trans }}
+                        </a>
+                    {% endif %}
                 </div>
-            {% endfor %}
-        </div>
-    {% endif %}
+            </div>
+        </header>
+    {% endblock %}
+    {% block unverified_user_warning %}
+        {% if app.user is not null and app.user.emailVerified == false %}
+            <div class="responsive flex flex-col gap-2 mb-4">
+                <div class="alert alert-warning">
+                    {{ 'email_verification.not_verified'|trans }}
+                    <a class="text-underline" href="{{ path('forumify_core_verify_email') }}">{{ 'email_verification.verify'|trans }}</a>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %}
+    {% block flashbag %}
+        {% set flashes = app.flashes %}
+        {% if flashes is not empty %}
+            <div class="responsive flex flex-col gap-2 mb-4">
+                {% for type, messages in flashes %}
+                    <div class="alert alert-{{ type }}">
+                        {% for message in messages %}
+                            <p>{{ message|trans }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock %}
+    {% block body_wrapper %}
+        <main class="responsive">
+            {% block body %}{% endblock %}
+        </main>
+    {% endblock %}
+    <footer class="mt-10">
+        <p class="text-small">
+            <!-- Modifying, hiding, or removing this section is forbidden. See LICENSE.md for more information. -->
+            Powered by <a href="https://forumify.net">forumify</a>
+        </p>
+    </footer>
 {% endblock %}
-{% block body_wrapper %}
-    <main class="responsive">
-        {% block body %}{% endblock %}
-    </main>
-{% endblock %}
-<footer class="mt-10">
-    <p class="text-small">
-        <!-- Modifying, hiding, or removing this section is forbidden. See LICENSE.md for more information. -->
-        Powered by <a href="https://forumify.net">forumify</a>
-    </p>
-</footer>
 </body>
 </html>
