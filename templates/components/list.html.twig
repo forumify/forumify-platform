@@ -1,6 +1,6 @@
 <div {{ attributes }}>
     {% block container %}
-        <div class="card">
+        <div class="{{ class ?? 'card' }}">
             {% block pagination_top %}
                 {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-title' } %}
             {% endblock %}

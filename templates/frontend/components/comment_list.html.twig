@@ -2,7 +2,7 @@
 {% block row %}
     {# Mobile view #}
     <li class="comment-mobile">
-        {% include '@Forumify/components/avatar.html.twig' with {user: item.createdBy } only %}
+        {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
         <div>
             <div>
                 {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}

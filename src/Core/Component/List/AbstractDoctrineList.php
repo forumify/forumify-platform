@@ -2,30 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Core\Component;
+namespace Forumify\Core\Component\List;
 
 use Doctrine\ORM\QueryBuilder;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
-use Symfony\UX\LiveComponent\Attribute\LiveArg;
-use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-abstract class AbstractList
+abstract class AbstractDoctrineList extends AbstractList
 {
-    use DefaultActionTrait;
-
-    #[LiveProp(writable: true)]
-    public int $page = 1;
-
-    #[LiveProp(writable: true)]
-    public int $size = 10;
-
-    #[LiveProp]
-    public bool $lastPageFirst = false;
-
-    #[LiveProp]
-    public bool $pageSwitched = false;
-
     private ?ListResult $result = null;
 
     abstract protected function getQueryBuilder(): QueryBuilder;
@@ -60,18 +42,5 @@ abstract class AbstractList
         );
 
         return $this->result;
-    }
-
-    #[LiveAction]
-    public function setPage(#[LiveArg] int $page): void
-    {
-        $this->pageSwitched = true;
-        $this->page = $page;
-    }
-
-    #[LiveAction]
-    public function setSize(#[LiveArg] int $size): void
-    {
-        $this->size = $size;
     }
 }

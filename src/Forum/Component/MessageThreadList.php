@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Forum\Component;
 
 use Doctrine\ORM\QueryBuilder;
-use Forumify\Core\Component\AbstractList;
+use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\MessageThread;
@@ -22,7 +22,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent(name: 'MessageThreadList', template: '@Forumify/frontend/components/message_thread_list.html.twig')]
-class MessageThreadList extends AbstractList
+class MessageThreadList extends AbstractDoctrineList
 {
     use DefaultActionTrait;
 

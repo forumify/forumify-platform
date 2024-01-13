@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Forum\Component;
 
 use Doctrine\ORM\QueryBuilder;
-use Forumify\Core\Component\AbstractList;
+use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReplyType;
@@ -22,7 +22,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent(name: 'MessageList', template: '@Forumify/frontend/components/message_list.html.twig')]
-class MessageList extends AbstractList
+class MessageList extends AbstractDoctrineList
 {
     use DefaultActionTrait;
 

@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Forumify\Forum\Component;
 
 use Doctrine\ORM\QueryBuilder;
-use Forumify\Core\Component\AbstractList;
+use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
 #[AsLiveComponent(name: 'TopicList', template: '@Forumify/frontend/components/topic_list.html.twig')]
-class TopicList extends AbstractList
+class TopicList extends AbstractDoctrineList
 {
     #[LiveProp]
     public Forum $forum;

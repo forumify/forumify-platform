@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Forumify\Forum\Component;
 
 use Doctrine\ORM\QueryBuilder;
-use Forumify\Core\Component\AbstractList;
+use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\CommentRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
 #[AsLiveComponent(name: 'CommentList', template: '@Forumify/frontend/components/comment_list.html.twig')]
-class CommentList extends AbstractList
+class CommentList extends AbstractDoctrineList
 {
     #[LiveProp]
     public Topic $topic;
