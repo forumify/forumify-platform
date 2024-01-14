@@ -36,6 +36,9 @@ class ColumnConfigurationProcessor
                 ->variableNode('renderer')
                     ->defaultNull()
                 ->end()
+                ->scalarNode('class')
+                    ->defaultNull()
+                ->end()
             ->end();
         //@formatter:on
 

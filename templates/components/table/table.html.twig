@@ -25,19 +25,21 @@
         </tr>
         <tr>
             {% for colName, col in this.columns %}
-                {% if col.searchable %}
-                    <th>
+                <th>
+                    {% if col.searchable %}
                         <input data-model="debounce(300)|search.{{ colName }}">
-                    </th>
-                {% endif %}
+                    {% endif %}
+                </th>
             {% endfor %}
         </tr>
         </thead>
         <tbody>
         {% for row in this.result.rows %}
             <tr>
-                {% for value in row %}
-                    <td {{ loop.last ? 'class="text-right"' : '' }}>{{ value|raw }}</td>
+                {% for colName, value in row %}
+                    <td class="{{ this.columns[colName].class|default(loop.last ? 'text-right' : '') }}">
+                        {{ value|raw }}
+                    </td>
                 {% endfor %}
             </tr>
         {% else %}
