@@ -5,6 +5,25 @@ date: '{date, date}'
 date_short: '{date, date, short}'
 date_time_short: '{date, date} at {date, time, short}'
 date_short_time_short: '{date, date, short} {date, time, short}'
+date_relative:
+    years: >-
+        {count, plural,
+            =0      {}
+            =1      {# year}
+            other   {# years}
+        }
+    months: >-
+        {count, plural,
+            =0      {}
+            =1      {# month}
+            other   {# months}
+        }
+    days: >-
+        {count, plural,
+            =0      {}
+            =1      {# day}
+            other   {# days}
+        }
 post: 'Post'
 create_topic: 'Post new topic'
 create_comment: 'Post comment'
@@ -111,7 +130,9 @@ role_type:
 reactions: 'Reactions'
 create_reaction: 'Create reaction'
 settings: 'Settings'
-no_entries: 'There are no records to display.'
+table:
+    no_entries: 'There are no records to display.'
+    record_count: '{offset} - {last} of {totalCount}'
 error:
     unknown: 'An unknown error occurred.'
     401: 'You need to be logged in to see this page.'

@@ -6,8 +6,19 @@ template variables:
     rows: array
 #}
 {% if totalCount > limit %}
+    {% set colspan = rows[0] is defined ? rows[0]|length : 1 %}
     <tr>
-        <td colspan="{{ rows[0] is defined ? rows[0]|length : 1 }}">
+        <td colspan="{{ colspan }}" class="text-right">
+            <span class="mr-4">
+                {% block pagination_counts %}
+                    {{ 'table.record_count'|trans({
+                        offset: (currentPage - 1) * limit + 1,
+                        last: min(currentPage * limit, totalCount),
+                        totalCount: totalCount
+                    }) }}
+                {% endblock %}
+            </span>
+
             {% set lastPage = range(1, totalCount, limit)|keys|last + 1 %}
             {% set visiblePages = ((currentPage - 3)..currentPage)|merge((currentPage + 1)..(currentPage + 3))|filter(p => p > 0 and p <= lastPage) %}
 
