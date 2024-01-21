@@ -78,6 +78,11 @@ input {
         transition: ease-in-out 150ms;
         border-color: var(--c-primary-accent);
     }
+
+    &[multiple="multiple"] {
+        padding: 0.5em 1em;
+        height: 120px;
+    }
 }
 
 textarea {
@@ -91,10 +96,6 @@ textarea {
 input[type='checkbox'] {
     height: 1rem;
     width: 1rem;
-}
-
-select {
-
 }
 
 // TODO: make file inputs look pretty

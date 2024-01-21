@@ -31,6 +31,15 @@ class SettingRepository extends AbstractRepository
         return $settings[$key] ?? '';
     }
 
+    public function getJson(string $key): mixed
+    {
+        try {
+            return json_decode($this->get($key), true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException) {
+            return [];
+        }
+    }
+
     public function getAll(): array
     {
         return $this->getSettingsFromCache();
@@ -56,10 +65,27 @@ class SettingRepository extends AbstractRepository
         }
     }
 
+    public function setJson(
+        string $key,
+        mixed $value,
+        bool $flush = true,
+        bool $refreshCache = true
+    ): void {
+        try {
+            $this->set($key, json_encode($value, JSON_THROW_ON_ERROR), $flush, $refreshCache);
+        } catch (\JsonException) {
+            $this->set($key, '', $flush, $refreshCache);
+        }
+    }
+
     public function setBulk(array $settings): void
     {
         foreach ($settings as $key => $value) {
-            $this->set($key, $value, false, false);
+            if (is_string($value)) {
+                $this->set($key, $value, false, false);
+            } else {
+                $this->setJson($key, $value, false, false);
+            }
         }
         $this->_em->flush();
         $this->invalidateSettingsCache();
