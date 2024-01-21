@@ -25,3 +25,9 @@ doctrine:
                 dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Page/Entity'
                 prefix: Forumify\Page\Entity
                 alias: ForumifyPage
+            forumify_form:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Form/Entity'
+                prefix: Forumify\Form\Entity
+                alias: ForumifyForm
