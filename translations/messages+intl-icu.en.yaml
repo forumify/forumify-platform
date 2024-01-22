@@ -88,6 +88,7 @@ flashes:
     acl_saved: 'Access control list saved.'
     account_settings_saved: 'Account settings saved.'
     comment_removed: 'Comment removed.'
+    user_removed: 'User removed.'
     forum_saved: 'Forum saved.'
     forum_removed: 'Forum removed.'
     forum_group_saved: 'Forum group saved.'

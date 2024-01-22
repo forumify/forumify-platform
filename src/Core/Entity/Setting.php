@@ -14,8 +14,8 @@ class Setting
     #[ORM\Column('`key`')]
     private readonly string $key;
 
-    #[ORM\Column(type: 'text')]
-    private string $value = '';
+    #[ORM\Column(type: 'json')]
+    private mixed $value = null;
 
     public function __construct(string $key)
     {
@@ -27,12 +27,12 @@ class Setting
         return $this->key;
     }
 
-    public function getValue(): string
+    public function getValue(): int|string|float|array|null
     {
         return $this->value;
     }
 
-    public function setValue(string $value): void
+    public function setValue(int|string|float|array|null $value): void
     {
         $this->value = $value;
     }

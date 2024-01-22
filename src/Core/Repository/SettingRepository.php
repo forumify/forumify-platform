@@ -25,21 +25,15 @@ class SettingRepository extends AbstractRepository
         return Setting::class;
     }
 
-    public function get(string $key): string
+    public function get(string $key): int|string|float|array|null
     {
         $settings = $this->getSettingsFromCache();
-        return $settings[$key] ?? '';
+        return $settings[$key] ?? null;
     }
 
-    public function getJson(string $key): mixed
-    {
-        try {
-            return json_decode($this->get($key), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException) {
-            return [];
-        }
-    }
-
+    /**
+     * @return array<string, int|string|float|array|null>
+     */
     public function getAll(): array
     {
         return $this->getSettingsFromCache();
@@ -47,7 +41,7 @@ class SettingRepository extends AbstractRepository
 
     public function set(
         string $key,
-        string $value,
+        int|string|float|array|null $value,
         bool $flush = true,
         bool $refreshCache = true
     ): void {
@@ -65,27 +59,10 @@ class SettingRepository extends AbstractRepository
         }
     }
 
-    public function setJson(
-        string $key,
-        mixed $value,
-        bool $flush = true,
-        bool $refreshCache = true
-    ): void {
-        try {
-            $this->set($key, json_encode($value, JSON_THROW_ON_ERROR), $flush, $refreshCache);
-        } catch (\JsonException) {
-            $this->set($key, '', $flush, $refreshCache);
-        }
-    }
-
     public function setBulk(array $settings): void
     {
         foreach ($settings as $key => $value) {
-            if (is_string($value)) {
-                $this->set($key, $value, false, false);
-            } else {
-                $this->setJson($key, $value, false, false);
-            }
+            $this->set($key, $value, false, false);
         }
         $this->_em->flush();
         $this->invalidateSettingsCache();
@@ -98,6 +75,31 @@ class SettingRepository extends AbstractRepository
             $this->remove($setting);
             $this->invalidateSettingsCache();
         }
+    }
+
+    public function toFormData(?string $prefix = null): array
+    {
+        $formData = [];
+        foreach ($this->getAll() as $key => $value) {
+            if ($prefix && !str_starts_with($key, $prefix)) {
+                continue;
+            }
+            $formData[str_replace('.', '__', $key)] = $value;
+        }
+        return $formData;
+    }
+
+    public function handleFormData(array $formData): void
+    {
+        $settings = [];
+        foreach ($formData as $key => $value) {
+            if ($value === null) {
+                continue;
+            }
+
+            $settings[str_replace('__', '.', $key)] = $value;
+        }
+        $this->setBulk($settings);
     }
 
     private function invalidateSettingsCache(): void
@@ -113,7 +115,7 @@ class SettingRepository extends AbstractRepository
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, int|string|float|array|null>
      */
     private function getSettingsFromCache(): array
     {
