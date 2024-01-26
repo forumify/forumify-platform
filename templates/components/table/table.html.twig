@@ -44,8 +44,8 @@
             </tr>
         {% else %}
             <tr>
-                <td>
-                    {{ 'no_entries'|trans }}
+                <td colspan="{{ this.columns|length }}">
+                    {{ 'table.no_entries'|trans }}
                 </td>
             </tr>
         {% endfor %}

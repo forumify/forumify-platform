@@ -28,6 +28,7 @@ class UserType extends AbstractType
             ->add('roleEntities', EntityType::class, [
                 'class' => Role::class,
                 'choice_label' => 'title',
+                'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
                 'query_builder' => $this->getRoleQueryBuilder(...),

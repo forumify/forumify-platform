@@ -12,7 +12,7 @@
                 {{ 'email_verification.no_email'|trans }}
             </p>
             {% if error is defined %}
-                <div class="alert alert-error mt-4">
+                <div class="alert-error mt-4">
                     <p>{{ ('email_verification.error.' ~ error)|trans }}</p>
                     <p>{{ 'email_verification.error.retry'|trans }}</p>
 
