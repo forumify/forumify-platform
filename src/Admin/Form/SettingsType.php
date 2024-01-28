@@ -48,7 +48,7 @@ class SettingsType extends AbstractType
                 'data' => (bool)$this->settingRepository->get('core.recaptcha.enabled'),
                 'required' => false,
                 'label' => 'Enable Google reCAPTCHA',
-                'help' => 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>',
+                'help' => 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>.',
                 'help_html' => true,
             ])
             ->add('recaptcha_site_key', TextType::class, [

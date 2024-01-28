@@ -1,7 +1,30 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block body %}
-    {% include '@Forumify/admin/components/simple_form.html.twig' with {
-        form: form,
-        title: 'configuration'|trans,
-    } only %}
+    <h1 class="mb-4">{{ 'configuration.title'|trans }}</h1>
+    <div class="box">
+        {{ form_start(form) }}
+        {% embed '@Forumify/components/tabs.html.twig' %}
+            {% block tabs %}
+                <button type="button" class="btn-link" data-tab-id="general">{{ 'configuration.general'|trans }}</button>
+                <button type="button" class="btn-link" data-tab-id="spam-protection">{{ 'configuration.spam_protection'|trans }}</button>
+            {% endblock %}
+            {% block tabpanels %}
+                <div id="general">
+                    {{ form_row(form.title) }}
+                    {{ form_row(form.logo) }}
+                    {{ form_row(form.default_avatar) }}
+                    {{ form_row(form.enable_registrations) }}
+                </div>
+                <div id="spam-protection">
+                    {{ form_row(form.enable_recaptcha) }}
+                    {{ form_row(form.recaptcha_site_key) }}
+                    {{ form_row(form.recaptcha_site_secret) }}
+                </div>
+            {% endblock %}
+        {% endembed %}
+        <div class="flex justify-center items-center gap-2">
+            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
