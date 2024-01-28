@@ -65,10 +65,7 @@ class ForumEditor
             return;
         }
 
-        $newPosition = $toSwap->getPosition();
-        $toSwap->setPosition($group->getPosition());
-        $group->setPosition($newPosition);
-
+        $this->swapPositions($group, $toSwap, $direction);
         $this->forumGroupRepository->saveAll([$group, $toSwap]);
     }
 
@@ -102,10 +99,22 @@ class ForumEditor
             return;
         }
 
-        $newPosition = $toSwap->getPosition();
-        $toSwap->setPosition($forum->getPosition());
-        $forum->setPosition($newPosition);
-
+        $this->swapPositions($forum, $toSwap, $direction);
         $this->forumRepository->saveAll([$forum, $toSwap]);
+    }
+
+    private function swapPositions(
+        Forum|ForumGroup $entity,
+        Forum|ForumGroup $toSwap,
+        string $direction
+    ): void {
+        $oldPosition = $entity->getPosition();
+        $newPosition = $toSwap->getPosition();
+        if ($newPosition === $oldPosition) {
+            $newPosition += $direction === 'up' ? -1 : 1;
+        }
+
+        $toSwap->setPosition($oldPosition);
+        $entity->setPosition($newPosition);
     }
 }
