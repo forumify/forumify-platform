@@ -24,6 +24,7 @@ class ForumGroup implements AccessControlledEntityInterface
     private int $position = 0;
 
     #[ORM\OneToMany(mappedBy: 'group', targetEntity: Forum::class)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $forums;
 
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'groups')]

@@ -23,6 +23,7 @@ class ForumGroupCreateController extends AbstractController
             ? $forumRepository->find($parentId)
             : null;
 
+        // TODO: use repository to get highest position instead of looping
         $siblings = $forumGroupRepository->findByParent($parent);
         $highestPosition = 0;
         foreach ($siblings as $sibling) {

@@ -15,6 +15,12 @@
         transition: ease-in-out 150ms;
     }
 
+    &:disabled,
+    &[disabled] {
+        cursor: default;
+        background-color: rgba(0, 0, 0, 0.03);
+    }
+
     i {
         margin-right: var(--spacing-2);
         font-size: 20px;

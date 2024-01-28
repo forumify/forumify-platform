@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Repository;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Forum\Entity\Forum;
-use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
-class ForumRepository extends NestedTreeRepository
+class ForumRepository extends AbstractRepository
 {
-    public function __construct(EntityManagerInterface $em)
+    public static function getEntityClass(): string
     {
-        parent::__construct($em, $em->getClassMetadata(Forum::class));
+        return Forum::class;
     }
 
     /**
@@ -20,7 +19,7 @@ class ForumRepository extends NestedTreeRepository
      */
     public function findByParent(?Forum $parent): array
     {
-        return $this->findBy(['parent' => $parent]);
+        return $this->findBy(['parent' => $parent], ['position' => 'ASC']);
     }
 
     /**
@@ -28,7 +27,7 @@ class ForumRepository extends NestedTreeRepository
      */
     public function findUngroupedByParent(?Forum $parent): array
     {
-        return $this->findBy(['parent' => $parent, 'group' => null]);
+        return $this->findBy(['parent' => $parent, 'group' => null], ['position' => 'ASC']);
     }
 
     public function save(object $entity, bool $flush = true): void

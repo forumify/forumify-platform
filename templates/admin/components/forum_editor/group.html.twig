@@ -1,0 +1,95 @@
+<div class="card">
+    <div class="card-title flex justify-between items-center">
+        <div class="flex items-center">
+            {% if group is not null and loop is defined %}
+                <div class="mr-2">
+                    <button
+                        class="btn-link btn-small btn-icon p-1"
+                        data-action="live#action"
+                        data-action-name="reorderGroup(groupId={{ group.id }}, direction=down)"
+                        {% if loop.last %}
+                            disabled
+                        {% endif %}
+                    >
+                        <i class="ph ph-arrow-down"></i>
+                    </button>
+                    <button
+                        class="btn-link btn-small btn-icon p-1"
+                        data-action="live#action"
+                        data-action-name="reorderGroup(groupId={{ group.id }}, direction=up)"
+                        {% if loop.first %}
+                            disabled
+                        {% endif %}
+                    >
+                        <i class="ph ph-arrow-up"></i>
+                    </button>
+                </div>
+            {% endif %}
+            <h4>{{ group is not null ? group.title : 'ungrouped'|trans }}</h4>
+        </div>
+        <div class="flex gap-2">
+            <a class="btn-link btn-small btn-icon" href="{{ path('forumify_admin_forum_create', {
+                parent: forum ? forum.id : null,
+                group: group is not null ? group.id : null
+            }) }}">
+                <i class="ph ph-plus"></i>
+            </a>
+            {% if group is not null %}
+                <a class="btn-link btn-small btn-icon" href="{{ path('forumify_admin_forum_group_edit', { id: group.id }) }}">
+                    <i class="ph ph-pencil-simple-line"></i>
+                </a>
+                <a class="btn-link btn-small btn-icon" href="{{ path('forumify_admin_acl', group|acl_parameters) }}">
+                    <i class="ph ph-lock-simple"></i>
+                </a>
+                <a class="btn-link btn-small btn-icon" href="{{ path('forumify_admin_forum_group_delete', { id: group.id }) }}">
+                    <i class="ph ph-x"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="flex flex-col gap-2">
+            {% for childForum in children %}
+                <div class="flex flex-row justify-between items-center">
+                    <div class="flex items-center">
+                        <div class="mr-2">
+                            <button
+                                class="btn-link btn-small btn-icon p-1"
+                                data-action="live#action"
+                                data-action-name="reorderForum(forumId={{ childForum.id }}, direction=down)"
+                                {% if loop.last %}
+                                    disabled
+                                {% endif %}
+                            >
+                                <i class="ph ph-arrow-down"></i>
+                            </button>
+                            <button
+                                class="btn-link btn-small btn-icon p-1"
+                                data-action="live#action"
+                                data-action-name="reorderForum(forumId={{ childForum.id }}, direction=up)"
+                                {% if loop.first %}
+                                    disabled
+                                {% endif %}
+                            >
+                                <i class="ph ph-arrow-up"></i>
+                            </button>
+                        </div>
+                        <a href="{{ path('forumify_admin_forum', { slug: childForum.slug }) }}">
+                            {{ childForum.title }}
+                        </a>
+                    </div>
+                    <div>
+                        <a class="btn-link btn-small btn-icon" href="{{ path('forumify_admin_acl', childForum|acl_parameters) }}">
+                            <i class="ph ph-lock-simple"></i>
+                        </a>
+                        <a class="btn-link btn-small btn-icon" href="{{ path('forumify_admin_forum_delete', { slug: childForum.slug }) }}">
+                            <i class="ph ph-x"></i>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                {{ 'empty_group'|trans }}
+            {% endfor %}
+        </div>
+    </div>
+</div>

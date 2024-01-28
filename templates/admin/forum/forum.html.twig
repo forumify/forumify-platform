@@ -21,23 +21,7 @@
         </div>
     {% endif %}
 
-    <div class="flex flex-col gap-4">
-        {% for group in groups %}
-            {% include '@Forumify/admin/forum/parts/group.html.twig' with {
-                group: group,
-                forum: forum,
-                children: group.forums
-            } only %}
-        {% endfor %}
-    </div>
-
-    <div class="mt-4">
-        {% include '@Forumify/admin/forum/parts/group.html.twig' with {
-            group: null,
-            forum: forum,
-            children: ungroupedForums
-        } only %}
-    </div>
+    {{ component('ForumEditor', { forum: forum }) }}
 
     <div class="box mt-4">
         <a href="{{ path('forumify_admin_forum_group_create', { parent: forum ? forum.id : null }) }}">

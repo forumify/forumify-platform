@@ -8,11 +8,12 @@ use Doctrine\ORM\EntityManagerInterface;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Repository\CommentRepository;
+use Forumify\Forum\Repository\ForumRepository;
 
 class ReindexLastActivityService
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly ForumRepository $forumRepository,
         private readonly CommentRepository $commentRepository,
     ) {
     }
@@ -24,16 +25,14 @@ class ReindexLastActivityService
      */
     public function reindexAll(): void
     {
-        $forumRepository = $this->em->getRepository(Forum::class);
-        $rootForums = $forumRepository->getRootNodes();
+        $rootForums = $this->forumRepository->findBy(['parent' => null]);
 
         /** @var Forum $rootForum */
         foreach ($rootForums as $rootForum) {
             $this->reindexChildren($rootForum);
-            $this->em->persist($rootForum);
         }
 
-        $this->em->flush();
+        $this->forumRepository->saveAll($rootForums);
     }
 
     private function reindexChildren(Forum $forum): void
@@ -56,6 +55,7 @@ class ReindexLastActivityService
                 $lastForumComment = $lastChildForumComment;
             }
         }
+
         $forum->setLastComment($lastForumComment);
     }
 
@@ -69,7 +69,6 @@ class ReindexLastActivityService
             }
 
             $topic->setLastComment($lastComment);
-            $this->em->persist($topic);
 
             if ($lastForumComment === null || $lastForumComment->getCreatedAt() < $lastComment->getCreatedAt()) {
                 $lastForumComment = $lastComment;

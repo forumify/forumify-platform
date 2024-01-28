@@ -14,7 +14,6 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Forum\Repository\ForumRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-#[Gedmo\Tree(type: 'nested')]
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 class Forum implements HierarchicalInterface, AccessControlledEntityInterface
 {
@@ -30,39 +29,25 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     #[ORM\Column(type: 'text')]
     private string $content = '';
 
-    #[Gedmo\TreeLeft]
-    #[ORM\Column(name: 'lft', type: 'integer')]
-    private int $lft;
-
-    #[Gedmo\TreeLevel]
-    #[ORM\Column(name: 'lvl', type: 'integer')]
-    private int $lvl;
-
-    #[Gedmo\TreeRight]
-    #[ORM\Column(name: 'rgt', type: 'integer')]
-    private int $rgt;
-
-    #[Gedmo\TreeRoot]
-    #[ORM\ManyToOne(targetEntity: Forum::class)]
-    #[ORM\JoinColumn(name: 'root', onDelete: 'CASCADE')]
-    private ?Forum $root = null;
-
-    #[Gedmo\TreeParent]
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent', onDelete: 'CASCADE')]
     private ?Forum $parent = null;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Forum::class, cascade: ['remove'])]
-    #[ORM\OrderBy(['lft' => 'ASC'])]
+    #[ORM\Column(type: 'integer')]
+    private int $position = 0;
+
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Forum::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $children;
 
-    #[ORM\OneToMany(mappedBy: 'forum', targetEntity: Topic::class, cascade: ['remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'forum', targetEntity: Topic::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $topics;
 
     #[ORM\ManyToOne(targetEntity: ForumGroup::class, inversedBy: 'forums')]
     private ?ForumGroup $group = null;
 
     #[ORM\OneToMany(mappedBy: 'parentForum', targetEntity: ForumGroup::class)]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $groups;
 
     #[ORM\ManyToOne(targetEntity: Comment::class)]
@@ -105,11 +90,6 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
         $this->content = $content;
     }
 
-    public function getRoot(): ?self
-    {
-        return $this->root;
-    }
-
     public function getParent(): ?self
     {
         return $this->parent;
@@ -118,6 +98,16 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     public function setParent(?self $parent): void
     {
         $this->parent = $parent;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): void
+    {
+        $this->position = $position;
     }
 
     /**

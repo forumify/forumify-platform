@@ -1,0 +1,16 @@
+<div {{ attributes }}>
+    <div class="flex flex-col gap-4">
+        {% for group in this.groups %}
+            {% include '@Forumify/admin/components/forum_editor/group.html.twig' with {
+                children: group.forums,
+            } %}
+        {% endfor %}
+    </div>
+
+    <div class="mt-4">
+        {% include '@Forumify/admin/components/forum_editor/group.html.twig' with {
+            group: null,
+            children: this.ungroupedForums
+        } %}
+    </div>
+</div>

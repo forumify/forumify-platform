@@ -39,14 +39,9 @@ class ForumController extends AbstractController
             }
         }
 
-        $groups = $forumGroupRepository->findByParent($forum);
-        $ungroupedForums = $forumRepository->findUngroupedByParent($forum);
-
         return $this->render('@Forumify/admin/forum/forum.html.twig', [
             'form' => $form?->createView(),
             'forum' => $forum,
-            'groups' => $groups,
-            'ungroupedForums' => $ungroupedForums
         ]);
     }
 }
