@@ -53,11 +53,13 @@ class SettingsType extends AbstractType
             ])
             ->add('recaptcha_site_key', TextType::class, [
                 'data' => $this->settingRepository->get('core.recaptcha.site_key'),
-                'label' => 'reCAPTCHA site key'
+                'label' => 'reCAPTCHA site key',
+                'required' => false,
             ])
             ->add('recaptcha_site_secret', TextType::class, [
                 'data' => $this->settingRepository->get('core.recaptcha.site_secret'),
-                'label' => 'reCAPTCHA site secret'
+                'label' => 'reCAPTCHA site secret',
+                'required' => false,
             ]);
     }
 }
