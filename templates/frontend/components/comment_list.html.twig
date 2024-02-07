@@ -1,21 +1,5 @@
 {% extends '@Forumify/components/list.html.twig' %}
 {% block row %}
-    {# Mobile view #}
-    <li class="comment-mobile">
-        {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
-        <div>
-            <div>
-                {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
-                <span class="text-small text-secondary">
-                    {{ 'date_short_time_short'|trans({ date: item.createdAt }) }}
-                </span>
-            </div>
-            {% include '@Forumify/components/markdown.html.twig' with { content: item.content } only %}
-            {{ component('CommentReactions', { comment: item }) }}
-        </div>
-    </li>
-
-    {# Desktop view #}
     <li id="comment-{{ item.id }}" class="comment">
         <div class="comment-author">
             {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}

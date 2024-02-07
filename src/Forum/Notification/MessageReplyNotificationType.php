@@ -9,7 +9,6 @@ use Forumify\Core\Notification\AbstractEmailNotificationType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Forum\Entity\Message;
 use Symfony\Component\Asset\Packages;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -24,9 +23,7 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
         private readonly Packages $packages,
         private readonly SettingRepository $settingRepository,
         private readonly UrlGeneratorInterface $urlGenerator,
-        MailerInterface $mailer
     ) {
-        parent::__construct($mailer);
     }
 
     public function getType(): string

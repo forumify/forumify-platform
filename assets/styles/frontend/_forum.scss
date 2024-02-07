@@ -111,13 +111,9 @@
 }
 
 .comment {
-    display: none;
+    display: flex;
     padding: var(--spacing-4) 0;
     min-height: 120px;
-
-    @include min-width-md {
-        display: flex;
-    }
 
     .comment-author {
         display: flex;
@@ -148,17 +144,6 @@
         .comment-toolbar {
             opacity: 1;
         }
-    }
-}
-
-.comment-mobile {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-2);
-    padding: var(--spacing-2) 0;
-
-    @include min-width-md {
-        display: none;
     }
 }
 

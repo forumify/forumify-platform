@@ -9,11 +9,16 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractEmailNotificationType implements NotificationTypeInterface
 {
-    public function __construct(protected readonly MailerInterface $mailer)
+    protected readonly MailerInterface $mailer;
+
+    #[Required]
+    public function setMailer(MailerInterface $mailer): void
     {
+        $this->mailer = $mailer;
     }
 
     protected function shouldSendEmail(Notification $notification): bool
