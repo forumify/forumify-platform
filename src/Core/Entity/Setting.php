@@ -27,12 +27,12 @@ class Setting
         return $this->key;
     }
 
-    public function getValue(): int|string|float|array|null
+    public function getValue(): mixed
     {
         return $this->value;
     }
 
-    public function setValue(int|string|float|array|null $value): void
+    public function setValue(mixed $value): void
     {
         $this->value = $value;
     }
