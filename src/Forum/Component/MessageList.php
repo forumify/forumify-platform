@@ -80,7 +80,7 @@ class MessageList extends AbstractDoctrineList
             return $this->replyForm;
         }
 
-        $action = $this->urlGenerator->generate('forumify_forum_messenger_reply', ['id' => $this->getThread()->getId()]);
+        $action = $this->urlGenerator->generate('forumify_forum_messenger_reply', ['id' => $this->getThread()?->getId()]);
         $this->replyForm = $this->formFactory
             ->createBuilder(MessageReplyType::class, null, ['thread' => $this->getThread()])
             ->setAction($action)

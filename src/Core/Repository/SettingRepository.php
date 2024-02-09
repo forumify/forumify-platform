@@ -25,14 +25,14 @@ class SettingRepository extends AbstractRepository
         return Setting::class;
     }
 
-    public function get(string $key): int|string|float|array|null
+    public function get(string $key): mixed
     {
         $settings = $this->getSettingsFromCache();
         return $settings[$key] ?? null;
     }
 
     /**
-     * @return array<string, int|string|float|array|null>
+     * @return array<string, mixed>
      */
     public function getAll(): array
     {
@@ -41,7 +41,7 @@ class SettingRepository extends AbstractRepository
 
     public function set(
         string $key,
-        int|string|float|array|null $value,
+        mixed $value,
         bool $flush = true,
         bool $refreshCache = true
     ): void {
@@ -115,7 +115,7 @@ class SettingRepository extends AbstractRepository
     }
 
     /**
-     * @return array<string, int|string|float|array|null>
+     * @return array<string, mixed>
      */
     private function getSettingsFromCache(): array
     {
