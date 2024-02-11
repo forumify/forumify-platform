@@ -1,63 +1,73 @@
 <div {{ attributes }}>
-    <table>
-        <thead>
-        <tr>
-            {% for colName, col in this.columns %}
-                <th>
-                    <div class="flex justify-start items-center">
-                        {% set label = col.label ?? colName|capitalize %}
-                        {% if col.sortable %}
-                            {{ label }}
-                            {% set sort = this.sort[colName] ?? null %}
-                            <a
-                                class="ml-1 btn-link btn-small btn-icon"
-                                data-action="live#action"
-                                data-action-name="toggleSort(column={{ colName }})"
-                            >
-                                <i class="ph ph-{{ sort == 'ASC' ? 'arrow-up' : (sort == 'DESC' ? 'arrow-down' : 'arrows-vertical') }}"></i>
-                            </a>
-                        {% else %}
-                            {{ label }}
-                        {% endif %}
-                    </div>
-                </th>
-            {% endfor %}
-        </tr>
-        <tr>
-            {% for colName, col in this.columns %}
-                <th>
-                    {% if col.searchable %}
-                        <input data-model="debounce(300)|search.{{ colName }}">
-                    {% endif %}
-                </th>
-            {% endfor %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for row in this.result.rows %}
-            <tr>
-                {% for colName, value in row %}
-                    <td class="{{ this.columns[colName].class|default(loop.last ? 'text-right' : '') }}">
-                        {{ value|raw }}
-                    </td>
-                {% endfor %}
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="{{ this.columns|length }}">
-                    {{ 'table.no_entries'|trans }}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-        <tfoot>
-        {% include '@Forumify/components/table/pagination.html.twig' with {
-            rows: this.result.rows,
-            totalCount: this.result.totalCount,
-            limit: this.limit,
-            currentPage: this.page
-        } only %}
-        </tfoot>
-    </table>
+    {% block table_wrapper %}
+        <table>
+            {% block table %}
+                <thead>
+                {% block table_head %}
+                    <tr>
+                        {% for colName, col in this.columns %}
+                            <th>
+                                <div class="flex justify-start items-center">
+                                    {% set label = col.label ?? colName|capitalize %}
+                                    {% if col.sortable %}
+                                        {{ label }}
+                                        {% set sort = this.sort[colName] ?? null %}
+                                        <a
+                                            class="ml-1 btn-link btn-small btn-icon"
+                                            data-action="live#action"
+                                            data-action-name="toggleSort(column={{ colName }})"
+                                        >
+                                            <i class="ph ph-{{ sort == 'ASC' ? 'arrow-up' : (sort == 'DESC' ? 'arrow-down' : 'arrows-vertical') }}"></i>
+                                        </a>
+                                    {% else %}
+                                        {{ label }}
+                                    {% endif %}
+                                </div>
+                            </th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% for colName, col in this.columns %}
+                            <th>
+                                {% if col.searchable %}
+                                    <input data-model="debounce(300)|search.{{ colName }}">
+                                {% endif %}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                {% endblock %}
+                </thead>
+                <tbody>
+                {% block table_body %}
+                    {% for row in this.result.rows %}
+                        <tr>
+                            {% for colName, value in row %}
+                                <td class="{{ this.columns[colName].class|default(loop.last ? 'text-right' : '') }}">
+                                    {{ value|raw }}
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="{{ this.columns|length }}">
+                                {{ 'table.no_entries'|trans }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endblock %}
+                </tbody>
+                <tfoot>
+                {% block table_footer %}
+                    {% include '@Forumify/components/table/pagination.html.twig' with {
+                        rows: this.result.rows,
+                        totalCount: this.result.totalCount,
+                        limit: this.limit,
+                        currentPage: this.page
+                    } only %}
+                {% endblock %}
+                </tfoot>
+            {% endblock %}
+        </table>
+    {% endblock %}
 </div>
 
