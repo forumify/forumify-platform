@@ -14,7 +14,7 @@ class Setting
     #[ORM\Column('`key`')]
     private readonly string $key;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: 'json', nullable: true)]
     private mixed $value = null;
 
     public function __construct(string $key)
