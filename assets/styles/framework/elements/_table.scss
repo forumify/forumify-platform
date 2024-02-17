@@ -48,3 +48,17 @@ tfoot {
     padding: var(--spacing-1) var(--spacing-2);
     background-color: var(--border-color);
 }
+
+.table-wrapper {
+    position: relative;
+}
+
+.table-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.2);
+}

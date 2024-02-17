@@ -14,6 +14,9 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 abstract class AbstractTable
 {
+    public const SORT_ASC = 'ASC';
+    public const SORT_DESC = 'DESC';
+
     use DefaultActionTrait;
 
     #[LiveProp(writable: true)]
@@ -67,9 +70,9 @@ abstract class AbstractTable
         }
 
         $this->sort[$column] = match ($this->sort[$column] ?? null) {
-            null => 'ASC',
-            'ASC' => 'DESC',
-            'DESC' => null,
+            null => self::SORT_ASC,
+            self::SORT_ASC => self::SORT_DESC,
+            self::SORT_DESC => null,
         };
     }
 

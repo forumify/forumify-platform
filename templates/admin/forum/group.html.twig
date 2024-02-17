@@ -3,6 +3,6 @@
     {% include '@Forumify/admin/components/simple_form.html.twig' with {
         title: group is defined ? 'edit_forum_group'|trans : 'create_forum_group'|trans,
         form: form,
-        cancelPath: path('forumify_admin_forum', parent is not null ? { slug: parent.slug } : {})
+        cancelPath: path('forumify_admin_forum', parent is defined and parent is not null ? { slug: parent.slug } : {})
     } only %}
 {% endblock %}
