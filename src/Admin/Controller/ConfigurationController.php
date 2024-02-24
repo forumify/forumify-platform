@@ -48,6 +48,7 @@ class ConfigurationController extends AbstractController
             $settingRepository->setBulk($settings);
 
             $this->addFlash('success', 'flashes.settings_saved');
+            return $this->redirectToRoute('forumify_admin_configuration');
         }
 
         return $this->render('@Forumify/admin/configuration/configuration.html.twig', [

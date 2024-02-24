@@ -41,6 +41,7 @@ class AccountSettingsController extends AbstractController
 
             $userRepository->save($user);
             $this->addFlash('success', 'flashes.account_settings_saved');
+            return $this->redirectToRoute('forumify_core_settings');
         }
 
         return $this->render('@Forumify/frontend/settings/settings.html.twig', [

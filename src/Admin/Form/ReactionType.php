@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Admin\Form;
 
 use Forumify\Forum\Entity\Reaction;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,7 +14,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ReactionType extends AbstractType
 {
-    public function configureOptions(OptionsResolver $resolver):void
+    public function __construct(private readonly Packages $packages)
+    {
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Reaction::class,
@@ -23,12 +28,20 @@ class ReactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $imagePreview = $options['data']?->getImage();
+
         $builder
             ->add('name')
             ->add('newImage', FileType::class, [
                 'mapped' => false,
+                'label' => 'Image',
                 'required' => $options['image_required'],
                 'help' => 'Recommended size is 64x64.',
+                'attr' => [
+                    'preview' => $imagePreview
+                        ? $this->packages->getUrl($imagePreview, 'forumify.asset')
+                        : null,
+                ],
                 'constraints' => [
                     new Assert\Image(
                         maxSize: '10M',
