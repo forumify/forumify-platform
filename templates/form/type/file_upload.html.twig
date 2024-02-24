@@ -1,0 +1,12 @@
+<div class="file-upload p-4 flex gap-4" {{ stimulus_controller('forumify/forumify-platform/file_upload') }} draggable="true">
+    <div class="flex items-center p-2 preview">
+        {% set preview = attr.preview is defined and attr.preview ? attr.preview : '' %}
+        <img src="{{ preview }}" alt="preview" {% if not preview %}class="d-none"{% endif %}>
+        {% if not preview %}
+            <i class="ph ph-file-dashed preview-missing"></i>
+        {% endif %}
+    </div>
+    <div class="flex items-center">{{ 'file_upload.drop_text'|trans }}</div>
+    <div class="dropzone" draggable="true"></div>
+    <input class="d-none" type="file" id="{{ id }}" name="{{ full_name }}">
+</div>

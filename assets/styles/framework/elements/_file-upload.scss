@@ -5,10 +5,21 @@
     background-color: var(--c-elevation-0);
     cursor: pointer;
     transition: border-color 200ms;
+    position: relative;
 
+    &.drag,
     &:hover {
         border: dashed 6px var(--c-primary-accent);
         transition: border-color 200ms;
+    }
+
+    .dropzone {
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
     }
 
     i {

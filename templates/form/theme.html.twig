@@ -43,7 +43,7 @@
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {%- if type == 'file' -%}
-        {% include '@Forumify/form/type/file.html.twig' %}
+        {% include '@Forumify/form/type/file_upload.html.twig' %}
     {%- else -%}
         {{ parent() }}
     {%- endif -%}
