@@ -1,5 +1,4 @@
 table {
-    @include box-shadow;
     width: 100%;
     border-collapse: collapse;
     background-color: var(--c-elevation-1);
@@ -50,6 +49,7 @@ tfoot {
 }
 
 .table-wrapper {
+    @include box-shadow;
     position: relative;
 }
 
