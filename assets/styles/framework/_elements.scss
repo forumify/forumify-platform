@@ -77,6 +77,10 @@ input {
     &:focus {
         transition: ease-in-out 150ms;
         border-color: var(--c-primary-accent);
+
+        &:disabled {
+            border-color: var(--border-color);
+        }
     }
 
     &[multiple="multiple"] {
@@ -194,3 +198,4 @@ input[type='file'] {
 @import 'elements/markdown';
 @import 'elements/markdown-editor';
 @import 'elements/alert';
+@import 'elements/file-upload';

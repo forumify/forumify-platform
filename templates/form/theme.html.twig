@@ -39,3 +39,12 @@
 {% block markdown_row %}
     {% include '@Forumify/form/type/markdown.html.twig' %}
 {% endblock %}
+
+{%- block form_widget_simple -%}
+    {%- set type = type|default('text') -%}
+    {%- if type == 'file' -%}
+        {% include '@Forumify/form/type/file.html.twig' %}
+    {%- else -%}
+        {{ parent() }}
+    {%- endif -%}
+{%- endblock form_widget_simple -%}

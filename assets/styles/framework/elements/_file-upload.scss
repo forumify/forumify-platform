@@ -1,0 +1,35 @@
+.file-upload {
+    border: dashed 6px var(--border-color);
+    border-radius: 16px;
+    width: 100%;
+    background-color: var(--c-elevation-0);
+    cursor: pointer;
+    transition: border-color 200ms;
+
+    &:hover {
+        border: dashed 6px var(--c-primary-accent);
+        transition: border-color 200ms;
+    }
+
+    i {
+        font-size: 25px;
+    }
+
+    .preview {
+        width: 80px;
+        height: 80px;
+        background-color: var(--c-elevation-1);
+        border-radius: 8px;
+
+        img {
+            width: 100%;
+            height: auto;
+            max-height: 100%;
+        }
+    }
+
+    .preview-missing {
+        font-size: 60px;
+        color: var(--border-color);
+    }
+}

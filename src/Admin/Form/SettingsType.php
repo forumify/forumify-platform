@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Admin\Form;
 
 use Forumify\Core\Repository\SettingRepository;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -14,8 +15,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class SettingsType extends AbstractType
 {
-    public function __construct(private readonly SettingRepository $settingRepository)
-    {
+    public function __construct(
+        private readonly SettingRepository $settingRepository,
+        private readonly Packages $packages,
+    ) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -26,6 +29,11 @@ class SettingsType extends AbstractType
             ])
             ->add('logo', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'preview' => ($logo = $this->settingRepository->get('forum.logo'))
+                        ? $this->packages->getUrl($logo, 'forumify.asset')
+                        : null,
+                ],
                 'constraints' => [
                     new Assert\Image(
                         maxSize: '10M',
@@ -34,6 +42,11 @@ class SettingsType extends AbstractType
             ])
             ->add('default_avatar', FileType::class, [
                 'required' => false,
+                'attr' => [
+                    'preview' => ($avatar = $this->settingRepository->get('forum.default_avatar'))
+                        ? $this->packages->getUrl($avatar, 'forumify.avatar')
+                        : null,
+                ],
                 'constraints' => [
                     new Assert\Image(
                         maxSize: '10M',
