@@ -123,6 +123,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             : new ArrayCollection($roles);
     }
 
+    public function addRoleEntity(Role $role): void
+    {
+        $this->roles->add($role);
+    }
+
     public function getPassword(): string
     {
         return $this->password;
