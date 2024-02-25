@@ -7,9 +7,9 @@ namespace Forumify\Core\Twig\Extension;
 use Forumify\Admin\MenuBuilder\AdminMenuManager;
 use Forumify\Forum\MenuBuilder\ForumMenuManager;
 use Twig\Extension\AbstractExtension;
-use Twig\Extension\GlobalsInterface;
+use Twig\TwigFunction;
 
-class MenuExtension extends AbstractExtension implements GlobalsInterface
+class MenuExtension extends AbstractExtension
 {
     public function __construct(
         private readonly ForumMenuManager $forumMenuManager,
@@ -17,11 +17,11 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
     ) {
     }
 
-    public function getGlobals(): array
+    public function getFunctions(): array
     {
         return [
-            'forum_menu' => $this->forumMenuManager->getMenu(),
-            'admin_menu' => $this->adminMenuManager->getMenu(),
+            new TwigFunction('forum_menu', $this->forumMenuManager->getMenu(...)),
+            new TwigFunction('admin_menu', $this->adminMenuManager->getMenu(...)),
         ];
     }
 }

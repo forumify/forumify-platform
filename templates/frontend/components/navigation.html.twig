@@ -1,4 +1,4 @@
-{% set menuItems = menu is defined ? menu.entries : forum_menu.entries %}
+{% set menuItems = menu is defined ? menu.entries : forum_menu().entries %}
 {% for menuItem in menuItems %}
     {% if menuItem is instanceof('Forumify\\Core\\MenuBuilder\\MenuItem') %}
         <a class="btn-link" href="{{ menuItem.location }}">{{ menuItem.label }}</a>
