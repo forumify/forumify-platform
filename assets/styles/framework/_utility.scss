@@ -68,7 +68,7 @@
     }
 }
 
-@for $i from 1 to 12 {
+@for $i from 0 to 13 {
     .m-#{$i} {
         margin: var(--spacing-#{$i});
     }

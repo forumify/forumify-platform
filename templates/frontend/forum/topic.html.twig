@@ -20,7 +20,7 @@
                     user: topic.createdBy
                 } only %}
                 <div>
-                    <h2>{{ topic.title }}</h2>
+                    <h2 class="mb-0">{{ topic.title }}</h2>
                     <div class="text-small">
                         {% set author %}
                             {% include '@Forumify/components/username.html.twig' with { user: topic.createdBy } only %}
@@ -35,7 +35,7 @@
                     entityId: topic.id,
                     subscriptionType: constant('Forumify\\Forum\\Notification\\CommentCreatedNotificationType::TYPE')
                 }) }}
-                {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
+                {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Moderator').value) %}
                     <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
                         <a class="btn-outlined btn-icon" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
                             <i class="ph ph-wrench"></i>
@@ -43,11 +43,38 @@
                         <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
                             <a class="btn-link" href="{{ path('forumify_forum_topic_edit', { slug: topic.slug }) }}">
                                 <i class="ph ph-pencil-simple-line"></i>
-                                Edit
+                                {{ 'forum.topic.actions.edit'|trans }}
+                            </a>
+                            <a class="btn-link" href="{{ path('forumify_forum_topic_pin', { slug: topic.slug }) }}">
+                                {% if not topic.pinned %}
+                                    <i class="ph ph-push-pin"></i>
+                                    {{ 'forum.topic.actions.pin'|trans }}
+                                {% else %}
+                                    <i class="ph ph-push-pin-slash"></i>
+                                    {{ 'forum.topic.actions.unpin'|trans }}
+                                {% endif %}
+                            </a>
+                            <a class="btn-link" href="{{ path('forumify_forum_topic_lock', { slug: topic.slug }) }}">
+                                {% if not topic.locked %}
+                                    <i class="ph ph-lock"></i>
+                                    {{ 'forum.topic.actions.lock'|trans }}
+                                {% else %}
+                                    <i class="ph ph-lock-open"></i>
+                                    {{ 'forum.topic.actions.unlock'|trans }}
+                                {% endif %}
+                            </a>
+                            <a class="btn-link" href="{{ path('forumify_forum_topic_hide', { slug: topic.slug }) }}">
+                                {% if not topic.hidden %}
+                                    <i class="ph ph-eye-slash"></i>
+                                    {{ 'forum.topic.actions.hide'|trans }}
+                                {% else %}
+                                    <i class="ph ph-eye"></i>
+                                    {{ 'forum.topic.actions.reveal'|trans }}
+                                {% endif %}
                             </a>
                             <a class="btn-link" href="{{ path('forumify_forum_topic_delete', { slug: topic.slug }) }}">
                                 <i class="ph ph-x"></i>
-                                Delete
+                                {{ 'forum.topic.actions.delete'|trans }}
                             </a>
                         </div>
                     </div>
@@ -59,6 +86,9 @@
         </div>
         {% if commentForm is not null %}
             <div class="box">
+                {% if topic.locked %}
+                    <div class="alert-warning mb-2">{{ 'forum.topic.locked_moderator'|trans }}</div>
+                {% endif %}
                 {{ form_start(commentForm) }}
                 {{ form_widget(commentForm) }}
                 <div class="flex justify-center">

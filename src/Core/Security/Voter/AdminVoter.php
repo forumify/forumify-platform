@@ -18,7 +18,7 @@ class AdminVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $token->getUser();
         if ($user === null) {
             return false;

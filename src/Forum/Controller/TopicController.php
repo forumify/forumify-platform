@@ -7,36 +7,46 @@ namespace Forumify\Forum\Controller;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\CommentType;
+use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[Route('/topic', name: 'topic')]
 class TopicController extends AbstractController
 {
-    #[Route('/topic/{slug}', name: 'topic')]
-    public function __invoke(
-        Topic $topic,
-        Request $request,
-        CreateCommentService $commentService,
-        Security $security,
-    ): Response {
-        $canComment = $security->isGranted(VoterAttribute::ACL->value, [
-            'permission' => 'create_comment',
+    public function __construct(
+        private readonly CreateCommentService $createCommentService,
+        private readonly TopicRepository $topicRepository,
+    ) {
+    }
+
+    #[Route('/{slug}', name: '')]
+    public function __invoke(Topic $topic, Request $request): Response
+    {
+        if ($topic->isHidden()) {
+            $this->denyAccessUnlessGranted(VoterAttribute::Moderator->value);
+        }
+        $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
+            'permission' => 'view',
             'entity' => $topic->getForum(),
         ]);
 
         $commentForm = null;
-        if ($canComment) {
+        if ($this->canComment($topic)) {
             $commentForm = $this->createForm(CommentType::class, options: [
                 'label' => false,
             ]);
 
             $commentForm->handleRequest($request);
             if ($commentForm->isSubmitted() && $commentForm->isValid()) {
-                $commentService->createComment($topic, $commentForm->getData());
+                $this->createCommentService->createComment($topic, $commentForm->getData());
                 return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
             }
         }
@@ -45,5 +55,85 @@ class TopicController extends AbstractController
             'topic' => $topic,
             'commentForm' => $commentForm?->createView(),
         ]);
+    }
+
+    private function canComment(Topic $topic): bool
+    {
+        if ($this->isGranted(VoterAttribute::Moderator->value, $topic)) {
+            return true;
+        }
+
+        if ($topic->isLocked()) {
+            return false;
+        }
+
+        return $this->isGranted(VoterAttribute::ACL->value, [
+            'permission' => 'create_comment',
+            'entity' => $topic->getForum(),
+        ]);
+    }
+
+    #[Route('/{slug}/edit', '_edit')]
+    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    public function edit(Request $request, Topic $topic): Response
+    {
+        $formBuilder = $this->createFormBuilder($topic, ['data_class' => Topic::class]);
+        $formBuilder->add('title', TextType::class);
+
+        $form = $formBuilder->getForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $topic = $form->getData();
+            $this->topicRepository->save($topic);
+
+            $this->addFlash('success', 'flashes.topic_saved');
+            return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
+        }
+
+        return $this->render('@Forumify/frontend/forum/topic_edit.html.twig', [
+            'topic' => $topic,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/{slug}/pin', '_pin')]
+    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    public function pin(Topic $topic): Response
+    {
+        $topic->setPinned(!$topic->isPinned());
+        $this->topicRepository->save($topic);
+
+        return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
+    }
+
+    #[Route('/{slug}/toggle-lock', '_lock')]
+    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    public function lock(Topic $topic): Response
+    {
+        $topic->setLocked(!$topic->isLocked());
+        $this->topicRepository->save($topic);
+
+        return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
+    }
+
+    #[Route('/{slug}/toggle-visibility', '_hide')]
+    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    public function hide(Topic $topic): Response
+    {
+        $topic->setHidden(!$topic->isHidden());
+        $this->topicRepository->save($topic);
+
+        return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
+    }
+
+    #[Route('/{slug}/delete', '_delete')]
+    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    public function delete(Topic $topic): Response
+    {
+        $forum = $topic->getForum();
+        $this->topicRepository->remove($topic);
+
+        $this->addFlash('success', 'flashes.topic_removed');
+        return $this->redirectToRoute('forumify_forum_forum', ['slug' => $forum->getSlug()]);
     }
 }

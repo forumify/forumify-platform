@@ -62,6 +62,12 @@
     justify-content: space-between;
 }
 
+.topic-hidden {
+    background-color: rgba(0, 0, 0, 0.05);
+    margin: 0 calc(var(--spacing-4) * -1);
+    padding: var(--spacing-2) var(--spacing-4);
+}
+
 .topic-row + * {
     margin-top: var(--spacing-6);
 }

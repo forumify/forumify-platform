@@ -31,6 +31,7 @@ class CreateTopicService
         $newComment = new NewComment();
         $newComment->setContent($newTopic->getContent());
         $comment = $this->commentService->createComment($topic, $newComment);
+        $topic->setFirstComment($comment);
         $topic->setComments([$comment]);
 
         $this->eventDispatcher->dispatch(new TopicCreatedEvent($topic));

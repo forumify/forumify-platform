@@ -34,7 +34,20 @@ class Topic implements SubscribableInterface
 
     #[ORM\ManyToOne(targetEntity: Comment::class)]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?Comment $firstComment = null;
+
+    #[ORM\ManyToOne(targetEntity: Comment::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Comment $lastComment = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $locked = false;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $pinned = false;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $hidden = false;
 
     public function __construct()
     {
@@ -88,6 +101,16 @@ class Topic implements SubscribableInterface
         $this->comments->add($comment);
     }
 
+    public function getFirstComment(): ?Comment
+    {
+        return $this->firstComment;
+    }
+
+    public function setFirstComment(?Comment $firstComment): void
+    {
+        $this->firstComment = $firstComment;
+    }
+
     public function getLastComment(): ?Comment
     {
         return $this->lastComment;
@@ -96,5 +119,35 @@ class Topic implements SubscribableInterface
     public function setLastComment(?Comment $lastComment): void
     {
         $this->lastComment = $lastComment;
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->locked;
+    }
+
+    public function setLocked(bool $locked): void
+    {
+        $this->locked = $locked;
+    }
+
+    public function isPinned(): bool
+    {
+        return $this->pinned;
+    }
+
+    public function setPinned(bool $pinned): void
+    {
+        $this->pinned = $pinned;
+    }
+
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden(bool $hidden): void
+    {
+        $this->hidden = $hidden;
     }
 }

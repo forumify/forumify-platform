@@ -1,9 +1,14 @@
 {% extends '@Forumify/components/list.html.twig' %}
 {% block row %}
-    <li class="topic-row">
+    <li class="topic-row {% if item.hidden %}topic-hidden{% endif %}">
         <div class="topic-row-content">
             <a href="{{ path('forumify_forum_topic', { slug: item.slug }) }}">
-                <h4>{{ item.title }}</h4>
+                <h4 class="flex flex-row items-center gap-2">
+                    {% if item.pinned %}<i class="ph ph-push-pin"></i>{% endif %}
+                    {% if item.locked %}<i class="ph ph-lock"></i>{% endif %}
+                    {% if item.hidden %}<i class="ph ph-eye-slash"></i>{% endif %}
+                    {{ item.title }}
+                </h4>
             </a>
             <p>
                 {% set author %}

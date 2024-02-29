@@ -12,16 +12,6 @@ enum VoterAttribute: string
 
     case ACL = 'ACCESS_CONTROL_LIST';
 
-    case ForumView = 'FORUM_VIEW';
-    case ForumCreate = 'FORUM_CREATE';
-    case ForumEdit = 'FORUM_EDIT';
-    case ForumDelete = 'FORUM_DELETE';
-
-    case TopicView = 'TOPIC_VIEW';
-    case TopicCreate = 'TOPIC_CREATE';
-    case TopicEdit = 'TOPIC_EDIT';
-    case TopicDelete = 'TOPIC_DELETE';
-
     case CommentCreate = 'COMMENT_CREATE';
     case CommentEdit = 'COMMENT_EDIT';
     case CommentDelete = 'COMMENT_DELETE';

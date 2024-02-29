@@ -147,3 +147,15 @@ plugin:
     homepage: 'Homepage'
 file_upload:
     drop_text: 'Drop files here or click to open dialog.'
+forum:
+    topic:
+        actions:
+            edit: 'Edit'
+            pin: 'Pin'
+            unpin: 'Unpin'
+            lock: 'Lock'
+            unlock: 'Unlock'
+            hide: 'Hide'
+            reveal: 'Reveal'
+            delete: 'Delete'
+        locked_moderator: 'This topic is locked, but as a moderator you can still add comments.'
