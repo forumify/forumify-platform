@@ -42,7 +42,7 @@
         {% block flashbag %}
             {% set flashes = app.flashes %}
             {% if flashes is not empty %}
-                <div class="flex flex-col gap-2 mb-4">
+                <div class="flex flex-col gap-2 mb-4 flashbag">
                     {% for type, messages in flashes %}
                         <div class="alert-{{ type }}">
                             {% for message in messages %}

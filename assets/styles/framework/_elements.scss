@@ -201,6 +201,38 @@ input[type='file'] {
     @extend .text-small;
 }
 
+// TODO: make the flashbag click-through
+.flashbag {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    max-width: 600px;
+    margin-right: var(--spacing-4);
+    z-index: 999;
+
+    @for $i from 1 through 25 {
+        div[class^="alert-"]:nth-child(#{$i}){
+            animation: 600ms fadeOut forwards;
+            animation-delay: #{5 + $i * 1}s;
+        }
+    }
+
+    div[class^="alert-"] {
+        @include box-shadow;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+        visibility: hidden;
+        display: none;
+    }
+}
+
 @import 'elements/table';
 @import 'elements/tabs';
 @import 'elements/markdown';
