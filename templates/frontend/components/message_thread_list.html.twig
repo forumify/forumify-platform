@@ -60,7 +60,7 @@
     <a
         class="btn-link thread-row {% if this.selectedThread is not null and this.selectedThread.id == item.id %}thread-active{% endif %}"
         data-action="live#action"
-        data-action-name="setSelectedThread(threadId={{ item.id }})"
+        data-live-action-param="setSelectedThread(threadId={{ item.id }})"
     >
         <div class="thread-row-inner">
             {% include '@Forumify/components/avatar.html.twig' with {

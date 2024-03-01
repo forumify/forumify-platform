@@ -8,7 +8,7 @@
         </a>
     {% else %}
         {% set subscription = this.subscription %}
-        <button class="{{ this.buttonClass }}" data-action="live#action" data-action-name="toggleSubscription">
+        <button class="{{ this.buttonClass }}" data-action="live#action" data-live-action-param="toggleSubscription">
             {% if subscription is null %}
                 {% if this.subscribeIcon is not empty %}
                     <i class="{{ this.subscribeIcon }}"></i>

@@ -3,7 +3,7 @@
         <a
             class="btn-small {{ this.userReacted(reaction.id) ? 'btn-outlined-highlighted' : 'btn-outlined' }}"
             data-action="live#action"
-            data-action-name="toggleReaction(reactionId={{ reaction.id }})"
+            data-live-action-param="toggleReaction(reactionId={{ reaction.id }})"
         >
             <img class="reaction mr-1" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="">
             {{ reaction.count }}
@@ -20,7 +20,7 @@
                     <button
                         class="btn-small btn-link"
                         data-action="live#action"
-                        data-action-name="toggleReaction(reactionId={{ reaction.id }}, allowRemove=0)"
+                        data-live-action-param="toggleReaction(reactionId={{ reaction.id }}, allowRemove=0)"
                     >
                         <img class="reaction" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="">
                     </button>
