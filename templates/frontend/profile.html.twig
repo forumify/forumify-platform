@@ -49,7 +49,7 @@
                             <a class="pb-1" href="{{ path('forumify_forum_topic', { slug: comment.topic.slug }) }}">
                                 {{ comment.topic.title }}
                             </a>
-                            {{ comment.content|striptags|markdown|striptags|u.truncate(100, '...', false) }}
+                            {{ comment.content|striptags|u.truncate(100, '...', false) }}
                         {% endif %}
                     </li>
                 {% else %}

@@ -45,7 +45,7 @@ class CommentCreatedNotificationType extends AbstractEmailNotificationType
 
     public function getDescription(Notification $notification): string
     {
-        return u($this->getComment($notification)?->getContent() ?? '')
+        return u(strip_tags($this->getComment($notification)?->getContent() ?? ''))
             ->truncate(200, '...', false)
             ->toString();
     }

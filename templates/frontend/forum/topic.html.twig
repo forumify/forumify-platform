@@ -5,7 +5,7 @@
 {% block meta_tags %}
     {{ parent() }}
     {% if topic.comments.first %}
-        {% set description = topic.comments.first.content|u.truncate(200, '...', false).trim()|markdown|striptags %}
+        {% set description = topic.comments.first.content|u.truncate(200, '...', false).trim()|striptags %}
         <meta property="description" content="{{ description }}">
         <meta property="og:description" content="{{ description }}">
         <meta property="twitter:description" content="{{ description }}">
@@ -99,7 +99,6 @@
         {% endif %}
     </div>
     <div id="comment-edit-prototype" class="d-none">
-        {% include '@Forumify/form/type/markdown.html.twig' with {} only %}
         <div class="flex justify-center items-center gap-2">
             <button id="comment-edit-save" type="button" class="btn-primary">{{ 'save'|trans }}</button>
             <button id="comment-edit-cancel" type="button" class="btn-outlined">{{ 'cancel'|trans }}</button>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Form;
 
-use Forumify\Core\Form\MarkdownType;
+use Forumify\Core\Form\RichTextEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,6 +23,6 @@ class NewTopicType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('content', MarkdownType::class);
+            ->add('content', RichTextEditorType::class);
     }
 }

@@ -6,7 +6,6 @@ namespace Forumify\Page\Controller;
 
 use Forumify\Core\Controller\IndexController;
 use Forumify\Page\Repository\PageRepository;
-use Forumify\Page\Service\PageMarkdownParser;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,7 +18,6 @@ class PageController extends AbstractController
         ?string $urlKey,
         Request $request,
         PageRepository $pageRepository,
-        PageMarkdownParser $pageMarkdownParser,
     ): Response {
         $page = $pageRepository->findOneByUrlKey($urlKey);
         if ($page === null) {
@@ -33,7 +31,7 @@ class PageController extends AbstractController
             return $this->render($page->getUrlKey());
         }
 
-        $pageHtml = $pageMarkdownParser->parse($page);
+        $pageHtml = $page;
         return $this->render('@Forumify/frontend/page_wrapper.html.twig', [
             'content' => $pageHtml,
         ]);

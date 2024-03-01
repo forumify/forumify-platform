@@ -1,4 +1,4 @@
-.markdown {
+.rich-text {
     h1, h2, h3, h4, h5, h6 {
         margin: var(--spacing-4) 0 var(--spacing-2);
     }
@@ -50,5 +50,32 @@
             display: block;
             width: 100%;
         }
+    }
+
+    blockquote {
+        border-left: var(--border);
+        border-left-width: 5px;
+        margin-left: var(--spacing-4);
+        padding-left: var(--spacing-2);
+    }
+
+    .ql-size-huge {
+        @extend .text-huge;
+    }
+
+    .ql-size-large {
+        @extend .text-large;
+    }
+
+    .ql-size-small {
+        @extend .text-small;
+    }
+
+    .ql-align-center {
+        @extend .text-center;
+    }
+
+    .ql-align-right {
+        @extend .text-right;
     }
 }

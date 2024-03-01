@@ -2,7 +2,7 @@
 {% block title_page %}Inbox{% endblock %}
 {% block body %}
     {% if initialThreadId is defined %}
-        {{ component('MessageThreadList', {selectedThread: initialThreadId}) }}
+        {{ component('MessageThreadList', { selectedThread: initialThreadId }) }}
     {% else %}
         {{ component('MessageThreadList') }}
     {% endif %}

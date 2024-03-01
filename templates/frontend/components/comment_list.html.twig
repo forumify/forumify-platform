@@ -25,7 +25,7 @@
                     {% endif %}
                 </div>
             </div>
-            {% include '@Forumify/components/markdown.html.twig' with { content: item.content } only %}
+            {{ item.content|rich }}
             {{ component('CommentReactions', { comment: item }) }}
         </div>
     </li>

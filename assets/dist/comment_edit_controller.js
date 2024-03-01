@@ -22,7 +22,7 @@ export default class extends Controller {
 
     const prototype = document.getElementById('comment-edit-prototype');
     const contentWrapper = document.querySelector(`#comment-${this.idValue} .comment-content`);
-    const originalContent = contentWrapper.querySelector('.markdown');
+    // const originalContent = contentWrapper.querySelector('.markdown');
 
     originalContent.classList.add('d-none');
 
@@ -43,7 +43,7 @@ export default class extends Controller {
       fetch(this.updateUrlValue, { method: 'POST', body: input.value })
         .then((res) => res.text())
         .then((newContent) => {
-          contentWrapper.querySelector('.markdown').innerHTML = newContent;
+          // contentWrapper.querySelector('.markdown').innerHTML = newContent;
           closeEditor();
         });
     });

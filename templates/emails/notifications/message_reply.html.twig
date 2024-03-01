@@ -8,7 +8,7 @@
     <div class="content-block">
         {% set authorLink = absolute_url(path('forumify_forum_profile', { username: message.createdBy.username })) %}
         <p><a href="{{ authorLink }}">{{ message.createdBy.username }}</a> replied:</p>
-        <p>{{ message.content|markdown }}</p>
+        <p>{{ message.content|raw }}</p>
     </div>
     <hr>
     {% include '@Forumify/emails/components/button.html.twig' with {

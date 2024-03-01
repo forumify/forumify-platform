@@ -15,10 +15,11 @@
                             <h4>{{ forum.title }}</h4>
                         </a>
                         <div>
-                            <p class="mb-2">{{ forum.content|striptags|nl2br }}</p>
+                            <p class="mb-2">{{ forum.content|rich }}</p>
                             <div class="forum-subforums">
                                 {% for subforum in forum.children|filter(subforum => can('view', subforum)) %}
                                     <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">
+                                        <i class="ph ph-arrow-bend-down-right"></i>
                                         {{ subforum.title }}
                                     </a>
                                 {% endfor %}

@@ -52,7 +52,7 @@ class TopicCreatedNotificationType extends AbstractEmailNotificationType
             return '';
         }
 
-        return u($firstComment->getContent())
+        return u(strip_tags($firstComment->getContent()))
             ->truncate(200, '...', false)
             ->toString();
     }

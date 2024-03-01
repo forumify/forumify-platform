@@ -1,0 +1,20 @@
+.rich-editor {
+    .ql-container.ql-snow {
+        border: 2px solid var(--border-color);
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    .ql-toolbar.ql-snow {
+        border: 2px solid var(--border-color);
+        border-bottom: none;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        background-color: var(--c-elevation-2);
+    }
+
+    .ql-editor {
+        min-height: 140px;
+    }
+}
+

@@ -34,19 +34,6 @@ a {
     }
 }
 
-h1, h2, h3, h4, h5, h6, p {
-    margin: 0;
-    padding: 0;
-}
-
-h1, h2 {
-    margin-bottom: var(--spacing-4);
-}
-
-h3, h4, h5, h6 {
-    margin-bottom: var(--spacing-2);
-}
-
 ul, ol {
     padding: 0;
     margin: 0;
@@ -235,7 +222,7 @@ input[type='file'] {
 
 @import 'elements/table';
 @import 'elements/tabs';
-@import 'elements/markdown';
-@import 'elements/markdown-editor';
+@import 'elements/rich-text';
+@import 'elements/rich-editor';
 @import 'elements/alert';
 @import 'elements/file-upload';

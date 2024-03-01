@@ -22,14 +22,12 @@
         {% include '@Forumify/components/avatar.html.twig' with {
             user: item.createdBy,
         } only %}
-        <div>
+        <div class="w-100">
             <div>
                 {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
                 <span class="text-small text-secondary">{{ 'date_short_time_short'|trans({ date: item.createdAt }) }}</span>
             </div>
-            <div>
-                {{ item.content|markdown|raw }}
-            </div>
+            {{ item.content|rich }}
         </div>
     </div>
 {% endblock %}

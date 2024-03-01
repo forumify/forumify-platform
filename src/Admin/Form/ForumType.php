@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Admin\Form;
 
 use Doctrine\ORM\QueryBuilder;
+use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\Repository\ForumGroupRepository;
@@ -13,7 +14,6 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,7 +37,7 @@ class ForumType extends AbstractType
 
         $builder
             ->add('title', TextType::class)
-            ->add('content', TextareaType::class, [
+            ->add('content', RichTextEditorType::class, [
                 'required' => false,
                 'empty_data' => '',
             ])

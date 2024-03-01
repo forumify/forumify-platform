@@ -41,7 +41,7 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
 
     public function getDescription(Notification $notification): string
     {
-        return u($this->getMessage($notification)?->getContent() ?? '')
+        return u(strip_tags($this->getMessage($notification)?->getContent() ?? ''))
             ->truncate(200, '...', false)
             ->toString();
     }

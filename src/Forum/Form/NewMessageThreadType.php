@@ -7,10 +7,10 @@ namespace Forumify\Forum\Form;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Form\RichTextEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -37,7 +37,7 @@ class NewMessageThreadType extends AbstractType
                 'autocomplete' => true,
                 'query_builder' => $this->addUserFilter(...),
             ])
-            ->add('message', TextareaType::class);
+            ->add('message', RichTextEditorType::class);
     }
 
     private function addUserFilter(EntityRepository $er): QueryBuilder

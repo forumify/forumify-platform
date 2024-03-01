@@ -32,7 +32,6 @@ class PageType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'choices' => [
                     'HTML' => 'html',
-                    'Markdown' => 'md',
                 ]
             ]);
 

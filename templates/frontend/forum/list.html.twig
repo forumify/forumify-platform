@@ -16,7 +16,7 @@
     {% if forum is not null %}
         <div class="card mb-4">
             <div class="card-title">
-                <h1>{{ forum.title }}</h1>
+                <h1 class="mb-0">{{ forum.title }}</h1>
                 <div class="forum-actions">
                     {{ component('SubscribeButton', {
                         entityId: forum.id,
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="card-body">
-                {{ forum.content|raw|nl2br }}
+                {{ forum.content|rich }}
             </div>
         </div>
     {% endif %}
