@@ -16,5 +16,53 @@
     .ql-editor {
         min-height: 140px;
     }
+
+    .ql-snow.ql-toolbar button:hover {
+
+    }
+
+    .ql-snow {
+        .ql-fill {
+            fill: var(--c-text-primary);
+        }
+
+        .ql-stroke {
+            stroke: var(--c-text-primary);
+        }
+
+        .ql-picker {
+            color: var(--c-text-primary);
+        }
+    }
+
+    .ql-snow.ql-toolbar button:hover,
+    .ql-snow .ql-toolbar button:hover,
+    .ql-snow.ql-toolbar button:focus,
+    .ql-snow .ql-toolbar button:focus,
+    .ql-snow.ql-toolbar button.ql-active,
+    .ql-snow .ql-toolbar button.ql-active,
+    .ql-snow.ql-toolbar .ql-picker-label:hover,
+    .ql-snow .ql-toolbar .ql-picker-label:hover,
+    .ql-snow.ql-toolbar .ql-picker-label.ql-active,
+    .ql-snow .ql-toolbar .ql-picker-label.ql-active,
+    .ql-snow.ql-toolbar .ql-picker-item:hover,
+    .ql-snow .ql-toolbar .ql-picker-item:hover,
+    .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
+    .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+        .ql-fill {
+            fill: var(--c-primary-accent);
+        }
+
+        .ql-stroke {
+            stroke: var(--c-primary-accent);
+        }
+
+        color: var(--c-primary-accent);
+    }
+
+    .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {
+        border: none;
+        background-color: var(--c-elevation-3);
+    }
 }
 
