@@ -16,7 +16,8 @@
                                         <a
                                             class="ml-1 btn-link btn-small btn-icon"
                                             data-action="live#action"
-                                            data-live-action-param="toggleSort(column={{ colName }})"
+                                            data-live-action-param="toggleSort"
+                                            data-live-column-param="{{ colName }}"
                                         >
                                             <i class="ph ph-{{ sort == 'ASC' ? 'arrow-up' : (sort == 'DESC' ? 'arrow-down' : 'arrows-vertical') }}"></i>
                                         </a>

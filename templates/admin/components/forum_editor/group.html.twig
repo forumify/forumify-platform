@@ -6,7 +6,9 @@
                     <button
                         class="btn-link btn-small btn-icon p-1"
                         data-action="live#action"
-                        data-live-action-param="reorderGroup(groupId={{ group.id }}, direction=down)"
+                        data-live-action-param="reorderGroup"
+                        data-live-group-id-param="{{ group.id }}"
+                        data-live-direction-param="down"
                         {% if loop.last %}
                             disabled
                         {% endif %}
@@ -16,7 +18,9 @@
                     <button
                         class="btn-link btn-small btn-icon p-1"
                         data-action="live#action"
-                        data-live-action-param="reorderGroup(groupId={{ group.id }}, direction=up)"
+                        data-live-action-param="reorderGroup"
+                        data-live-group-id-param="{{ group.id }}"
+                        data-live-direction-param="up"
                         {% if loop.first %}
                             disabled
                         {% endif %}
@@ -56,7 +60,9 @@
                             <button
                                 class="btn-link btn-small btn-icon p-1"
                                 data-action="live#action"
-                                data-live-action-param="reorderForum(forumId={{ childForum.id }}, direction=down)"
+                                data-live-action-param="reorderForum"
+                                data-live-forum-id-param="{{ childForum.id }}"
+                                data-live-direction-param="down"
                                 {% if loop.last %}
                                     disabled
                                 {% endif %}
@@ -66,7 +72,9 @@
                             <button
                                 class="btn-link btn-small btn-icon p-1"
                                 data-action="live#action"
-                                data-live-action-param="reorderForum(forumId={{ childForum.id }}, direction=up)"
+                                data-live-action-param="reorderForum"
+                                data-live-forum-id-param="{{ childForum.id }}"
+                                data-live-direction-param="up"
                                 {% if loop.first %}
                                     disabled
                                 {% endif %}

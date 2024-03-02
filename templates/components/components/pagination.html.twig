@@ -6,7 +6,12 @@
 
             {% block pagination_first_page %}
                 {% if 1 not in visiblePages %}
-                    <a class="btn-link btn-small" data-action="live#action" data-live-action-param="setPage(page=1)">1</a>
+                    <a
+                        class="btn-link btn-small"
+                        data-action="live#action"
+                        data-live-action-param="setPage"
+                        data-live-page-param="1"
+                    >1</a>
                     {% if visiblePages|first - 1 != 1 %}
                         ...
                     {% endif %}
@@ -16,9 +21,15 @@
             {% block pagination_pages %}
                 {% for page in visiblePages %}
                     {% if page == this.result.page %}
-                        <span class="pagination-selected-page">{{ page }}</span>
+                        <span class="pagination-selected-page"
+                        >{{ page }}</span>
                     {% else %}
-                        <a class="btn-link btn-small" data-action="live#action" data-live-action-param="setPage(page={{ page }})">{{ page }}</a>
+                        <a
+                            class="btn-link btn-small"
+                            data-action="live#action"
+                            data-live-action-param="setPage"
+                            data-live-page-param="{{ page }}"
+                        >{{ page }}</a>
                     {% endif %}
                 {% endfor %}
             {% endblock %}
@@ -28,7 +39,12 @@
                     {% if lastPage - 1 != visiblePages|last %}
                         ...
                     {% endif %}
-                    <a class="btn-link btn-small" data-action="live#action" data-live-action-param="setPage(page={{ lastPage }})">{{ lastPage }}</a>
+                    <a
+                        class="btn-link btn-small"
+                        data-action="live#action"
+                        data-live-action-param="setPage"
+                        data-live-page-param="{{ lastPage }}"
+                    >{{ lastPage }}</a>
                 {% endif %}
             {% endblock %}
         </div>
