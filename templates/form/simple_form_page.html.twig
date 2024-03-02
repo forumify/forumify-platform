@@ -1,0 +1,7 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block body %}
+    {% if title is defined %}
+        {% set title = title|trans %}
+    {% endif %}
+    {% include '@Forumify/admin/components/simple_form.html.twig' %}
+{% endblock %}

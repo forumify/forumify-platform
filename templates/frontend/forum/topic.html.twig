@@ -72,6 +72,10 @@
                                     {{ 'forum.topic.actions.reveal'|trans }}
                                 {% endif %}
                             </a>
+                            <a class="btn-link" href="{{ path('forumify_forum_topic_move', { slug: topic.slug }) }}">
+                                <i class="ph ph-arrow-right"></i>
+                                {{ 'forum.topic.actions.move'|trans }}
+                            </a>
                             <a class="btn-link" href="{{ path('forumify_forum_topic_delete', { slug: topic.slug }) }}">
                                 <i class="ph ph-x"></i>
                                 {{ 'forum.topic.actions.delete'|trans }}

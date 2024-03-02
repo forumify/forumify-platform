@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Forumify\Forum\Controller;
 
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\CommentType;
 use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,10 +78,10 @@ class TopicController extends AbstractController
     #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
     public function edit(Request $request, Topic $topic): Response
     {
-        $formBuilder = $this->createFormBuilder($topic, ['data_class' => Topic::class]);
-        $formBuilder->add('title', TextType::class);
+        $form = $this->createFormBuilder($topic, ['data_class' => Topic::class])
+            ->add('title', TextType::class)
+            ->getForm();
 
-        $form = $formBuilder->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $topic = $form->getData();
@@ -124,6 +125,36 @@ class TopicController extends AbstractController
         $this->topicRepository->save($topic);
 
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
+    }
+
+    #[Route('/{slug}/move', '_move')]
+    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    public function move(Topic $topic, Request $request): Response
+    {
+        $form = $this->createFormBuilder($topic, ['data_class' => Topic::class])
+            ->add('forum', EntityType::class, [
+                'class' => Forum::class,
+                'choice_label' => 'title',
+                'autocomplete' => true,
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $topic = $form->getData();
+            if ($this->isGranted(VoterAttribute::Moderator->value, $topic->getForum())) {
+                $this->topicRepository->save($topic);
+
+                $this->addFlash('success', 'forum.topic.flashes.topic_moved');
+                return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
+            }
+        }
+
+        return $this->render('@Forumify/form/simple_form_page.html.twig', [
+            'form' => $form->createView(),
+            'title' => 'forum.topic.actions.move',
+            'cancelPath' => $this->generateUrl('forumify_forum_topic', ['slug' => $topic->getSlug()]),
+        ]);
     }
 
     #[Route('/{slug}/delete', '_delete')]

@@ -158,5 +158,8 @@ forum:
             unlock: 'Unlock'
             hide: 'Hide'
             reveal: 'Reveal'
+            move: 'Move'
             delete: 'Delete'
+        flashes:
+            topic_moved: 'Topic moved.'
         locked_moderator: 'This topic is locked, but as a moderator you can still add comments.'
