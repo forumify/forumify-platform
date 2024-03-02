@@ -10,6 +10,7 @@ use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\CommentType;
 use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
+use Forumify\Forum\Service\ReindexLastActivityService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -25,6 +26,7 @@ class TopicController extends AbstractController
     public function __construct(
         private readonly CreateCommentService $createCommentService,
         private readonly TopicRepository $topicRepository,
+        private readonly ReindexLastActivityService $reindexLastActivityService,
     ) {
     }
 
@@ -122,7 +124,9 @@ class TopicController extends AbstractController
     public function hide(Topic $topic): Response
     {
         $topic->setHidden(!$topic->isHidden());
+
         $this->topicRepository->save($topic);
+        $this->reindexLastActivityService->reindexAll();
 
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
     }
@@ -144,6 +148,7 @@ class TopicController extends AbstractController
             $topic = $form->getData();
             if ($this->isGranted(VoterAttribute::Moderator->value, $topic->getForum())) {
                 $this->topicRepository->save($topic);
+                $this->reindexLastActivityService->reindexAll();
 
                 $this->addFlash('success', 'forum.topic.flashes.topic_moved');
                 return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
@@ -163,6 +168,7 @@ class TopicController extends AbstractController
     {
         $forum = $topic->getForum();
         $this->topicRepository->remove($topic);
+        $this->reindexLastActivityService->reindexAll();
 
         $this->addFlash('success', 'flashes.topic_removed');
         return $this->redirectToRoute('forumify_forum_forum', ['slug' => $forum->getSlug()]);

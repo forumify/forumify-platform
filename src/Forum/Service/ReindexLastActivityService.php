@@ -63,6 +63,10 @@ class ReindexLastActivityService
     {
         $lastForumComment = null;
         foreach ($forum->getTopics() as $topic) {
+            if ($topic->isHidden()) {
+                continue;
+            }
+
             $lastComment = $this->commentRepository->findLastCommentInTopic($topic);
             if ($lastComment === null) {
                 continue;

@@ -10,8 +10,9 @@ use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\HierarchicalInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
+use Forumify\Forum\Repository\CommentRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment implements SubscribableInterface
 {
     use IdentifiableEntityTrait;
