@@ -28,15 +28,17 @@
                             </th>
                         {% endfor %}
                     </tr>
-                    <tr>
-                        {% for colName, col in this.columns %}
-                            <th>
-                                {% if col.searchable %}
-                                    <input data-model="debounce(500)|search.{{ colName }}">
-                                {% endif %}
-                            </th>
-                        {% endfor %}
-                    </tr>
+                    {% if this.columns|filter(col => col.searchable)|length > 0 %}
+                        <tr>
+                            {% for colName, col in this.columns %}
+                                <th>
+                                    {% if col.searchable %}
+                                        <input data-model="debounce(500)|search.{{ colName }}">
+                                    {% endif %}
+                                </th>
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
                 {% endblock %}
                 </thead>
                 <tbody>

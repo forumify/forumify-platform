@@ -15,7 +15,8 @@ class CreateCommentService
 {
     public function __construct(
         private readonly CommentRepository $commentRepository,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ReindexLastActivityService $reindexLastActivityService,
     ) {
     }
 
@@ -25,6 +26,7 @@ class CreateCommentService
         $comment->setContent($newComment->getContent());
         $comment->setTopic($topic);
         $this->commentRepository->save($comment);
+        $this->reindexLastActivityService->reindexAll();
 
         $this->eventDispatcher->dispatch(new CommentCreatedEvent($comment));
         return $comment;

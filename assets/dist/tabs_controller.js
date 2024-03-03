@@ -19,6 +19,8 @@ export default class extends Controller {
     }
 
     this.handleTabClicked(this.tabsTarget.firstElementChild);
+
+    this.tabPanelsTarget.classList.remove('d-none');
   }
 
   hideAllTabPanels() {
