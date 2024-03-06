@@ -6,7 +6,7 @@
     <h2>{{ 'notification.comment_topic'|trans({ topic: comment.topic.title }) }}</h2>
     <hr>
     <div class="content-block">
-        <p>{{ comment.content|u.truncate(400, '...', false)|raw }}</p>
+        <p>{{ comment.content|striptags|u.truncate(400, '...', false) }}</p>
     </div>
     <hr>
     {% include '@Forumify/emails/components/button.html.twig' with {

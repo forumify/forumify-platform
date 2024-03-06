@@ -7,8 +7,8 @@
     <hr>
     <div class="content-block">
         <h1>{{ topic.title }}</h1>
-        {% if topic.comments.first %}
-            <p>{{ topic.comments.first.content|u.truncate(400, '...', false)|raw }}</p>
+        {% if topic.firstComment %}
+            <p>{{ topic.firstComment.content|striptags|u.truncate(400, '...', false) }}</p>
         {% endif %}
     </div>
     <hr>
