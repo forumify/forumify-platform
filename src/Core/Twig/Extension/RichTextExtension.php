@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Twig\Extension;
 
+use Forumify\Core\Service\HTMLSanitizer;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -40,6 +41,10 @@ class RichTextExtension extends AbstractExtension
         'alt',
     ];
 
+    public function __construct(private readonly HTMLSanitizer $sanitizer)
+    {
+    }
+
     public function getFilters(): array
     {
         return [
@@ -49,6 +54,7 @@ class RichTextExtension extends AbstractExtension
 
     private function richText(string $content): string
     {
-        return "<div class='rich-text'>$content</div>";
+        $sanitized = $this->sanitizer->sanitize($content);
+        return "<div class='rich-text'>$sanitized</div>";
     }
 }
