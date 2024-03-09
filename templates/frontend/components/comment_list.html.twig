@@ -25,7 +25,7 @@
             </div>
             {{ item.content|rich }}
             {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
-                <div class="d-none" {{ stimulus_target('forumify/forumify-platform/comment_edit', 'editorContainer') }}>
+                <div class="d-none rich-editor" {{ stimulus_target('forumify/forumify-platform/comment_edit', 'editorContainer') }}>
                     <div class="flex justify-center items-center gap-2 mt-2">
                         <button type="button" class="btn-outlined" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'discardEdit') }}>
                             {{ 'cancel'|trans }}
