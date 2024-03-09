@@ -220,9 +220,10 @@ input[type='file'] {
     }
 }
 
+@import 'elements/alert';
 @import 'elements/table';
 @import 'elements/tabs';
-@import 'elements/rich-text';
-@import 'elements/rich-editor';
-@import 'elements/alert';
 @import 'elements/file-upload';
+@import 'elements/modal';
+@import 'elements/rich-editor';
+@import 'elements/rich-text';
