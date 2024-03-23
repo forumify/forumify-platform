@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
+use Forumify\Forum\Entity\Badge;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
@@ -64,6 +65,13 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'query_builder' => $this->getRoleQueryBuilder(...),
+            ])
+            ->add('badges', EntityType::class, [
+                'class' => Badge::class,
+                'choice_label' => 'name',
+                'required' => false,
+                'multiple' => true,
+                'autocomplete' => true,
             ]);
     }
 

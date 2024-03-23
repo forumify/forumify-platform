@@ -7,6 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\UserRepository;
+use Forumify\Forum\Entity\Badge;
+use Forumify\Forum\Entity\CommentReaction;
 use Forumify\Forum\Entity\Subscription;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -64,10 +66,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserNotificationSettings::class, cascade: ['persist'])]
     private UserNotificationSettings $notificationSettings;
 
+    /**
+     * @var Collection<Badge>
+     */
+    #[ORM\ManyToMany(targetEntity: Badge::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinTable(
+        'user_badge',
+        joinColumns: [new ORM\JoinColumn('user', onDelete: 'CASCADE')],
+        inverseJoinColumns: [new ORM\JoinColumn('badge', onDelete: 'CASCADE')],
+    )]
+    private Collection $badges;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
         $this->notificationSettings = new UserNotificationSettings($this);
+        $this->badges = new ArrayCollection();
     }
 
     public function getUsername(): string
@@ -215,5 +229,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNotificationSettings(UserNotificationSettings $notificationSettings): void
     {
         $this->notificationSettings = $notificationSettings;
+    }
+
+    /**
+     * @return Collection<Badge>
+     */
+    public function getBadges(): Collection
+    {
+        return $this->badges;
+    }
+
+    public function setBadges(array|Collection $badges): void
+    {
+        $this->badges = $badges instanceof Collection
+            ? $badges
+            : new ArrayCollection($badges);
     }
 }

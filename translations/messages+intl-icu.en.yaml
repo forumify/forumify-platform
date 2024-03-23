@@ -91,6 +91,7 @@ save: 'Save'
 flashes:
     acl_saved: 'Access control list saved.'
     account_settings_saved: 'Account settings saved.'
+    badge_saved: 'Badge saved.'
     comment_removed: 'Comment removed.'
     user_saved: 'User saved.'
     user_removed: 'User removed.'
@@ -163,3 +164,8 @@ forum:
         flashes:
             topic_moved: 'Topic moved.'
         locked_moderator: 'This topic is locked, but as a moderator you can still add comments.'
+admin:
+    badges:
+        badges: 'Badges'
+        create: 'Create Badge'
+        edit: 'Editing Badge {name}'

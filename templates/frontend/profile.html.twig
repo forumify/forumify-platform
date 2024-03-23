@@ -37,25 +37,36 @@
             <p class="text-small">Last login: {{ user.lastLogin is not null ? user.lastLogin|date('d M Y') : 'never' }}</p>
         </div>
     </div>
-    <div class="card">
-        <div class="card-title">
-            {{ 'activity'|trans }}
+    <div class="flex items-start gap-4">
+        <div class="card w-30">
+            <div class="card-title">
+                {{ 'badges'|trans }}
+            </div>
+            <div class="card-body flex flex-wrap">
+                {% for badge in user.badges %}
+                    <div class="w-25 p-2 flex flex-col justify-center items-center">
+                        <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" alt="{{ badge.name }}">
+                    </div>
+                {% endfor %}
+            </div>
         </div>
-        <div class="card-body">
-            <ul>
-                {% for comment in comments|filter(comment => can('view', comment.topic.forum)) %}
-                    <li class="flex flex-col items-start pb-4">
-                        {% if comment is instanceof('Forumify\\Forum\\Entity\\Comment') %}
+        <div class="card w-70">
+            <div class="card-title">
+                {{ 'activity'|trans }}
+            </div>
+            <div class="card-body">
+                <ul>
+                    {% for comment in comments|filter(comment => can('view', comment.topic.forum)) %}
+                        <li class="flex flex-col items-start">
                             <a class="pb-1" href="{{ path('forumify_forum_topic', { slug: comment.topic.slug }) }}">
                                 {{ comment.topic.title }}
                             </a>
-                            {{ comment.content|striptags|u.truncate(100, '...', false) }}
-                        {% endif %}
-                    </li>
-                {% else %}
-                    {{ 'no_activity'|trans }}
-                {% endfor %}
-            </ul>
+                        </li>
+                    {% else %}
+                        {{ 'no_activity'|trans }}
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 {% endblock %}
