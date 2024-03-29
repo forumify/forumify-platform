@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Page\Entity;
+namespace Forumify\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
-use Forumify\Page\Repository\PageRepository;
-
+use Forumify\Cms\Repository\PageRepository;
 
 #[ORM\Entity(repositoryClass: PageRepository::class)]
 class Page
@@ -27,10 +26,13 @@ class Page
     private string $urlKey = '';
 
     #[ORM\Column(type: 'text')]
-    private string $source = '';
+    private string $twig = '';
 
-    #[ORM\Column]
-    private string $type = 'html';
+    #[ORM\Column(type: 'text')]
+    private string $css = '';
+
+    #[ORM\Column(type: 'text')]
+    private string $javascript = '';
 
     public function getTitle(): string
     {
@@ -52,23 +54,33 @@ class Page
         $this->urlKey = $urlKey;
     }
 
-    public function getSource(): string
+    public function getTwig(): string
     {
-        return $this->source;
+        return $this->twig;
     }
 
-    public function setSource(string $source): void
+    public function setTwig(string $twig): void
     {
-        $this->source = $source;
+        $this->twig = $twig;
     }
 
-    public function getType(): string
+    public function getCss(): string
     {
-        return $this->type;
+        return $this->css;
     }
 
-    public function setType(string $type): void
+    public function setCss(string $css): void
     {
-        $this->type = $type;
+        $this->css = $css;
+    }
+
+    public function getJavascript(): string
+    {
+        return $this->javascript;
+    }
+
+    public function setJavascript(string $javascript): void
+    {
+        $this->javascript = $javascript;
     }
 }

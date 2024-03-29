@@ -26,12 +26,15 @@ class SettingsController extends AbstractController
             ]),
             new MenuItem($trans->trans('admin.badges.badges'), $url->generate('forumify_admin_badge_list'), [
                 'icon' => 'ph ph-medal-military'
-            ])
+            ]),
+            new MenuItem($trans->trans('admin.menu_builder.title'), '', [
+                'icon' => 'ph ph-list'
+            ]),
         ]);
 
         $menu->sortByLabel();
         return $this->render('@Forumify/admin/settings/settings.html.twig', [
-            'settingMenuItems' => $menu->getEntries(),
+            'items' => $menu->getEntries(),
         ]);
     }
 }

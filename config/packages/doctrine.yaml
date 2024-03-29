@@ -19,9 +19,9 @@ doctrine:
                 dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Forum/Entity'
                 prefix: Forumify\Forum\Entity
                 alias: ForumifyForum
-            forumify_page:
+            forumify_cms:
                 is_bundle: false
                 type: attribute
-                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Page/Entity'
-                prefix: Forumify\Page\Entity
-                alias: ForumifyPage
+                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Cms/Entity'
+                prefix: Forumify\Cms\Entity
+                alias: ForumifyCms

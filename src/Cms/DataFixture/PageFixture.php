@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Page\DataFixture;
+namespace Forumify\Cms\DataFixture;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Forumify\Core\DataFixture\UserFixture;
 use Forumify\Core\Entity\User;
-use Forumify\Page\Entity\Page;
+use Forumify\Cms\Entity\Page;
 
 class PageFixture extends Fixture implements DependentFixtureInterface
 {

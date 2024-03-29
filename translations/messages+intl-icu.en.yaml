@@ -86,7 +86,6 @@ confirm: 'Confirm'
 cancel: 'Cancel'
 select_page: 'Select or create a page to start editing.'
 search: 'Type to search'
-page_delete_warning: 'You are about to delete page "{title}".'
 save: 'Save'
 flashes:
     acl_saved: 'Access control list saved.'
@@ -169,3 +168,16 @@ admin:
         badges: 'Badges'
         create: 'Create Badge'
         edit: 'Editing Badge {name}'
+    cms:
+        title: 'Content Management System'
+        pages:
+            title: 'Pages'
+            delete_warning: 'You are about to delete the page "{title}". If it is still being linked anywhere, it will no longer be found. If the page is referenced in your menu, the menu entry will be deleted.'
+            create: 'Create Page'
+            edit: 'Editing Page {name}'
+        resources:
+            title: 'Resources'
+        snippets:
+            title: 'Snippets'
+    menu_builder:
+        title: 'Menu Builder'

@@ -1,0 +1,9 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ path('forumify_cms_page_css', { slug: page.slug }) }}">
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ path('forumify_cms_page_js', { slug: page.slug }) }}"></script>
+{% endblock %}

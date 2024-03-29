@@ -1,0 +1,12 @@
+<ul class="flex gap-4">
+    {% for item in items %}
+        <a class="setting" href="{{ item.location }}">
+            <div class="setting-icon">
+                <i class="{{ item.options.icon }}"></i>
+            </div>
+            <p class="setting-label pt-2">
+                {{ item.label }}
+            </p>
+        </a>
+    {% endfor %}
+</ul>

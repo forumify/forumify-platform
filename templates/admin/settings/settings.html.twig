@@ -1,9 +1,12 @@
 {% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}
+    {{ 'settings'|trans }}
+{% endblock %}
 {% block body %}
-    <h2>{{ 'settings'|trans }}</h2>
+    <h2>{{ block('title_page') }}</h2>
     <div class="box mt-4">
         <ul class="flex gap-4">
-            {% for item in settingMenuItems %}
+            {% for item in items %}
                 <a class="setting" href="{{ item.location }}">
                     <div class="setting-icon">
                         <i class="{{ item.options.icon }}"></i>

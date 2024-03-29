@@ -1,0 +1,12 @@
+{% set editorId = 'code-editor-' ~ form.vars.id %}
+<div class="form-row code-editor" {{ stimulus_controller('forumify/forumify-platform/code_editor', {
+    editorId: editorId,
+    inputId: form.vars.id,
+    language: form.vars.language,
+    value: form.vars.value,
+}) }}>
+    {{ form_label(form) }}
+    <div id="{{ editorId }}"></div>
+    {{ form_widget(form, { attr: { class: 'd-none' } }) }}
+    {{ form_errors(form) }}
+</div>

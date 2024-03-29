@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Page\Repository;
+namespace Forumify\Cms\Repository;
 
 use Forumify\Core\Repository\AbstractRepository;
-use Forumify\Page\Entity\Page;
+use Forumify\Cms\Entity\Page;
 
 class PageRepository extends AbstractRepository
 {

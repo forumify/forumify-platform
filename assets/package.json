@@ -4,6 +4,12 @@
     "version": "0.1.0",
     "symfony": {
         "controllers": {
+            "code_editor": {
+                "main": "dist/code_editor_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
+            },
             "comment_edit": {
                 "main": "dist/comment_edit_controller.js",
                 "fetch": "lazy",
@@ -45,6 +51,7 @@
             "@hotwired/stimulus": "^3.0.0",
             "@phosphor-icons/web": "^2.0.3",
             "@popperjs/core": "^2.11.8",
+            "ace-builds": "^1.32.8",
             "quill": "^2.0.0-rc.2"
         }
     },
@@ -52,6 +59,7 @@
         "@hotwired/stimulus": "^3.0.0",
         "@phosphor-icons/web": "^2.0.3",
         "@popperjs/core": "^2.11.8",
+        "ace-builds": "^1.32.8",
         "quill": "^2.0.0-rc.2"
     },
     "devDependencies": {

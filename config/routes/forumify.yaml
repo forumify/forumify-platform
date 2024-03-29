@@ -15,6 +15,12 @@ forum:
     name_prefix: forum_
 
 page:
-    resource: ../../src/Page/Controller
+    resource: ../../src/Cms/Controller/Frontend
     type: attribute
-    name_prefix: page_
+    name_prefix: cms_
+
+page_admin:
+    resource: ../../src/Cms/Controller/Admin
+    type: attribute
+    name_prefix: admin_cms_
+    prefix: admin/cms/

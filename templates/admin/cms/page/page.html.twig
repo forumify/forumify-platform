@@ -1,0 +1,42 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}
+    {% if page is null %}
+        {{ 'admin.cms.pages.create'|trans }}
+    {% else %}
+        {{ page.title }}
+    {% endif %}
+{% endblock %}
+{% block body %}
+    <h1 class="mb-4">
+        {% if page is null %}
+            {{ 'admin.cms.pages.create'|trans }}
+        {% else %}
+            {{ 'admin.cms.pages.edit'|trans({ name: page.title }) }}
+        {% endif %}
+    </h1>
+    <div class="box">
+        {{ form_start(form) }}
+
+        {{ form_row(form.title) }}
+        {{ form_row(form.urlKey) }}
+
+        {% embed '@Forumify/components/tabs.html.twig' %}
+            {% block tabs %}
+                <button type="button" class="btn-link" data-tab-id="twig">Twig</button>
+                <button type="button" class="btn-link" data-tab-id="css">CSS</button>
+                <button type="button" class="btn-link" data-tab-id="javascript">JavaScript</button>
+            {% endblock %}
+            {% block tabpanels %}
+                <div id="twig">{{ form_row(form.twig) }}</div>
+                <div id="css">{{ form_row(form.css) }}</div>
+                <div id="javascript">{{ form_row(form.javascript) }}</div>
+            {% endblock %}
+        {% endembed %}
+
+        <div class="flex justify-center items-center gap-2">
+            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+            <a href="{{ path('forumify_admin_cms_page_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

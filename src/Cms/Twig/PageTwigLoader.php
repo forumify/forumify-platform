@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Page\Twig;
+namespace Forumify\Cms\Twig;
 
-use Forumify\Page\Entity\Page;
-use Forumify\Page\Repository\PageRepository;
+use Forumify\Cms\Entity\Page;
+use Forumify\Cms\Repository\PageRepository;
 use Twig\Error\LoaderError;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
@@ -23,7 +23,7 @@ class PageTwigLoader implements LoaderInterface
             throw new LoaderError("Template $name does not exist.");
         }
 
-        return new Source($page->getSource(), $name);
+        return new Source($page->getTwig(), $name);
     }
 
     public function getCacheKey(string $name): string

@@ -40,6 +40,10 @@
     {% include '@Forumify/form/type/rich_editor.html.twig' %}
 {% endblock %}
 
+{% block code_editor_row %}
+    {% include '@Forumify/form/type/code_editor.html.twig' %}
+{% endblock %}
+
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {%- if type == 'file' -%}

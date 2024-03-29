@@ -43,11 +43,8 @@
     {% block icon %}
         <link rel="icon" href="{{ logo }}">
     {% endblock %}
+    {{ encore_entry_link_tags('frontend') }}
     {% block stylesheets %}
-        {{ encore_entry_link_tags('frontend') }}
-    {% endblock %}
-    {% block javascripts %}
-        {{ encore_entry_script_tags('frontend') }}
     {% endblock %}
 </head>
 <body>
@@ -148,6 +145,9 @@
             Powered by <a href="https://forumify.net">forumify</a>
         </p>
     </footer>
+{% endblock %}
+{{ encore_entry_script_tags('frontend') }}
+{% block javascripts %}
 {% endblock %}
 </body>
 </html>
