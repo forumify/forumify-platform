@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('pages', 'page_')]
 class PageController extends AbstractController
 {
     public function __construct(
@@ -19,25 +20,25 @@ class PageController extends AbstractController
     ) {
     }
 
-    #[Route('pages', 'page_list')]
+    #[Route('', 'list')]
     public function list(): Response
     {
         return $this->render('@Forumify/admin/cms/page/list.html.twig');
     }
 
-    #[Route('pages/create', 'page_create')]
+    #[Route('/create', 'create')]
     public function create(Request $request): Response
     {
         return $this->handleForm($request, null);
     }
 
-    #[Route('pages/{slug}', 'page_edit')]
+    #[Route('/{slug}', 'edit')]
     public function edit(Request $request, Page $page): Response
     {
         return $this->handleForm($request, $page);
     }
 
-    #[Route('pages/{slug}/delete', 'page_delete')]
+    #[Route('/{slug}/delete', 'delete')]
     public function delete(Page $page, Request $request): Response
     {
         if (!$request->get('confirmed')) {

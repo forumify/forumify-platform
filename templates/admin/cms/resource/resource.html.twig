@@ -1,0 +1,15 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}
+    {% if resource is null %}
+        {{ 'admin.cms.resources.create'|trans }}
+    {% else %}
+        {{ resource.name }}
+    {% endif %}
+{% endblock %}
+{% block body %}
+    {% include '@Forumify/admin/components/simple_form.html.twig' with {
+        title: resource is null ? 'admin.cms.resources.create'|trans : 'admin.cms.resources.edit'|trans({ name: resource.name }),
+        form: form,
+        cancelPath: path('forumify_admin_cms_resource_list')
+    } only %}
+{% endblock %}

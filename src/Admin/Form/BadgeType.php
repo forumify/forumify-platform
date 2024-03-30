@@ -9,6 +9,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -32,7 +33,7 @@ class BadgeType extends AbstractType
         $imagePreview = empty($options['data']) ? null : $options['data']->getImage();
 
         $builder
-            ->add('name')
+            ->add('name', TextType::class)
             ->add('description', TextareaType::class, [
                 'empty_data' => '',
                 'required' => false,

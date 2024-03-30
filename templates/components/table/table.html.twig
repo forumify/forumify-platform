@@ -47,7 +47,7 @@
                         <tr>
                             {% for colName, value in row %}
                                 <td class="{{ this.columns[colName].class|default(loop.last ? 'text-right' : '') }}">
-                                    {{ value|raw }}
+                                    {{- value|raw -}}
                                 </td>
                             {% endfor %}
                         </tr>

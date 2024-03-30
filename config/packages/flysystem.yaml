@@ -11,3 +11,9 @@ flysystem:
             adapter: 'local'
             options:
                 directory: '%kernel.project_dir%/public%forumify.avatar.storage.path%'
+
+        # Used for CMS resources
+        resource.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/public%forumify.resource.storage.path%'

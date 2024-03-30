@@ -5,3 +5,5 @@ framework:
                 base_path: '%forumify.avatar.storage.path%'
             forumify.asset:
                 base_path: '%forumify.asset.storage.path%'
+            forumify.resource:
+                base_path: '%forumify.resource.storage.path%'

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Cms\Form;
 
 use Forumify\Cms\Entity\Page;
+use Forumify\Core\Form\CodeEditorLanguage;
 use Forumify\Core\Form\CodeEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,7 +34,7 @@ class PageType extends AbstractType
             ])
             ->add('twig', CodeEditorType::class, [
                 'label' => false,
-                'language' => 'twig',
+                'language' => CodeEditorLanguage::Twig->value,
                 'required' => false,
                 'data' => $page === null
                     ? $this->defaultTwigTemplate()
@@ -42,13 +43,13 @@ class PageType extends AbstractType
             ])
             ->add('css', CodeEditorType::class, [
                 'label' => false,
-                'language' => 'css',
+                'language' => CodeEditorLanguage::Css->value,
                 'required' => false,
                 'empty_data' => '',
             ])
             ->add('javascript', CodeEditorType::class, [
                 'label' => false,
-                'language' => 'javascript',
+                'language' => CodeEditorLanguage::JavaScript->value,
                 'required' => false,
                 'empty_data' => '',
             ]);

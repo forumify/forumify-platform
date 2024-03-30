@@ -1,0 +1,8 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/confirm.html.twig' with {
+        warningText: 'admin.cms.resources.delete_warning'|trans({ name: resource.name }),
+        confirmPath: path('forumify_admin_cms_resource_delete', { slug: resource.slug, confirmed: 1 }),
+        cancelPath: path('forumify_admin_cms_resource_list')
+    } only %}
+{% endblock %}

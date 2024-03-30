@@ -106,6 +106,8 @@ flashes:
     registration_disabled: 'Registrations are not enabled. Please contact an administrator to create an account.'
     reaction_saved: 'Reaction saved.'
     reaction_removed: 'Reaction removed.'
+    resource_saved: 'Resource saved.'
+    resource_removed: 'Resource removed.'
     role_saved: 'Role saved.'
     role_removed: 'Role removed.'
     topic_saved: 'Topic saved.'
@@ -167,16 +169,19 @@ admin:
     badges:
         badges: 'Badges'
         create: 'Create Badge'
-        edit: 'Editing Badge {name}'
+        edit: 'Editing Badge "{name}"'
     cms:
         title: 'Content Management System'
         pages:
             title: 'Pages'
-            delete_warning: 'You are about to delete the page "{title}". If it is still being linked anywhere, it will no longer be found. If the page is referenced in your menu, the menu entry will be deleted.'
             create: 'Create Page'
-            edit: 'Editing Page {name}'
+            edit: 'Editing Page "{name}"'
+            delete_warning: 'You are about to delete the page "{title}". If it is still being linked anywhere, it will no longer be found. If the page is referenced in your menu, the menu entry will be deleted.'
         resources:
             title: 'Resources'
+            create: 'Create CMS Resource'
+            edit: 'Editing Resource "{name}"'
+            delete_warning: 'You are about to delete the resource "{name}". If it is still being used anywhere, it will no longer be found.'
         snippets:
             title: 'Snippets'
     menu_builder:
