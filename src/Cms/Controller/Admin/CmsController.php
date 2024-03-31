@@ -23,7 +23,7 @@ class CmsController extends AbstractController
             new MenuItem($t->trans('admin.cms.resources.title'), $u->generate('forumify_admin_cms_resource_list'), [
                 'icon' => 'ph ph-paperclip',
             ]),
-            new MenuItem($t->trans('admin.cms.snippets.title'), '', [
+            new MenuItem($t->trans('admin.cms.snippets.title'), $u->generate('forumify_admin_cms_snippet_list'), [
                 'icon' => 'ph ph-file-code',
             ]),
         ]);

@@ -1,0 +1,13 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}
+    {{ 'admin.cms.snippets.title'|trans }}
+{% endblock %}
+{% block body %}
+    <h2 class="mb-4">
+        {{ 'admin.cms.snippets.title'|trans }}
+        <a class="btn-primary btn-small btn-icon" href="{{ path('forumify_admin_cms_snippet_create') }}">
+            <i class="ph ph-plus"></i>
+        </a>
+    </h2>
+    {{ component('SnippetTable') }}
+{% endblock %}

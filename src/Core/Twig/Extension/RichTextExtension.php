@@ -10,37 +10,6 @@ use Twig\TwigFilter;
 
 class RichTextExtension extends AbstractExtension
 {
-    private const TAG_WHITELIST = [
-        'h1',
-        'h2',
-        'h3',
-        'h4',
-        'h5',
-        'h6',
-        'div',
-        'p',
-        'span',
-        'br',
-        'a',
-        'img',
-        'strong',
-        'em',
-        'blockquote',
-        'code',
-        'pre',
-        'ul',
-        'ol',
-        'li',
-    ];
-
-    private const ATTR_WHITELIST = [
-        'class',
-        'style',
-        'href',
-        'src',
-        'alt',
-    ];
-
     public function __construct(private readonly HTMLSanitizer $sanitizer)
     {
     }

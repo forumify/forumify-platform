@@ -1,0 +1,15 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}
+    {% if snippet is null %}
+        {{ 'admin.cms.snippets.create'|trans }}
+    {% else %}
+        {{ snippet.name }}
+    {% endif %}
+{% endblock %}
+{% block body %}
+    {% include '@Forumify/admin/components/simple_form.html.twig' with {
+        title: snippet is null ? 'admin.cms.snippets.create'|trans : 'admin.cms.snippets.edit'|trans({ name: snippet.name }),
+        form: form,
+        cancelPath: path('forumify_admin_cms_snippet_list')
+    } only %}
+{% endblock %}

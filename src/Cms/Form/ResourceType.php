@@ -31,16 +31,24 @@ class ResourceType extends AbstractType
         /** @var Resource|null $resource */
         $resource = $options['data'] ?? null;
 
-        $builder
-            ->add('name', TextType::class)
-            ->add('file', FileType::class, [
-                'mapped' => false,
-                'required' => $resource === null,
-                'attr' => [
-                    'preview' => !empty($resource?->getPath())
-                        ? $this->packages->getUrl($resource->getPath(), 'forumify.resource')
-                        : null,
-                ],
+        $builder->add('name', TextType::class, [
+            'disabled' => $resource !== null,
+        ]);
+
+        if ($resource !== null) {
+            $builder->add('slug', TextType::class, [
+                'disabled' => true,
             ]);
+        }
+
+        $builder->add('file', FileType::class, [
+            'mapped' => false,
+            'required' => $resource === null,
+            'attr' => [
+                'preview' => !empty($resource?->getPath())
+                    ? $this->packages->getUrl($resource->getPath(), 'forumify.resource')
+                    : null,
+            ],
+        ]);
     }
 }
