@@ -184,5 +184,8 @@ admin:
             delete_warning: 'You are about to delete the resource "{name}". If it is still being used anywhere, it will no longer be found.'
         snippets:
             title: 'Snippets'
+            create: 'Create CMS Snippet'
+            edit: 'Editing Snippet "{name}"'
+            delete_warning: 'You are about to delete the snippet "{name}". If it is still being used anywhere, it will no longer be found.'
     menu_builder:
         title: 'Menu Builder'
