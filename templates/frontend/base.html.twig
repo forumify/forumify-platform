@@ -60,7 +60,7 @@
                 {% endblock %}
                 <div class="flex-grow flex flex-row items-center justify-between">
                     <nav class="header-navigation">
-                        {% include '@Forumify/frontend/components/navigation.html.twig' %}
+                        {{ forum_menu() }}
                     </nav>
                     {% if app.user is not null %}
                         <div class="flex flex-row">

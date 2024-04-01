@@ -15,11 +15,12 @@ class ACLRuntime implements RuntimeExtensionInterface
     {
     }
 
-    public function canAccess(string $permission, AccessControlledEntityInterface $entity): bool
+    public function canAccess(string $permission, AccessControlledEntityInterface $entity, $default = false): bool
     {
         return $this->security->isGranted(VoterAttribute::ACL->value, [
             'permission' => $permission,
-            'entity' => $entity
+            'entity' => $entity,
+            'default' => $default,
         ]);
     }
 }

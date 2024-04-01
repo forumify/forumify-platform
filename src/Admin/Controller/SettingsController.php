@@ -15,19 +15,19 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class SettingsController extends AbstractController
 {
     #[Route('/settings', 'settings')]
-    public function __invoke(UrlGeneratorInterface $url, TranslatorInterface $trans): Response
+    public function __invoke(UrlGeneratorInterface $u, TranslatorInterface $t): Response
     {
         $menu = new Menu(items: [
-            new MenuItem($trans->trans('roles'), $url->generate('forumify_admin_role_list'), [
+            new MenuItem($t->trans('roles'), $u->generate('forumify_admin_role_list'), [
                 'icon' => 'ph ph-lock-key',
             ]),
-            new MenuItem($trans->trans('reactions'), $url->generate('forumify_admin_reaction_list'), [
+            new MenuItem($t->trans('reactions'), $u->generate('forumify_admin_reaction_list'), [
                 'icon' => 'ph ph-smiley-wink',
             ]),
-            new MenuItem($trans->trans('admin.badges.badges'), $url->generate('forumify_admin_badge_list'), [
+            new MenuItem($t->trans('admin.badges.badges'), $u->generate('forumify_admin_badge_list'), [
                 'icon' => 'ph ph-medal-military'
             ]),
-            new MenuItem($trans->trans('admin.menu_builder.title'), '', [
+            new MenuItem($t->trans('admin.menu_builder.title'), $u->generate('forumify_admin_menu_builder'), [
                 'icon' => 'ph ph-list'
             ]),
         ]);

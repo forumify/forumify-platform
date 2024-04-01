@@ -29,10 +29,11 @@ class AccessControlListVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         ['permission' => $permission, 'entity' => $entity] = $subject;
+        $default = $subject['default'] ?? false;
 
         $acl = $this->aclRepository->findOneByEntityAndPermission($entity, $permission);
         if ($acl === null) {
-            return false;
+            return $default;
         }
 
         /** @var User|null $user */
