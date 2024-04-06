@@ -29,6 +29,11 @@ abstract class AbstractMenuType implements MenuTypeInterface
         return $this->render($item);
     }
 
+    public function getPayloadFormType(): ?string
+    {
+        return null;
+    }
+
     protected function canView(MenuItem $item): bool
     {
         return $this->security->isGranted(VoterAttribute::ACL->value, [

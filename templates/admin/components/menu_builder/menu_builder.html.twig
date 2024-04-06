@@ -1,0 +1,31 @@
+<div {{ attributes }}>
+    <div class="flex items-start gap-4">
+        <div class="w-40">
+            {% include '@Forumify/admin/components/menu_builder/collection.html.twig' with {
+                children: this.roots,
+                indent: false,
+            } %}
+        </div>
+        {% if this.formVisible %}
+            <div class="w-60 box">
+                <h4>
+                    {% if this.selectedItem is not null %}
+                        {{ this.selectedItem.name }}
+                    {% else %}
+                        {{ 'admin.menu_builder.create_collection_item'|trans }}
+                    {% endif %}
+                </h4>
+                {{ form_start(form, { attr: {
+                    'data-model': 'norender|*',
+                    'data-action': 'live#action:prevent',
+                    'data-live-action-param': 'save'
+                } }) }}
+                {{ form_widget(form) }}
+                <div class="flex justify-center items-center gap-2">
+                    <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        {% endif %}
+    </div>
+</div>

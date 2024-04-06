@@ -11,4 +11,5 @@ interface MenuTypeInterface
 {
     public function getType(): string;
     public function buildItem(MenuItemEntity $item): string;
+    public function getPayloadFormType(): ?string;
 }

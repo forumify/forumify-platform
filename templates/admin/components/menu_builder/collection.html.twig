@@ -1,0 +1,73 @@
+<ul class="{% if indent %}ml-6{% endif %} mt-2">
+    {% for child in children %}
+        <li class="mb-2">
+            {% set btnClass = this.selectedItem is not null and this.selectedItem.id == child.id ? 'btn-outlined-highlighted' : 'btn-outlined' %}
+            <a
+                class="{{ btnClass }} w-100 flex justify-between"
+                style="background-color: var(--c-elevation-1)"
+                data-action="live#action"
+                data-live-action-param="selectItem"
+                data-live-item-id-param="{{ child.id }}"
+            >
+                <div class="flex items-center">
+                    <button
+                        class="btn-link btn-small btn-icon p-1"
+                        data-action="live#action"
+                        data-live-action-param="reorderItem"
+                        data-live-item-id-param="{{ child.id }}"
+                        data-live-direction-param="down"
+                        {% if loop.last %}
+                            disabled
+                        {% endif %}
+                    >
+                        <i class="ph ph-arrow-down"></i>
+                    </button>
+                    <button
+                        class="btn-link btn-small btn-icon p-1 mr-2"
+                        data-action="live#action"
+                        data-live-action-param="reorderItem"
+                        data-live-item-id-param="{{ child.id }}"
+                        data-live-direction-param="up"
+                        {% if loop.first %}
+                            disabled
+                        {% endif %}
+                    >
+                        <i class="ph ph-arrow-up"></i>
+                    </button>
+                    {{ child.name }}
+                </div>
+                <div>
+                    <button
+                        class="btn-link btn-small btn-icon"
+                    >
+                        <i class="ph ph-lock"></i>
+                    </button>
+                    <button
+                        class="btn-link btn-small btn-icon"
+                        data-action="live#action"
+                        data-live-action-param="delete"
+                        data-live-item-id-param="{{ child.id }}"
+                    >
+                        <i class="ph ph-x"></i>
+                    </button>
+                </div>
+            </a>
+            {% if child.type == 'collection' %}
+                {% include '@Forumify/admin/components/menu_builder/collection.html.twig' with {
+                    children: child.children,
+                    indent: true,
+                } %}
+            {% endif %}
+        </li>
+    {% endfor %}
+    <li>
+        <a
+            class="btn-outlined w-100 flex justify-start"
+            data-action="live#action"
+            data-live-action-param="setCreating"
+        >
+            <i class="ph ph-plus"></i>
+            {{ 'admin.menu_builder.create_collection_item'|trans }}
+        </a>
+    </li>
+</ul>

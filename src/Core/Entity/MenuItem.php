@@ -18,13 +18,13 @@ class MenuItem implements AccessControlledEntityInterface
     private string $name;
 
     #[ORM\Column(type: 'integer')]
-    private int $position;
+    private int $position = 0;
 
     #[ORM\Column]
     private string $type;
 
     #[ORM\Column(type: 'json')]
-    private array $payload;
+    private array $payload = [];
 
     #[ORM\ManyToOne(MenuItem::class, inversedBy: 'children')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
@@ -87,7 +87,7 @@ class MenuItem implements AccessControlledEntityInterface
         return $this->parent;
     }
 
-    public function setParent(MenuItem $parent): void
+    public function setParent(?MenuItem $parent): void
     {
         $this->parent = $parent;
     }

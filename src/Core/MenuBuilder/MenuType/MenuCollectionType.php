@@ -45,16 +45,7 @@ class MenuCollectionType extends AbstractMenuType
             $menuHtml .= $menuType->render($child);
         }
 
-        $template = "<div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement='{{ placement }}'>
-            <a class='btn-link' {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
-                {{ name }}
-            </a>
-            <div class='menu' {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
-                {{ inner|raw }}
-            </div>
-        </div>";
-
-        return $this->twig->createTemplate($template)->render([
+        return $this->twig->render('@Forumify/frontend/menu/collection.html.twig', [
             'name' => $item->getName(),
             'placement' => $item->getParent() === null ? 'bottom-start' : 'right',
             'inner' => $menuHtml,
