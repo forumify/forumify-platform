@@ -28,6 +28,9 @@ class MenuBuilder extends AbstractController
     public bool $isCreating = false;
 
     #[LiveProp]
+    public ?MenuItem $parent = null;
+
+    #[LiveProp]
     public ?MenuItem $selectedItem = null;
 
     public function __construct(
@@ -53,14 +56,20 @@ class MenuBuilder extends AbstractController
     {
         $this->selectedItem = $this->menuItemRepository->find($itemId);
         $this->isCreating = false;
+        $this->parent = null;
+
         $this->resetForm();
     }
 
     #[LiveAction]
-    public function setCreating(): void
+    public function setCreating(#[LiveArg] ?int $parentId): void
     {
         $this->selectedItem = null;
         $this->isCreating = true;
+        $this->parent = $parentId !== null
+            ? $this->menuItemRepository->find($parentId)
+            : null;
+
         $this->resetForm();
     }
 
@@ -87,11 +96,11 @@ class MenuBuilder extends AbstractController
 
     private function enrichNew(MenuItem $menuItem): void
     {
-        $menuItem->setParent($this->selectedItem);
+        $menuItem->setParent($this->parent);
 
-        $siblings = $this->selectedItem === null
+        $siblings = $this->parent === null
             ? $this->getRoots()
-            : $this->selectedItem->getChildren();
+            : $this->parent->getChildren();
 
         $highestPosition = 0;
         foreach ($siblings as $sibling) {

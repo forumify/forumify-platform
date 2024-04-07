@@ -8,7 +8,7 @@ use Forumify\Core\Entity\MenuItem;
 use Forumify\Core\MenuBuilder\Form\RoutePayloadType;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class MenuRouteType extends AbstractMenuType
+class RouteMenuType extends UrlMenuType
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator
@@ -25,16 +25,13 @@ class MenuRouteType extends AbstractMenuType
         return RoutePayloadType::class;
     }
 
-    public function render(MenuItem $item): string
+    protected function getUrl(MenuItem $item): string
     {
         $payload = $item->getPayload();
 
-        $label = htmlentities($item->getName());
-        $url = $this->urlGenerator->generate(
+        return $this->urlGenerator->generate(
             $payload['route'] ?? 'forumify_core_index',
             $payload['parameters'] ?? []
         );
-
-        return "<a class='btn-link' href='$url'>$label</a>";
     }
 }

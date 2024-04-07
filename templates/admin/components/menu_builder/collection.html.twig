@@ -55,6 +55,7 @@
             {% if child.type == 'collection' %}
                 {% include '@Forumify/admin/components/menu_builder/collection.html.twig' with {
                     children: child.children,
+                    item: child,
                     indent: true,
                 } %}
             {% endif %}
@@ -65,6 +66,7 @@
             class="btn-outlined w-100 flex justify-start"
             data-action="live#action"
             data-live-action-param="setCreating"
+            data-live-parent-id-param="{{ item is defined ? item.id : 'null' }}"
         >
             <i class="ph ph-plus"></i>
             {{ 'admin.menu_builder.create_collection_item'|trans }}

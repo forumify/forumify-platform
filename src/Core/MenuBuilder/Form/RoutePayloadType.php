@@ -40,6 +40,7 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
         $builder
             ->add('route', ChoiceType::class, [
                 'choices' => array_combine($routeChoices, $routeChoices),
+                'placeholder' => 'admin.menu_builder.route.select_route',
             ])
             ->add('parameters', TextareaType::class)
             ->setDataMapper($this);

@@ -12,6 +12,8 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function Symfony\Component\String\u;
+
 class MenuItemType extends AbstractType
 {
     /**
@@ -44,12 +46,11 @@ class MenuItemType extends AbstractType
             ? $this->menuTypes[$menuItem->getType()]
             : null;
 
-        $typeOptions = array_keys($this->menuTypes);
-
         $builder
             ->add('name')
             ->add('type', ChoiceType::class, [
-                'choices' => array_combine($typeOptions, $typeOptions),
+                'choices' => array_keys($this->menuTypes),
+                'choice_label' => $this->typeLabel(...),
                 'placeholder' => 'admin.menu_builder.select_type',
                 'disabled' => $menuItem !== null,
             ]);
@@ -60,5 +61,14 @@ class MenuItemType extends AbstractType
                 'label' => false,
             ]);
         }
+    }
+
+    private function typeLabel(string $type): string
+    {
+        return u($type)
+            ->replace('_', ' ')
+            ->replace('-', ' ')
+            ->title()
+            ->toString();
     }
 }

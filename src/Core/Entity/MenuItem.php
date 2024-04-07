@@ -77,6 +77,11 @@ class MenuItem implements AccessControlledEntityInterface
         return $this->payload;
     }
 
+    public function getPayloadValue(string $key): mixed
+    {
+        return $this->payload[$key] ?? null;
+    }
+
     public function setPayload(array $payload): void
     {
         $this->payload = $payload;

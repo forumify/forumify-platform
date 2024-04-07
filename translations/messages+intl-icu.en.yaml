@@ -191,3 +191,7 @@ admin:
         title: 'Menu Builder'
         create_collection_item: 'Add Item'
         select_type: 'Select type'
+        route:
+            select_route: 'Select a route'
+        page:
+            select_page: 'Select a page'
