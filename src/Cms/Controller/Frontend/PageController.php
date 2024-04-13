@@ -12,9 +12,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Environment;
 
 class PageController extends AbstractController
 {
+    public function __construct(private readonly Environment $twig)
+    {
+    }
+
     #[Route('/{urlKey?}', 'page', requirements: ['urlKey' => '.*'], priority: -1)]
     public function __invoke(
         ?string $urlKey,
@@ -59,6 +64,10 @@ class PageController extends AbstractController
         $response->setPublic();
         if ($response->isNotModified($request)) {
             return $response;
+        }
+
+        if (!empty($content)) {
+            $content = $this->twig->createTemplate($content)->render();
         }
 
         $response->setContent($content);
