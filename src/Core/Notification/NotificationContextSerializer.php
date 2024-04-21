@@ -24,7 +24,7 @@ class NotificationContextSerializer
                 continue;
             }
 
-            if (is_scalar($v)) {
+            if (is_scalar($v) || $v === null) {
                 $newContext[$k] = $v;
                 continue;
             }

@@ -43,7 +43,11 @@ abstract class AbstractEmailNotificationType implements NotificationTypeInterfac
             ->to(new Address($recipient->getEmail(), $recipient->getUsername()))
             ->subject($this->getTitle($notification))
             ->htmlTemplate($this->getEmailTemplate($notification))
-            ->context($notification->getDeserializedContext());
+            ->context([
+                'notification' => $notification,
+                'this' => $this,
+                ...$notification->getDeserializedContext(),
+            ]);
 
         try {
             $this->mailer->send($email);

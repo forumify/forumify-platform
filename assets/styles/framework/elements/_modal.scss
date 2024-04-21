@@ -28,6 +28,8 @@
     & > .modal-body {
         width: 100%;
         max-width: 800px;
+        max-height: 80vh;
+        overflow-y: auto;
         margin: 0 var(--spacing-2);
         position: relative;
 
