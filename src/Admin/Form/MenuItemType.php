@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Forumify\Core\Entity\MenuItem;
 use Forumify\Core\MenuBuilder\MenuTypeInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -53,6 +55,18 @@ class MenuItemType extends AbstractType
                 'choice_label' => $this->typeLabel(...),
                 'placeholder' => 'admin.menu_builder.select_type',
                 'disabled' => $menuItem !== null,
+            ])
+            ->add('parent', EntityType::class, [
+                'class' => MenuItem::class,
+                'required' => false,
+                'placeholder' => 'admin.menu_builder.parent_root',
+                'choice_label' => 'name',
+                'help' => 'admin.menu_builder.parent_help',
+                'query_builder' => fn (EntityRepository $repository) => $repository
+                    ->createQueryBuilder('mi')
+                    ->where('mi.type = :type')
+                    ->setParameter('type', 'collection')
+                    ->orderBy('mi.position', 'ASC'),
             ]);
 
         $payloadType = $menuType?->getPayloadFormType();

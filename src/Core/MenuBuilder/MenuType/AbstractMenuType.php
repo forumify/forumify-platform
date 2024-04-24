@@ -39,7 +39,6 @@ abstract class AbstractMenuType implements MenuTypeInterface
         return $this->security->isGranted(VoterAttribute::ACL->value, [
             'permission' => 'view',
             'entity' => $item,
-            'default' => true,
         ]);
     }
 

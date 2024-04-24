@@ -42,7 +42,11 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
                 'choices' => array_combine($routeChoices, $routeChoices),
                 'placeholder' => 'admin.menu_builder.route.select_route',
             ])
-            ->add('parameters', TextareaType::class)
+            ->add('parameters', TextareaType::class, [
+                'help' => 'admin.menu_builder.route.parameters_help',
+                'required' => false,
+                'empty_data' => '{}'
+            ])
             ->setDataMapper($this);
     }
 
@@ -71,8 +75,11 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
     public function mapDataToForms(mixed $viewData, Traversable $forms): void
     {
         $formRows = iterator_to_array($forms);
-        $formRows['route']->setData($viewData['route']);
-        $formRows['parameters']->setData(json_encode($viewData['parameters'], JSON_PRETTY_PRINT));
+
+        if (isset($viewData['route'])) {
+            $formRows['route']->setData($viewData['route']);
+            $formRows['parameters']->setData(json_encode($viewData['parameters'], JSON_PRETTY_PRINT));
+        }
     }
 
     /**

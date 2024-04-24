@@ -193,5 +193,8 @@ admin:
         select_type: 'Select type'
         route:
             select_route: 'Select a route'
+            parameters_help: 'Parameters in JSON format.'
         page:
             select_page: 'Select a page'
+        parent_root: 'Root (no parent)'
+        parent_help: 'Move the menu item to a different parent, parent must be of type "collection".'

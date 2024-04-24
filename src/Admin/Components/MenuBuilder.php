@@ -9,6 +9,7 @@ use Forumify\Core\Entity\MenuItem;
 use Forumify\Core\Repository\MenuItemRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -159,5 +160,17 @@ class MenuBuilder extends AbstractController
         $item->setPosition($newPosition);
 
         $this->menuItemRepository->saveAll([$item, $toSwap]);
+    }
+
+    #[LiveAction]
+    public function manageACL(#[LiveArg] int $itemId): RedirectResponse
+    {
+        /** @var MenuItem|null $menuItem */
+        $menuItem = $this->menuItemRepository->find($itemId);
+        if ($menuItem === null) {
+            throw $this->createNotFoundException();
+        }
+
+        return $this->redirectToRoute('forumify_admin_acl', (array)$menuItem->getACLParameters());
     }
 }
