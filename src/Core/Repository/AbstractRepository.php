@@ -43,7 +43,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         if ($flush) {
-            $this->getEntityManager()->flush();
+            $this->flush();
         }
     }
 

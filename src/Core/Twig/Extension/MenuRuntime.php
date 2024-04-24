@@ -9,7 +9,7 @@ use Forumify\Core\Repository\MenuItemRepository;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Twig\Extension\RuntimeExtensionInterface;
 
-class MenuExtensionRuntime implements RuntimeExtensionInterface
+class MenuRuntime implements RuntimeExtensionInterface
 {
     /**
      * @var array<string, MenuTypeInterface>

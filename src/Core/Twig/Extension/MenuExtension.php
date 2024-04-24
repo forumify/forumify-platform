@@ -18,7 +18,7 @@ class MenuExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('forum_menu', [MenuExtensionRuntime::class, 'buildForumMenu'], ['is_safe' => ['html']]),
+            new TwigFunction('forum_menu', [MenuRuntime::class, 'buildForumMenu'], ['is_safe' => ['html']]),
             new TwigFunction('admin_menu', $this->adminMenuManager->getMenu(...)),
         ];
     }

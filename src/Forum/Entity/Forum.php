@@ -41,6 +41,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     private Collection $children;
 
     #[ORM\OneToMany(mappedBy: 'forum', targetEntity: Topic::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $topics;
 
     #[ORM\ManyToOne(targetEntity: ForumGroup::class, inversedBy: 'forums')]
