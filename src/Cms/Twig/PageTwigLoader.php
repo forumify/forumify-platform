@@ -43,6 +43,10 @@ class PageTwigLoader implements LoaderInterface
 
     public function exists(string $name): bool
     {
+        if (str_ends_with($name, '.twig')) {
+            return false;
+        }
+
         return $this->getPage($name) !== null;
     }
 
