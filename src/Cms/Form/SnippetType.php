@@ -40,7 +40,7 @@ class SnippetType extends AbstractType
 
         $builder->add('type', ChoiceType::class, [
             'choices' => [
-                'Html' => 'html',
+                'Html (Twig)' => 'html',
                 'Rich Text' => 'rich_text',
             ],
             'disabled' => $snippet !== null,
@@ -51,7 +51,7 @@ class SnippetType extends AbstractType
                 'html' => [
                     'type' => CodeEditorType::class,
                     'options' => [
-                        'language' => CodeEditorLanguage::Html->value,
+                        'language' => CodeEditorLanguage::Twig->value,
                     ]
                 ],
                 'rich_text' => [

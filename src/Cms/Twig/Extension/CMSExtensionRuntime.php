@@ -8,6 +8,7 @@ use Forumify\Cms\Repository\ResourceRepository;
 use Forumify\Cms\Repository\SnippetRepository;
 use Forumify\Core\Service\HTMLSanitizer;
 use Symfony\Component\Asset\Packages;
+use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
 class CMSExtensionRuntime implements RuntimeExtensionInterface
@@ -15,6 +16,7 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
     public function __construct(
         private readonly ResourceRepository $resourceRepository,
         private readonly SnippetRepository $snippetRepository,
+        private readonly Environment $twig,
         private readonly Packages $packages,
         private readonly HTMLSanitizer $sanitizer,
     ) {
@@ -38,7 +40,9 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
         }
 
         if ($snippet->getType() === 'html') {
-            return $snippet->getContent();
+            return $this->twig
+                ->createTemplate($snippet->getContent())
+                ->render();
         }
 
         $sanitized = $this->sanitizer->sanitize($snippet->getContent());
