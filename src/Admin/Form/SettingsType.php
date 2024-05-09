@@ -8,6 +8,7 @@ use Forumify\Core\Repository\SettingRepository;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -56,6 +57,18 @@ class SettingsType extends AbstractType
             ->add('enable_registrations', CheckboxType::class, [
                 'data' => (bool)$this->settingRepository->get('core.enable_registrations'),
                 'required' => false,
+            ])
+            ->add('enable_email_login', ChoiceType::class, [
+                'data' => (string)$this->settingRepository->get('core.enable_email_login'),
+                'label' => 'Login type',
+                'help' => 'Enable login via email, username, or both.',
+                'required' => false,
+                'choices' => [
+                    'Username' => 'username',
+                    'Email' => 'email',
+                    'Both' => 'both',
+                ],
+                'placeholder' => null,
             ])
             ->add('enable_recaptcha', CheckboxType::class, [
                 'data' => (bool)$this->settingRepository->get('core.recaptcha.enabled'),
