@@ -1,28 +1,109 @@
 {% extends '@Forumify/admin/base.html.twig' %}
-{% block title_page %}Plugins{% endblock %}
+{% block title_page %}{{ 'admin.plugins.plugins'|trans }}{% endblock %}
 {% block body %}
-    <ul>
-        {% for metadata in pluginMetadatas %}
-            <div class="box flex{{ loop.last ? '' : ' mb-4' }}">
-                <div class="w-75">
-                    <div class="mb-2">
-                        <h3>{{ metadata.name }}</h3>
-                        <p>{{ metadata.description }}</p>
-                    </div>
-                    <p>
-                        {% if metadata.homepage %}
-                            <a href="{{ metadata.homepage }}" target="_blank">{{ 'created_by'|trans({ author:metadata.author }) }}</a>
-                        {% else %}
-                            {{ 'created_by'|trans({ author:metadata.author }) }}
-                        {% endif %}
-                    </p>
-                </div>
-                <div class="w-25 flex justify-end">
-                    {% if metadata.settingsRoute %}
-                        <a class="btn-outlined btn-icon" href="{{ path(metadata.settingsRoute) }}"><i class="ph ph-wrench"></i></a>
+    <div>
+        <h2>{{ 'admin.plugins.platform.title'|trans }}</h2>
+        <div class="box mb-6">
+            <div class="flex items-baseline gap-1">
+                <h3>{{ 'admin.plugins.platform.name'|trans }}</h3>
+                <span class="text-small">
+                    (v{{ platformVersions.version }})
+                    {% if platformVersions.version != platformVersions.latest %}
+                        <span class="ml-2">
+                            <i class="ph ph-download"></i>
+                            {{ 'admin.plugins.update'|trans({ version: platformVersions.latest }) }}
+                        </span>
                     {% endif %}
-                </div>
+                </span>
             </div>
-        {% endfor %}
-    </ul>
+            <p>{{ 'admin.plugins.platform.description'|trans }}</p>
+        </div>
+    </div>
+    <div {{ stimulus_controller('forumify/forumify-platform/plugin_manager') }}>
+        <h2>
+            {{ 'admin.plugins.plugins'|trans }}
+            <a class="btn-outlined btn-small btn-icon" href="{{ path('forumify_admin_plugin_refresh') }}">
+                <i class="ph ph-arrows-clockwise"></i>
+            </a>
+        </h2>
+        <div>
+            <div
+                class="alert-error mb-6 d-none"
+                {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'errorBox') }}
+            ></div>
+            <div
+                class="flex justify-center d-none"
+                {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'loader') }}
+            >
+                {% include '@Forumify/components/loader.html.twig' %}
+            </div>
+            <ul {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'pluginList') }}>
+                {% for plugin in plugins|filter(p => p.plugin is not null) %}
+                    {% set metadata = plugin.plugin.pluginMetadata %}
+                    {% set updateAvailable = plugin.version != plugin.latestVersion %}
+                    <div class="box flex{{ loop.last ? '' : ' mb-4' }}">
+                        <div class="w-75">
+                            <div class="flex items-baseline gap-1">
+                                <h3>{{ metadata.name }}</h3>
+                                <span class="text-small">
+                                (v{{ plugin.version }})
+                                {% if updateAvailable %}
+                                    <span class="ml-2">
+                                    <i class="ph ph-download"></i>
+                                    {{ 'admin.plugins.update_available'|trans({ version: plugin.latestVersion }) }}
+                                </span>
+                                {% endif %}
+                            </span>
+                            </div>
+                            <p>{{ metadata.description }}</p>
+                            <p class="mt-4">
+                                {% if metadata.homepage %}
+                                    <a href="{{ metadata.homepage }}" target="_blank">{{ 'created_by'|trans({ author: metadata.author }) }}</a>
+                                {% else %}
+                                    {{ 'created_by'|trans({ author:metadata.author }) }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div class="w-25 flex justify-end gap-2">
+                            <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+                                <button class="btn-outlined" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+                                    <i class="ph ph-caret-down"></i>{{ 'admin.plugins.manage'|trans }}
+                                </button>
+                                <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+                                    {% if updateAvailable %}
+                                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
+                                            action: 'update',
+                                            plugin: plugin.id
+                                        }) }}>
+                                            <i class="ph ph-download"></i>{{ 'admin.plugins.update'|trans }}
+                                        </a>
+                                    {% endif %}
+                                    {% if plugin.active %}
+                                        {% if metadata.settingsRoute %}
+                                            <a class="btn-link" href="{{ path(metadata.settingsRoute) }}">
+                                                <i class="ph ph-wrench"></i>{{ 'admin.plugins.settings'|trans }}
+                                            </a>
+                                        {% endif %}
+                                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
+                                            action: 'deactivate',
+                                            plugin: plugin.id
+                                        }) }}>
+                                            <i class="ph ph-power"></i>{{ 'admin.plugins.deactivate'|trans }}
+                                        </a>
+                                    {% else %}
+                                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
+                                            action: 'activate',
+                                            plugin: plugin.id
+                                        }) }}>
+                                            <i class="ph ph-power"></i>{{ 'admin.plugins.activate'|trans }}
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

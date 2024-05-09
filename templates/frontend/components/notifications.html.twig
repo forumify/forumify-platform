@@ -13,28 +13,30 @@
             {% set notifications = this.notifications %}
             {% for notification in notifications %}
                 {% set notificationType = this.notificationType(notification) %}
-                <li class="p-3 flex gap-2 notification">
-                    {% set image = notificationType.image(notification) %}
-                    {% if image is not empty %}
-                        <img width="48px" height="48px" style="object-fit: contain" src="{{ notificationType.image(notification) }}" alt="">
-                    {% endif %}
-                    <div>
-                        {% set notificationTitle %}
-                            <p class="text-subtitle {% if not notification.seen %}text-bold{% endif %}">
-                                {{ notificationType.title(notification) }}
-                            </p>
-                        {% endset %}
-                        {% set notificationUrl = notificationType.url(notification) %}
-                        {% if notificationUrl is not empty %}
-                            <a href="{{ notificationUrl }}">{{ notificationTitle }}</a>
-                        {% else %}
-                            {{ notificationTitle }}
+                {% if notificationType is not null %}
+                    <li class="p-3 flex gap-2 notification">
+                        {% set image = notificationType.image(notification) %}
+                        {% if image is not empty %}
+                            <img width="48px" height="48px" style="object-fit: contain" src="{{ notificationType.image(notification) }}" alt="">
                         {% endif %}
-                        <p class="text-small">
-                            {{ notificationType.description(notification) }}
-                        </p>
-                    </div>
-                </li>
+                        <div>
+                            {% set notificationTitle %}
+                                <p class="text-subtitle {% if not notification.seen %}text-bold{% endif %}">
+                                    {{ notificationType.title(notification) }}
+                                </p>
+                            {% endset %}
+                            {% set notificationUrl = notificationType.url(notification) %}
+                            {% if notificationUrl is not empty %}
+                                <a href="{{ notificationUrl }}">{{ notificationTitle }}</a>
+                            {% else %}
+                                {{ notificationTitle }}
+                            {% endif %}
+                            <p class="text-small">
+                                {{ notificationType.description(notification) }}
+                            </p>
+                        </div>
+                    </li>
+                {% endif %}
             {% else %}
                 <div class="flex justify-center p-6">
                     {{ 'no_notifications'|trans }}

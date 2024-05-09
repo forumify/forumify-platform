@@ -8,6 +8,8 @@ services:
     Forumify\:
         resource: '../src/'
         exclude:
-            - '../src/**/DataFixture/'
-            - '../src/**/DependencyInjection/'
-            - '../src/**/Entity/'
+            - '../src/**/DataFixture/*'
+            - '../src/**/DependencyInjection/*'
+            - '../src/**/Entity/*'
+            - '../src/Plugin/Application/*'
+            - '../src/Core/ForumifyKernel.php'

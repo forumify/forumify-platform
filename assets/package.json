@@ -34,6 +34,12 @@
                 "enabled": true,
                 "autoimport": {}
             },
+            "plugin_manager": {
+                "main": "dist/plugin_manager_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
+            },
             "rich_editor": {
                 "main": "dist/rich_editor_controller.js",
                 "fetch": "eager",

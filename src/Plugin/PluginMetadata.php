@@ -12,6 +12,7 @@ class PluginMetadata
         public readonly string $description = '',
         public readonly ?string $homepage = null,
         public readonly ?string $settingsRoute = null,
+        public readonly ?string $image = null,
     ) {
     }
 }

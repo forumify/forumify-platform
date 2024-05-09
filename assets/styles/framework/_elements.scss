@@ -220,6 +220,10 @@ input[type='file'] {
     }
 }
 
+iframe {
+    border: none;
+}
+
 @import 'elements/alert';
 @import 'elements/table';
 @import 'elements/tabs';
@@ -228,3 +232,4 @@ input[type='file'] {
 @import 'elements/rich-editor';
 @import 'elements/code-editor';
 @import 'elements/rich-text';
+@import 'elements/loader';

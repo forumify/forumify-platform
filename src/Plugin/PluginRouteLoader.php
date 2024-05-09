@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Plugin\Routing;
+namespace Forumify\Plugin;
 
-use Forumify\Plugin\Service\LoadedPluginService;
+use Forumify\Core\Repository\PluginRepository;
+use Forumify\Plugin\Entity\Plugin;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -15,7 +16,7 @@ class PluginRouteLoader extends Loader
 {
     private const ROUTE_LOCATION = '/config/routes.yaml';
 
-    public function __construct(private readonly LoadedPluginService $pluginService)
+    public function __construct(private readonly PluginRepository $pluginRepository)
     {
         parent::__construct();
     }
@@ -29,9 +30,13 @@ class PluginRouteLoader extends Loader
     {
         $routeCollection = new RouteCollection();
 
-        foreach ($this->pluginService->getLoadedPlugins() as $plugin) {
-            if ($this->bundleHasRoutes($plugin)) {
-                $this->loadBundleRoutes($plugin, $routeCollection);
+        /** @var Plugin $plugin */
+        foreach ($this->pluginRepository->findByActive() as $plugin) {
+            $bundleClass = $plugin->getPluginClass();
+            $bundle = new $bundleClass();
+
+            if ($this->bundleHasRoutes($bundle)) {
+                $this->loadBundleRoutes($bundle, $routeCollection);
             }
         }
 

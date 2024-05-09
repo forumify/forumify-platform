@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand('forumify:platform:install')]
+#[AsCommand('forumify:install')]
 class InstallCommand extends Command
 {
     public function __construct(private readonly SettingRepository $settingRepository)

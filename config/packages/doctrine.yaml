@@ -25,3 +25,9 @@ doctrine:
                 dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Cms/Entity'
                 prefix: Forumify\Cms\Entity
                 alias: ForumifyCms
+            forumify_plugin:
+                is_bundle: false
+                type: attribute
+                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Plugin/Entity'
+                prefix: Forumify\Plugin\Entity
+                alias: ForumifyPlugin

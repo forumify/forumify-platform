@@ -58,7 +58,7 @@ class Notifications extends AbstractController
         ]);
     }
 
-    public function getNotificationType(Notification $notification): NotificationTypeInterface
+    public function getNotificationType(Notification $notification): ?NotificationTypeInterface
     {
         return $this->notificationTypeCollection->getNotificationType($notification->getType());
     }

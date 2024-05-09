@@ -198,3 +198,15 @@ admin:
             select_page: 'Select a page'
         parent_root: 'Root (no parent)'
         parent_help: 'Move the menu item to a different parent, parent must be of type "collection".'
+    plugins:
+        platform:
+            title: 'Platform'
+            name: 'Forumify Platform'
+            description: 'The forumify platform is the core application. You cannot uninstall this plugin. You can check and install available platform updates here.'
+        plugins: 'Plugins'
+        update_available: 'Version {version} is available!'
+        update: 'Update'
+        manage: 'Manage'
+        settings: 'Settings'
+        activate: 'Activate'
+        deactivate: 'Deactivate'
