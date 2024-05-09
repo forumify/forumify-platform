@@ -6,9 +6,19 @@
         <div class="alert-error mb-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
     <form action="{{ app.request.requestUri }}" method="post">
+        {% set userIdentifier = setting('core.enable_email_login') %}
+        {%- set identifierLabel -%}
+            {% if userIdentifier == 'email' %}
+                {{- 'email'|trans -}}
+            {% elseif userIdentifier == 'both' %}
+                {{- 'username_and_email'|trans -}}
+            {% else %}
+                {{- 'username'|trans -}}
+            {% endif %}
+        {% endset %}
         <div class="form-row">
-            <label for="username" class="labels">{{ 'username'|trans }}</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="{{ 'username'|trans }}">
+            <label for="username" class="labels">{{ identifierLabel }}</label>
+            <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="{{ identifierLabel }}">
         </div>
 
         <div class="form-row">
@@ -19,7 +29,7 @@
         <div class="login-actions">
             <a href="{{ path('forumify_core_forgot_password') }}">{{ 'forgot_password'|trans }}</a>
             <div>
-                <input type="checkbox" id="rememberme" name="rememberme">
+                <input type="checkbox" id="rememberme" name="_remember_me">
                 <label for="rememberme">{{ 'remember_me'|trans }}</label>
             </div>
         </div>

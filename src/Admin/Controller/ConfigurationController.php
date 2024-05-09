@@ -32,6 +32,7 @@ class ConfigurationController extends AbstractController
 
             $settings['forum.title'] = $data['title'];
             $settings['core.enable_registrations'] = (string)$data['enable_registrations'];
+            $settings['core.enable_email_login'] = (string)$data['enable_email_login'];
 
             if ($data['logo'] !== null) {
                 $settings['forum.logo'] = $mediaService->saveToFilesystem($assetStorage, $data['logo']);
