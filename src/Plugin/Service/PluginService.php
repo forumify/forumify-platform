@@ -9,7 +9,6 @@ use Forumify\Core\Repository\PluginRepository;
 use Forumify\Plugin\Application\Service\PluginService as ApplicationPluginService;
 use Forumify\Plugin\Entity\Plugin;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Process\Process;
 
 class PluginService
 {

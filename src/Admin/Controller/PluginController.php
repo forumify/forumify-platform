@@ -25,7 +25,7 @@ class PluginController extends AbstractController
     {
         $plugins = $this->pluginRepository->findBy([], ['active' => 'DESC']);
         $latestVersions = $this->pluginService->getLatestVersions();
-        $platformVersions = $latestVersions['forumify/forumify-platform'];
+        $platformVersions = $latestVersions['forumify/forumify-platform'] ?? null;
 
         return $this->render('@Forumify/admin/plugin/plugin.html.twig', [
             'plugins' => $plugins,

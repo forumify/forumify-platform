@@ -6,6 +6,7 @@
         <div class="box mb-6">
             <div class="flex items-baseline gap-1">
                 <h3>{{ 'admin.plugins.platform.name'|trans }}</h3>
+                {% if platformVersions is not null %}
                 <span class="text-small">
                     (v{{ platformVersions.version }})
                     {% if platformVersions.version != platformVersions.latest %}
@@ -15,6 +16,7 @@
                         </span>
                     {% endif %}
                 </span>
+                {% endif %}
             </div>
             <p>{{ 'admin.plugins.platform.description'|trans }}</p>
         </div>

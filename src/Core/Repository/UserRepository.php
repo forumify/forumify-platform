@@ -8,12 +8,11 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 
 class UserRepository extends AbstractRepository implements UserLoaderInterface
 {
-    private $settingRepository;
-
-    public function __construct(ManagerRegistry $registry, SettingRepository $settingRepository)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly SettingRepository $settingRepository
+    ) {
         parent::__construct($registry);
-        $this->settingRepository = $settingRepository;
     }
 
     public static function getEntityClass(): string
@@ -21,22 +20,18 @@ class UserRepository extends AbstractRepository implements UserLoaderInterface
         return User::class;
     }
 
-    public function loadUserByIdentifier(string $usernameOrEmail): ?User
+    public function loadUserByIdentifier(string $identifier): ?User
     {
-        $queryBuilder = $this->createQueryBuilder('u');
-
-        $where = match($this->settingRepository->get('core.enable_email_login')) {
+        $where = match ($this->settingRepository->get('core.enable_email_login')) {
             'email' => 'u.email = :query',
             'both' => 'u.username = :query OR u.email = :query',
             default => 'u.username = :query',
         };
-        $queryBuilder->where($where);
 
         return $this->createQueryBuilder('u')
             ->where($where)
-            ->setParameter('query', $usernameOrEmail)
+            ->setParameter('query', $identifier)
             ->getQuery()
             ->getOneOrNullResult();
-
     }
 }

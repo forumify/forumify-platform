@@ -95,23 +95,12 @@ class PluginService
 
     public static function getLatestVersions(string $rootDir): array
     {
-        $process = new Process(['composer', 'outdated', '--all', '--direct', '--working-dir', $rootDir]);
+        $process = new Process(['composer', 'outdated', '--all', '--direct', '--format', 'json', '--working-dir', $rootDir]);
         $process->run();
         $output = $process->getOutput();
 
-        $lines = explode(PHP_EOL, $output);
-        $latestVersions = [];
-        foreach ($lines as $line) {
-            $matches = [];
-            $res = preg_match('/([\w-]+\/[\w-]+)\s+v?([\d.]+)\s+.\sv?([\d.]+)/', $line, $matches);
-            if ($res !== 1) {
-                continue;
-            }
-
-            $latestVersions[$matches[1]] = ['version' => $matches[2], 'latest' => $matches[3]];
-        }
-
-        return $latestVersions;
+        $versions = json_decode($output, true, 512, JSON_THROW_ON_ERROR)['installed'] ?? [];
+        return array_combine(array_column($versions, 'name'), $versions);
     }
 
     /**
