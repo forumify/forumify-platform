@@ -1,0 +1,8 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/confirm.html.twig' with {
+        warningText: 'admin.crud.delete_warning'|trans({ single: (translationPrefix ~ 'single')|trans|lower }),
+        confirmPath: path(route ~ '_delete', app.current_route_parameters|merge({ confirmed: 1 })),
+        cancelPath: path(route ~ '_list')
+    } %}
+{% endblock %}

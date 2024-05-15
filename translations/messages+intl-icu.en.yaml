@@ -171,6 +171,12 @@ admin:
         badges: 'Badges'
         create: 'Create Badge'
         edit: 'Editing Badge "{name}"'
+    crud:
+        edit: 'Editing {single}'
+        create: 'New {single}'
+        saved: '{single} saved.'
+        deleted: '{single} deleted.'
+        delete_warning: 'Warning, you are about to delete this {single}!'
     cms:
         title: 'Content Management System'
         pages:

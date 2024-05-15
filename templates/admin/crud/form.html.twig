@@ -1,0 +1,11 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% set transSingle = (translationPrefix ~ 'single')|trans %}
+{% set title = ('admin.crud.' ~ (data is null ? 'create' : 'edit'))|trans({ single: transSingle })|title %}
+{% block title_page %}
+    {{ title }}
+{% endblock %}
+{% block body %}
+    {% include '@Forumify/admin/components/simple_form.html.twig' with {
+        cancelPath: path(route ~ '_list')
+    } %}
+{% endblock %}

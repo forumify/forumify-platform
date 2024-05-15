@@ -13,7 +13,7 @@ class SettingRuntime implements RuntimeExtensionInterface
     {
     }
 
-    public function getSetting(string $key): int|string|float|array|null
+    public function getSetting(string $key): mixed
     {
         return $this->settingRepository->get($key);
     }
