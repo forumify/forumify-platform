@@ -40,6 +40,7 @@ class PluginService
 
         $this->clearFrameworkCache();
         $this->validateKernel();
+        $this->postInstall();
     }
 
     /**
@@ -53,6 +54,7 @@ class PluginService
 
         $this->clearFrameworkCache();
         $this->validateKernel();
+        $this->postInstall();
     }
 
     /**
@@ -89,13 +91,29 @@ class PluginService
 
     private function require(string $package, string $version): void
     {
-        $process = new Process(['composer', 'require', "{$package}:{$version}", '--working-dir', $this->rootDir]);
+        $process = new Process([
+            'composer',
+            'require',
+            "{$package}:{$version}",
+            '--no-interaction',
+            '--working-dir',
+            $this->rootDir,
+        ]);
         $process->run();
     }
 
     public static function getLatestVersions(string $rootDir): array
     {
-        $process = new Process(['composer', 'outdated', '--all', '--direct', '--format', 'json', '--working-dir', $rootDir]);
+        $process = new Process([
+            'composer',
+            'outdated',
+            '--all',
+            '--direct',
+            '--format',
+            'json',
+            '--working-dir',
+            $rootDir,
+        ]);
         $process->run();
         $output = $process->getOutput();
 
@@ -142,5 +160,18 @@ class PluginService
         } catch (\Exception $ex) {
             throw new UnbootableKernelException('Unable to boot new kernel: ' . $ex->getMessage());
         }
+    }
+
+    private function postInstall(): void
+    {
+        $process = new Process([
+            'composer',
+            'run-script',
+            'post-install-cmd',
+            '--no-interaction',
+            '--working-dir',
+            $this->rootDir,
+        ]);
+        $process->run();
     }
 }
