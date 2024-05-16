@@ -13,13 +13,6 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 class PluginService
 {
     /**
-     * Memoized plugin composer.json's
-     *
-     * @var array<string, array>|null
-     */
-    private ?array $plugins = null;
-
-    /**
      * Memoized "composer outdated" information
      *
      * @var array<string, array>|null
@@ -36,45 +29,40 @@ class PluginService
     public function refresh(): void
     {
         /** @var array<Plugin> $allPlugins */
-        $allPlugins = [];
+        $allPlugins = $this->pluginRepository->findAll();
+        $knownPlugins = array_combine(
+            array_map(static fn (Plugin $plugin) => $plugin->getPackage(), $allPlugins),
+            $allPlugins,
+        );
 
+        $plugins = [];
         $installedPlugins = $this->getInstalledPlugins();
-        $installedPluginClasses = [];
-        foreach ($installedPlugins as $composerJson) {
-            $installedPluginClasses[] = $composerJson['extra']['forumify-plugin-class'];
-        }
-
-        /** @var array<Plugin> $knownPlugins */
-        $knownPlugins = $this->pluginRepository->findAll();
-        foreach ($knownPlugins as $knownPlugin) {
-            if (!in_array($knownPlugin->getPluginClass(), $installedPluginClasses, true)) {
-                $this->pluginRepository->remove($knownPlugin, false);
-                continue;
-            }
-            $allPlugins[] = $knownPlugin;
-        }
-
-        $knownPluginClasses = array_map(static fn (Plugin $plugin) => $plugin->getPluginClass(), $knownPlugins);
         foreach ($installedPlugins as $package => $composerJson) {
-            $pluginClass = $composerJson['extra']['forumify-plugin-class'];
-            if (in_array($pluginClass, $knownPluginClasses, true)) {
-                continue;
+            $plugin = $knownPlugins[$package] ?? null;
+            if ($plugin === null) {
+                $plugin = new Plugin();
+                $plugin->setPackage($package);
+                $plugin->setVersion('0.0.0');
+                $plugin->setLatestVersion('0.0.0');
             }
 
-            $plugin = new Plugin();
-            $plugin->setPackage($package);
+            $pluginClass = $composerJson['extra']['forumify-plugin-class'];
             $plugin->setPluginClass($pluginClass);
-            $plugin->setVersion(InstalledVersions::getPrettyVersion($package));
-            $plugin->setLatestVersion('0.0.0');
-            $this->pluginRepository->save($plugin, false);
 
-            $allPlugins[] = $plugin;
+            $this->pluginRepository->save($plugin, false);
+            $plugins[] = $plugin;
+        }
+
+        foreach ($knownPlugins as $package => $plugin) {
+            if (!isset($installedPlugins[$package])) {
+                $this->pluginRepository->remove($plugin, false);
+            }
         }
 
         $this->pluginRepository->flush();
 
         $latestVersions = $this->getLatestVersions();
-        foreach ($allPlugins as $plugin) {
+        foreach ($plugins as $plugin) {
             $versions = $latestVersions[$plugin->getPackage()] ?? null;
             if ($versions === null) {
                 continue;
@@ -83,7 +71,7 @@ class PluginService
             $plugin->setVersion($versions['version']);
             $plugin->setLatestVersion($versions['latest']);
         }
-        $this->pluginRepository->saveAll($allPlugins);
+        $this->pluginRepository->saveAll($plugins);
     }
 
     public function getLatestVersions(): array
@@ -101,10 +89,6 @@ class PluginService
      */
     private function getInstalledPlugins(): array
     {
-        if ($this->plugins !== null) {
-            return $this->plugins;
-        }
-
         $packages = InstalledVersions::getInstalledPackagesByType('forumify-plugin');
         $packages = array_unique($packages);
 
@@ -130,7 +114,6 @@ class PluginService
             $foundPlugins[$pluginPackage] = $decodedJson;
         }
 
-        $this->plugins = $foundPlugins;
-        return $this->plugins;
+        return $foundPlugins;
     }
 }
