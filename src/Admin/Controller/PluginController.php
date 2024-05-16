@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Admin\Controller;
 
 use Forumify\Core\Repository\PluginRepository;
-use Forumify\Plugin\Entity\Plugin;
 use Forumify\Plugin\Service\PluginService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,12 +22,15 @@ class PluginController extends AbstractController
     #[Route('', '_list')]
     public function list(): Response
     {
-        $plugins = $this->pluginRepository->findBy([], ['active' => 'DESC']);
+        $activePlugins = $this->pluginRepository->findBy(['active' => true], ['package' => 'ASC']);
+        $inactivePlugins = $this->pluginRepository->findBy(['active' => false], ['package' => 'ASC']);
+
         $latestVersions = $this->pluginService->getLatestVersions();
         $platformVersions = $latestVersions['forumify/forumify-platform'] ?? null;
 
-        return $this->render('@Forumify/admin/plugin/plugin.html.twig', [
-            'plugins' => $plugins,
+        return $this->render('@Forumify/admin/plugin/pluginManager.html.twig', [
+            'activePlugins' => $activePlugins,
+            'inactivePlugins' => $inactivePlugins,
             'pluginService' => $this->pluginService,
             'platformVersions' => $platformVersions,
         ]);

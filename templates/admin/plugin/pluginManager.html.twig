@@ -1,0 +1,63 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}{{ 'admin.plugins.plugins'|trans }}{% endblock %}
+{% block body %}
+    <h2>{{ 'admin.plugins.platform.title'|trans }}</h2>
+    <div class="box mb-6">
+        <div class="flex items-baseline gap-1">
+            <h3>{{ 'admin.plugins.platform.name'|trans }}</h3>
+            {% if platformVersions is not null %}
+                <span class="text-small">
+                    ({{ platformVersions.version }})
+                    {% if platformVersions.version != platformVersions.latest %}
+                        <span class="ml-2">
+                            <i class="ph ph-download"></i>
+                            {{ 'admin.plugins.update'|trans({ version: platformVersions.latest }) }}
+                        </span>
+                    {% endif %}
+                </span>
+            {% endif %}
+        </div>
+        <p>{{ 'admin.plugins.platform.description'|trans }}</p>
+    </div>
+    <div {{ stimulus_controller('forumify/forumify-platform/plugin_manager') }}>
+        <h2>
+            {{ 'admin.plugins.plugins'|trans }}
+            <a class="btn-outlined btn-small btn-icon" href="{{ path('forumify_admin_plugin_refresh') }}">
+                <i class="ph ph-arrows-clockwise"></i>
+            </a>
+        </h2>
+        <div
+            class="alert-error mb-6 d-none"
+            {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'errorBox') }}
+        ></div>
+        <div
+            class="flex justify-center d-none"
+            {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'loader') }}
+        >
+            {% include '@Forumify/components/loader.html.twig' %}
+        </div>
+        <div {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'pluginList') }}>
+            <ul class="box">
+                {% for plugin in activePlugins|filter(p => p.plugin is not null) %}
+                    {% include '@Forumify/admin/plugin/plugin.html.twig' %}
+                    {% if not loop.last %}
+                        <hr>
+                    {% endif %}
+                {% else %}
+                    {{ 'admin.plugins.no_active_plugins'|trans }}
+                {% endfor %}
+            </ul>
+            {% if inactivePlugins|length > 0 %}
+                <h2 class="mt-6">{{ 'admin.plugins.inactive_plugins'|trans }}</h2>
+                <ul class="box">
+                    {% for plugin in inactivePlugins|filter(p => p.plugin is not null) %}
+                        {% include '@Forumify/admin/plugin/plugin.html.twig' %}
+                        {% if not loop.last %}
+                            <hr>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
