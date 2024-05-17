@@ -41,6 +41,7 @@ class PluginService
         $this->clearFrameworkCache();
         $this->validateKernel();
         $this->postInstall();
+        $this->runMigrations();
     }
 
     /**
@@ -171,6 +172,18 @@ class PluginService
             '--no-interaction',
             '--working-dir',
             $this->rootDir,
+        ]);
+        $process->run();
+    }
+
+    private function runMigrations(): void
+    {
+        $process = new Process([
+           'php',
+           $this->rootDir . '/bin/console',
+           'doctrine:migrations:migrate',
+            '--allow-no-migration',
+            '--no-interaction'
         ]);
         $process->run();
     }
