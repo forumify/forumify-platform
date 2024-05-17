@@ -1,3 +1,7 @@
-<a class='btn-link' href='{{ url }}' {% if external %}target="_blank"{% endif %}>
+<a
+    class='btn-link text-small'
+    href='{{ url }}'
+    {% if external is defined and external %}target="_blank"{% endif %}
+>
     {{ label }}
 </a>

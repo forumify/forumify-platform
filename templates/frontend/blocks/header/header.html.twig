@@ -1,0 +1,21 @@
+{% block header %}
+    <header class="header">
+        <div class="responsive flex">
+            {% block header_logo %}
+                <a href="{{ path('forumify_core_index') }}" class="header-logo">
+                    <img src="{{ logo }}" alt="logo">
+                    <span class="ml-2">{{ setting('forum.title') }}</span>
+                </a>
+            {% endblock %}
+            {% block header_navigtion %}
+                <div class="flex flex-grow justify-end items-center">
+                    {% include '@Forumify/frontend/blocks/header/menu_large.html.twig' %}
+                    {% include '@Forumify/frontend/blocks/header/menu_mobile.html.twig' %}
+                    {% if app.user is not null %}
+                        {{ component('Notifications') }}
+                    {% endif %}
+                </div>
+            {% endblock %}
+        </div>
+    </header>
+{% endblock %}

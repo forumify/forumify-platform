@@ -2,9 +2,7 @@ $breakpoint-xs: 0px;
 $breakpoint-sm: 600px;
 $breakpoint-md: 900px;
 $breakpoint-lg: 1200px;
-$breakpoint-xl: 1500px;
-$breakpoint-2xl: 1800px;
-$breakpoint-3xl: 2100px;
+$breakpoint-xl: 1536px;
 
 @mixin min-width-xs {
     @media screen and (min-width: $breakpoint-xs) {
@@ -32,18 +30,6 @@ $breakpoint-3xl: 2100px;
 
 @mixin min-width-xl {
     @media screen and (min-width: $breakpoint-xl) {
-        @content;
-    }
-}
-
-@mixin min-width-2xl {
-    @media screen and (min-width: $breakpoint-2xl) {
-        @content;
-    }
-}
-
-@mixin min-width-3xl {
-    @media screen and (min-width: $breakpoint-3xl) {
         @content;
     }
 }

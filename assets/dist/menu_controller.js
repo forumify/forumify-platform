@@ -2,22 +2,10 @@ import { Controller } from '@hotwired/stimulus';
 import { createPopper } from '@popperjs/core';
 
 const END_ADORNMENT_CLASSES = {
-  top: {
-    closed: 'ph-caret-up',
-    open: 'ph-caret-down',
-  },
-  left: {
-    closed: 'ph-caret-left',
-    open: 'ph-caret-right',
-  },
-  bottom: {
-    closed: 'ph-caret-down',
-    open: 'ph-caret-up',
-  },
-  right: {
-    closed: 'ph-caret-right',
-    open: 'ph-caret-left',
-  },
+  top: 'ph-caret-up',
+  left: 'ph-caret-left',
+  bottom: 'ph-caret-down',
+  right: 'ph-caret-right',
 };
 
 export default class extends Controller {
@@ -32,22 +20,22 @@ export default class extends Controller {
 
     this.isOpen = false;
     this.placement = this.placementValue || 'bottom';
-    this.endAdornment = this.initEndAdornment();
+
+    this.initEndAdornment();
   }
 
   initEndAdornment() {
     const position = this.placement.split('-')[0];
-    this.icons = END_ADORNMENT_CLASSES[position];
+    const icon = END_ADORNMENT_CLASSES[position];
 
     const endAdornment = document.createElement('i');
-    endAdornment.classList.add('end-adornment', 'ph', this.icons.closed);
+    endAdornment.classList.add('end-adornment', 'ph', icon);
 
     if (this.hideAdornmentValue) {
       endAdornment.classList.add('d-none');
     }
 
     this.openButtonTarget.append(endAdornment);
-    return endAdornment;
   }
 
   connect() {
@@ -74,17 +62,11 @@ export default class extends Controller {
     this.menuTarget.style.display = 'flex';
     this.isOpen = true;
     this.popper.update();
-
-    this.endAdornment.classList.remove(this.icons.closed);
-    this.endAdornment.classList.add(this.icons.open);
   }
 
   close() {
     this.menuTarget.style.display = 'none';
     this.isOpen = false;
     this.popper.update();
-
-    this.endAdornment.classList.remove(this.icons.open);
-    this.endAdornment.classList.add(this.icons.closed);
   }
 }

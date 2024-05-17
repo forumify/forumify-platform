@@ -1,0 +1,26 @@
+<div class="flex-grow flex flex-row items-center justify-between hide-phone">
+    <nav class="flex flex-wrap flex-grow justify-end text-small pr-3 mr-3 border-r">
+        {{ forum_menu() }}
+    </nav>
+    {% if app.user is not null %}
+        <div class="flex flex-row">
+            <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
+                <a class="btn-link header-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+                    {% include '@Forumify/components/avatar.html.twig' with {
+                        user: app.user,
+                        className: 'avatar-sm',
+                    } only %}
+                    <span class="ml-2">{{ app.user.username }}</span>
+                </a>
+                <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+                    {% include '@Forumify/frontend/blocks/header/fixed_menu.html.twig' %}
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <a class="btn-link" href="{{ path('forumify_core_login', { '_target_path': app.request.requestUri }) }}">
+            <i class="ph ph-sign-in"></i>
+            {{ 'login'|trans }}
+        </a>
+    {% endif %}
+</div>

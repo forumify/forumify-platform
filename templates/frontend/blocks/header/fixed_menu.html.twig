@@ -1,0 +1,24 @@
+<a class="btn-link" href="{{ path('forumify_forum_profile', { username: app.user.username }) }}">
+    <i class="ph ph-user"></i>
+    Profile
+</a>
+<a class="btn-link" href="{{ path('forumify_forum_messenger') }}">
+    <i class="ph ph-chat-dots"></i>
+    Messages
+</a>
+{% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
+    <hr>
+    <a class="btn-link" href="{{ path('forumify_admin_dashboard') }}" target="_blank">
+        <i class="ph ph-wrench"></i>
+        Admin
+    </a>
+{% endif %}
+<hr>
+<a class="btn-link" href="{{ path('forumify_core_settings') }}">
+    <i class="ph ph-faders-horizontal"></i>
+    Settings
+</a>
+<a class="btn-link" href="{{ path('forumify_core_logout') }}">
+    <i class="ph ph-sign-out"></i>
+    {{ 'logout'|trans }}
+</a>

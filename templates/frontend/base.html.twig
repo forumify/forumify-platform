@@ -49,68 +49,7 @@
 </head>
 <body>
 {% block base %}
-    {% block header %}
-        <header class="header">
-            <div class="responsive flex">
-                {% block header_logo %}
-                    <a href="{{ path('forumify_core_index') }}" class="header-logo">
-                        <img src="{{ logo }}" alt="logo">
-                        <span class="ml-2">{{ setting('forum.title') }}</span>
-                    </a>
-                {% endblock %}
-                <div class="flex-grow flex flex-row items-center justify-between">
-                    <nav class="header-navigation">
-                        {{ forum_menu() }}
-                    </nav>
-                    {% if app.user is not null %}
-                        <div class="flex flex-row">
-                            <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
-                                <a class="btn-link header-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
-                                    {% include '@Forumify/components/avatar.html.twig' with {
-                                        user: app.user,
-                                        className: 'avatar-sm',
-                                    } only %}
-                                    <span class="ml-2">{{ app.user.username }}</span>
-                                </a>
-                                <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
-                                    <a class="btn-link" href="{{ path('forumify_forum_profile', { username: app.user.username }) }}">
-                                        <i class="ph ph-user"></i>
-                                        Profile
-                                    </a>
-                                    <a class="btn-link" href="{{ path('forumify_forum_messenger') }}">
-                                        <i class="ph ph-chat-dots"></i>
-                                        Messages
-                                    </a>
-                                    {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
-                                        <hr>
-                                        <a class="btn-link" href="{{ path('forumify_admin_dashboard') }}" target="_blank">
-                                            <i class="ph ph-wrench"></i>
-                                            Admin
-                                        </a>
-                                    {% endif %}
-                                    <hr>
-                                    <a class="btn-link" href="{{ path('forumify_core_settings') }}">
-                                        <i class="ph ph-faders-horizontal"></i>
-                                        Settings
-                                    </a>
-                                    <a class="btn-link" href="{{ path('forumify_core_logout') }}">
-                                        <i class="ph ph-sign-out"></i>
-                                        {{ 'logout'|trans }}
-                                    </a>
-                                </div>
-                            </div>
-                            {{ component('Notifications') }}
-                        </div>
-                    {% else %}
-                        <a class="btn-link" href="{{ path('forumify_core_login', { '_target_path': app.request.requestUri }) }}">
-                            <i class="ph ph-sign-in"></i>
-                            {{ 'login'|trans }}
-                        </a>
-                    {% endif %}
-                </div>
-            </div>
-        </header>
-    {% endblock %}
+    {% include '@Forumify/frontend/blocks/header/header.html.twig' %}
     {% block unverified_user_warning %}
         {% if app.user is not null and app.user.emailVerified == false %}
             <div class="responsive flex flex-col gap-2 mb-4">

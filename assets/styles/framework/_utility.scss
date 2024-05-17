@@ -117,3 +117,49 @@
 .d-none {
     display: none;
 }
+
+.d-block {
+    display: block;
+}
+
+.d-inline-block {
+    display: inline-block;
+}
+
+.border {
+    border: var(--border);
+}
+
+.border-t {
+    border-top: var(--border);
+}
+
+.border-r {
+    border-right: var(--border);
+}
+
+.border-b {
+    border-bottom: var(--border);
+}
+
+.border-l {
+    border-left: var(--border);
+}
+
+@media screen and (min-width: $breakpoint-lg) {
+    .hide-desktop {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: $breakpoint-md) and (max-width: calc($breakpoint-lg - 1px)) {
+    .hide-tablet {
+        display: none !important;
+    }
+}
+
+@media screen and (max-width: $breakpoint-md) {
+    .hide-phone {
+        display: none !important;
+    }
+}
