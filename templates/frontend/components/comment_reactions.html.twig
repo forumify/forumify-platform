@@ -10,7 +10,7 @@
             {{ reaction.count }}
         </a>
     {% endfor %}
-    <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+    <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
         <a class="btn-small btn-outlined btn-icon" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
             <i class="ph ph-smiley"></i>
         </a>

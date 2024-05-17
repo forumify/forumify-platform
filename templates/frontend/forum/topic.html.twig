@@ -36,7 +36,7 @@
                     subscriptionType: constant('Forumify\\Forum\\Notification\\CommentCreatedNotificationType::TYPE')
                 }) }}
                 {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Moderator').value) %}
-                    <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+                    <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
                         <a class="btn-outlined btn-icon" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
                             <i class="ph ph-wrench"></i>
                         </a>

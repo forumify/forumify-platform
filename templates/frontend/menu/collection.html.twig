@@ -1,4 +1,4 @@
-<div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement='{{ placement }}'>
+<div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: placement }) }}>
     <a class='btn-link' {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
         {% block name %}{{ name }}{% endblock %}
     </a>

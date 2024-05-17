@@ -25,6 +25,11 @@
         margin-right: var(--spacing-2);
         font-size: 20px;
     }
+
+    i.end-adornment {
+        margin-right: 0;
+        margin-left: var(--spacing-2);
+    }
 }
 
 @mixin btn-contained {

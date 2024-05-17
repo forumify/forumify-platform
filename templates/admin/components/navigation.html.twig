@@ -8,7 +8,7 @@
             {{ menuItem.label }}
         </a>
     {% else %}
-        <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="right-start">
+        <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'right-start' }) }}>
             <a class="btn-link navigation-row" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
                 {% if menuItem.options.icon is defined %}
                     <i class="{{ menuItem.options.icon }}"></i>

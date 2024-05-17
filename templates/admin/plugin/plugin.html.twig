@@ -24,7 +24,7 @@
         </p>
     </div>
     <div class="w-25 flex justify-end gap-2">
-        <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+        <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
             <button class="btn-outlined" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
                 <i class="ph ph-caret-down"></i>{{ 'admin.plugins.manage'|trans }}
             </button>

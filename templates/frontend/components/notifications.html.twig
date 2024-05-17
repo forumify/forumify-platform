@@ -1,13 +1,17 @@
 <div {{ attributes }} data-poll="delay(30000)|$render">
-    <div {{ stimulus_controller('forumify/forumify-platform/menu') }} data-placement="bottom-end">
+    {% set unseenCount = this.unseenCount %}
+    <div {{ stimulus_controller('forumify/forumify-platform/menu', { hideAdornment: true, placement: 'bottom-end' }) }}>
         <a
-            class="btn-link btn-icon"
+            class="btn-link btn-icon{% if unseenCount == 0 %} btn-icon{% endif %}"
             data-action="live#action"
             data-live-action-param="markAsRead"
             {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}
         >
-            {% set unseenCount = this.unseenCount %}
-            <i class="ph ph-bell-ringing"></i>{{ unseenCount }}
+            {% if unseenCount > 0 %}
+                <i class="ph ph-bell-ringing"></i>{{ unseenCount }}
+            {% else %}
+                <i class="ph ph-bell"></i>
+            {% endif %}
         </a>
         <ul class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
             {% set notifications = this.notifications %}
