@@ -1,5 +1,9 @@
 <div class="table-wrapper" {{ attributes }}>
-    <div data-loading class="table-loader"></div>
+    <div data-loading class="table-loader flex justify-center items-cente">
+        <div class="flex justify-center items-center" style="height: 100%">
+            {% include '@Forumify/components/loader.html.twig' %}
+        </div>
+    </div>
     {% block table_wrapper %}
         <table>
             {% block table %}
