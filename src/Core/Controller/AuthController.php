@@ -61,7 +61,7 @@ class AuthController extends AbstractController
             }
 
             $user = $createUserService->createUser($form->getData());
-            $security->login($user);
+            $security->login($user, 'security.authenticator.form_login.main');
             return $this->redirectToRoute('forumify_core_verify_email');
         }
 
