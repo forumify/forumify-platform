@@ -114,6 +114,8 @@ flashes:
     topic_saved: 'Topic saved.'
     topic_removed: 'Topic removed.'
     settings_saved: 'Global configuration saved.'
+    snippet_saved: 'Snippet saved.'
+    snippet_removed: 'Snippet removed.'
     bot_detected: 'Spam detected. If you are human, please use a different browser, device or internet connection and try again.'
 email_subjects:
     account_verification: '{forum_name} - Account Verification'
