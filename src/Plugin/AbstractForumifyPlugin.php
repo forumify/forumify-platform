@@ -7,4 +7,5 @@ namespace Forumify\Plugin;
 abstract class AbstractForumifyPlugin extends AbstractForumifyBundle
 {
     abstract public function getPluginMetadata(): PluginMetadata;
+    abstract public function getPluginPermissions(): PluginPermissions;
 }

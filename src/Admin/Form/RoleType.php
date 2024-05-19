@@ -18,6 +18,7 @@ class RoleType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Role::class,
+            'permissions' => null,
         ]);
     }
 
@@ -34,5 +35,13 @@ class RoleType extends AbstractType
                 'required' => false,
                 'help' => 'role_type.moderator'
             ]);
+        foreach ($options['permissions'] as $permission) {
+            $builder->add('permission_' . $permission->getId(), CheckboxType::class, [
+                'label_attr' => ['class' => 'slidebox'],
+                'required' => false,
+                'mapped' => false,
+                'data' => isset($options['data']) ? ($options['data']->getPermissions()->contains($permission) ?? null) : null,
+            ]);
+        }
     }
 }

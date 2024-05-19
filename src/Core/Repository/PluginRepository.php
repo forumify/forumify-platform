@@ -17,4 +17,17 @@ class PluginRepository extends AbstractRepository
     {
         return $this->findBy(['active' => true]);
     }
+
+    public function findInactivePluginsExcludingPackage(string $excludedPackage): array
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.active = :active')
+            ->andWhere('p.package != :excludedPackage')
+            ->setParameter('active', false)
+            ->setParameter('excludedPackage', $excludedPackage)
+            ->orderBy('p.package', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
 }

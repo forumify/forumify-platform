@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\RoleRepository;
 
+use Forumify\Plugin\Entity\Permission;
 use function Symfony\Component\String\u;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
@@ -36,6 +38,17 @@ class Role
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
     private Collection $users;
+
+    /**
+     * @var Collection<Permission>
+     */
+    #[ORM\ManyToMany(targetEntity: Permission::class, mappedBy: 'roles')]
+    private Collection $permissions;
+
+    public function __construct()
+    {
+        $this->permissions = new ArrayCollection();
+    }
 
     public function getTitle(): string
     {
@@ -100,4 +113,26 @@ class Role
     {
         $this->users = $users;
     }
+
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function addPermission(Permission $permission): void
+    {
+        if (!$this->permissions->contains($permission)) {
+            $this->permissions[] = $permission;
+            $permission->addRole($this);
+        }
+    }
+
+    public function removePermission(Permission $permission): void
+    {
+        if ($this->permissions->removeElement($permission)) {
+            $permission->removeRole($this);
+        }
+    }
+
+
 }

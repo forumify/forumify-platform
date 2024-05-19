@@ -13,8 +13,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/users', 'user')]
+#[IsGranted('forumify.admin.user.view')]
 class UserController extends AbstractController
 {
     public function __construct(
@@ -31,6 +33,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{username}', '')]
+    #[IsGranted('forumify.admin.user.modify')]
     public function edit(User $user, Request $request): Response
     {
         $form = $this->createForm(UserType::class, $user);
@@ -58,6 +61,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{username}/delete', '_delete')]
+    #[IsGranted('forumify.admin.user.delete')]
     public function delete(User $user, Request $request): Response
     {
         if (!$request->get('confirmed')) {
