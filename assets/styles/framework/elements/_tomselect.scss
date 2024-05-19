@@ -1,95 +1,62 @@
 .ts-wrapper {
-    position: relative;
+    min-height: 40px;
 }
 
-.ts-wrapper.single {
-    .item {
-        padding: var(--spacing-2);
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        height: 24px;
-    }
-
-    &.full {
-        input {
-            display: none;
-        }
-    }
-
-    &:not(.full) {
-        .clear-button {
-            display: none;
-        }
-    }
-
-    .clear-button {
-        height: 24px;
-        cursor: pointer;
-        background-color: var(--c-secondary);
-        border-left: var(--border);
-        color: var(--c-secondary-text);
-        padding: var(--spacing-2);
-        font-weight: 700;
-        border-top-right-radius: 8px;
-        border-bottom-right-radius: 8px;
-    }
-}
-
-.ts-wrapper.multi {
-    .ts-control {
-        flex-wrap: wrap;
-        gap: var(--spacing-2);
-        align-items: baseline;
-    }
-}
-
-.ts-hidden-accessible {
-    width: 1px;
-    height: 1px;
-    border: none;
-    position: absolute;
-    visibility: hidden;
-}
-
+.focus .ts-control,
 .ts-control {
-    display: flex;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: none;
+}
 
-    .item {
-        border-radius: 8px;
-        padding: var(--spacing-2) 0 var(--spacing-2) var(--spacing-2);
-        background-color: var(--c-secondary);
-        color: var(--c-secondary-text);
-        display: flex;
-        align-items: center;
+.dropdown-active .ts-control {
+    border-radius: 8px 8px 0 0;
+    border-bottom: none;
+    @include box-shadow;
+}
 
-        a.remove {
-            border-left: var(--border);
-            color: var(--c-secondary-text);
-            padding: var(--spacing-2);
-            margin-left: var(--spacing-2);
-            margin-top: calc(var(--spacing-2) * -1);
-            margin-bottom: calc(var(--spacing-2) * -1);
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-    }
+.ts-dropdown, .ts-control, .ts-control input {
+    font-size: 1rem;
+    color: var(--c-text-primary);
+}
+
+.ts-wrapper.single .ts-control {
+    background: var(--c-elevation-1);
+    box-shadow: none;
+}
+
+.ts-wrapper.single .ts-control, .ts-dropdown.single {
+    border-color: var(--border-color);
 }
 
 .ts-dropdown {
+    margin: 0;
+    border: 2px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    background-color: var(--c-elevation-1);
     @include box-shadow;
-    position: absolute;
-    width: 100%;
-    overflow: hidden;
-    background-color: var(--c-elevation-2);
-    max-height: 200px;
-    overflow-y: auto;
 
-    .ts-dropdown-content {
-        display: flex;
-        flex-direction: column;
-
-        .option {
-            @extend .btn-link;
+    .option {
+        color: var(--c-text-primary);
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.03);
         }
+    }
+}
+
+.ts-wrapper.multi .ts-control [data-value] {
+    background: var(--c-primary);
+    color: var(--c-primary-text);
+    text-shadow: none;
+    border-radius: 8px;
+    border: none;
+    padding: var(--spacing-1) var(--spacing-2);
+    font-weight: 500;
+    box-shadow: none;
+    &.active {
+        background: var(--c-primary);
+        color: var(--c-primary-text);
+        border: none;
     }
 }
