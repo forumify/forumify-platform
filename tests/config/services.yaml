@@ -1,0 +1,3 @@
+parameters:
+    forumify.vendor_dir: '%kernel.project_dir%/../vendor'
+    forumify.project_dir: '%kernel.project_dir%/..'

@@ -1,0 +1,24 @@
+{
+  "entrypoints": {
+    "frontend": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_controllers_sync_recursive_node_modules_symfony_stimulus-bridge_lazy-controller-loader-7f9b26.js",
+        "/build/frontend.js"
+      ],
+      "css": [
+        "/build/frontend.css"
+      ]
+    },
+    "admin": {
+      "js": [
+        "/build/runtime.js",
+        "/build/assets_controllers_sync_recursive_node_modules_symfony_stimulus-bridge_lazy-controller-loader-7f9b26.js",
+        "/build/admin.js"
+      ],
+      "css": [
+        "/build/admin.css"
+      ]
+    }
+  }
+}

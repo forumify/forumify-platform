@@ -1,0 +1,36 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    providers:
+        forumify_user_provider:
+            entity:
+                class: Forumify\Core\Entity\User
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            provider: forumify_user_provider
+            form_login:
+                login_path: forumify_core_login
+                check_path: forumify_core_login
+                enable_csrf: true
+            logout:
+                path: forumify_core_logout
+            login_throttling:
+                max_attempts: 3
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon

@@ -1,0 +1,14 @@
+{
+  "build/frontend.css": "/build/frontend.css",
+  "build/frontend.js": "/build/frontend.js",
+  "build/admin.css": "/build/admin.css",
+  "build/admin.js": "/build/admin.js",
+  "build/runtime.js": "/build/runtime.js",
+  "build/forumify-platform_assets_dist_code_editor_controller_js.js": "/build/forumify-platform_assets_dist_code_editor_controller_js.js",
+  "build/forumify-platform_assets_dist_plugin_manager_controller_js.js": "/build/forumify-platform_assets_dist_plugin_manager_controller_js.js",
+  "build/assets_controllers_sync_recursive_node_modules_symfony_stimulus-bridge_lazy-controller-loader-7f9b26.js": "/build/assets_controllers_sync_recursive_node_modules_symfony_stimulus-bridge_lazy-controller-loader-7f9b26.js",
+  "build/images/Phosphor.svg": "/build/images/Phosphor.d44f1fe8.svg",
+  "build/fonts/Phosphor.woff": "/build/fonts/Phosphor.698d5958.woff",
+  "build/fonts/Phosphor.ttf": "/build/fonts/Phosphor.830ae329.ttf",
+  "build/fonts/Phosphor.woff2": "/build/fonts/Phosphor.a8ec9179.woff2"
+}

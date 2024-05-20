@@ -1,0 +1,2 @@
+forumify:
+    resource: '@ForumifyBundle/config/routes.yaml'

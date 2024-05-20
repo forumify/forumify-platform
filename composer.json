@@ -61,7 +61,8 @@
         "symfony/debug-bundle": "6.4.*",
         "symfony/phpunit-bridge": "6.4.*",
         "symfony/stopwatch": "6.4.*",
-        "symfony/web-profiler-bundle": "6.4.*"
+        "symfony/web-profiler-bundle": "6.4.*",
+        "dama/doctrine-test-bundle": "^8.0"
     },
     "autoload": {
         "psr-4": {

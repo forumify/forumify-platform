@@ -1,33 +1,27 @@
 doctrine:
     orm:
         mappings:
-            gedmo_tree:
-                type: attribute
-                prefix: Gedmo\Tree\Entity
-                dir: '%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Tree/Entity'
-                alias: GedmoTree
-                is_bundle: false
             forumify_core:
                 is_bundle: false
                 type: attribute
-                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Core/Entity'
+                dir: '%forumify.project_dir%/src/Core/Entity'
                 prefix: Forumify\Core\Entity
                 alias: ForumifyCore
             forumify_forum:
                 is_bundle: false
                 type: attribute
-                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Forum/Entity'
+                dir: '%forumify.project_dir%/src/Forum/Entity'
                 prefix: Forumify\Forum\Entity
                 alias: ForumifyForum
             forumify_cms:
                 is_bundle: false
                 type: attribute
-                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Cms/Entity'
+                dir: '%forumify.project_dir%/src/Cms/Entity'
                 prefix: Forumify\Cms\Entity
                 alias: ForumifyCms
             forumify_plugin:
                 is_bundle: false
                 type: attribute
-                dir: '%kernel.project_dir%/vendor/forumify/forumify-platform/src/Plugin/Entity'
+                dir: '%forumify.project_dir%/src/Plugin/Entity'
                 prefix: Forumify\Plugin\Entity
                 alias: ForumifyPlugin

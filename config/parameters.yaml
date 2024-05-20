@@ -2,3 +2,6 @@ parameters:
     forumify.asset.storage.path: '/storage/assets'
     forumify.avatar.storage.path: '/storage/avatars'
     forumify.resource.storage.path: '/storage/resources'
+
+    forumify.vendor_dir: '%kernel.project_dir%/vendor'
+    forumify.project_dir: '%forumify.vendor_dir%/forumify/forumify-platform'
