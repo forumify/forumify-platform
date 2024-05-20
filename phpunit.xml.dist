@@ -14,6 +14,7 @@
         <server name="KERNEL_CLASS" value="Tests\ForumifyTestKernel"/>
         <server name="DATABASE_URL" value="mysql://root:root@host.docker.internal:3306/forumify?serverVersion=8.0.32&amp;charset=utf8mb4" />
         <server name="DEFAULT_URI" value="http://localhost"/>
+        <server name="MAILER_DSN" value="smtp://localhost:1025"/>
         <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled=1"/>
     </php>
 
