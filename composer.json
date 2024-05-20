@@ -86,7 +86,7 @@
     "config": {
         "allow-plugins": {
             "symfony/flex": false,
-            "symfony/runtime": false
+            "symfony/runtime": true
         }
     },
     "extra": {
