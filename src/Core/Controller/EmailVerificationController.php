@@ -12,7 +12,9 @@ use Forumify\Core\Service\EmailVerificationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 class EmailVerificationController extends AbstractController
 {
     #[Route('/verify-email/{token?}', name: 'verify_email')]
@@ -21,8 +23,6 @@ class EmailVerificationController extends AbstractController
         EmailVerificationService $verificationService,
         UserRepository $userRepository,
     ): Response {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         /** @var User $user */
         $user = $this->getUser();
         if ($user->isEmailVerified()) {
@@ -63,8 +63,6 @@ class EmailVerificationController extends AbstractController
     #[Route('/verify-email/resend', name: 'verify_email_resend', priority: 1)]
     public function resendEmailVerification(EmailVerificationService $verificationService): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         /** @var User $user */
         $user = $this->getUser();
         if ($user->isEmailVerified()) {
