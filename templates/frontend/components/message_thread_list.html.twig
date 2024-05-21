@@ -13,7 +13,7 @@
                             user: this.selectedThread.createdBy
                         } only %}
                         <div>
-                            <h3>{{ this.selectedThread.title }}</h3>
+                            <h3 class="mb-0">{{ this.selectedThread.title }}</h3>
                             <div class="text-small text-secondary">
                                 {% set autor %}
                                     {% include '@Forumify/components/username.html.twig' with { user: this.selectedThread.createdBy } only %}
@@ -30,7 +30,7 @@
                                         user: participant,
                                         className: 'avatar-sm'
                                     } only %}
-                                    {{ participant.username }}
+                                    {{ participant.displayName }}
                                 </a>
                             </li>
                         {% endfor %}

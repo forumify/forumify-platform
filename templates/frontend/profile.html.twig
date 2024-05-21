@@ -1,5 +1,5 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
-{% block title_page %}{{ user.username }}{% endblock %}
+{% block title_page %}{{ user.displayName }}{% endblock %}
 {% block body %}
     <div class="mt-6 mb-6 flex flex-row items-start justify-center">
         <div class="profile-avatar w-50 pr-3 mr-3">
@@ -9,8 +9,11 @@
             } only %}
         </div>
         <div class="w-50">
-            <h2 class="flex items-center gap-4 mb-2">
-                {{ user.username }}
+            <div class="flex gap-4 mb-4">
+                <div>
+                    <h2 class="mb-0">{{ user.displayName }}</h2>
+                    <p class="text-small">@{{ user.username }}</p>
+                </div>
                 {% if app.user is not null %}
                     {% if app.user.id != user.id %}
                         {{ component('SubscribeButton', {
@@ -24,7 +27,7 @@
                         }) }}
                     {% endif %}
                 {% endif %}
-            </h2>
+            </div>
             <p class="mb-2">
                 <span class="text-bold">{{ topicCount }}</span> topics
                 <span class="text-bold ml-4">{{ commentCount }}</span> comments

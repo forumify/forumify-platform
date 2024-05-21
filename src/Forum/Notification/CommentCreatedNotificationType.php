@@ -38,7 +38,7 @@ class CommentCreatedNotificationType extends AbstractEmailNotificationType
         $topicTitle = $comment?->getTopic()?->getTitle();
 
         return $this->translator->trans('notification.comment_created', [
-            'author' => $author?->getUsername() ?? 'Deleted',
+            'author' => $author?->getDisplayName() ?? 'Deleted',
             'topic' => $topicTitle ?? 'Deleted',
         ]);
     }

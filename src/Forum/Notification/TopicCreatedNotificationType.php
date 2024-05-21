@@ -39,7 +39,7 @@ class TopicCreatedNotificationType extends AbstractEmailNotificationType
         $forum = $topic?->getForum()?->getTitle();
 
         return $this->translator->trans('notification.topic_created', [
-            'author' => $author?->getUsername() ?? 'Deleted',
+            'author' => $author?->getDisplayName() ?? 'Deleted',
             'forum' => $forum ?? 'Deleted',
         ]);
     }

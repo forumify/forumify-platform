@@ -35,7 +35,7 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
     {
         $sender = $this->getMessage($notification)?->getCreatedBy();
         return $this->translator->trans('notification.message_reply', [
-            'sender' => $sender?->getUsername() ?? 'Deleted',
+            'sender' => $sender?->getDisplayName() ?? 'Deleted',
         ]);
     }
 

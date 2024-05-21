@@ -9,6 +9,9 @@ use Forumify\Core\Form\UserNotificationSettingsType;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -31,6 +34,17 @@ class AccountSettingsType extends AbstractType
         $avatarPreview = $options['data']?->getAvatar();
 
         $builder
+            ->add('displayName', TextType::class, [
+                'constraints' => [new Assert\Length(min: 4, max: 32, normalizer: 'trim')]
+            ])
+            ->add('newPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'mapped' => false,
+                'required' => false,
+                'first_options' => ['label' => 'New password', 'required' => false],
+                'second_options' => ['label' => 'Repeat new password', 'required' => false],
+                'constraints' => [new Assert\Length(min: 8)]
+            ])
             ->add('newAvatar', FileType::class, [
                 'required' => false,
                 'label' => 'Avatar',

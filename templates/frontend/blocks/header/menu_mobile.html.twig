@@ -11,7 +11,7 @@
                 {% include '@Forumify/components/avatar.html.twig' with {
                     user: app.user,
                 } only %}
-                <p class="mt-4 text-regular">{{ app.user.username }}</p>
+                <p class="mt-4 text-regular">{{ app.user.displayName }}</p>
             </div>
             <hr>
             <nav>

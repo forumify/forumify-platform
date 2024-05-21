@@ -7,7 +7,7 @@
     <hr>
     <div class="content-block">
         {% set authorLink = absolute_url(path('forumify_forum_profile', { username: message.createdBy.username })) %}
-        <p><a href="{{ authorLink }}">{{ message.createdBy.username }}</a> replied:</p>
+        <p><a href="{{ authorLink }}">{{ message.createdBy.displayName }}</a> replied:</p>
         <p>{{ message.content|striptags|u.truncate(400, '...', false) }}</p>
     </div>
     <hr>

@@ -6,6 +6,7 @@
         <div class="comment-author">
             {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
             {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
+            <span class="text-small">@{{ item.createdBy.username }}</span>
             <div class="flex flex-wrap justify-center gap-2 mt-4">
                 {% for badge in item.createdBy.badges %}
                     <div class="w-15 flex justify-center items-center">

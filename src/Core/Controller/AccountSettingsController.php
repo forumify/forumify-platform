@@ -12,31 +12,36 @@ use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AccountSettingsController extends AbstractController
 {
+    #[IsGranted('ROLE_USER')]
     #[Route('/settings', name: 'settings')]
     public function __invoke(
         Request $request,
         UserRepository $userRepository,
         MediaService $mediaService,
         FilesystemOperator $avatarStorage,
+        UserPasswordHasherInterface $passwordHasher,
     ): Response {
-        $user = $this->getUser();
-        if (!$user instanceof User) {
-            return $this->redirectToRoute('forumify_core_index');
-        }
-
-        $form = $this->createForm(AccountSettingsType::class, $user);
+        $form = $this->createForm(AccountSettingsType::class, $this->getUser());
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
             $user = $form->getData();
 
             $newAvatar = $form->get('newAvatar')->getData();
             if ($newAvatar !== null) {
                 $avatar = $mediaService->saveToFilesystem($avatarStorage, $newAvatar);
                 $user->setAvatar($avatar);
+            }
+
+            $newPassword = $form->get('newPassword')->getData();
+            if ($newPassword) {
+                $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
             }
 
             $userRepository->save($user);

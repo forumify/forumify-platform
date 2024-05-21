@@ -1,5 +1,5 @@
 {%- if user is not null -%}
-    <a href="{{ path('forumify_forum_profile', { username: user.username }) }}">{{ user.username }}</a>
+    <a href="{{ path('forumify_forum_profile', { username: user.username }) }}">{{ user.displayName|default(user.username) }}</a>
 {%- else -%}
-    <a>{{ 'deleted'|trans }}</a>
+    <span>{{ 'deleted'|trans }}</span>
 {%- endif -%}

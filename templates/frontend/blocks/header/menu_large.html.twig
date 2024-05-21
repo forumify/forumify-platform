@@ -10,7 +10,7 @@
                         user: app.user,
                         className: 'avatar-sm',
                     } only %}
-                    <span class="ml-2">{{ app.user.username }}</span>
+                    <span class="ml-2">{{ app.user.displayName }}</span>
                 </a>
                 <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
                     {% include '@Forumify/frontend/blocks/header/fixed_menu.html.twig' %}

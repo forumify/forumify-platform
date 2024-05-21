@@ -10,11 +10,14 @@ use Symfony\Component\Validator\Constraints as Assert;
 class NewUser
 {
     #[Assert\Length(min: 4, max: 32, normalizer: 'trim')]
+    #[Assert\Regex('/^[A-Za-z0-9-_]+$/', 'registration.validation_error.username_alphanumeric')]
+    #[Assert\Regex('/[A-Za-z]/', 'registration.validation_error.username_one_letter')]
     private string $username;
 
     #[Assert\Email]
     private string $email;
 
+    #[Assert\NotBlank]
     #[Assert\Length(min: 8)]
     private string $password;
 

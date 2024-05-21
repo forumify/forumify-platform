@@ -67,7 +67,11 @@ remember_me: 'Remember me'
 login: 'Login'
 logout: 'Logout'
 no_account: 'No account yet? Register'
-register: 'Register'
+registration:
+    register: 'Register'
+    validation_error:
+        username_alphanumeric: 'Username can only contain letters, numbers, underscores and hyphens.'
+        username_one_letter: 'Username must contain at least one letter.'
 registrations_disabled: 'Registrations are not enabled for this website.'
 no_messages: 'Your inbox is empty.'
 configuration:

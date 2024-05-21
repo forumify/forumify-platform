@@ -4,7 +4,9 @@
     <div class="box">
         {{ form_start(form) }}
         <h2>Profile</h2>
+        {{ form_row(form.displayName) }}
         {{ form_row(form.newAvatar) }}
+        {{ form_row(form.newPassword) }}
 
         <h2>{{ 'user_notification_settings_type.label'|trans }}</h2>
         {% set notifications = form.notificationSettings %}
