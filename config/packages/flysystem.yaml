@@ -17,3 +17,9 @@ flysystem:
             adapter: 'local'
             options:
                 directory: '%kernel.project_dir%/public%forumify.resource.storage.path%'
+
+        # Used for uploaded resources from users through rich text editor etc.
+        media.storage:
+            adapter: 'local'
+            options:
+                directory: '%kernel.project_dir%/public%forumify.media.storage.path%'

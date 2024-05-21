@@ -7,5 +7,7 @@ framework:
                 base_path: '%forumify.asset.storage.path%'
             forumify.resource:
                 base_path: '%forumify.resource.storage.path%'
+            forumify.media:
+                base_path: '%forumify.media.storage.path%'
     router:
         default_uri: '%env(DEFAULT_URI)%'
