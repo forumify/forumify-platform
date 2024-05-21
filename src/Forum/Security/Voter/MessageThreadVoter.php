@@ -27,32 +27,23 @@ class MessageThreadVoter extends Voter
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
+        $user = $token->getUser();
+        if (!$user instanceof User) {
+            return false;
+        }
+
         return match ($attribute) {
-            VoterAttribute::MessageThreadCreate->value => $this->voteOnCreate($token),
-            VoterAttribute::MessageThreadView->value => $this->voteOnView($subject, $token),
+            VoterAttribute::MessageThreadCreate->value => !$user->isBanned(),
+            VoterAttribute::MessageThreadView->value => $this->voteOnView($subject, $user),
             default => false,
         };
     }
 
-    private function voteOnCreate(TokenInterface $token): bool
+    /**
+     * User must be a participant of the thread in order to view it
+     */
+    private function voteOnView(MessageThread $subject, User $user): bool
     {
-        /** @var User|null $user */
-        $user = $token->getUser();
-        if ($user === null) {
-            return false;
-        }
-
-        return !$user->isBanned();
-    }
-
-    private function voteOnView(mixed $subject, TokenInterface $token): bool
-    {
-        /** @var User|null $user */
-        $user = $token->getUser();
-        if ($user === null) {
-            return false;
-        }
-
         /** @var User $participant */
         foreach ($subject->getParticipants() as $participant) {
             if ($participant->getId() === $user->getId()) {

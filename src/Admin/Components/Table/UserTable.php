@@ -26,6 +26,10 @@ class UserTable extends AbstractDoctrineTable
             ->addColumn('username', [
                 'field' => 'username',
             ])
+            ->addColumn('displayName', [
+                'field' => 'displayName',
+                'label' => 'Display name',
+            ])
             ->addColumn('email', [
                 'field' => 'email'
             ])

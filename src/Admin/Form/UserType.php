@@ -37,12 +37,8 @@ class UserType extends AbstractType
         $user = $options['data'];
 
         $builder
-            ->add('username', TextType::class, [
-                'disabled' => true,
-            ])
-            ->add('email', TextType::class, [
-                'disabled' => true,
-            ])
+            ->add('username', TextType::class)
+            ->add('email', TextType::class)
             ->add('newAvatar', FileType::class, [
                 'mapped' => false,
                 'label' => 'Avatar',
