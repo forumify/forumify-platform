@@ -24,7 +24,6 @@ class AdminMenuBuilder implements AdminMenuBuilderInterface
         $menu->addItem(new MenuItem('Users', $url('forumify_admin_user_list'), ['icon' => 'ph ph-user-list']));
         $menu->addItem(new MenuItem('Forums', $url('forumify_admin_forum'), ['icon' => 'ph ph-chats']));
         $menu->addItem(new MenuItem('CMS', $url('forumify_admin_cms_menu'), ['icon' => 'ph ph-files']));
-        $menu->addItem(new MenuItem('Plugins', $url('forumify_admin_plugin_list'), ['icon' => 'ph ph-plugs']));
         $menu->addItem(new MenuItem('Settings', $url('forumify_admin_settings'), ['icon' => 'ph ph-wrench']));
     }
 }

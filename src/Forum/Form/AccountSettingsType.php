@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Forum\Form;
 
 use Forumify\Core\Entity\User;
+use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Core\Form\UserNotificationSettingsType;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
@@ -37,14 +38,6 @@ class AccountSettingsType extends AbstractType
             ->add('displayName', TextType::class, [
                 'constraints' => [new Assert\Length(min: 4, max: 32, normalizer: 'trim')]
             ])
-            ->add('newPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'mapped' => false,
-                'required' => false,
-                'first_options' => ['label' => 'New password', 'required' => false],
-                'second_options' => ['label' => 'Repeat new password', 'required' => false],
-                'constraints' => [new Assert\Length(min: 8)]
-            ])
             ->add('newAvatar', FileType::class, [
                 'required' => false,
                 'label' => 'Avatar',
@@ -59,6 +52,17 @@ class AccountSettingsType extends AbstractType
                     ),
                 ],
                 'mapped' => false,
+            ])
+            ->add('signature', RichTextEditorType::class, [
+                'required' => false,
+            ])
+            ->add('newPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'mapped' => false,
+                'required' => false,
+                'first_options' => ['label' => 'New password', 'required' => false],
+                'second_options' => ['label' => 'Repeat new password', 'required' => false],
+                'constraints' => [new Assert\Length(min: 8)]
             ])
             ->add('notificationSettings', UserNotificationSettingsType::class, [
                 'label' => false,

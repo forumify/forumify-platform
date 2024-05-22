@@ -50,6 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?string $avatar = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $signature = null;
+
     #[ORM\Column(type: 'boolean')]
     private bool $emailVerified = false;
 
@@ -180,6 +183,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAvatar(?string $avatar): void
     {
         $this->avatar = $avatar;
+    }
+
+    public function getSignature(): ?string
+    {
+        return $this->signature;
+    }
+
+    public function setSignature(?string $signature): void
+    {
+        $this->signature = $signature;
     }
 
     public function eraseCredentials(): void

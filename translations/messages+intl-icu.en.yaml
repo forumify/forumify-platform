@@ -46,6 +46,10 @@ notification:
     topic_view: 'View topic'
     message_reply: 'You received a new message from {sender}'
     message_view: 'View message'
+account_settings:
+    title: 'Account Settings'
+    notification_settings: 'Notification Settings'
+
 user_notification_settings_type:
     label: 'Notification settings'
     auto_subscribe: 'Automatically subscribe to notifications for:'
