@@ -37,6 +37,7 @@ class MenuItemType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => MenuItem::class,
+            'parent' => null,
         ]);
     }
 
@@ -62,6 +63,7 @@ class MenuItemType extends AbstractType
                 'placeholder' => 'admin.menu_builder.parent_root',
                 'choice_label' => 'name',
                 'help' => 'admin.menu_builder.parent_help',
+                'data' => $menuItem?->getParent() ?? $options['parent'] ?? null,
                 'query_builder' => fn (EntityRepository $repository) => $repository
                     ->createQueryBuilder('mi')
                     ->where('mi.type = :type')

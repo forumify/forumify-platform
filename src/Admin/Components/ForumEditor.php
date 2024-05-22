@@ -54,7 +54,7 @@ class ForumEditor
         $siblings = $this->forumGroupRepository->createQueryBuilder('fg')
             ->where("fg.position $predicate :position")
             ->setParameter('position', $group->getPosition())
-            ->orderBy('fg.position', 'ASC')
+            ->orderBy('fg.position', $direction === 'up' ? 'DESC' : 'ASC')
             ->setMaxResults(1)
             ->getQuery()
             ->getResult();
@@ -81,7 +81,7 @@ class ForumEditor
         $qb = $this->forumRepository->createQueryBuilder('f')
             ->where("f.position $predicate :position")
             ->setParameter('position', $forum->getPosition())
-            ->orderBy('f.position', 'ASC')
+            ->orderBy('f.position', $direction === 'up' ? 'DESC' : 'ASC')
             ->setMaxResults(1);
 
         if ($forum->getGroup() !== null) {

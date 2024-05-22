@@ -76,7 +76,9 @@ class MenuBuilder extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->createForm(MenuItemType::class, $this->selectedItem);
+        return $this->createForm(MenuItemType::class, $this->selectedItem, [
+            'parent' => $this->parent
+        ]);
     }
 
     #[LiveAction]
@@ -97,11 +99,9 @@ class MenuBuilder extends AbstractController
 
     private function enrichNew(MenuItem $menuItem): void
     {
-        $menuItem->setParent($this->parent);
-
-        $siblings = $this->parent === null
+        $siblings = $menuItem->getParent() === null
             ? $this->getRoots()
-            : $this->parent->getChildren();
+            : $menuItem->getParent()->getChildren();
 
         $highestPosition = 0;
         foreach ($siblings as $sibling) {
@@ -133,7 +133,7 @@ class MenuBuilder extends AbstractController
         $qb = $this->menuItemRepository->createQueryBuilder('mi')
             ->where("mi.position $predicate :position")
             ->setParameter('position', $item->getPosition())
-            ->orderBy('mi.position', 'ASC')
+            ->orderBy('mi.position', $direction === 'up' ? 'DESC' : 'ASC')
             ->setMaxResults(1);
 
         if ($item->getParent() !== null) {
@@ -143,10 +143,9 @@ class MenuBuilder extends AbstractController
             $qb->andWhere('mi.parent IS NULL');
         }
 
-        $siblings = $qb->getQuery()->getResult();
         /** @var MenuItem|null $toSwap */
-        $toSwap = reset($siblings);
-        if ($toSwap === false) {
+        $toSwap = $qb->getQuery()->getSingleResult();
+        if ($toSwap === null) {
             return;
         }
 
