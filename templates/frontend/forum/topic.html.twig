@@ -17,7 +17,8 @@
         <div class="box topic-header">
             <div class="flex flex-row items-start">
                 {% include '@Forumify/components/avatar.html.twig' with {
-                    user: topic.createdBy
+                    user: topic.createdBy,
+                    className: 'hide-phone'
                 } only %}
                 <div>
                     <h2 class="mb-0">{{ topic.title }}</h2>

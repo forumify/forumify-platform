@@ -118,29 +118,50 @@
 
 .comment {
     display: flex;
+    flex-direction: column;
     padding: var(--spacing-4) 0;
     min-height: 120px;
 
+    @include min-width-md {
+        flex-direction: row;
+    }
+
     .comment-author {
         display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
+        width: 100%;
         align-items: center;
-        width: calc(1 / 6) * 100%;
-        border-right: var(--border);
-        padding: var(--spacing-4) 0;
+        gap: var(--spacing-2);
+
+        @include min-width-md {
+            width: calc(1 / 6) * 100%;
+            border-right: var(--border);
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: var(--spacing-4) 0;
+        }
 
         .avatar {
-            width: 48px;
-            height: 48px;
-            margin-bottom: var(--spacing-2);
+            width: 32px;
+            height: 32px;
+
+            @include min-width-md {
+                width: 48px;
+                height: 48px;
+                margin-bottom: var(--spacing-2);
+            }
         }
+
     }
 
     .comment-content {
-        width: calc(5 / 6) * 100%;
-        padding: var(--spacing-4) 0 var(--spacing-4) var(--spacing-4);
         position: relative;
+        width: 100%;
+
+        @include min-width-md {
+            width: calc(5 / 6) * 100%;
+            padding: var(--spacing-4) 0 var(--spacing-4) var(--spacing-4);
+        }
     }
 
     .comment-toolbar {

@@ -5,7 +5,7 @@
     }) }}>
         <div class="comment-author">
             {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
-            {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
+            {% include '@Forumify/components/username.html.twig' with { user: item.createdBy, className: 'text-center' } only %}
             <span class="text-small">@{{ item.createdBy.username }}</span>
             <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
                 {% for badge in item.createdBy.badges %}
@@ -17,7 +17,7 @@
         </div>
         <div class="comment-content">
             <div class="text-small text-secondary flex justify-between items-end">
-                <span>{{ 'date_time_short'|trans({ date: item.createdAt }) }}</span>
+                <span class="mb-2">{{ 'date_time_short'|trans({ date: item.createdAt }) }}</span>
                 <div class="comment-toolbar">
                     {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
                         <a class="btn-link btn-small btn-icon text-secondary" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'toggleEdit') }}>
