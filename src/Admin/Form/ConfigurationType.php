@@ -14,10 +14,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SettingsType extends AbstractType
+class ConfigurationType extends AbstractType
 {
     public function __construct(
-        private readonly SettingRepository $settingRepository,
         private readonly Packages $packages,
     ) {
     }
@@ -25,13 +24,12 @@ class SettingsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class, [
-                'data' => $this->settingRepository->get('forum.title'),
-            ])
-            ->add('logo', FileType::class, [
+            ->add('forumify__title', TextType::class)
+            ->add('newLogo', FileType::class, [
                 'required' => false,
+                'mapped' => false,
                 'attr' => [
-                    'preview' => ($logo = $this->settingRepository->get('forum.logo'))
+                    'preview' => ($logo = $options['data']['forumify__logo'] ?? null) !== null
                         ? $this->packages->getUrl($logo, 'forumify.asset')
                         : null,
                 ],
@@ -41,10 +39,11 @@ class SettingsType extends AbstractType
                     ),
                 ],
             ])
-            ->add('default_avatar', FileType::class, [
+            ->add('newDefaultAvatar', FileType::class, [
                 'required' => false,
+                'mapped' => false,
                 'attr' => [
-                    'preview' => ($avatar = $this->settingRepository->get('forum.default_avatar'))
+                    'preview' => ($avatar = $options['data']['forumify__default_avatar'] ?? null)
                         ? $this->packages->getUrl($avatar, 'forumify.avatar')
                         : null,
                 ],
@@ -54,12 +53,10 @@ class SettingsType extends AbstractType
                     ),
                 ],
             ])
-            ->add('enable_registrations', CheckboxType::class, [
-                'data' => (bool)$this->settingRepository->get('core.enable_registrations'),
+            ->add('forumify__enable_registrations', CheckboxType::class, [
                 'required' => false,
             ])
-            ->add('enable_email_login', ChoiceType::class, [
-                'data' => (string)$this->settingRepository->get('core.enable_email_login'),
+            ->add('forumify__login_method', ChoiceType::class, [
                 'label' => 'Login type',
                 'help' => 'Enable login via email, username, or both.',
                 'required' => false,
@@ -68,22 +65,18 @@ class SettingsType extends AbstractType
                     'Email' => 'email',
                     'Both' => 'both',
                 ],
-                'placeholder' => null,
             ])
-            ->add('enable_recaptcha', CheckboxType::class, [
-                'data' => (bool)$this->settingRepository->get('core.recaptcha.enabled'),
+            ->add('forumify__recaptcha__enabled', CheckboxType::class, [
                 'required' => false,
                 'label' => 'Enable Google reCAPTCHA',
                 'help' => 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>.',
                 'help_html' => true,
             ])
-            ->add('recaptcha_site_key', TextType::class, [
-                'data' => $this->settingRepository->get('core.recaptcha.site_key'),
+            ->add('forumify__recaptcha__site_key', TextType::class, [
                 'label' => 'reCAPTCHA site key',
                 'required' => false,
             ])
-            ->add('recaptcha_site_secret', TextType::class, [
-                'data' => $this->settingRepository->get('core.recaptcha.site_secret'),
+            ->add('forumify__recaptcha__site_secret', TextType::class, [
                 'label' => 'reCAPTCHA site secret',
                 'required' => false,
             ]);

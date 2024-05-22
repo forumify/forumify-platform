@@ -22,7 +22,7 @@ class UserRepository extends AbstractRepository implements UserLoaderInterface
 
     public function loadUserByIdentifier(string $identifier): ?User
     {
-        $where = match ($this->settingRepository->get('core.enable_email_login')) {
+        $where = match ($this->settingRepository->get('forumify.login_method')) {
             'email' => 'u.email = :query',
             'both' => 'u.username = :query OR u.email = :query',
             default => 'u.username = :query',

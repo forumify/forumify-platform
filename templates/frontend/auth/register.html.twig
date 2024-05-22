@@ -5,10 +5,10 @@
     {{ form_start(form, { attr: { id: 'registration-form' } }) }}
     {{ form_widget(form) }}
     <div class="flex justify-center">
-        {% if setting('core.recaptcha.enabled') %}
+        {% if setting('forumify.recaptcha.enabled') %}
             <button
                 class="btn-primary g-recaptcha"
-                data-sitekey="{{ setting('core.recaptcha.site_key') }}"
+                data-sitekey="{{ setting('forumify.recaptcha.site_key') }}"
                 data-callback='onRegister'
                 data-action='register'
             >
@@ -24,7 +24,7 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {% if setting('core.recaptcha.enabled') %}
+    {% if setting('forumify.recaptcha.enabled') %}
         <script src="https://www.google.com/recaptcha/api.js"></script>
         <script type="text/javascript">
             function onRegister() {

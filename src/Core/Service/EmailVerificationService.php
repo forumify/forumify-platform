@@ -35,7 +35,7 @@ class EmailVerificationService
         $verificationToken = $this->createToken($user);
 
         $subject = $this->translator->trans('email_subjects.account_verification', [
-            'forum_name' => $this->settingRepository->get('forum.title')
+            'forum_name' => $this->settingRepository->get('forumify.title')
         ]);
 
         $email = (new TemplatedEmail())

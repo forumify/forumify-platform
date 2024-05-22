@@ -43,7 +43,7 @@ class AuthController extends AbstractController
         SettingRepository $settingRepository,
         RecaptchaService $recaptchaService,
     ): Response {
-        if (!$settingRepository->get('core.enable_registrations')) {
+        if (!$settingRepository->get('forumify.enable_registrations')) {
             $this->addFlash('error', 'flashes.registration_disabled');
             return $this->redirectToRoute('forumify_core_index');
         }
@@ -51,7 +51,7 @@ class AuthController extends AbstractController
         $form = $this->createForm(RegisterType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($settingRepository->get('core.recaptcha.enabled')) {
+            if ($settingRepository->get('forumify.recaptcha.enabled')) {
                 $score = $recaptchaService->verifyRequest($request);
                 if ($score < 0.8) {
                     // most likely a bot

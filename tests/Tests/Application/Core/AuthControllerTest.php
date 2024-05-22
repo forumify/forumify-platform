@@ -89,8 +89,8 @@ class AuthControllerTest extends WebTestCase
 
         /** @var SettingRepository $settingRepository */
         $settingRepository = self::getContainer()->get(SettingRepository::class);
-        $settingRepository->set('core.enable_registrations', true);
-        $settingRepository->set('core.recaptcha.enabled', false);
+        $settingRepository->set('forumify.enable_registrations', true);
+        $settingRepository->set('forumify.recaptcha.enabled', false);
 
         $client->request('GET', '/register');
         $crawler = $client->submitForm('Register', [
@@ -122,6 +122,6 @@ class AuthControllerTest extends WebTestCase
     {
         /** @var SettingRepository $settingRepository */
         $settingRepository = self::getContainer()->get(SettingRepository::class);
-        $settingRepository->set('core.enable_email_login', $method);
+        $settingRepository->set('forumify.login_method', $method);
     }
 }

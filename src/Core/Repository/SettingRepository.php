@@ -80,7 +80,7 @@ class SettingRepository extends AbstractRepository
     public function toFormData(?string $prefix = null): array
     {
         $formData = [];
-        foreach ($this->getAll() as $key => $value) {
+        foreach ($this->refreshSettingsCache() as $key => $value) {
             if ($prefix && !str_starts_with($key, $prefix)) {
                 continue;
             }

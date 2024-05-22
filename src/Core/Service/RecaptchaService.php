@@ -24,7 +24,7 @@ class RecaptchaService
         $response = (new Client())
             ->post('https://www.google.com/recaptcha/api/siteverify', [
                 'form_params' => [
-                    'secret' => $this->settingRepository->get('core.recaptcha.site_secret'),
+                    'secret' => $this->settingRepository->get('forumify.recaptcha.site_secret'),
                     'response' => $token
                 ],
             ])

@@ -6,7 +6,7 @@
         <div class="alert-error mb-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
     <form action="{{ app.request.requestUri }}" method="post">
-        {% set userIdentifier = setting('core.enable_email_login') %}
+        {% set userIdentifier = setting('forumify.login_method') %}
         {%- set identifierLabel -%}
             {% if userIdentifier == 'email' %}
                 {{- 'email'|trans -}}
@@ -40,7 +40,7 @@
                 <i class="ph ph-sign-in"></i>{{ 'login'|trans }}
             </button>
         </div>
-        {% if setting('core.enable_registrations') %}
+        {% if setting('forumify.enable_registrations') %}
             <a class="text-small" href="{{ path('forumify_core_register') }}">{{ 'no_account'|trans }}</a>
         {% endif %}
     </form>

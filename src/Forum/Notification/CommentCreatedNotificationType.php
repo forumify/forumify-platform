@@ -53,7 +53,7 @@ class CommentCreatedNotificationType extends AbstractEmailNotificationType
     public function getImage(Notification $notification): string
     {
         $avatar = $this->getComment($notification)?->getCreatedBy()?->getAvatar();
-        $url = $avatar ?? $this->settingRepository->get('forum.default_avatar');
+        $url = $avatar ?? $this->settingRepository->get('forumify.default_avatar');
 
         return empty($url)
             ? ''

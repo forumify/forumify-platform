@@ -60,7 +60,7 @@ class TopicCreatedNotificationType extends AbstractEmailNotificationType
     public function getImage(Notification $notification): string
     {
         $avatar = $this->getTopic($notification)?->getCreatedBy()?->getAvatar();
-        $url = $avatar ?? $this->settingRepository->get('forum.default_avatar');
+        $url = $avatar ?? $this->settingRepository->get('forumify.default_avatar');
 
         return empty($url)
             ? ''

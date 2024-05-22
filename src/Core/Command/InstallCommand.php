@@ -63,7 +63,7 @@ class InstallCommand extends Command
 
         $io->section('Website configuration');
         $settings = [];
-        $settings['forum.title'] = $io->ask('Forum name');
+        $settings['forumify.title'] = $io->ask('Forum name');
         $this->settingRepository->setBulk($settings);
 
         $io->writeln('Settings stored.');

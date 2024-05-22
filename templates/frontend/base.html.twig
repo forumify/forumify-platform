@@ -2,8 +2,8 @@
 <html lang="{{ app.locale }}">
 <head>
     {% set logo %}
-        {%- if setting('forum.logo') -%}
-            {{ asset(setting('forum.logo'), 'forumify.asset') }}
+        {%- if setting('forumify.logo') -%}
+            {{ asset(setting('forumify.logo'), 'forumify.asset') }}
         {%- else -%}
             {{ asset('bundles/forumify/images/forumify.svg') }}
         {% endif %}
@@ -16,7 +16,7 @@
                     {%- block title_page -%}{%- endblock -%}
                     {{- ' - ' -}}
                 {%- endif -%}
-                {{- setting('forum.title') -}}
+                {{- setting('forumify.title') -}}
             {% endapply %}
         {%- endset -%}
         {% set absolute_request_url = absolute_url(app.request.requestUri) %}

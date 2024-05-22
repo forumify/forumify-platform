@@ -10,16 +10,16 @@
             {% endblock %}
             {% block tabpanels %}
                 <div id="general">
-                    {{ form_row(form.title) }}
-                    {{ form_row(form.logo) }}
-                    {{ form_row(form.default_avatar) }}
-                    {{ form_row(form.enable_registrations) }}
-                    {{ form_row(form.enable_email_login) }}
+                    {{ form_row(form.forumify__title) }}
+                    {{ form_row(form.newLogo) }}
+                    {{ form_row(form.newDefaultAvatar) }}
+                    {{ form_row(form.forumify__enable_registrations) }}
+                    {{ form_row(form.forumify__login_method) }}
                 </div>
                 <div id="spam-protection">
-                    {{ form_row(form.enable_recaptcha) }}
-                    {{ form_row(form.recaptcha_site_key) }}
-                    {{ form_row(form.recaptcha_site_secret) }}
+                    {{ form_row(form.forumify__recaptcha__enabled) }}
+                    {{ form_row(form.forumify__recaptcha__site_key) }}
+                    {{ form_row(form.forumify__recaptcha__site_secret) }}
                 </div>
             {% endblock %}
         {% endembed %}
