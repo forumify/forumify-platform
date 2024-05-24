@@ -50,12 +50,12 @@ class ConfigurationController extends AbstractController
     {
         $settings = [];
 
-        $newLogo = $form->get('newLogo')->getData();
+        $newLogo = $form->get('logo')->getData();
         if ($newLogo !== null) {
             $settings['forumify.logo'] = $this->mediaService->saveToFilesystem($this->assetStorage, $newLogo);
         }
 
-        $newDefaultAvatar = $form->get('newDefaultAvatar')->getData();
+        $newDefaultAvatar = $form->get('defaultAvatar')->getData();
         if ($newDefaultAvatar !== null) {
             $settings['forumify.default_avatar'] = $this->mediaService->saveToFilesystem($this->avatarStorage, $newDefaultAvatar);
         }

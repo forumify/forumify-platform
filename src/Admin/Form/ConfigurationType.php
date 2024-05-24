@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Form;
 
-use Forumify\Core\Repository\SettingRepository;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -24,8 +23,11 @@ class ConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('forumify__title', TextType::class)
-            ->add('newLogo', FileType::class, [
+            ->add('forumify__title', TextType::class, [
+                'label' => 'admin.configuration.forum_title'
+            ])
+            ->add('logo', FileType::class, [
+                'label' => 'admin.configuration.logo',
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
@@ -39,7 +41,9 @@ class ConfigurationType extends AbstractType
                     ),
                 ],
             ])
-            ->add('newDefaultAvatar', FileType::class, [
+            ->add('defaultAvatar', FileType::class, [
+                'label' => 'admin.configuration.default_avatar',
+                'help' => 'admin.configuration.default_avatar_help',
                 'required' => false,
                 'mapped' => false,
                 'attr' => [
@@ -54,30 +58,32 @@ class ConfigurationType extends AbstractType
                 ],
             ])
             ->add('forumify__enable_registrations', CheckboxType::class, [
+                'label' => 'admin.configuration.enable_registrations',
                 'required' => false,
             ])
             ->add('forumify__login_method', ChoiceType::class, [
-                'label' => 'Login type',
-                'help' => 'Enable login via email, username, or both.',
+                'label' => 'admin.configuration.login_method',
+                'help' => 'admin.configuration.login_method_help',
                 'required' => false,
                 'choices' => [
                     'Username' => 'username',
                     'Email' => 'email',
                     'Both' => 'both',
                 ],
+                'placeholder' => null,
             ])
             ->add('forumify__recaptcha__enabled', CheckboxType::class, [
-                'required' => false,
-                'label' => 'Enable Google reCAPTCHA',
-                'help' => 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>.',
+                'label' => 'admin.configuration.recaptcha_enabled',
+                'help' => 'admin.configuration.recaptcha_enabled_help',
                 'help_html' => true,
+                'required' => false,
             ])
             ->add('forumify__recaptcha__site_key', TextType::class, [
-                'label' => 'reCAPTCHA site key',
+                'label' => 'admin.configuration.recaptcha_site_key',
                 'required' => false,
             ])
             ->add('forumify__recaptcha__site_secret', TextType::class, [
-                'label' => 'reCAPTCHA site secret',
+                'label' => 'admin.configuration.recaptcha_site_secret',
                 'required' => false,
             ]);
     }

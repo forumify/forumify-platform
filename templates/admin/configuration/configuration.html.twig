@@ -1,18 +1,19 @@
 {% extends '@Forumify/admin/base.html.twig' %}
+{% block title_page %}{{ 'admin.configuration.title'|trans }}{% endblock %}
 {% block body %}
-    <h1 class="mb-4">{{ 'configuration.title'|trans }}</h1>
+    <h1>{{ 'admin.configuration.title'|trans }}</h1>
     <div class="box">
         {{ form_start(form) }}
         {% embed '@Forumify/components/tabs.html.twig' %}
             {% block tabs %}
-                <button type="button" class="btn-link" data-tab-id="general">{{ 'configuration.general'|trans }}</button>
-                <button type="button" class="btn-link" data-tab-id="spam-protection">{{ 'configuration.spam_protection'|trans }}</button>
+                <button type="button" class="btn-link" data-tab-id="general">{{ 'admin.configuration.general'|trans }}</button>
+                <button type="button" class="btn-link" data-tab-id="spam-protection">{{ 'admin.configuration.spam_protection'|trans }}</button>
             {% endblock %}
             {% block tabpanels %}
                 <div id="general">
                     {{ form_row(form.forumify__title) }}
-                    {{ form_row(form.newLogo) }}
-                    {{ form_row(form.newDefaultAvatar) }}
+                    {{ form_row(form.logo) }}
+                    {{ form_row(form.defaultAvatar) }}
                     {{ form_row(form.forumify__enable_registrations) }}
                     {{ form_row(form.forumify__login_method) }}
                 </div>
