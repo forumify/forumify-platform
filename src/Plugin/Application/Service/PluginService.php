@@ -11,6 +11,7 @@ use Forumify\Core\ForumifyKernel;
 use Forumify\Plugin\Application\Exception\PluginException;
 use Forumify\Plugin\Application\Exception\PluginNotFoundException;
 use Forumify\Plugin\Application\Exception\UnbootableKernelException;
+use JsonException;
 use Symfony\Component\Process\Process;
 
 class PluginService
@@ -61,22 +62,15 @@ class PluginService
     /**
      * @throws PluginException
      */
-    public function updatePlugin(int $pluginId): void
+    public function updatePackage(string $package): void
     {
-        try {
-            $packages = $this->connection->fetchFirstColumn('SELECT package FROM plugin WHERE id = ?', [$pluginId]);
-        } catch (Exception $ex) {
-            throw new PluginException($ex->getMessage(), 0, $ex);
-        }
-
-        if (empty($packages)) {
-            throw new PluginNotFoundException($pluginId);
-        }
-
-        $package = reset($packages);
         $versions = self::getLatestVersions($this->rootDir)[$package] ?? null;
         if ($versions === null) {
             throw new PluginException("Unable to read versions for $package.");
+        }
+
+        if (($versions['latest-status'] ?? null) !== 'update-possible') {
+            return; // nothing to update....
         }
 
         $this->require($package, $versions['latest'] ?? '*');
@@ -88,6 +82,37 @@ class PluginService
             $this->require($package, $versions['version'] ?? '*');
             throw new PluginException('Unable to require new version, rollback was successful', 0, $ex);
         }
+        $this->postInstall();
+        $this->runMigrations();
+    }
+
+    /**
+     * @throws PluginException
+     */
+    public function findPackageForPlugin(int $pluginId): string
+    {
+        try {
+            $packages = $this->connection->fetchFirstColumn('SELECT package FROM plugin WHERE id = ?', [$pluginId]);
+        } catch (Exception $ex) {
+            throw new PluginException($ex->getMessage(), 0, $ex);
+        }
+
+        if (empty($packages)) {
+            throw new PluginNotFoundException($pluginId);
+        }
+
+        return reset($packages);
+    }
+
+    /**
+     * @throws PluginException
+     */
+    public function updateAll(): void
+    {
+        $this->update();
+        $this->clearFrameworkCache();
+        $this->postInstall();
+        $this->runMigrations();
     }
 
     private function require(string $package, string $version): void
@@ -97,6 +122,25 @@ class PluginService
             'require',
             "{$package}:{$version}",
             '--no-interaction',
+            '--no-scripts',
+            '--working-dir',
+            $this->rootDir,
+        ]);
+        $process->run();
+    }
+
+    private function update(?string $package = null): void
+    {
+        $cmd = ['composer', 'update'];
+        if ($package !== null) {
+            $cmd[] = $package;
+            $cmd[] = '--with-all-dependencies';
+        }
+
+        $process = new Process([
+            ...$cmd,
+            '--no-interaction',
+            '--no-scripts',
             '--working-dir',
             $this->rootDir,
         ]);
@@ -118,7 +162,12 @@ class PluginService
         $process->run();
         $output = $process->getOutput();
 
-        $versions = json_decode($output, true, 512, JSON_THROW_ON_ERROR)['installed'] ?? [];
+        try {
+            $versions = json_decode($output, true, 512, JSON_THROW_ON_ERROR)['installed'] ?? [];
+        } catch (JsonException) {
+            // a lot more needs to be broken before this can happen...
+        }
+
         return array_combine(array_column($versions, 'name'), $versions);
     }
 
@@ -179,9 +228,9 @@ class PluginService
     private function runMigrations(): void
     {
         $process = new Process([
-           'php',
-           $this->rootDir . '/bin/console',
-           'doctrine:migrations:migrate',
+            'php',
+            $this->rootDir . '/bin/console',
+            'doctrine:migrations:migrate',
             '--allow-no-migration',
             '--no-interaction'
         ]);

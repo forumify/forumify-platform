@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Forumify\Plugin\Scheduler;
 
 use Forumify\Plugin\Service\PluginService;
-use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Component\Scheduler\Attribute\AsCronTask;
 
-#[AsMessageHandler(handles: RefreshPluginsTask::class)]
+#[AsCronTask('@midnight', jitter: 30)]
 class RefreshPluginsTaskHandler
 {
     public function __construct(private readonly PluginService $pluginService)

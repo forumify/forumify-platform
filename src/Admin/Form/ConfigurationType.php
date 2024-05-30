@@ -72,6 +72,11 @@ class ConfigurationType extends AbstractType
                 ],
                 'placeholder' => null,
             ])
+            ->add('forumify__enable_auto_updates', CheckboxType::class, [
+                'label' => 'admin.configuration.enable_auto_updates',
+                'help' => 'admin.configuration.enable_auto_updates_help',
+                'required' => false,
+            ])
             ->add('forumify__recaptcha__enabled', CheckboxType::class, [
                 'label' => 'admin.configuration.recaptcha_enabled',
                 'help' => 'admin.configuration.recaptcha_enabled_help',
