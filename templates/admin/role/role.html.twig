@@ -1,15 +1,56 @@
 {% extends '@Forumify/admin/base.html.twig' %}
-{% block title_page %}
-    {% if role is not null %}
-        role {{ role.title }}
-    {% else %}
-        {{ 'create_role'|trans }}
-    {% endif %}
-{% endblock %}
 {% block body %}
-    {% include '@Forumify/admin/components/simple_form.html.twig' with {
-        title: role is not null ? role.title : 'create_role'|trans,
-        form: form,
-        cancelPath: path('forumify_admin_role_list')
-    } only %}
+    <h1 class="mb-4">{{ role ? 'edit_role'|trans ~ role.title : 'create_role'|trans }}</h1>
+    <div class="box">
+        {{ form_start(form) }}
+        {% embed '@Forumify/components/tabs.html.twig' %}
+            {% block tabs %}
+                <button type="button" class="btn-link" data-tab-id="role">{{ 'role'|trans }}</button>
+                <button type="button" class="btn-link" data-tab-id="permissions">{{ 'permissions'|trans }}</button>
+            {% endblock %}
+            {% block tabpanels %}
+                <div id="role">
+                    {{ form_row(form.title) }}
+                    {{ form_row(form.description) }}
+                    {{ form_row(form.administrator) }}
+                    {{ form_row(form.moderator) }}
+                </div>
+                <div id="permissions">
+                    {% embed '@Forumify/components/tabs.html.twig' %}
+                        {% block tabs %}
+                            {% for plugin in plugins %}
+                                <button type="button" class="btn-link" data-tab-id="plugin_{{ plugin.id }}">{{ plugin.plugin.pluginMetadata.name }}</button>
+                            {% endfor %}
+                        {% endblock %}
+                        {% block tabpanels %}
+                            {% for plugin in plugins %}
+                                <div id="plugin_{{ plugin.id }}">
+                                    {% for category, subcategories in permissionsByPlugin[plugin.id] %}
+                                        <div class="category">
+                                            <h2>{{ category }}</h2>
+                                            {% for subcategory, permissions in subcategories %}
+                                                <div class="subcategory ml-5">
+                                                    <h3>{{ subcategory }}</h3>
+                                                    <ul class="ml-5">
+                                                        {% for permission in permissions %}
+                                                            <li>{{ form_widget(form['permission_' ~ permission.id]) }} {{ permission.name|humanize }} </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% endblock %}
+                    {% endembed %}
+                </div>
+            {% endblock %}
+        {% endembed %}
+        <div class="flex justify-center items-center gap-2">
+            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+        </div>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}
+

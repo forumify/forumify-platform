@@ -23,7 +23,7 @@ class PluginController extends AbstractController
     public function list(): Response
     {
         $activePlugins = $this->pluginRepository->findBy(['active' => true], ['package' => 'ASC']);
-        $inactivePlugins = $this->pluginRepository->findBy(['active' => false], ['package' => 'ASC']);
+        $inactivePlugins = $this->pluginRepository->findInactivePluginsExcludingPackage('forumify/forumify-platform');
 
         $latestVersions = $this->pluginService->getLatestVersions();
         $platformVersions = $latestVersions['forumify/forumify-platform'] ?? null;

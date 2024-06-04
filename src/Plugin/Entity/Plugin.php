@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Forumify\Plugin\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Repository\PluginRepository;
 use Forumify\Plugin\AbstractForumifyPlugin;
-use Forumify\Plugin\PluginMetadata;
 
 #[ORM\Entity(repositoryClass: PluginRepository::class)]
 class Plugin
@@ -31,6 +31,9 @@ class Plugin
     private bool $active = false;
 
     private ?AbstractForumifyPlugin $plugin = null;
+
+    #[ORM\OneToMany(mappedBy: 'plugin', targetEntity: Permission::class, cascade: ["remove"])]
+    private Collection $permissions;
 
     public function getPackage(): string
     {
@@ -95,5 +98,28 @@ class Plugin
         }
 
         return $this->plugin;
+    }
+
+
+    public function getPermissions(): Collection
+    {
+        return $this->permissions;
+    }
+
+    public function addPermission(Permission $permission): void
+    {
+        if (!$this->permissions->contains($permission)) {
+            $this->permissions[] = $permission;
+            $permission->setPlugin($this);
+        }
+    }
+
+    public function removePermission(Permission $permission): void
+    {
+        if ($this->permissions->removeElement($permission)) {
+            if ($permission->getPlugin() === $this) {
+                $permission->setPlugin(null);
+            }
+        }
     }
 }
