@@ -11,8 +11,15 @@
                 {% set link = path('forumify_forum_forum', { slug: forum.slug }) %}
                 <li class="forum">
                     <div class="forum-content">
-                        <a href="{{ link }}">
-                            <h4>{{ forum.title }}</h4>
+                        <a href="{{ link }}" class="flex items-center gap-1 mb-4">
+                            <h4 class="mb-0">
+                                {{ forum.title }}
+                            </h4>
+                            {% if forum.type == 'text' %}
+                                <i class="ph ph-chats"></i>
+                            {% elseif forum.type == 'image' %}
+                                <i class="ph ph-images"></i>
+                            {% endif %}
                         </a>
                         <div>
                             <p class="mb-2">{{ forum.content|rich }}</p>

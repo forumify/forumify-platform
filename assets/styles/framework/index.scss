@@ -32,10 +32,16 @@
     --c-elevation-4: #dedede;
     --c-elevation-5: #d5d5d5;
 
+    --c-hover: rgba(0, 0, 0, 0.03);
+
     --border-style: solid;
     --border-width: 1px;
     --border-color: rgba(0, 0, 0, 0.1);
     --border: var(--border-style) var(--border-width) var(--border-color);
+
+    --border-radius: 8px;
+
+    --font-size: 16px;
 
     @for $i from 1 through 12 {
         --spacing-#{$i}: #{$i * 0.25rem};

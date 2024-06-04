@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Service;
 
+use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Event\TopicCreatedEvent;
 use Forumify\Forum\Form\NewComment;
-use Forumify\Forum\Form\NewTopic;
+use Forumify\Forum\Form\TopicData;
 use Forumify\Forum\Repository\TopicRepository;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CreateTopicService
@@ -18,14 +20,21 @@ class CreateTopicService
         private readonly TopicRepository $topicRepository,
         private readonly CreateCommentService $commentService,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly FilesystemOperator $mediaStorage,
+        private readonly MediaService $mediaService,
     ) {
     }
 
-    public function createTopic(Forum $forum, NewTopic $newTopic): Topic
+    public function createTopic(Forum $forum, TopicData $newTopic): Topic
     {
         $topic = new Topic();
         $topic->setTitle($newTopic->getTitle());
         $topic->setForum($forum);
+        if ($newTopic->getImage() !== null) {
+            $image = $this->mediaService->saveToFilesystem($this->mediaStorage, $newTopic->getImage());
+            $topic->setImage($image);
+        }
+
         $this->topicRepository->save($topic);
 
         $newComment = new NewComment();

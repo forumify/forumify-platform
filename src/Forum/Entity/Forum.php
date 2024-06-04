@@ -17,6 +17,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 class Forum implements HierarchicalInterface, AccessControlledEntityInterface
 {
+    public const TYPE_TEXT = 'text';
+    public const TYPE_IMAGE = 'image';
+    public const TYPE_MIXED = 'mixed';
+
     use IdentifiableEntityTrait;
 
     #[ORM\Column]
@@ -25,6 +29,9 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     #[Gedmo\Slug(fields: ['title'])]
     #[ORM\Column(unique: true)]
     private string $slug;
+
+    #[ORM\Column(options: ['default' => self::TYPE_TEXT])]
+    private string $type = self::TYPE_TEXT;
 
     #[ORM\Column(type: 'text')]
     private string $content = '';
@@ -79,6 +86,16 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     public function getSlug(): string
     {
         return $this->slug;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
     }
 
     public function getContent(): string

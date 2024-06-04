@@ -13,6 +13,7 @@ use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -37,6 +38,15 @@ class ForumType extends AbstractType
 
         $builder
             ->add('title', TextType::class)
+            ->add('type', ChoiceType::class, [
+                'choices' => [
+                    'admin.forum.type.text' => Forum::TYPE_TEXT,
+                    'admin.forum.type.image' => Forum::TYPE_IMAGE,
+                    'admin.forum.type.mixed' => Forum::TYPE_MIXED,
+                ],
+                'placeholder' => 'admin.forum.type_placeholder',
+                'help' => 'admin.forum.type_help'
+            ])
             ->add('content', RichTextEditorType::class, [
                 'required' => false,
                 'empty_data' => '',

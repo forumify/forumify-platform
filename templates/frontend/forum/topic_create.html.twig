@@ -1,6 +1,9 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
+{% block title_page %}
+    {{ 'create_topic'|trans }}
+{% endblock %}
 {% block body %}
-    <h1>{{ 'create_topic'|trans }}</h1>
+    <h1>{{ forum.title }} - {{ 'create_topic'|trans }}</h1>
     <div class="box">
         {{ form_start(form) }}
         {{ form_widget(form) }}

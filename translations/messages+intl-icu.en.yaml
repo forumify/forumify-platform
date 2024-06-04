@@ -172,6 +172,7 @@ forum:
         flashes:
             topic_moved: 'Topic moved.'
         locked_moderator: 'This topic is locked, but as a moderator you can still add comments.'
+        last_comment_by: 'Last comment by'
 admin:
     badges:
         badges: 'Badges'
@@ -217,6 +218,17 @@ admin:
         recaptcha_enabled_help: 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>.'
         recaptcha_site_key: 'reCAPTCHA site key'
         recaptcha_site_secret: 'reCAPTCHA site secret'
+    forum:
+        type:
+            text: 'Forum'
+            image: 'Image Board'
+            mixed: 'Mixed'
+        type_placeholder: 'Please select a forum type'
+        type_help: >
+            Type "Forum" does not allow images on topics, like a traditional forum.
+            Type "Image Board" requires all topics to have an initial image, like 4chan.
+            Type "Mixed" allows images on topics, but it is not required, like Reddit.
+            The type of a forum can be changed later, however, going from "Forum" to "Image Board" will set your forum's logo on all topics.
     menu_builder:
         title: 'Menu Builder'
         create_collection_item: 'Add Item'

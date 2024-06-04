@@ -6,7 +6,7 @@ namespace Forumify\Forum\Controller;
 
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
-use Forumify\Forum\Form\NewTopicType;
+use Forumify\Forum\Form\TopicType;
 use Forumify\Forum\Service\CreateTopicService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +26,7 @@ class TopicCreateController extends AbstractController
             'entity' => $forum,
         ]);
 
-        $form = $this->createForm(NewTopicType::class);
+        $form = $this->createForm(TopicType::class, null, ['forum' => $forum]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -38,6 +38,7 @@ class TopicCreateController extends AbstractController
 
         return $this->render('@Forumify/frontend/forum/topic_create.html.twig', [
             'form' => $form->createView(),
+            'forum' => $forum,
         ]);
     }
 }

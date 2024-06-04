@@ -36,7 +36,7 @@
 @mixin btn-contained {
     @include btn;
     padding: 0 var(--spacing-4);
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     justify-content: center;
     align-items: center;
     font-size: 0.875rem;
@@ -93,7 +93,7 @@
     align-items: center;
     justify-content: start;
     padding: var(--spacing-2) var(--spacing-4);
-    border-radius: 8px;
+    border-radius: var(--border-radius);
 }
 
 .menu .btn-link {

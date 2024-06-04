@@ -57,38 +57,37 @@
 }
 
 .topic-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    position: relative;
+    cursor: pointer;
+    padding: var(--spacing-2) var(--spacing-4);
+
+    &:hover {
+        background-color: var(--c-hover);
+    }
 }
 
 .topic-hidden {
     background-color: rgba(0, 0, 0, 0.05);
-    margin: 0 calc(var(--spacing-4) * -1);
-    padding: var(--spacing-2) var(--spacing-4);
 }
 
-.topic-row + * {
-    margin-top: var(--spacing-6);
+.topic-link {
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
 }
 
-.topic-row-content {
-    width: 100%;
-
-    @include min-width-md {
-        width: 75%;
-    }
+.topic-image {
+    object-fit: contain;
+    width: auto;
+    max-width: 100%;
+    max-height: 300px;
 }
 
-.topic-row-last-comment {
-    display: none;
-    width: 25%;
-
-    @include min-width-md {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-    }
+.topic-content {
+    max-height: 220px;
+    overflow-y: hidden;
 }
 
 .topic {

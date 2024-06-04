@@ -7,7 +7,7 @@ framework:
             failed: 'doctrine://default?queue_name=failed'
 
         routing:
-            'Forumify\Core\Notification\NotificationMessage': async
+            'Forumify\Core\Messenger\AsyncMessageInterface': async
 
 when@dev:
     framework:

@@ -24,6 +24,9 @@ class Topic implements SubscribableInterface
     #[ORM\Column]
     private string $title;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $image = null;
+
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'topics')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Forum $forum;
@@ -67,6 +70,16 @@ class Topic implements SubscribableInterface
     public function setTitle(string $title): void
     {
         $this->title = $title;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): void
+    {
+        $this->image = $image;
     }
 
     public function getForum(): Forum

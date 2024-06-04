@@ -5,16 +5,19 @@ declare(strict_types=1);
 namespace Forumify\Forum\Controller;
 
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\CommentType;
+use Forumify\Forum\Form\TopicData;
+use Forumify\Forum\Form\TopicType;
 use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
 use Forumify\Forum\Service\ReindexLastActivityService;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -78,15 +81,29 @@ class TopicController extends AbstractController
 
     #[Route('/{slug}/edit', '_edit')]
     #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
-    public function edit(Request $request, Topic $topic): Response
-    {
-        $form = $this->createFormBuilder($topic, ['data_class' => Topic::class])
-            ->add('title', TextType::class)
-            ->getForm();
+    public function edit(
+        Request $request,
+        Topic $topic,
+        FilesystemOperator $mediaStorage,
+        MediaService $mediaService,
+    ): Response {
+        $topicData = new TopicData();
+        $topicData->setTitle($topic->getTitle());
+        $topicData->setExistingImage($topic->getImage());
+
+        $form = $this->createForm(TopicType::class, $topicData, ['forum' => $topic->getForum()]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $topic = $form->getData();
+            /** @var TopicData $topicData */
+            $topicData = $form->getData();
+
+            $topic->setTitle($topicData->getTitle());
+            if ($topicData->getImage() !== null) {
+                $newImage = $mediaService->saveToFilesystem($mediaStorage, $topicData->getImage());
+                $topic->setImage($newImage);
+            }
+
             $this->topicRepository->save($topic);
 
             $this->addFlash('success', 'flashes.topic_saved');

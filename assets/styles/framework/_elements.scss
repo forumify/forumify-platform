@@ -9,6 +9,7 @@ body {
     font-weight: 300;
     color: var(--c-text-primary);
     background-color: var(--c-elevation-0);
+    font-size: var(--font-size);
 }
 
 footer,
@@ -167,6 +168,7 @@ input[type='file'] {
     object-fit: cover;
     width: 48px;
     height: 48px;
+    border-radius: 50%;
 }
 
 .avatar-sm {

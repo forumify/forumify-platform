@@ -1,33 +1,53 @@
 {% extends '@Forumify/components/list.html.twig' %}
-{% block row %}
-    <li class="topic-row {% if item.hidden %}topic-hidden{% endif %}">
-        <div class="topic-row-content">
-            <a href="{{ path('forumify_forum_topic', { slug: item.slug }) }}">
-                <h4 class="flex flex-row items-center gap-2">
-                    {% if item.pinned %}<i class="ph ph-push-pin"></i>{% endif %}
-                    {% if item.locked %}<i class="ph ph-lock"></i>{% endif %}
-                    {% if item.hidden %}<i class="ph ph-eye-slash"></i>{% endif %}
-                    {{ item.title }}
-                </h4>
-            </a>
-            <p>
-                {% set author %}
-                    {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
-                {% endset %}
-                {{ 'created_by'|trans({ author: author })|raw }}
-            </p>
-        </div>
-        {% if item.comments is not empty %}
-            {% set lastComment = item.comments.last %}
-            <div class="topic-row-last-comment">
-                <div class="mr-2">
-                    {% include '@Forumify/components/avatar.html.twig' with { user: lastComment.createdBy } only %}
+{% block list %}
+    <ul>
+        {% for topic in this.result.data %}
+            <li class="flex flex-col topic-row justify-between {% if topic.hidden %}topic-hidden{% endif %}">
+                <a class="topic-link" href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}"></a>
+                <div class="flex mb-2">
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-2 mb-1">
+                            {% include '@Forumify/components/avatar.html.twig' with { user: topic.createdBy, className: 'avatar-sm' } only %}
+                            <span class="flex items-baseline gap-2">
+                            {% include '@Forumify/components/username.html.twig' with { user: topic.createdBy } only %}
+                            <span class="text-small">
+                                {{ 'date_time_short'|trans({ date: topic.createdAt }) }}
+                            </span>
+                        </span>
+                        </div>
+                        <h4 class="flex flex-row items-center gap-2">
+                            {% if topic.pinned %}<i class="ph ph-push-pin"></i>{% endif %}
+                            {% if topic.locked %}<i class="ph ph-lock"></i>{% endif %}
+                            {% if topic.hidden %}<i class="ph ph-eye-slash"></i>{% endif %}
+                            {{ topic.title }}
+                        </h4>
+                    </div>
+                    {% if topic.lastComment %}
+                        <div class="flex flex-col w-25 hide-phone">
+                            <p class="text-small mb-1">{{ 'forum.topic.last_comment_by'|trans }}</p>
+                            <div class="flex gap-2">
+                                {% include '@Forumify/components/avatar.html.twig' with { user: topic.lastComment.createdBy, className: 'avatar-sm' } only %}
+                                <div>
+                                    {% include '@Forumify/components/username.html.twig' with { user: topic.lastComment.createdBy } only %}
+                                    <p class="text-small">{{ 'date_time_short'|trans({ date: topic.lastComment.createdAt }) }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-                <div>
-                    {% include '@Forumify/components/username.html.twig' with { user: lastComment.createdBy } only %}
-                    <p class="text-small">{{ 'date_time_short'|trans({ date: lastComment.createdAt }) }}</p>
-                </div>
-            </div>
-        {% endif %}
-    </li>
+                {% if topic.forum.type == 'image' or (topic.forum.type == 'mixed' and topic.image) %}
+                    {% set image = topic.image
+                        ? asset(topic.image, 'forumify.media')
+                        : (setting('forumify.logo') ? asset(setting('forumify.logo'), 'forumify.asset') : asset('bundles/forumify/images/forumify.svg')) %}
+                    <div>
+                        <img class="topic-image" src="{{ image }}" alt="">
+                    </div>
+                {% elseif topic.firstComment %}
+                    <div class="topic-content">
+                        {{ topic.firstComment.content|striptags('<br><p>')|u.truncate(600, '...', false)|raw }}
+                    </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
