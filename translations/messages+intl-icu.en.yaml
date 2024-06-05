@@ -173,6 +173,18 @@ forum:
             topic_moved: 'Topic moved.'
         locked_moderator: 'This topic is locked, but as a moderator you can still add comments.'
         last_comment_by: 'Last comment by'
+        comments: >
+            {count, plural,
+                =0    {0 comments}
+                =1    {1 comment}
+                other {# comments}
+            }
+        views: >
+            {count, plural,
+                =0    {0 views}
+                =1    {1 view}
+                other {# views}
+            }
 admin:
     badges:
         badges: 'Badges'

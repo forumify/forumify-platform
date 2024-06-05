@@ -57,6 +57,7 @@ class TopicController extends AbstractController
             }
         }
 
+        $this->topicRepository->incrementViews($topic);
         return $this->render('@Forumify/frontend/forum/topic.html.twig', [
             'topic' => $topic,
             'commentForm' => $commentForm?->createView(),

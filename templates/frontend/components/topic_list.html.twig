@@ -4,7 +4,7 @@
         {% for topic in this.result.data %}
             <li class="flex flex-col topic-row justify-between {% if topic.hidden %}topic-hidden{% endif %}">
                 <a class="topic-link" href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}"></a>
-                <div class="flex mb-2">
+                <div class="flex gap-4 mb-2">
                     <div class="flex-grow">
                         <div class="flex items-center gap-2 mb-1">
                             {% include '@Forumify/components/avatar.html.twig' with { user: topic.createdBy, className: 'avatar-sm' } only %}
@@ -22,8 +22,15 @@
                             {{ topic.title }}
                         </h4>
                     </div>
+                    <div class="flex flex-col items-end gap-1 hide-phone text-small">
+                        <p>{{ max(0, topic.comments.count - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></p>
+                        <p>{{ topic.views|short_number }} <i class="ph ph-eye"></i></p>
+                        {% if topic.firstComment %}
+                            <p>{{ topic.firstComment.reactions.count|short_number }} <i class="ph ph-sparkle"></i></p>
+                        {% endif %}
+                    </div>
                     {% if topic.lastComment %}
-                        <div class="flex flex-col w-25 hide-phone">
+                        <div class="flex flex-col w-25 hide-phone hide-tablet">
                             <p class="text-small mb-1">{{ 'forum.topic.last_comment_by'|trans }}</p>
                             <div class="flex gap-2">
                                 {% include '@Forumify/components/avatar.html.twig' with { user: topic.lastComment.createdBy, className: 'avatar-sm' } only %}

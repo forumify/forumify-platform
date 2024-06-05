@@ -13,4 +13,16 @@ class TopicRepository extends AbstractRepository
     {
         return Topic::class;
     }
+
+    public function incrementViews(Topic $topic): void
+    {
+        $topic->setViews($topic->getViews() + 1);
+        $this->getEntityManager()->createQueryBuilder()
+            ->update(Topic::class, 't')
+            ->set('t.views', $topic->getViews())
+            ->where('t.id = :topicId')
+            ->setParameter('topicId', $topic->getId())
+            ->getQuery()
+            ->execute();
+    }
 }

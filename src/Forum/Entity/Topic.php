@@ -35,11 +35,11 @@ class Topic implements SubscribableInterface
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $comments;
 
-    #[ORM\ManyToOne(targetEntity: Comment::class)]
+    #[ORM\ManyToOne(targetEntity: Comment::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Comment $firstComment = null;
 
-    #[ORM\ManyToOne(targetEntity: Comment::class)]
+    #[ORM\ManyToOne(targetEntity: Comment::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Comment $lastComment = null;
 
@@ -51,6 +51,9 @@ class Topic implements SubscribableInterface
 
     #[ORM\Column(type: 'boolean')]
     private bool $hidden = false;
+
+    #[ORM\Column(type: 'integer', options: ['unsigned' => true, 'default' => 0])]
+    private int $views = 0;
 
     public function __construct()
     {
@@ -162,5 +165,15 @@ class Topic implements SubscribableInterface
     public function setHidden(bool $hidden): void
     {
         $this->hidden = $hidden;
+    }
+
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $views): void
+    {
+        $this->views = $views;
     }
 }
