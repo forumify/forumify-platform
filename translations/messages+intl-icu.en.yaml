@@ -241,6 +241,8 @@ admin:
             Type "Image Board" requires all topics to have an initial image, like 4chan.
             Type "Mixed" allows images on topics, but it is not required, like Reddit.
             The type of a forum can be changed later, however, going from "Forum" to "Image Board" will set your forum's logo on all topics.
+        general: 'General'
+        display_settings: 'Display Settings'
     menu_builder:
         title: 'Menu Builder'
         create_collection_item: 'Add Item'

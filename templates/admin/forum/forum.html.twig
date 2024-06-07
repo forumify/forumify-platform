@@ -15,8 +15,27 @@
     {% if form is not null %}
         <div class="box mb-6">
             {{ form_start(form) }}
-            {{ form_widget(form) }}
-            <button class="btn-primary">{{ 'save'|trans }}</button>
+            {% embed '@Forumify/components/tabs.html.twig' %}
+                {% block tabs %}
+                    <button type="button" class="btn-link" data-tab-id="general">{{ 'admin.forum.general'|trans }}</button>
+                    <button type="button" class="btn-link" data-tab-id="display-settings">{{ 'admin.forum.display_settings'|trans }}</button>
+                {% endblock %}
+                {% block tabpanels %}
+                    <div id="general">
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.type) }}
+                        {{ form_row(form.content) }}
+                        {{ form_row(form.group) }}
+                    </div>
+                    <div id="display-settings">
+                        {{ form_widget(form.displaySettings) }}
+                    </div>
+                {% endblock %}
+            {% endembed %}
+            <div class="flex justify-center gap-4">
+                <button class="btn-primary">{{ 'save'|trans }}</button>
+                <a href="{{ path('forumify_admin_forum', { slug: forum.parent }) }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+            </div>
             {{ form_end(form) }}
         </div>
     {% endif %}

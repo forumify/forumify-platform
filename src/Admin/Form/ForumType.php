@@ -7,6 +7,7 @@ namespace Forumify\Admin\Form;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\ForumDisplaySettings;
 use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\Repository\ForumGroupRepository;
 use Forumify\Forum\Repository\ForumRepository;
@@ -28,6 +29,7 @@ class ForumType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'is_new' => false,
             'data_class' => Forum::class,
         ]);
     }
@@ -61,6 +63,10 @@ class ForumType extends AbstractType
             ->add('parent', HiddenType::class, [
                 'data' => $parentId,
             ]);
+
+        if (!$options['is_new']) {
+            $builder->add('displaySettings', ForumDisplaySettingsType::class);
+        }
 
         $builder
             ->get('parent')

@@ -14,49 +14,46 @@
 {% block body %}
     {{ component('Breadcrumbs', { entity: forum }) }}
     {% if forum is not null %}
-        <div class="card mb-4">
-            <div class="card-title">
-                <h1 class="mb-0">{{ forum.title }}</h1>
-                <div class="forum-actions">
-                    {{ component('SubscribeButton', {
-                        entityId: forum.id,
-                        subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
-                    }) }}
-                    {% if can('create_topic', forum) %}
-                        <div>
-                            <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
-                                <i class="ph ph-chats"></i>
-                                {{ 'create_topic'|trans }}
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            <div class="card-body">
+        <div class="mb-4">
+            <h1 class="mb-0">{{ forum.title }}</h1>
+            {% if forum.content|striptags %}
                 {{ forum.content|rich }}
-            </div>
+            {% endif %}
         </div>
     {% endif %}
-    <div class="forum-list">
-        {% for group in groups %}
-            {% if can('view', group) %}
+    {% if groups is not empty or ungroupedForums is not empty %}
+        <div class="forum-list">
+            {% for group in groups %}
+                {% if can('view', group) %}
+                    {% include '@Forumify/frontend/forum/forum_group.html.twig' with {
+                        title: group.title,
+                        forums: group.forums.toArray
+                    } %}
+                {% endif %}
+            {% endfor %}
+            {% if ungroupedForums is not empty %}
                 {% include '@Forumify/frontend/forum/forum_group.html.twig' with {
-                    title: group.title,
-                    forums: group.forums
+                    forums: ungroupedForums
                 } %}
             {% endif %}
-        {% endfor %}
-        {% if ungroupedForums is not empty %}
-            {% include '@Forumify/frontend/forum/forum_group.html.twig' with {
-                forums: ungroupedForums
-            } %}
-        {% endif %}
-    </div>
-
-    {% if forum is not null and forum.topics is not empty %}
-        <div class="mt-6">
-            {{ component('TopicList', { forum: forum }) }}
         </div>
+    {% endif %}
+    {% if forum is not null and forum.topics is not empty %}
+        <div class="flex justify-end gap-2 mt-6 mb-4">
+            {{ component('SubscribeButton', {
+                entityId: forum.id,
+                subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
+            }) }}
+            {% if can('create_topic', forum) %}
+                <div>
+                    <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
+                        <i class="ph ph-chats"></i>
+                        {{ 'create_topic'|trans }}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+        {{ component('TopicList', { forum: forum }) }}
     {% endif %}
 {% endblock %}
 

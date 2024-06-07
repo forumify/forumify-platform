@@ -3,26 +3,21 @@
     <div class="card">
         {% if title is defined %}
             <div class="card-title">
-                <h3 class="text-subtitle mb-0">{{ title }}</h3>
+                <h4 class="text-subtitle mb-0">{{ title }}</h4>
             </div>
         {% endif %}
-        <ul class="card-body">
+        <ul>
             {% for forum in visibleForums %}
                 {% set link = path('forumify_forum_forum', { slug: forum.slug }) %}
                 <li class="forum">
                     <div class="forum-content">
-                        <a href="{{ link }}" class="flex items-center gap-1 mb-4">
-                            <h4 class="mb-0">
+                        <a href="{{ link }}">
+                            <h3 class="mb-0">
                                 {{ forum.title }}
-                            </h4>
-                            {% if forum.type == 'text' %}
-                                <i class="ph ph-chats"></i>
-                            {% elseif forum.type == 'image' %}
-                                <i class="ph ph-images"></i>
-                            {% endif %}
+                            </h3>
                         </a>
                         <div>
-                            <p class="mb-2">{{ forum.content|rich }}</p>
+                            {{ forum.content|rich }}
                             <div class="forum-subforums">
                                 {% for subforum in forum.children|filter(subforum => can('view', subforum)) %}
                                     <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">
@@ -33,7 +28,7 @@
                             </div>
                         </div>
                     </div>
-                    {% if forum.lastComment %}
+                    {% if forum.displaySettings.showLastCommentBy and forum.lastComment %}
                         {% set lastComment = forum.lastComment %}
                         {% set topic = lastComment.topic %}
                         <div class="forum-last-comment">
@@ -54,6 +49,9 @@
                         </div>
                     {% endif %}
                 </li>
+                {% if not loop.last %}
+                    <hr>
+                {% endif %}
             {% endfor %}
         </ul>
     </div>

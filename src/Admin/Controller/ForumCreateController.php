@@ -32,7 +32,9 @@ class ForumCreateController extends AbstractController
         $forum->setParent($parent);
         $forum->setGroup($group);
 
-        $form = $this->createForm(ForumType::class, $forum);
+        $form = $this->createForm(ForumType::class, $forum, [
+            'is_new' => true,
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

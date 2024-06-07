@@ -7,6 +7,17 @@ h1, h2 {
     margin-bottom: var(--spacing-4);
 }
 
+h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
 h3, h4, h5, h6 {
     margin-bottom: var(--spacing-2);
 }

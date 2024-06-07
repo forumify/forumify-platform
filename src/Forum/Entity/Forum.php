@@ -62,10 +62,14 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Comment $lastComment = null;
 
+    #[ORM\Embedded(class: ForumDisplaySettings::class, columnPrefix: 'display_settings_')]
+    private ForumDisplaySettings $displaySettings;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
         $this->topics = new ArrayCollection();
+        $this->displaySettings = new ForumDisplaySettings();
     }
 
     public function __toString(): string
@@ -186,6 +190,11 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     public function setLastComment(?Comment $lastComment): void
     {
         $this->lastComment = $lastComment;
+    }
+
+    public function getDisplaySettings(): ForumDisplaySettings
+    {
+        return $this->displaySettings;
     }
 
     public function getACLPermissions(): array
