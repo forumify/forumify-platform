@@ -9,6 +9,7 @@ use Forumify\Core\Entity\ACL;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ACLRepository;
 use Forumify\Core\Security\VoterAttribute;
+use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -20,14 +21,20 @@ class AccessControlListVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === VoterAttribute::ACL->value
-            && isset($subject['permission'], $subject['entity'])
-            && $subject['entity'] instanceof AccessControlledEntityInterface
-            && is_string($subject['permission']);
+        return $attribute === VoterAttribute::ACL->value && is_array($subject);
     }
 
+    /**
+     * @param array $subject
+     *      [
+     *          'entity' => AccessControlledEntityInterface,
+     *          'permission' => string,
+     *          'always_block_guest' => bool
+     *      ]
+     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
+        $this->validateSubject($subject);
         ['permission' => $permission, 'entity' => $entity] = $subject;
 
         $acl = $this->aclRepository->findOneByEntityAndPermission($entity, $permission);
@@ -38,6 +45,9 @@ class AccessControlListVoter extends Voter
         /** @var User|null $user */
         $user = $token->getUser();
         if ($user === null) {
+            if ($subject['always_block_guest'] ?? false) {
+                return false;
+            }
             return $this->isGuestAllowed($acl);
         }
 
@@ -48,6 +58,17 @@ class AccessControlListVoter extends Voter
             }
         }
         return false;
+    }
+
+    private function validateSubject(array $subject): void
+    {
+        if (!isset($subject['permission'], $subject['entity'])) {
+            throw new RuntimeException('You must supply an entity and permission to use ACL voter');
+        }
+
+        if (!$subject['entity'] instanceof AccessControlledEntityInterface) {
+            throw new RuntimeException('To use ACL voter the entity must implement ' . AccessControlledEntityInterface::class);
+        }
     }
 
     private function isGuestAllowed(ACL $acl): bool

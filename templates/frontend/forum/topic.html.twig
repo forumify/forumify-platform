@@ -89,7 +89,7 @@
         <div class="comment-list">
             {{ component('CommentList', { topic: topic }) }}
         </div>
-        {% if commentForm is not null %}
+        {% if app.user and commentForm is not null %}
             <div class="box">
                 {% if topic.locked %}
                     <div class="alert-warning mb-2">{{ 'forum.topic.locked_moderator'|trans }}</div>

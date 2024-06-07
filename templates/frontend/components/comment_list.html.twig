@@ -6,14 +6,16 @@
         <div class="comment-author">
             {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
             {% include '@Forumify/components/username.html.twig' with { user: item.createdBy, className: 'text-center' } only %}
-            <span class="text-small">@{{ item.createdBy.username }}</span>
-            <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
-                {% for badge in item.createdBy.badges %}
-                    <div class="avatar-sm flex justify-center items-center">
-                        <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" alt="{{ badge.name }}">
-                    </div>
-                {% endfor %}
-            </div>
+            {% if item.createdBy %}
+                <span class="text-small">@{{ item.createdBy.username }}</span>
+                <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
+                    {% for badge in item.createdBy.badges %}
+                        <div class="avatar-sm flex justify-center items-center">
+                            <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" alt="{{ badge.name }}">
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
         <div class="comment-content">
             <div class="text-small text-secondary flex justify-between items-end">
