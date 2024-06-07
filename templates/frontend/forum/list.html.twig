@@ -38,22 +38,22 @@
             {% endif %}
         </div>
     {% endif %}
-    {% if forum is not null and forum.topics is not empty %}
+    {% if forum is not null %}
         <div class="flex justify-end gap-2 mt-6 mb-4">
             {{ component('SubscribeButton', {
                 entityId: forum.id,
                 subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
             }) }}
             {% if can('create_topic', forum) %}
-                <div>
-                    <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
-                        <i class="ph ph-chats"></i>
-                        {{ 'create_topic'|trans }}
-                    </a>
-                </div>
+                <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
+                    <i class="ph ph-chats"></i>
+                    {{ 'create_topic'|trans }}
+                </a>
             {% endif %}
         </div>
-        {{ component('TopicList', { forum: forum }) }}
+        {% if forum.topics is not empty %}
+            {{ component('TopicList', { forum: forum }) }}
+        {% endif %}
     {% endif %}
 {% endblock %}
 

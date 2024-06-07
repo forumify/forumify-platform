@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Tests\Unit\Core\Twig\Extension;
+namespace Unit\Core\Twig\Extension;
 
 use Forumify\Core\Twig\Extension\CoreExtension;
 use PHPUnit\Framework\TestCase;

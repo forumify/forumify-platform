@@ -36,7 +36,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     #[ORM\Column(type: 'text')]
     private string $content = '';
 
-    #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: Forum::class, cascade: ['persist', 'remove'], inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent', onDelete: 'CASCADE')]
     private ?Forum $parent = null;
 

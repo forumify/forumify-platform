@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Application\Core;
 
-use Forumify\Core\Entity\User;
-use Forumify\Core\Form\DTO\NewUser;
 use Forumify\Core\Repository\SettingRepository;
-use Forumify\Core\Service\CreateUserService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\Tests\Traits\SettingTrait;
+use Tests\Tests\Traits\UserTrait;
 
 class AuthControllerTest extends WebTestCase
 {
+    use UserTrait;
+    use SettingTrait;
+
     public function testLoginPage(): void
     {
         $client = static::createClient();
@@ -27,8 +29,8 @@ class AuthControllerTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects();
 
-        $this->setLoginMethod('username');
-        $this->createTestUser();
+        $this->setSetting('forumify.login_method', 'username');
+        $this->createUser('tester', 'tester@example.org', 'test12345');
 
         $client->request('GET', '/login');
         $crawler = $client->submitForm('Login', [
@@ -45,8 +47,8 @@ class AuthControllerTest extends WebTestCase
         $client = static::createClient();
         $client->followRedirects();
 
-        $this->setLoginMethod('email');
-        $this->createTestUser();
+        $this->setSetting('forumify.login_method', 'email');
+        $this->createUser('tester', 'tester@example.org', 'test12345');
 
         $client->request('GET', '/login');
         $crawler = $client->submitForm('Login', [
@@ -103,25 +105,5 @@ class AuthControllerTest extends WebTestCase
         $username = $crawler->filter('.header-menu')->text();
         self::assertStringContainsString('tester', $username);
         self::assertSelectorExists('a[href="/verify-email"]');
-    }
-
-    private function createTestUser(): User
-    {
-        /** @var CreateUserService $createUserService */
-        $createUserService = self::getContainer()->get(CreateUserService::class);
-
-        $user = new NewUser();
-        $user->setUsername('tester');
-        $user->setEmail('tester@example.org');
-        $user->setPassword('test12345');
-
-        return $createUserService->createUser($user, false);
-    }
-
-    private function setLoginMethod(string $method): void
-    {
-        /** @var SettingRepository $settingRepository */
-        $settingRepository = self::getContainer()->get(SettingRepository::class);
-        $settingRepository->set('forumify.login_method', $method);
     }
 }
