@@ -7,9 +7,9 @@ namespace Forumify\Plugin\Scheduler;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Plugin\Application\Service\PluginService;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\Scheduler\Attribute\AsPeriodicTask;
+use Symfony\Component\Scheduler\Attribute\AsCronTask;
 
-#[AsPeriodicTask('30 seconds')]
+#[AsCronTask('0 5 * * MON')]
 class AutoUpdateTask
 {
     public function __construct(
