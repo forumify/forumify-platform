@@ -56,6 +56,12 @@
                     }) }}>
                         <i class="ph ph-power"></i>{{ 'admin.plugins.activate'|trans }}
                     </a>
+                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
+                        action: 'uninstall',
+                        plugin: plugin.id
+                    }) }}>
+                        <i class="ph ph-trash"></i>{{ 'admin.plugins.uninstall'|trans }}
+                    </a>
                 {% endif %}
             </div>
         </div>

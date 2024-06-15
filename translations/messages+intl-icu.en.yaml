@@ -263,9 +263,21 @@ admin:
         inactive_plugins: 'Inactive Plugins'
         update_available: 'Version {version} is available!'
         no_active_plugins: 'No plugins are active on this instance.'
-        update-all: 'Update All'
+        update_all: 'Update All'
         update: 'Update'
         manage: 'Manage'
         settings: 'Settings'
         activate: 'Activate'
         deactivate: 'Deactivate'
+        uninstall: 'Uninstall'
+        marketplace: 'Browse Plugins'
+        install_plugin_temp: 'Install Plugin'
+        install_plugin_temp_warning: >
+            This is a temporary method to install plugins.
+            Plugins installed using this method are not guaranteed to continue working, or receive updates, once the marketplace is added.
+            Additionally, these plugins are not validated, so use with caution and only use plugins from developers that you trust.
+            This method of adding plugins will still be available after the release of the marketplace, but only for plugins that aren't published to the marketplace.
+        plugin_package: 'Plugin Package'
+        plugin_package_help: 'Insert the plugin''s package name in the <vendor>/<plugin> format, for example "forumify/forumify-donations-plugin".'
+        install_risk: 'I understand the risks associated with installing plugins from unknown sources.'
+        install_plugin: 'Install Plugin'

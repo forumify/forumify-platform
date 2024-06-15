@@ -6,6 +6,8 @@ namespace Forumify\Plugin\Application;
 
 use Forumify\Plugin\Application\Controller\ActivatePluginController;
 use Forumify\Plugin\Application\Controller\DeactivatePluginController;
+use Forumify\Plugin\Application\Controller\InstallPluginController;
+use Forumify\Plugin\Application\Controller\UninstallPluginController;
 use Forumify\Plugin\Application\Controller\UpdatePluginController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +42,8 @@ class PluginManagerRunner implements RunnerInterface
             'activate' => (new ActivatePluginController($this->context))(...),
             'deactivate' => (new DeactivatePluginController($this->context))(...),
             'update' => (new UpdatePluginController($this->context))(...),
+            'install' => (new InstallPluginController($this->context))(...),
+            'uninstall' => (new UninstallPluginController($this->context))(...),
             default => static fn () => new JsonResponse(['error' => 'action not found'], Response::HTTP_NOT_FOUND),
         };
 

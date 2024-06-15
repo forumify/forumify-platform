@@ -27,9 +27,22 @@ export default class extends Controller {
       });
   }
 
+  install(event) {
+    event.preventDefault();
+    event.target.querySelector('button[type="submit"]').disabled = true;
+
+    const pkg = event.target.querySelector('#plugin-package').value;
+    this.send({
+      params: {
+        action: 'install',
+        package: pkg,
+      }
+    });
+  }
+
   handleResponse(data) {
     if (data.success) {
-      window.location.reload();
+      window.location.href = '/admin/plugins/refresh';
       return;
     }
 

@@ -4,12 +4,49 @@
     <div {{ stimulus_controller('forumify/forumify-platform/plugin_manager') }}>
         <div class="flex justify-between items-center mb-4">
             <h2 class="mb-0">{{ 'admin.plugins.platform.title'|trans }}</h2>
-            <button class="btn-primary" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
-                action: 'update',
-            }) }}>
-                <i class="ph ph-download"></i>
-                {{ 'admin.plugins.update-all'|trans }}
-            </button>
+            <div class="flex items-center gap-2">
+                {% embed '@Forumify/components/modal.html.twig' %}
+                    {% block modalOpenButton %}
+                        <button class="btn-outlined">
+                            <i class="ph ph-shopping-cart"></i>
+                            {{ 'admin.plugins.marketplace'|trans }}
+                        </button>
+                    {% endblock %}
+                    {% block modalContent %}
+                        <div class="card">
+                            <div class="card-title">{{ 'admin.plugins.install_plugin_temp'|trans }}</div>
+                            <div class="card-body">
+                                <p class="text-small mb-4">
+                                    <i class="ph ph-info"></i>
+                                    {{ 'admin.plugins.install_plugin_temp_warning'|trans }}
+                                </p>
+                                <form {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'install') }}>
+                                    <div class="form-row">
+                                        <label for="plugin-package">{{ 'admin.plugins.plugin_package'|trans }}</label>
+                                        <input id="plugin-package" type="text" name="pluginPackage">
+                                        <div class="help-text">{{ 'admin.plugins.plugin_package_help'|trans }}</div>
+                                    </div>
+                                    <div class="form-row">
+                                        <input type="checkbox" required="required" id="understand-risks">
+                                        <label for="understand-risks">{{ 'admin.plugins.install_risk'|trans }}</label>
+                                    </div>
+                                    <div class="flex justify-center">
+                                        <button type="submit" class="btn-primary">
+                                            {{ 'admin.plugins.install_plugin'|trans }}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    {% endblock %}
+                {% endembed %}
+                <button class="btn-primary" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
+                    action: 'update',
+                }) }}>
+                    <i class="ph ph-download"></i>
+                    {{ 'admin.plugins.update_all'|trans }}
+                </button>
+            </div>
         </div>
         <div class="box mb-6">
             <div class="flex items-baseline gap-1">

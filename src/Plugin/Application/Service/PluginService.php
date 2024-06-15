@@ -115,12 +115,56 @@ class PluginService
         $this->runMigrations();
     }
 
-    private function require(string $package, string $version): void
+    /**
+     * @throws PluginException
+     */
+    public function uninstallPluginFromPackage(string $package, bool $allowRollback = true): void
     {
+        $this->remove($package);
+        $this->clearFrameworkCache();
+        $this->postInstall();
+
+        try {
+            $this->validateKernel();
+        } catch (UnbootableKernelException $ex) {
+            if ($allowRollback) {
+                $this->installPluginFromPackage($package, false);
+                throw new PluginException('Unable to boot after removing plugin. Plugin was re-installed.', 0, $ex);
+            }
+            throw new PluginException('Unable to boot after removing plugin.', 0, $ex);
+        }
+    }
+
+    /**
+     * @throws PluginException
+     */
+    public function installPluginFromPackage(string $package, bool $allowRollback = true): void
+    {
+        $this->require($package);
+        $this->clearFrameworkCache();
+        $this->postInstall();
+        $this->runMigrations();
+
+        try {
+            $this->validateKernel();
+        } catch (UnbootableKernelException $ex) {
+            if ($allowRollback) {
+                $this->uninstallPluginFromPackage($package, false);
+                throw new PluginException('Unable to boot after installing plugin. Plugin was removed.', 0, $ex);
+            }
+            throw new PluginException('Unable to boot after installing plugin.', 0, $ex);
+        }
+    }
+
+    private function require(string $package, ?string $version = null): void
+    {
+        if ($version !== null) {
+            $package .= ':' . $version;
+        }
         $process = new Process([
             'composer',
             'require',
-            "{$package}:{$version}",
+            $package,
             '--no-interaction',
             '--no-scripts',
             '--working-dir',
@@ -139,6 +183,20 @@ class PluginService
 
         $process = new Process([
             ...$cmd,
+            '--no-interaction',
+            '--no-scripts',
+            '--working-dir',
+            $this->rootDir,
+        ]);
+        $process->run();
+    }
+
+    private function remove(string $package): void
+    {
+        $process = new Process([
+            'composer',
+            'remove',
+            $package,
             '--no-interaction',
             '--no-scripts',
             '--working-dir',

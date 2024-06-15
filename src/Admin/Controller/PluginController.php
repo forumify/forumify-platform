@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/plugins', 'plugin')]
+#[Route('/plugins', 'plugin_')]
 class PluginController extends AbstractController
 {
     public function __construct(
@@ -19,7 +19,7 @@ class PluginController extends AbstractController
     ) {
     }
 
-    #[Route('', '_list')]
+    #[Route('', 'list')]
     public function list(): Response
     {
         $activePlugins = $this->pluginRepository->findBy(['active' => true], ['package' => 'ASC']);
@@ -36,7 +36,7 @@ class PluginController extends AbstractController
         ]);
     }
 
-    #[Route('/refresh', '_refresh')]
+    #[Route('/refresh', 'refresh')]
     public function refresh(): Response
     {
         $this->pluginService->refresh();
