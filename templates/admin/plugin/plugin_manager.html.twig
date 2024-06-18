@@ -1,7 +1,7 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block title_page %}{{ 'admin.plugins.plugins'|trans }}{% endblock %}
 {% block body %}
-    <div {{ stimulus_controller('forumify/forumify-platform/plugin_manager') }}>
+    <div {{ stimulus_controller('forumify/forumify-platform/plugin_manager', { token: ajaxAuthToken }) }}>
         <div class="flex justify-between items-center mb-4">
             <h2 class="mb-0">{{ 'admin.plugins.platform.title'|trans }}</h2>
             <div class="flex items-center gap-2">

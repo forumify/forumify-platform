@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Controller;
 
+use Firebase\JWT\JWT;
+use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\PluginRepository;
 use Forumify\Plugin\Service\PluginService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,6 +18,7 @@ class PluginController extends AbstractController
     public function __construct(
         private readonly PluginRepository $pluginRepository,
         private readonly PluginService $pluginService,
+        private readonly string $appSecret,
     ) {
     }
 
@@ -28,11 +31,19 @@ class PluginController extends AbstractController
         $latestVersions = $this->pluginService->getLatestVersions();
         $platformVersions = $latestVersions['forumify/forumify-platform'] ?? null;
 
+        /** @var User $user */
+        $user = $this->getUser();
+        $ajaxAuthToken = JWT::encode([
+            'sub' => $user->getId(),
+            'exp' => (new \DateTime())->add(new \DateInterval('P1D'))->getTimestamp(),
+        ], $this->appSecret, 'HS256');
+
         return $this->render('@Forumify/admin/plugin/plugin_manager.html.twig', [
             'activePlugins' => $activePlugins,
             'inactivePlugins' => $inactivePlugins,
             'pluginService' => $this->pluginService,
             'platformVersions' => $platformVersions,
+            'ajaxAuthToken' => $ajaxAuthToken,
         ]);
     }
 

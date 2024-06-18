@@ -1,6 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+  static values = {
+    token: String,
+  }
   static targets = ['errorBox', 'pluginList', 'loader'];
 
   loading = false;
@@ -16,6 +19,9 @@ export default class extends Controller {
     const requestInfo = {
       method: 'POST',
       body: JSON.stringify(event.params),
+      headers: {
+        Authorization: this.tokenValue,
+      }
     };
 
     fetch('/plugins', requestInfo)
