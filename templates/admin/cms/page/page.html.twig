@@ -19,6 +19,8 @@
 
         {{ form_row(form.title) }}
         {{ form_row(form.urlKey) }}
+        {{ form_row(form.seoDescription) }}
+        {{ form_row(form.seoKeywords, { attr: { rows: 10 } }) }}
 
         {% embed '@Forumify/components/tabs.html.twig' %}
             {% block tabs %}

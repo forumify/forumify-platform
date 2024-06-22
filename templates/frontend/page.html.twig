@@ -7,3 +7,15 @@
     {{ parent() }}
     <script src="{{ path('forumify_cms_page_js', { slug: page.slug }) }}"></script>
 {% endblock %}
+{% block title_page %}{{ page.title }}{% endblock %}
+{% block meta_tags %}
+    {{ parent() }}
+    {% if page.seoDescription %}
+        <meta property="description" content="{{ page.seoDescription }}">
+        <meta property="og:description" content="{{ page.seoDescription }}">
+        <meta property="twitter:description" content="{{ page.seoDescription }}">
+    {% endif %}
+    {% if page.seoKeywords %}
+        <meta name="keywords" content="{{ page.seoKeywords }}">
+    {% endif %}
+{% endblock %}

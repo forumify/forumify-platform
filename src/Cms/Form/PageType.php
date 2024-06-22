@@ -8,6 +8,7 @@ use Forumify\Cms\Entity\Page;
 use Forumify\Core\Form\CodeEditorLanguage;
 use Forumify\Core\Form\CodeEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -29,6 +30,14 @@ class PageType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('urlKey', TextType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('seoDescription', TextareaType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
+            ->add('seoKeywords', TextType::class, [
                 'required' => false,
                 'empty_data' => '',
             ])

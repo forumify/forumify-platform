@@ -26,6 +26,12 @@ class Page
     private string $urlKey = '';
 
     #[ORM\Column(type: 'text')]
+    private string $seoDescription = '';
+
+    #[ORM\Column]
+    private string $seoKeywords = '';
+
+    #[ORM\Column(type: 'text')]
     private string $twig = '';
 
     #[ORM\Column(type: 'text')]
@@ -52,6 +58,26 @@ class Page
     public function setUrlKey(string $urlKey): void
     {
         $this->urlKey = $urlKey;
+    }
+
+    public function getSeoDescription(): string
+    {
+        return $this->seoDescription;
+    }
+
+    public function setSeoDescription(string $seoDescription): void
+    {
+        $this->seoDescription = $seoDescription;
+    }
+
+    public function getSeoKeywords(): string
+    {
+        return $this->seoKeywords;
+    }
+
+    public function setSeoKeywords(string $seoKeywords): void
+    {
+        $this->seoKeywords = $seoKeywords;
     }
 
     public function getTwig(): string
