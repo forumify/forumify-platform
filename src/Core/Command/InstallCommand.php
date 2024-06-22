@@ -31,24 +31,6 @@ class InstallCommand extends Command
         }
 
         $result = $this->runSubcommand($application, $output, new ArrayInput([
-            'command' => 'doctrine:database:create',
-            '--if-not-exists' => true,
-        ]));
-
-        if ($result !== Command::SUCCESS) {
-            return $this->fail($io, 'Unable to create database.');
-        }
-
-        $result = $this->runSubcommand($application, $output, new ArrayInput([
-            'command' => 'doctrine:migrations:migrate',
-            '--no-interaction' => true,
-        ]));
-
-        if ($result !== Command::SUCCESS) {
-            return $this->fail($io, 'Unable to create database schema.');
-        }
-
-        $result = $this->runSubcommand($application, $output, new ArrayInput([
             'command' => 'forumify:platform:create-user',
             '--admin' => true,
         ]), 5);
