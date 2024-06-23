@@ -63,3 +63,19 @@
     }
 }
 
+.progress {
+    width: 100%;
+    height: 20px;
+    background: var(--c-elevation-2);
+    border: var(--border);
+    position: relative;
+    border-radius: 10px;
+
+    .progress-bar {
+        background: var(--c-primary);
+        color: var(--c-primary-text);
+        border-radius: 10px;
+        height: 100%;
+        overflow: hidden;
+    }
+}

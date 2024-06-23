@@ -281,3 +281,5 @@ admin:
         plugin_package_help: 'Insert the plugin''s package name in the <vendor>/<plugin> format, for example "forumify/forumify-donations-plugin".'
         install_risk: 'I understand the risks associated with installing plugins from unknown sources.'
         install_plugin: 'Install Plugin'
+        open_log: 'View log'
+        errors: 'An error occurred. Open the log to see what went wrong.'

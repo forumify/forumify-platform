@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Forumify\Plugin\Application;
 
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Forumify\Plugin\Application\Controller\ActivatePluginController;
-use Forumify\Plugin\Application\Controller\DeactivatePluginController;
-use Forumify\Plugin\Application\Controller\InstallPluginController;
-use Forumify\Plugin\Application\Controller\UninstallPluginController;
-use Forumify\Plugin\Application\Controller\UpdatePluginController;
+use Forumify\Plugin\Application\Service\PluginService;
+use JsonException;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,53 +21,67 @@ use Symfony\Component\Runtime\RunnerInterface;
  */
 class PluginManagerRunner implements RunnerInterface
 {
-    public function __construct(private readonly array $context)
+    private readonly Request $request;
+    private readonly PluginService $pluginService;
+
+    public function __construct(array $context)
     {
+        $this->request = Request::createFromGlobals();
+        $this->pluginService = new PluginService($context);
     }
 
     public function run(): int
     {
-        $request = Request::createFromGlobals();
-
         try {
-            $token = $request->headers->get('Authorization');
-            if ($token === null) {
-                throw new RuntimeException('No authorization methods found.');
-            }
-            $decodedToken = (array)JWT::decode($token, new Key($_ENV['APP_SECRET'], 'HS256'));
-            $userId = $decodedToken['sub'] ?? null;
-            if (!is_int($userId)) {
-                throw new RuntimeException('Token invalid.');
-            }
-        } catch (\Exception $ex) {
-            (new JsonResponse(['error' => 'Unauthorized: ' . $ex->getMessage()]))->prepare($request)->send();
-            return 0;
+            $this->checkAuth();
+        } catch (Exception $ex) {
+            return $this->error('Unauthorized: ' . $ex->getMessage(), Response::HTTP_UNAUTHORIZED);
         }
 
         try {
-            $body = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        } catch (\JsonException $ex) {
-            (new JsonResponse(['error' => 'Unable to decode body: ' . $ex->getMessage()]))
-                ->prepare($request)
-                ->send();
-
-            return 0;
+            $body = json_decode($this->request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $ex) {
+            return $this->error('Unable to decode body: ' . $ex->getMessage(), Response::HTTP_BAD_REQUEST);
         }
 
-        $action = $body['action'] ?? null;
-        $handler = match ($action) {
-            'activate' => (new ActivatePluginController($this->context))(...),
-            'deactivate' => (new DeactivatePluginController($this->context))(...),
-            'update' => (new UpdatePluginController($this->context))(...),
-            'install' => (new InstallPluginController($this->context))(...),
-            'uninstall' => (new UninstallPluginController($this->context))(...),
-            default => static fn () => new JsonResponse(['error' => 'Action not found'], Response::HTTP_NOT_FOUND),
-        };
+        $fn = $body['fn'] ?? null;
+        if ($fn === null || !method_exists($this->pluginService, $fn)) {
+           return $this->error('Function not set or missing.', Response::HTTP_BAD_REQUEST);
+        }
 
-        $handler($body)
-            ->prepare($request)
-            ->send();
+        try {
+            $args = $body['args'] ?? [];
+            $output = $this->pluginService->$fn(...$args);
+            return $this->success($output);
+        } catch (Exception $ex) {
+            return $this->error($ex->getMessage());
+        }
+    }
 
+    /**
+     * @throws Exception
+     */
+    private function checkAuth(): void
+    {
+        $token = $this->request->headers->get('Authorization');
+        if ($token === null) {
+            throw new RuntimeException('No authorization methods found.');
+        }
+        $decodedToken = (array)JWT::decode($token, new Key($_ENV['APP_SECRET'], 'HS256'));
+        if (empty($decodedToken['resource_access']) || !in_array('plugin-manager', $decodedToken['resource_access'], true)) {
+            throw new RuntimeException('No access to plugin manager.');
+        }
+    }
+
+    private function error(string $msg, int $status = Response::HTTP_INTERNAL_SERVER_ERROR): int
+    {
+        (new JsonResponse(['success' => false, 'error' => $msg], $status))->prepare($this->request)->send();
+        return 0;
+    }
+
+    private function success(string $output): int
+    {
+        (new JsonResponse(['success' => true, 'output' => $output]))->prepare($this->request)->send();
         return 0;
     }
 }

@@ -30,9 +30,8 @@
             </button>
             <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
                 {% if updateAvailable %}
-                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
-                        action: 'update',
-                        plugin: plugin.id
+                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePackage', null, {
+                        package: plugin.package
                     }) }}>
                         <i class="ph ph-download"></i>{{ 'admin.plugins.update'|trans }}
                     </a>
@@ -43,22 +42,19 @@
                             <i class="ph ph-wrench"></i>{{ 'admin.plugins.settings'|trans }}
                         </a>
                     {% endif %}
-                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
-                        action: 'deactivate',
+                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'deactivate', null, {
                         plugin: plugin.id
                     }) }}>
                         <i class="ph ph-power"></i>{{ 'admin.plugins.deactivate'|trans }}
                     </a>
                 {% else %}
-                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
-                        action: 'activate',
+                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'activate', null, {
                         plugin: plugin.id
                     }) }}>
                         <i class="ph ph-power"></i>{{ 'admin.plugins.activate'|trans }}
                     </a>
-                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
-                        action: 'uninstall',
-                        plugin: plugin.id
+                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'uninstall', null, {
+                        package: plugin.package
                     }) }}>
                         <i class="ph ph-trash"></i>{{ 'admin.plugins.uninstall'|trans }}
                     </a>

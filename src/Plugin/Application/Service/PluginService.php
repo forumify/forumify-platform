@@ -12,6 +12,7 @@ use Forumify\Plugin\Application\Exception\PluginException;
 use Forumify\Plugin\Application\Exception\PluginNotFoundException;
 use Forumify\Plugin\Application\Exception\UnbootableKernelException;
 use JsonException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 class PluginService
@@ -30,150 +31,21 @@ class PluginService
         $this->frameworkCacheClearer = new FrameworkCacheClearer($this->rootDir);
     }
 
-    /**
-     * @throws PluginException
-     */
-    public function activate(int $pluginId): void
-    {
-        if ($this->setActive($pluginId, true) < 1) {
-            throw new PluginNotFoundException($pluginId);
-        }
-
-        $this->clearFrameworkCache();
-        $this->validateKernel();
-        $this->postInstall();
-        $this->runMigrations();
-    }
-
-    /**
-     * @throws PluginException
-     */
-    public function deactivate(int $pluginId): void
-    {
-        if ($this->setActive($pluginId, false) < 1) {
-            throw new PluginNotFoundException($pluginId);
-        }
-
-        $this->clearFrameworkCache();
-        $this->validateKernel();
-        $this->postInstall();
-    }
-
-    /**
-     * @throws PluginException
-     */
-    public function updatePackage(string $package): void
-    {
-        $versions = self::getLatestVersions($this->rootDir)[$package] ?? null;
-        if ($versions === null) {
-            throw new PluginException("Unable to read versions for $package.");
-        }
-
-        if (($versions['latest-status'] ?? null) !== 'update-possible') {
-            return; // nothing to update....
-        }
-
-        $this->require($package, $versions['latest'] ?? '*');
-
-        $this->clearFrameworkCache();
-        try {
-            $this->validateKernel();
-        } catch (UnbootableKernelException $ex) {
-            $this->require($package, $versions['version'] ?? '*');
-            throw new PluginException('Unable to require new version, rollback was successful', 0, $ex);
-        }
-        $this->postInstall();
-        $this->runMigrations();
-    }
-
-    /**
-     * @throws PluginException
-     */
-    public function findPackageForPlugin(int $pluginId): string
-    {
-        try {
-            $packages = $this->connection->fetchFirstColumn('SELECT package FROM plugin WHERE id = ?', [$pluginId]);
-        } catch (Exception $ex) {
-            throw new PluginException($ex->getMessage(), 0, $ex);
-        }
-
-        if (empty($packages)) {
-            throw new PluginNotFoundException($pluginId);
-        }
-
-        return reset($packages);
-    }
-
-    /**
-     * @throws PluginException
-     */
-    public function updateAll(): void
-    {
-        $this->update();
-        $this->clearFrameworkCache();
-        $this->postInstall();
-        $this->runMigrations();
-    }
-
-    /**
-     * @throws PluginException
-     */
-    public function uninstallPluginFromPackage(string $package, bool $allowRollback = true): void
-    {
-        $this->remove($package);
-        $this->clearFrameworkCache();
-        $this->postInstall();
-
-        try {
-            $this->validateKernel();
-        } catch (UnbootableKernelException $ex) {
-            if ($allowRollback) {
-                $this->installPluginFromPackage($package, false);
-                throw new PluginException('Unable to boot after removing plugin. Plugin was re-installed.', 0, $ex);
-            }
-            throw new PluginException('Unable to boot after removing plugin.', 0, $ex);
-        }
-    }
-
-    /**
-     * @throws PluginException
-     */
-    public function installPluginFromPackage(string $package, bool $allowRollback = true): void
-    {
-        $this->require($package);
-        $this->clearFrameworkCache();
-        $this->postInstall();
-        $this->runMigrations();
-
-        try {
-            $this->validateKernel();
-        } catch (UnbootableKernelException $ex) {
-            if ($allowRollback) {
-                $this->uninstallPluginFromPackage($package, false);
-                throw new PluginException('Unable to boot after installing plugin. Plugin was removed.', 0, $ex);
-            }
-            throw new PluginException('Unable to boot after installing plugin.', 0, $ex);
-        }
-    }
-
-    private function require(string $package, ?string $version = null): void
+    public function composerRequire(string $package, ?string $version = null): string
     {
         if ($version !== null) {
             $package .= ':' . $version;
         }
-        $process = new Process([
+        return $this->run([
             'composer',
             'require',
             $package,
             '--no-interaction',
             '--no-scripts',
-            '--working-dir',
-            $this->rootDir,
         ]);
-        $process->run();
     }
 
-    private function update(?string $package = null): void
+    public function composerUpdate(?string $package = null): string
     {
         $cmd = ['composer', 'update'];
         if ($package !== null) {
@@ -181,28 +53,32 @@ class PluginService
             $cmd[] = '--with-all-dependencies';
         }
 
-        $process = new Process([
+        return $this->run([
             ...$cmd,
             '--no-interaction',
             '--no-scripts',
-            '--working-dir',
-            $this->rootDir,
         ]);
-        $process->run();
     }
 
-    private function remove(string $package): void
+    public function composerRemove(string $package): string
     {
-        $process = new Process([
+        return $this->run([
             'composer',
             'remove',
             $package,
             '--no-interaction',
             '--no-scripts',
-            '--working-dir',
-            $this->rootDir,
         ]);
-        $process->run();
+    }
+
+    public function composerPostInstall(): string
+    {
+        return $this->run([
+            'composer',
+            'run-script',
+            'post-install-cmd',
+            '--no-interaction',
+        ]);
     }
 
     public static function getLatestVersions(string $rootDir): array
@@ -232,25 +108,32 @@ class PluginService
     /**
      * @throws PluginException
      */
-    private function setActive(int $pluginId, bool $active): int
+    public function setActive(int $pluginId, bool $active): string
     {
         try {
-            return (int)$this->connection->executeStatement('UPDATE plugin SET active = :active WHERE id = :id', [
+            $updated = (int)$this->connection->executeStatement('UPDATE plugin SET active = :active WHERE id = :id', [
                 'active' => (int)$active,
                 'id' => $pluginId,
             ]);
         } catch (Exception $ex) {
             throw new PluginException('Unable to execute query: ' . $ex->getMessage(), 0, $ex);
         }
+
+        if ($updated < 1) {
+            throw new PluginNotFoundException($pluginId);
+        }
+
+        return "Plugin $pluginId " . ($active ? 'activated' : 'deactivated');
     }
 
     /**
      * @throws PluginException
      */
-    private function clearFrameworkCache(): void
+    public function clearFrameworkCache(): string
     {
         try {
             $this->frameworkCacheClearer->clear();
+            return 'Cache removed.';
         } catch (\Exception $ex) {
             throw new PluginException('Unable to clear cache: ' . $ex->getMessage(), 0, $ex);
         }
@@ -259,7 +142,7 @@ class PluginService
     /**
      * @throws PluginException
      */
-    private function validateKernel(): void
+    public function validateKernel(): void
     {
         $kernel = new ForumifyKernel($this->context);
         try {
@@ -270,28 +153,59 @@ class PluginService
         }
     }
 
-    private function postInstall(): void
+    public function migrations(): string
     {
-        $process = new Process([
-            'composer',
-            'run-script',
-            'post-install-cmd',
-            '--no-interaction',
-            '--working-dir',
-            $this->rootDir,
-        ]);
-        $process->run();
-    }
-
-    private function runMigrations(): void
-    {
-        $process = new Process([
+        return $this->run([
             'php',
-            $this->rootDir . '/bin/console',
+            'bin/console',
             'doctrine:migrations:migrate',
             '--allow-no-migration',
             '--no-interaction'
         ]);
-        $process->run();
+    }
+
+    /**
+     * @throws JsonException
+     */
+    public function npmUpdate(): string
+    {
+        $output = '';
+
+        // first we need to delete linked files because npm is ass at updating local files
+        $fs = new Filesystem();
+        $packageJson = json_decode(file_get_contents($this->rootDir . DIRECTORY_SEPARATOR . 'package.json'), true, 512, JSON_THROW_ON_ERROR);
+        $packages = array_merge($packageJson['dependencies'] ?? [], $packageJson['devDependencies'] ?? []);
+
+        foreach ($packages as $package => $version) {
+            if (!str_starts_with($version, 'file:')) {
+                continue;
+            }
+            $path = [$this->rootDir, 'node_modules', ...explode('/', $package)];
+            $dir = implode(DIRECTORY_SEPARATOR, $path);
+            $fs->remove($dir);
+            $output .= "Removed $dir.\n";
+        }
+
+        $output .= $this->run([
+            'npm',
+            'install',
+        ]);
+        return $output;
+    }
+
+    public function npmBuild(): string
+    {
+        return $this->run([
+            'npm',
+            'run',
+            'build',
+        ]);
+    }
+
+    private function run(array $cmd): string
+    {
+        $process = new Process($cmd, $this->rootDir);
+        $process->mustRun();
+        return $process->getOutput() . "\n" . $process->getErrorOutput();
     }
 }

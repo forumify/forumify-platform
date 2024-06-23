@@ -20,7 +20,7 @@
                                     <i class="ph ph-info"></i>
                                     {{ 'admin.plugins.install_plugin_temp_warning'|trans }}
                                 </p>
-                                <form {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'install') }}>
+                                <form data-action="forumify--forumify-platform--plugin-manager#install forumify--forumify-platform--modal#close">
                                     <div class="form-row">
                                         <label for="plugin-package">{{ 'admin.plugins.plugin_package'|trans }}</label>
                                         <input id="plugin-package" type="text" name="pluginPackage">
@@ -40,9 +40,7 @@
                         </div>
                     {% endblock %}
                 {% endembed %}
-                <button class="btn-primary" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
-                    action: 'update',
-                }) }}>
+                <button class="btn-primary" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updateAll') }}>
                     <i class="ph ph-download"></i>
                     {{ 'admin.plugins.update_all'|trans }}
                 </button>
@@ -57,10 +55,7 @@
                         {% if platformVersions['latest-status'] == 'update-possible' %}
                             <span class="ml-2">
                                 {{ 'admin.plugins.update_available'|trans({ version: platformVersions.latest }) }}
-                                <button class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'send', null, {
-                                    action: 'update',
-                                    platform: true,
-                                }) }}>
+                                <button class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePlatform') }}>
                                     <i class="ph ph-download"></i>
                                     {{ 'admin.plugins.update'|trans }}
                                 </button>
@@ -78,15 +73,20 @@
                     <i class="ph ph-arrows-clockwise"></i>
                 </a>
             </h2>
-            <div
-                class="alert-error mb-6 d-none"
-                {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'errorBox') }}
-            ></div>
-            <div
-                class="flex justify-center d-none"
-                {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'loader') }}
-            >
-                {% include '@Forumify/components/loader.html.twig' %}
+            <div class="rich-text d-none" {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'log') }}>
+                <div class="alert-error d-none mb-4">
+                    {{ 'admin.plugins.errors'|trans }}
+                </div>
+                {% embed '@Forumify/components/modal.html.twig' %}
+                    {% block modalOpenButton %}
+                        <a class="btn-link mb-4">{{ 'admin.plugins.open_log'|trans }}</a>
+                    {% endblock %}
+                    {% block modalContent %}
+                        <div class="box">
+                            <pre style="height: 600px; overflow-y: auto"></pre>
+                        </div>
+                    {% endblock %}
+                {% endembed %}
             </div>
             <div {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'pluginList') }}>
                 <ul class="box">
@@ -110,6 +110,16 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
+            </div>
+            <div
+                class="flex flex-col items-center justify-start d-none"
+                {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'progress') }}
+            >
+                {% include '@Forumify/components/loader.html.twig' %}
+                <p class="w-100">Running step: <span class="step"></span>...</p>
+                <div class="progress">
+                    <div class="progress-bar"></div>
+                </div>
             </div>
         </div>
     </div>

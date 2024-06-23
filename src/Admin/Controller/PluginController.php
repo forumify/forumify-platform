@@ -36,6 +36,7 @@ class PluginController extends AbstractController
         $ajaxAuthToken = JWT::encode([
             'sub' => $user->getId(),
             'exp' => (new \DateTime())->add(new \DateInterval('P1D'))->getTimestamp(),
+            'resource_access' => ['plugin-manager'],
         ], $this->appSecret, 'HS256');
 
         return $this->render('@Forumify/admin/plugin/plugin_manager.html.twig', [
