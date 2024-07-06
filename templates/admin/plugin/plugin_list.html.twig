@@ -1,0 +1,10 @@
+<ul class="box">
+    {% for plugin in plugins|filter(p => p.plugin is not null) %}
+        {% include '@Forumify/admin/plugin/plugin.html.twig' %}
+        {% if not loop.last %}
+            <hr>
+        {% endif %}
+    {% else %}
+        {{ emptyText }}
+    {% endfor %}
+</ul>

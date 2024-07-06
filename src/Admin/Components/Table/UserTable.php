@@ -15,9 +15,12 @@ class UserTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        UserRepository $userRepository
     ) {
-        parent::__construct($userRepository);
+    }
+
+    protected function getEntityClass(): string
+    {
+        return User::class;
     }
 
     protected function buildTable(): void

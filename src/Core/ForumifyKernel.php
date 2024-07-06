@@ -6,6 +6,7 @@ namespace Forumify\Core;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
+use Forumify\Plugin\Entity\Plugin;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -33,7 +34,9 @@ class ForumifyKernel extends Kernel
             ]);
 
             $plugins = $connection
-                ->executeQuery('SELECT plugin_class FROM plugin WHERE active = 1')
+                ->executeQuery('SELECT plugin_class FROM plugin WHERE type = :type AND active = 1', [
+                    'type' => Plugin::TYPE_PLUGIN
+                ])
                 ->fetchFirstColumn();
         } catch (Exception $ex) {
             $plugins = [];

@@ -24,42 +24,52 @@
         </p>
     </div>
     <div class="w-25 flex justify-end gap-2">
-        <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
-            <button class="btn-outlined" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
-                <i class="ph ph-caret-down"></i>{{ 'admin.plugins.manage'|trans }}
-            </button>
-            <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
-                {% if updateAvailable %}
-                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePackage', null, {
-                        package: plugin.package
-                    }) }}>
-                        <i class="ph ph-download"></i>{{ 'admin.plugins.update'|trans }}
-                    </a>
-                {% endif %}
-                {% if plugin.active %}
-                    {% if metadata.settingsRoute %}
-                        <a class="btn-link" href="{{ path(metadata.settingsRoute) }}">
-                            <i class="ph ph-wrench"></i>{{ 'admin.plugins.settings'|trans }}
+        {% if plugin.type == constant('Forumify\\Plugin\\Entity\\Plugin::TYPE_PLUGIN') %}
+            <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
+                <button class="btn-outlined" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+                    <i class="ph ph-caret-down"></i>{{ 'admin.plugins.manage'|trans }}
+                </button>
+                <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+                    {% if updateAvailable %}
+                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePackage', null, {
+                            package: plugin.package
+                        }) }}>
+                            <i class="ph ph-download"></i>{{ 'admin.plugins.update'|trans }}
                         </a>
                     {% endif %}
-                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'deactivate', null, {
-                        plugin: plugin.id
-                    }) }}>
-                        <i class="ph ph-power"></i>{{ 'admin.plugins.deactivate'|trans }}
-                    </a>
-                {% else %}
-                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'activate', null, {
-                        plugin: plugin.id
-                    }) }}>
-                        <i class="ph ph-power"></i>{{ 'admin.plugins.activate'|trans }}
-                    </a>
-                    <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'uninstall', null, {
-                        package: plugin.package
-                    }) }}>
-                        <i class="ph ph-trash"></i>{{ 'admin.plugins.uninstall'|trans }}
-                    </a>
-                {% endif %}
+                    {% if plugin.active %}
+                        {% if metadata.settingsRoute %}
+                            <a class="btn-link" href="{{ path(metadata.settingsRoute) }}">
+                                <i class="ph ph-wrench"></i>{{ 'admin.plugins.settings'|trans }}
+                            </a>
+                        {% endif %}
+                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'deactivate', null, {
+                            plugin: plugin.id
+                        }) }}>
+                            <i class="ph ph-power"></i>{{ 'admin.plugins.deactivate'|trans }}
+                        </a>
+                    {% else %}
+                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'activate', null, {
+                            plugin: plugin.id
+                        }) }}>
+                            <i class="ph ph-power"></i>{{ 'admin.plugins.activate'|trans }}
+                        </a>
+                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'uninstall', null, {
+                            package: plugin.package
+                        }) }}>
+                            <i class="ph ph-trash"></i>{{ 'admin.plugins.uninstall'|trans }}
+                        </a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
+        {% elseif plugin.type == constant('Forumify\\Plugin\\Entity\\Plugin::TYPE_THEME') %}
+            {% if plugin.package != 'forumify/forumify-theme' %}
+                <a class="btn-outlined" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'uninstall', null, {
+                    package: plugin.package
+                }) }}>
+                    <i class="ph ph-trash"></i>{{ 'admin.plugins.uninstall'|trans }}
+                </a>
+            {% endif %}
+        {% endif %}
     </div>
 </li>

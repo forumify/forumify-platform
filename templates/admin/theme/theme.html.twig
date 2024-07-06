@@ -1,0 +1,32 @@
+{% extends '@Forumify/admin/crud/form.html.twig' %}
+{% block body %}
+    {% embed '@Forumify/admin/components/simple_form.html.twig' with {
+        cancelPath: path(route ~ '_list')
+    } %}
+        {% block form_widget %}
+            {{ form_row(form.name) }}
+            {{ form_row(form.active) }}
+            <div class="mb-4">
+                {% embed '@Forumify/components/tabs.html.twig' %}
+                    {% block tabs %}
+                        {% for key, _ in form.themeConfig %}
+                            <button type="button" class="btn-link" data-tab-id="theme-config-{{ key }}">
+                                {{ ('admin.theme.config.' ~ key)|trans }}
+                            </button>
+                        {% endfor %}
+                    {% endblock %}
+                    {% block tabpanels %}
+                        {% for key, config in form.themeConfig %}
+                            <div id="theme-config-{{ key }}" style="max-height: 600px; overflow-y: auto; margin-top: calc(-1* var(--spacing-4));">
+                                <div class="p-4" style="background-color: var(--c-elevation-0)">
+                                    {{ form_row(config) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endblock %}
+                {% endembed %}
+            </div>
+            {{ form_row(form.css) }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

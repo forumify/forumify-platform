@@ -43,8 +43,9 @@
     {% block icon %}
         <link rel="icon" href="{{ logo }}">
     {% endblock %}
-    {{ encore_entry_link_tags('frontend') }}
     {% block stylesheets %}
+        {{ encore_entry_link_tags('frontend') }}
+        {{ theme_tags() }}
     {% endblock %}
 </head>
 <body>
@@ -86,8 +87,8 @@
         </p>
     </footer>
 {% endblock %}
-{{ encore_entry_script_tags('frontend') }}
 {% block javascripts %}
+    {{ encore_entry_script_tags('frontend') }}
 {% endblock %}
 </body>
 </html>

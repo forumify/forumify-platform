@@ -6,7 +6,6 @@ namespace Forumify\Admin\Components\Table;
 
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Forum\Entity\Badge;
-use Forumify\Forum\Repository\BadgeRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -15,9 +14,12 @@ class BadgeTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        BadgeRepository $repository
     ) {
-        parent::__construct($repository);
+    }
+
+    protected function getEntityClass(): string
+    {
+        return Badge::class;
     }
 
     protected function buildTable(): void
@@ -27,6 +29,7 @@ class BadgeTable extends AbstractDoctrineTable
                 'field' => 'name',
             ])
             ->addColumn('actions', [
+                'field' => 'id',
                 'label' => '',
                 'searchable' => false,
                 'sortable' => false,
@@ -34,10 +37,10 @@ class BadgeTable extends AbstractDoctrineTable
             ]);
     }
 
-    protected function renderActionColumn($_, Badge $badge): string
+    protected function renderActionColumn(int $id): string
     {
-        $editUrl = $this->urlGenerator->generate('forumify_admin_badge', ['id' => $badge->getId()]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_badge_delete', ['id' => $badge->getId()]);
+        $editUrl = $this->urlGenerator->generate('forumify_admin_badge', ['id' => $id]);
+        $deleteUrl = $this->urlGenerator->generate('forumify_admin_badge_delete', ['id' => $id]);
 
         return "
             <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>

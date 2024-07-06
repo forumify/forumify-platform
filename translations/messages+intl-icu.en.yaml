@@ -196,6 +196,9 @@ admin:
         saved: '{single} saved.'
         deleted: '{single} deleted.'
         delete_warning: 'Warning, you are about to delete this {single}!'
+        create_not_allowed: 'You are not allowed to create {plural}.'
+        edit_not_allowed: 'You are not allowed to edit {plural}.'
+        delete_not_allowed: 'You are not allowed to delete {plural}.'
     cms:
         title: 'Content Management System'
         pages:
@@ -258,11 +261,12 @@ admin:
         platform:
             title: 'Platform'
             name: 'Forumify Platform'
-            description: 'The forumify platform is the core application. You cannot uninstall this plugin. You can check and install available platform updates here.'
+            description: 'This is the core application. You can check and install available platform updates here.'
         plugins: 'Plugins'
         inactive_plugins: 'Inactive Plugins'
         update_available: 'Version {version} is available!'
-        no_active_plugins: 'No plugins are active on this instance.'
+        no_active_plugins: 'No active plugins.'
+        refresh: 'Refresh'
         update_all: 'Update All'
         update: 'Update'
         manage: 'Manage'
@@ -283,3 +287,16 @@ admin:
         install_plugin: 'Install Plugin'
         open_log: 'View log'
         errors: 'An error occurred. Open the log to see what went wrong.'
+        themes: 'Themes'
+        no_themes: 'No themes are installed.'
+        manage_themes: 'To customize your themes, please visit <a href="{themesPath}">Themes</a>.'
+    theme:
+        name_help: 'You can modify the name displayed to your users if you do not like the one provided by the theme plugin.'
+        active_help: 'Only 1 theme can be active at once.'
+        css: 'Custom Theme CSS'
+        crud:
+            single: theme
+            plural: themes
+        config:
+            default: 'Default Configuration'
+            dark: 'Dark Configuration'

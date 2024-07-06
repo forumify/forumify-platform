@@ -8,7 +8,9 @@ use Composer\InstalledVersions;
 use Forumify\Core\Repository\PluginRepository;
 use Forumify\Plugin\Application\Service\PluginService as ApplicationPluginService;
 use Forumify\Plugin\Entity\Plugin;
+use Forumify\Plugin\Event\PluginRefreshedEvent;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class PluginService
 {
@@ -23,6 +25,7 @@ class PluginService
         #[Autowire('%kernel.project_dir%')]
         private readonly string $rootDir,
         private readonly PluginRepository $pluginRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -40,7 +43,18 @@ class PluginService
         foreach ($installedPlugins as $package => $composerJson) {
             $plugin = $knownPlugins[$package] ?? null;
             if ($plugin === null) {
+                $type = match ($composerJson['type']) {
+                    'forumify-plugin' => Plugin::TYPE_PLUGIN,
+                    'forumify-theme' => Plugin::TYPE_THEME,
+                    default => null,
+                };
+
+                if ($type === null) {
+                    continue;
+                }
+
                 $plugin = new Plugin();
+                $plugin->setType($type);
                 $plugin->setPackage($package);
                 $plugin->setVersion('0.0.0');
                 $plugin->setLatestVersion('0.0.0');
@@ -50,6 +64,8 @@ class PluginService
             $plugin->setPluginClass($pluginClass);
 
             $this->pluginRepository->save($plugin, false);
+            $this->eventDispatcher->dispatch(new PluginRefreshedEvent($plugin));
+
             $plugins[] = $plugin;
         }
 
@@ -89,8 +105,9 @@ class PluginService
      */
     private function getInstalledPlugins(): array
     {
-        $packages = InstalledVersions::getInstalledPackagesByType('forumify-plugin');
-        $packages = array_unique($packages);
+        $plugins = InstalledVersions::getInstalledPackagesByType('forumify-plugin');
+        $themes = InstalledVersions::getInstalledPackagesByType('forumify-theme');
+        $packages = array_unique(array_merge($plugins, $themes));
 
         $foundPlugins = [];
         foreach ($packages as $pluginPackage) {

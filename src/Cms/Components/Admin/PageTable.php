@@ -16,10 +16,13 @@ class PageTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        PageRepository $repository,
     ) {
-        parent::__construct($repository);
         $this->sort = ['title' => AbstractTable::SORT_ASC];
+    }
+
+    protected function getEntityClass(): string
+    {
+        return Page::class;
     }
 
     protected function buildTable(): void
@@ -33,6 +36,7 @@ class PageTable extends AbstractDoctrineTable
                 'renderer' => $this->renderUrlKey(...),
             ])
             ->addColumn('actions', [
+                'field' => 'slug',
                 'label' => '',
                 'searchable' => false,
                 'sortable' => false,
@@ -46,10 +50,10 @@ class PageTable extends AbstractDoctrineTable
         return "$urlKey <a href='$url' target='_blank'><i class='ph ph-arrow-square-out'></i></a>";
     }
 
-    private function renderActionColumn($_, Page $page): string
+    private function renderActionColumn(string $slug): string
     {
-        $editUrl = $this->urlGenerator->generate('forumify_admin_cms_page_edit', ['slug' => $page->getSlug()]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_cms_page_delete', ['slug' => $page->getSlug()]);
+        $editUrl = $this->urlGenerator->generate('forumify_admin_cms_page_edit', ['slug' => $slug]);
+        $deleteUrl = $this->urlGenerator->generate('forumify_admin_cms_page_delete', ['slug' => $slug]);
 
         return "
             <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>

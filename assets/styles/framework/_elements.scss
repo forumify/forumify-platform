@@ -58,6 +58,7 @@ hr {
 select,
 textarea,
 input {
+    color: var(--c-text-primary);
     background-color: var(--c-elevation-1);
     height: 40px;
     padding: 0 1em;
@@ -206,7 +207,7 @@ input[type='file'] {
     z-index: 999;
 
     @for $i from 1 through 25 {
-        div[class^="alert-"]:nth-child(#{$i}){
+        div[class^="alert-"]:nth-child(#{$i}) {
             animation: 600ms fadeOut forwards;
             animation-delay: #{5 + $i * 1}s;
         }

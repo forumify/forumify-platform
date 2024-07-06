@@ -14,6 +14,13 @@
                     {% if app.user is not null %}
                         {{ component('Notifications') }}
                     {% endif %}
+                    <a
+                        class="btn-link btn-icon hide-phone"
+                        href="{{ path('forumify_core_theme_toggle', { '_target_path': app.request.requestUri }) }}"
+                        {{ stimulus_controller('forumify/forumify-platform/theme') }}
+                    >
+                        <i class="ph ph-circle-half-tilt"></i>
+                    </a>
                 </div>
             {% endblock %}
         </div>

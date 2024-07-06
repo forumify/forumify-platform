@@ -6,7 +6,6 @@ namespace Forumify\Admin\Components\Table;
 
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Forum\Entity\Reaction;
-use Forumify\Forum\Repository\ReactionRepository;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -15,9 +14,12 @@ class ReactionTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        ReactionRepository $reactionRepository,
     ) {
-        parent::__construct($reactionRepository);
+    }
+
+    protected function getEntityClass(): string
+    {
+        return Reaction::class;
     }
 
     protected function buildTable(): void

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Cms\Components\Admin;
 
 use Forumify\Cms\Entity\Resource;
-use Forumify\Cms\Repository\ResourceRepository;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -17,9 +16,12 @@ class ResourceTable extends AbstractDoctrineTable
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Packages $packages,
-        ResourceRepository $repository
     ) {
-        parent::__construct($repository);
+    }
+
+    protected function getEntityClass(): string
+    {
+        return Resource::class;
     }
 
     protected function buildTable(): void
@@ -38,6 +40,7 @@ class ResourceTable extends AbstractDoctrineTable
                 'renderer' => $this->renderPreview(...),
             ])
             ->addColumn('actions', [
+                'field' => 'slug',
                 'label' => '',
                 'searchable' => false,
                 'sortable' => false,
@@ -53,10 +56,10 @@ class ResourceTable extends AbstractDoctrineTable
         </a>";
     }
 
-    private function renderActionColumn($_, Resource $resource): string
+    private function renderActionColumn(string $slug): string
     {
-        $editUrl = $this->urlGenerator->generate('forumify_admin_cms_resource_edit', ['slug' => $resource->getSlug()]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_cms_resource_delete', ['slug' => $resource->getSlug()]);
+        $editUrl = $this->urlGenerator->generate('forumify_admin_cms_resource_edit', ['slug' => $slug]);
+        $deleteUrl = $this->urlGenerator->generate('forumify_admin_cms_resource_delete', ['slug' => $slug]);
 
         return "
             <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>

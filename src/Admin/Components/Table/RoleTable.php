@@ -15,9 +15,12 @@ class RoleTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        RoleRepository $roleRepository
     ) {
-        parent::__construct($roleRepository);
+    }
+
+    protected function getEntityClass(): string
+    {
+        return Role::class;
     }
 
     protected function buildTable(): void

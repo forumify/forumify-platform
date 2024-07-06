@@ -40,6 +40,10 @@
                         </div>
                     {% endblock %}
                 {% endembed %}
+                <a class="btn-outlined" href="{{ path('forumify_admin_plugin_refresh') }}">
+                    <i class="ph ph-arrows-clockwise"></i>
+                    {{ 'admin.plugins.refresh'|trans }}
+                </a>
                 <button class="btn-primary" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updateAll') }}>
                     <i class="ph ph-download"></i>
                     {{ 'admin.plugins.update_all'|trans }}
@@ -66,60 +70,59 @@
             </div>
             <p>{{ 'admin.plugins.platform.description'|trans }}</p>
         </div>
-        <div>
-            <h2>
-                {{ 'admin.plugins.plugins'|trans }}
-                <a class="btn-outlined btn-small btn-icon" href="{{ path('forumify_admin_plugin_refresh') }}">
-                    <i class="ph ph-arrows-clockwise"></i>
-                </a>
-            </h2>
-            <div class="rich-text d-none" {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'log') }}>
-                <div class="alert-error d-none mb-4">
-                    {{ 'admin.plugins.errors'|trans }}
-                </div>
-                {% embed '@Forumify/components/modal.html.twig' %}
-                    {% block modalOpenButton %}
-                        <a class="btn-link mb-4">{{ 'admin.plugins.open_log'|trans }}</a>
-                    {% endblock %}
-                    {% block modalContent %}
-                        <div class="box">
-                            <pre style="height: 600px; overflow-y: auto"></pre>
-                        </div>
-                    {% endblock %}
-                {% endembed %}
+        <div class="rich-text d-none" {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'log') }}>
+            <div class="alert-error d-none mb-4">
+                {{ 'admin.plugins.errors'|trans }}
             </div>
-            <div {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'pluginList') }}>
-                <ul class="box">
-                    {% for plugin in activePlugins|filter(p => p.plugin is not null) %}
-                        {% include '@Forumify/admin/plugin/plugin.html.twig' %}
-                        {% if not loop.last %}
-                            <hr>
+            {% embed '@Forumify/components/modal.html.twig' %}
+                {% block modalOpenButton %}
+                    <a class="btn-link mb-4">{{ 'admin.plugins.open_log'|trans }}</a>
+                {% endblock %}
+                {% block modalContent %}
+                    <div class="box">
+                        <pre style="height: 600px; overflow-y: auto"></pre>
+                    </div>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'pluginList') }}>
+            {% embed '@Forumify/components/tabs.html.twig' %}
+                {% block tabs %}
+                    <button type="button" class="btn-link" data-tab-id="tab-plugins">{{ 'admin.plugins.plugins'|trans }}</button>
+                    <button type="button" class="btn-link" data-tab-id="tab-themes">{{ 'admin.plugins.themes'|trans }}</button>
+                {% endblock %}
+                {% block tabpanels %}
+                    <div id="tab-plugins">
+                        {% include '@Forumify/admin/plugin/plugin_list.html.twig' with {
+                            plugins: activePlugins,
+                            emptyText: 'admin.plugins.no_active_plugins'|trans,
+                        } only %}
+                        {% if inactivePlugins|length > 0 %}
+                            <h2 class="mt-6">{{ 'admin.plugins.inactive_plugins'|trans }}</h2>
+                            {% include '@Forumify/admin/plugin/plugin_list.html.twig' with {
+                                plugins: inactivePlugins,
+                                emptyText: ''
+                            } only %}
                         {% endif %}
-                    {% else %}
-                        {{ 'admin.plugins.no_active_plugins'|trans }}
-                    {% endfor %}
-                </ul>
-                {% if inactivePlugins|length > 0 %}
-                    <h2 class="mt-6">{{ 'admin.plugins.inactive_plugins'|trans }}</h2>
-                    <ul class="box">
-                        {% for plugin in inactivePlugins|filter(p => p.plugin is not null) %}
-                            {% include '@Forumify/admin/plugin/plugin.html.twig' %}
-                            {% if not loop.last %}
-                                <hr>
-                            {% endif %}
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            </div>
-            <div
-                class="flex flex-col items-center justify-start d-none"
-                {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'progress') }}
-            >
-                {% include '@Forumify/components/loader.html.twig' %}
-                <p class="w-100">Running step: <span class="step"></span>...</p>
-                <div class="progress">
-                    <div class="progress-bar"></div>
-                </div>
+                    </div>
+                    <div id="tab-themes">
+                        <p class="mb-4">{{ 'admin.plugins.manage_themes'|trans({ themesPath: path('forumify_admin_themes_list') })|raw }}</p>
+                        {% include '@Forumify/admin/plugin/plugin_list.html.twig' with {
+                            plugins: themes,
+                            emptyText: 'admin.plugins.no_themes'|trans,
+                        } only %}
+                    </div>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        <div
+            class="flex flex-col items-center justify-start d-none"
+            {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'progress') }}
+        >
+            {% include '@Forumify/components/loader.html.twig' %}
+            <p class="w-100"><span class="step"></span>...</p>
+            <div class="progress">
+                <div class="progress-bar"></div>
             </div>
         </div>
     </div>

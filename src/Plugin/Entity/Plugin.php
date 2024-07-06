@@ -7,12 +7,15 @@ namespace Forumify\Plugin\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Repository\PluginRepository;
-use Forumify\Plugin\AbstractForumifyPlugin;
-use Forumify\Plugin\PluginMetadata;
+use Forumify\Plugin\PluginInterface;
+use RuntimeException;
 
 #[ORM\Entity(repositoryClass: PluginRepository::class)]
 class Plugin
 {
+    public const TYPE_PLUGIN = 'plugin';
+    public const TYPE_THEME = 'theme';
+
     use IdentifiableEntityTrait;
 
     #[ORM\Column(unique: true)]
@@ -30,7 +33,10 @@ class Plugin
     #[ORM\Column(type: 'boolean')]
     private bool $active = false;
 
-    private ?AbstractForumifyPlugin $plugin = null;
+    #[ORM\Column(options: ['default' => self::TYPE_PLUGIN])]
+    private string $type;
+
+    private ?PluginInterface $plugin = null;
 
     public function getPackage(): string
     {
@@ -82,7 +88,17 @@ class Plugin
         $this->active = $active;
     }
 
-    public function getPlugin(): ?AbstractForumifyPlugin
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
+
+    public function getPlugin(): PluginInterface
     {
         if ($this->plugin !== null) {
             return $this->plugin;
@@ -90,10 +106,11 @@ class Plugin
 
         $class = $this->getPluginClass();
         $object = new $class();
-        if ($object instanceof AbstractForumifyPlugin) {
-            $this->plugin = $object;
+        if (!$object instanceof PluginInterface) {
+            throw new RuntimeException('Cannot use ' . get_class($this) . ' as a plugin. Did you forget to implement PluginInterface?');
         }
 
+        $this->plugin = $object;
         return $this->plugin;
     }
 }

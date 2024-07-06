@@ -30,7 +30,8 @@ class SettingsController extends AbstractController
             new MenuItem($t->trans('admin.menu_builder.title'), $u->generate('forumify_admin_menu_builder'), [
                 'icon' => 'ph ph-list'
             ]),
-            new MenuItem('Plugins', $u->generate('forumify_admin_plugin_list'), ['icon' => 'ph ph-plugs'])
+            new MenuItem('Plugins', $u->generate('forumify_admin_plugin_list'), ['icon' => 'ph ph-plugs']),
+            new MenuItem('Themes', $u->generate('forumify_admin_themes_list'), ['icon' => 'ph ph-paint-brush']),
         ]);
 
         $menu->sortByLabel();

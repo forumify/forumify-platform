@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Component\Table;
 
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Forumify\Core\Repository\AbstractRepository;
+use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractDoctrineTable extends AbstractTable
 {
-    public function __construct(protected readonly ServiceEntityRepository $repository)
-    {
-    }
+    private AbstractRepository $repository;
+
+    abstract protected function getEntityClass(): string;
 
     protected function getData(int $limit, int $offset, array $search, array $sort): array
     {
@@ -43,5 +45,15 @@ abstract class AbstractDoctrineTable extends AbstractTable
         }
 
         return $qb;
+    }
+
+    #[Required]
+    public function setServices(EntityManagerInterface $em): void
+    {
+        $repository = $em->getRepository($this->getEntityClass());
+        if (!$repository instanceof AbstractRepository) {
+            throw new \RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
+        }
+        $this->repository = $repository;
     }
 }

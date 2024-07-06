@@ -11,14 +11,14 @@
     overflow: hidden;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.03);
+        background-color: var(--c-hover);
         transition: ease-in-out 150ms;
     }
 
     &:disabled,
     &[disabled] {
         cursor: default;
-        background-color: rgba(0, 0, 0, 0.03);
+        background-color: var(--c-hover);
     }
 
     i {
@@ -90,6 +90,7 @@
 
 .btn-link {
     @include btn;
+    color: var(--c-text-primary);
     align-items: center;
     justify-content: start;
     padding: var(--spacing-2) var(--spacing-4);

@@ -31,6 +31,10 @@ abstract class AbstractCrudController extends AbstractController
     protected string $formTemplate = '@Forumify/admin/crud/form.html.twig';
     protected string $deleteTemplate = '@Forumify/admin/crud/delete.html.twig';
 
+    protected bool $allowAdd = true;
+    protected bool $allowEdit = true;
+    protected bool $allowDelete = true;
+
     /**
      * @return string The classname for the entity this controller will act on, for example Forum::class
      */
@@ -44,10 +48,10 @@ abstract class AbstractCrudController extends AbstractController
     /**
      * @return FormInterface Gets the form to use.
      *
-     * You can use `$this->createForm(MyFormType::class);` to re-use an existing form,
+     * You can use `$this->createForm(MyFormType::class, $data);` to re-use an existing form,
      * or `$this->createFormBuilder();` to build a one-off form.
      */
-    abstract protected function getForm(): FormInterface;
+    abstract protected function getForm(?object $data): FormInterface;
 
     #[Route('', '_list')]
     public function list(): Response
@@ -60,12 +64,22 @@ abstract class AbstractCrudController extends AbstractController
     #[Route('/create', '_create')]
     public function create(Request $request): Response
     {
+        if (!$this->allowAdd) {
+            $this->addCrudFlash('error', 'admin.crud.create_not_allowed');
+            return $this->redirectToRoute($this->getRoute('list'));
+        }
+
         return $this->handleForm($request);
     }
 
     #[Route('/{identifier}/edit', '_edit')]
     public function edit(Request $request, string $identifier): Response
     {
+        if (!$this->allowEdit) {
+            $this->addCrudFlash('error', 'admin.crud.edit_not_allowed');
+            return $this->redirectToRoute($this->getRoute('list'));
+        }
+
         $data = $this->repository->find($identifier);
         if ($data === null) {
             throw $this->createNotFoundException("Entity {$this->getEntityClass()} with $identifier could not be found.");
@@ -77,6 +91,11 @@ abstract class AbstractCrudController extends AbstractController
     #[Route('/{identifier}/delete', '_delete')]
     public function delete(Request $request, string $identifier): Response
     {
+        if (!$this->allowDelete) {
+            $this->addCrudFlash('error', 'admin.crud.delete_not_allowed');
+            return $this->redirectToRoute($this->getRoute('list'));
+        }
+
         if (!$request->get('confirmed')) {
             return $this->render($this->deleteTemplate, $this->templateParams());
         }
@@ -86,16 +105,13 @@ abstract class AbstractCrudController extends AbstractController
             $this->repository->remove($data);
         }
 
-        $this->addFlash('success', ucfirst($this->translator->trans('admin.crud.deleted', [
-            'single' => $this->translator->trans($this->getTranslationPrefix() . 'single'),
-        ])));
+        $this->addCrudFlash('success', 'admin.crud.deleted');
         return $this->redirectToRoute($this->getRoute('list'));
     }
 
     private function handleForm(Request $request, ?object $data = null): Response
     {
-        $form = $this->getForm();
-        $form->setData($data);
+        $form = $this->getForm($data);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -113,9 +129,7 @@ abstract class AbstractCrudController extends AbstractController
                 PostSaveCrudEvent::getName($this->getEntityClass()),
             );
 
-            $this->addFlash('success', ucfirst($this->translator->trans('admin.crud.saved', [
-                'single' => $this->translator->trans($this->getTranslationPrefix() . 'single'),
-            ])));
+            $this->addCrudFlash('success', 'admin.crud.saved');
             return $this->redirectToRoute($this->getRoute('list'));
         }
 
@@ -130,6 +144,11 @@ abstract class AbstractCrudController extends AbstractController
         return [
             'translationPrefix' => $this->getTranslationPrefix(),
             'route' => $this->getRoute(),
+            'capabilities' => [
+                'create' => $this->allowAdd,
+                'edit' => $this->allowEdit,
+                'delete' => $this->allowDelete,
+            ],
             ...$params,
         ];
     }
@@ -157,6 +176,16 @@ abstract class AbstractCrudController extends AbstractController
             ->prepend('admin.')
             ->append('.crud.')
             ->toString();
+    }
+
+    private function addCrudFlash(string $type, string $key): void
+    {
+        $prefix = $this->getTranslationPrefix();
+        $message = $this->translator->trans($key, [
+            'single' => $this->translator->trans($prefix . 'single'),
+            'plural' => $this->translator->trans($prefix . 'plural'),
+        ]);
+        $this->addFlash($type, $message);
     }
 
     #[Required]

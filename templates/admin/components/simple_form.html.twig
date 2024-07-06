@@ -6,7 +6,9 @@
 <div class="box">
     {% block form %}
         {{ form_start(form) }}
-        {{ form_widget(form) }}
+        {% block form_widget %}
+            {{ form_widget(form) }}
+        {% endblock %}
         <div class="flex justify-center items-center gap-2">
             <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
             {% if cancelPath is defined %}

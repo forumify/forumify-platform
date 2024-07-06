@@ -7,6 +7,7 @@ namespace Forumify\Admin\Controller;
 use Firebase\JWT\JWT;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\PluginRepository;
+use Forumify\Plugin\Entity\Plugin;
 use Forumify\Plugin\Service\PluginService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,10 +26,11 @@ class PluginController extends AbstractController
     #[Route('', 'list')]
     public function list(): Response
     {
-        $activePlugins = $this->pluginRepository->findBy(['active' => true], ['package' => 'ASC']);
-        $inactivePlugins = $this->pluginRepository->findBy(['active' => false], ['package' => 'ASC']);
+        $activePlugins = $this->pluginRepository->findBy(['active' => true, 'type' => Plugin::TYPE_PLUGIN], ['package' => 'ASC']);
+        $inactivePlugins = $this->pluginRepository->findBy(['active' => false, 'type' => Plugin::TYPE_PLUGIN], ['package' => 'ASC']);
+        $themes = $this->pluginRepository->findBy(['type' => Plugin::TYPE_THEME], ['package' => 'ASC']);
 
-        $latestVersions = $this->pluginService->getLatestVersions();
+//        $latestVersions = $this->pluginService->getLatestVersions();
         $platformVersions = $latestVersions['forumify/forumify-platform'] ?? null;
 
         /** @var User $user */
@@ -42,6 +44,7 @@ class PluginController extends AbstractController
         return $this->render('@Forumify/admin/plugin/plugin_manager.html.twig', [
             'activePlugins' => $activePlugins,
             'inactivePlugins' => $inactivePlugins,
+            'themes' => $themes,
             'pluginService' => $this->pluginService,
             'platformVersions' => $platformVersions,
             'ajaxAuthToken' => $ajaxAuthToken,
