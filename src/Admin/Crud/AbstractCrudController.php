@@ -118,14 +118,14 @@ abstract class AbstractCrudController extends AbstractController
             $entity = $form->getData();
 
             $this->eventDispatcher->dispatch(
-                new PreSaveCrudEvent($data === null, $entity),
+                new PreSaveCrudEvent($data === null, $form, $entity),
                 PreSaveCrudEvent::getName($this->getEntityClass()),
             );
 
             $this->repository->save($entity);
 
             $this->eventDispatcher->dispatch(
-                new PostSaveCrudEvent($data === null, $entity),
+                new PostSaveCrudEvent($data === null, $form, $entity),
                 PostSaveCrudEvent::getName($this->getEntityClass()),
             );
 
