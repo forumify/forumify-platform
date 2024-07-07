@@ -27,13 +27,24 @@ class ThemeExtension extends AbstractExtension
 
     public function getThemeTags(array $context): string
     {
-        $lastModified = $this->themeService->getLastModified();
+        $metaData = $this->themeService->getThemeMetaData();
+        $lastModified = $metaData['lastModified'] ?? '0';
 
         /** @var AppVariable $app */
         $app = $context['app'];
         $preference = $app->getRequest()->cookies->get(ThemeService::CURRENT_THEME_COOKIE) ?? 'system';
 
-        $url = $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, $preference, $lastModified), 'forumify.asset');
-        return "<link rel='stylesheet' href='$url'>";
+        $links = [
+            $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, $preference, $lastModified), 'forumify.asset')
+        ];
+        foreach ($metaData['stylesheets'] ?? [] as $stylesheet) {
+            $links[] = $this->packages->getUrl('themes/' . $stylesheet);
+        }
+
+        return array_reduce(
+            $links,
+            static fn (string $acc, string $link) => "$acc<link rel='stylesheet' href='$link'>",
+            ''
+        );
     }
 }

@@ -28,20 +28,33 @@ class ThemeService
         $this->cache->delete(self::THEME_LAST_MODIFIED_CACHE_KEY);
     }
 
-    public function getLastModified(): ?string
+    public function getThemeMetaData(): array
     {
-        return $this->cache->get(self::THEME_LAST_MODIFIED_CACHE_KEY, function () {
+        return $this->cache->get(self::THEME_LAST_MODIFIED_CACHE_KEY, function (): array {
             /** @var Theme|null $theme */
             $theme = $this->themeRepository->findOneBy(['active' => true]);
             if ($theme === null) {
-                return null;
+                return [];
             }
 
             $modifiedTimestamp = $theme->getUpdatedAt()?->getTimestamp() ?? 0;
             $modifiedTimestamp = (string)$modifiedTimestamp;
             $this->dumpStyleSheets($theme, $modifiedTimestamp);
 
-            return $modifiedTimestamp;
+            $metaData = [
+                'lastModified' => $modifiedTimestamp,
+            ];
+
+            $plugin = $theme->getPlugin();
+            $instance = $plugin->getPlugin();
+            if ($instance instanceof AbstractForumifyTheme) {
+                $metaData['stylesheets'] = [];
+                foreach ($instance->getStylesheets() as $stylesheet) {
+                    $metaData['stylesheets'][] = $plugin->getPackage() . '/' . $stylesheet;
+                }
+            }
+
+            return $metaData;
         });
     }
 
@@ -60,7 +73,7 @@ class ThemeService
         }
         $this->assetStorage->createDirectory('themes');
 
-        $system =":root{{$defaultVars}}@media (prefers-color-scheme: dark) {:root{{$darkVars}}}" . $css;
+        $system = ":root{{$defaultVars}}@media (prefers-color-scheme: dark) {:root{{$darkVars}}}" . $css;
         $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'system', $key), $system);
 
         $default = ":root{{$defaultVars}}" . $css;
