@@ -89,7 +89,7 @@ class ThemeService
         $config = ['default' => [], 'dark' => []];
         foreach ($plugin->getThemeConfig()->vars as $var) {
             $config['default'][$var->key] = $var->defaultValue;
-            $config['dark'][$var->key] = $var->defaultDarkValue;
+            $config['dark'][$var->key] = $var->defaultDarkValue ?: $var->defaultValue;
         }
 
         $overrideConfig = $theme->getThemeConfig();

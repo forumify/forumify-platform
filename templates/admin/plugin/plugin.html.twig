@@ -25,11 +25,9 @@
     </div>
     <div class="w-25 flex justify-end gap-2">
         {% if plugin.type == constant('Forumify\\Plugin\\Entity\\Plugin::TYPE_PLUGIN') %}
-            <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
-                <button class="btn-outlined" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
-                    <i class="ph ph-caret-down"></i>{{ 'admin.plugins.manage'|trans }}
-                </button>
-                <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+            {% embed '@Forumify/components/menu.html.twig' with { placement: 'bottom-end', buttonClass: 'btn-outlined' } %}
+                {% block button_text %}{{ 'admin.plugins.manage'|trans }}{% endblock %}
+                {% block menu_items %}
                     {% if updateAvailable %}
                         <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePackage', null, {
                             package: plugin.package
@@ -60,8 +58,8 @@
                             <i class="ph ph-trash"></i>{{ 'admin.plugins.uninstall'|trans }}
                         </a>
                     {% endif %}
-                </div>
-            </div>
+                {% endblock %}
+            {% endembed %}
         {% elseif plugin.type == constant('Forumify\\Plugin\\Entity\\Plugin::TYPE_THEME') %}
             {% if plugin.package != 'forumify/forumify-theme' %}
                 <a class="btn-outlined" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'uninstall', null, {

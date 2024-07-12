@@ -1,8 +1,4 @@
-<div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: placement }) }}>
-    <a class='btn-link' {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
-        {% block name %}{{ name }}{% endblock %}
-    </a>
-    <div class='menu' {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
-        {% block menuItems %}{{ inner|raw }}{% endblock %}
-    </div>
-</div>
+{% embed '@Forumify/components/menu.html.twig' with { placement: placement } %}
+    {% block button_text %}{{ name }}{% endblock %}
+    {% block menu_items %}{{ inner|raw }}{% endblock %}
+{% endembed %}
