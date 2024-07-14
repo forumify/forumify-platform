@@ -14,7 +14,6 @@ use Forumify\Core\Repository\UserRepository;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -25,7 +24,7 @@ class EmailVerificationService
         private readonly UserRepository $userRepository,
         private readonly SettingRepository $settingRepository,
         private readonly TranslatorInterface $translator,
-        private readonly MailerInterface $mailer,
+        private readonly Mailer $mailer,
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -39,8 +38,6 @@ class EmailVerificationService
         ]);
 
         $email = (new TemplatedEmail())
-            ->from('noreply@forumify.net')
-            ->to($user->getEmail())
             ->subject($subject)
             ->htmlTemplate("@Forumify/emails/verify_mail.html.twig")
             ->context([
@@ -49,7 +46,7 @@ class EmailVerificationService
             ]);
 
         try {
-            $this->mailer->send($email);
+            $this->mailer->send($email, $user);
         } catch (TransportExceptionInterface $ex) {
             $this->logger->error($ex->getMessage(), ['context' => $ex]);
         }

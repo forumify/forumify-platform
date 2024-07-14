@@ -124,7 +124,7 @@ flashes:
     snippet_removed: 'Snippet removed.'
     bot_detected: 'Spam detected. If you are human, please use a different browser, device or internet connection and try again.'
 email_subjects:
-    account_verification: '{forum_name} - Account Verification'
+    account_verification: 'Account Verification'
 resend_email_verification: 'Resend verification email'
 email_verification:
     greeting: 'Hello {username}, please check your email inbox for a verification email.'
