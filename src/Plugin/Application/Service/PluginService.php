@@ -7,10 +7,8 @@ namespace Forumify\Plugin\Application\Service;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
-use Forumify\Core\ForumifyKernel;
 use Forumify\Plugin\Application\Exception\PluginException;
 use Forumify\Plugin\Application\Exception\PluginNotFoundException;
-use Forumify\Plugin\Application\Exception\UnbootableKernelException;
 use JsonException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
@@ -21,7 +19,7 @@ class PluginService
     private readonly FrameworkCacheClearer $frameworkCacheClearer;
     private readonly string $rootDir;
 
-    public function __construct(private readonly array $context)
+    public function __construct(array $context)
     {
         $this->connection = DriverManager::getConnection([
             'url' => $context['DATABASE_URL'],
@@ -31,11 +29,17 @@ class PluginService
         $this->frameworkCacheClearer = new FrameworkCacheClearer($this->rootDir);
     }
 
+    /**
+     * @throws PluginException|JsonException
+     */
     public function composerRequire(string $package, ?string $version = null): string
     {
+        $this->verifyPackage($package);
+
         if ($version !== null) {
             $package .= ':' . $version;
         }
+
         return $this->run([
             'composer',
             'require',
@@ -43,6 +47,34 @@ class PluginService
             '--no-interaction',
             '--no-scripts',
         ]);
+    }
+
+    /**
+     * Probably a temporary measure until marketplace is released to restrict plugins
+     *
+     * @throws PluginException|JsonException
+     */
+    private function verifyPackage(string $package): void
+    {
+        $isDemo = (bool)($_SERVER['FORUMIFY_DEMO'] ?? false);
+        $isHostedInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
+        if (!$isDemo && !$isHostedInstance) {
+            return;
+        }
+
+        $allowedPlugins = json_decode(file_get_contents('https://forumify.net/allowed-plugins'), true, 512, JSON_THROW_ON_ERROR);
+        $pluginAvailability = $allowedPlugins[$package] ?? null;
+        if ($pluginAvailability === null) {
+            throw new PluginException("$package is only installable on self-hosted versions of forumify.");
+        }
+
+        if ($isDemo && !in_array('demo', $pluginAvailability, true)) {
+            throw new PluginException("$package is not available on demo versions of forumify.");
+        }
+
+        if ($isHostedInstance && !in_array('hosted', $pluginAvailability, true)) {
+            throw new PluginException("$package is not available on forumify hosted instances. Either contact support to get the package whitelisted or use the self-hosted version of forumify.");
+        }
     }
 
     public function composerUpdate(?string $package = null): string
@@ -136,20 +168,6 @@ class PluginService
             return 'Cache removed.';
         } catch (\Exception $ex) {
             throw new PluginException('Unable to clear cache: ' . $ex->getMessage(), 0, $ex);
-        }
-    }
-
-    /**
-     * @throws PluginException
-     */
-    public function validateKernel(): void
-    {
-        $kernel = new ForumifyKernel($this->context);
-        try {
-            $kernel->boot();
-            $kernel->shutdown();
-        } catch (\Exception $ex) {
-            throw new UnbootableKernelException('Unable to boot new kernel: ' . $ex->getMessage());
         }
     }
 

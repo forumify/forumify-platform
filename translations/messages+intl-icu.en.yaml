@@ -1,5 +1,6 @@
 index: 'index'
 install: 'Installing forumify'
+demo_warning: 'This is a demo version of forumify. Anything you do will be deleted when the demo expires 6 hours after requesting it.'
 created_by: 'By {author}'
 deleted: 'Deleted'
 date: '{date, date}'
