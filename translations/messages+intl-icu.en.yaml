@@ -1,4 +1,5 @@
 index: 'index'
+install: 'Installing forumify'
 created_by: 'By {author}'
 deleted: 'Deleted'
 date: '{date, date}'
