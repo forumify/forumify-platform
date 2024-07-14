@@ -221,7 +221,9 @@ admin:
     configuration:
         title: 'Configuration'
         general: 'General'
+        users: 'Users'
         spam_protection: 'Spam Protection'
+        emails: 'Emails'
         forum_title: 'Forum title'
         logo: 'Logo'
         default_avatar: 'Default avatar'
@@ -235,6 +237,8 @@ admin:
         recaptcha_enabled_help: 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>.'
         recaptcha_site_key: 'reCAPTCHA site key'
         recaptcha_site_secret: 'reCAPTCHA site secret'
+        mailer_from: 'Email from'
+        mailer_from_help: 'Email address that the platform will use to send emails from.'
     forum:
         type:
             text: 'Forum'

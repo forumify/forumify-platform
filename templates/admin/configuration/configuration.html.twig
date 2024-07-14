@@ -7,22 +7,33 @@
         {% embed '@Forumify/components/tabs.html.twig' %}
             {% block tabs %}
                 <button type="button" class="btn-link" data-tab-id="general">{{ 'admin.configuration.general'|trans }}</button>
+                <button type="button" class="btn-link" data-tab-id="users">{{ 'admin.configuration.users'|trans }}</button>
                 <button type="button" class="btn-link" data-tab-id="spam-protection">{{ 'admin.configuration.spam_protection'|trans }}</button>
+                {% if form.forumify__mailer__from is defined %}
+                    <button type="button" class="btn-link" data-tab-id="emails">{{ 'admin.configuration.emails'|trans }}</button>
+                {% endif %}
             {% endblock %}
             {% block tabpanels %}
                 <div id="general">
                     {{ form_row(form.forumify__title) }}
                     {{ form_row(form.logo) }}
-                    {{ form_row(form.defaultAvatar) }}
-                    {{ form_row(form.forumify__enable_registrations) }}
-                    {{ form_row(form.forumify__login_method) }}
                     {{ form_row(form.forumify__enable_auto_updates) }}
+                </div>
+                <div id="users">
+                    {{ form_row(form.defaultAvatar) }}
+                    {{ form_row(form.forumify__login_method) }}
+                    {{ form_row(form.forumify__enable_registrations) }}
                 </div>
                 <div id="spam-protection">
                     {{ form_row(form.forumify__recaptcha__enabled) }}
                     {{ form_row(form.forumify__recaptcha__site_key) }}
                     {{ form_row(form.forumify__recaptcha__site_secret) }}
                 </div>
+                {% if form.forumify__mailer__from is defined %}
+                    <div id="emails">
+                        {{ form_row(form.forumify__mailer__from) }}
+                    </div>
+                {% endif %}
             {% endblock %}
         {% endembed %}
         <div class="flex justify-center items-center gap-2">
