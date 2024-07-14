@@ -7,7 +7,7 @@ namespace Forumify\Plugin\Scheduler;
 use Forumify\Plugin\Service\PluginService;
 use Symfony\Component\Scheduler\Attribute\AsCronTask;
 
-#[AsCronTask('@midnight', jitter: 30)]
+#[AsCronTask('@midnight', jitter: 1800)]
 class RefreshPluginsTaskHandler
 {
     public function __construct(private readonly PluginService $pluginService)

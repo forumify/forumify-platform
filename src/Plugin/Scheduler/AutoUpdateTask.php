@@ -9,7 +9,7 @@ use Forumify\Plugin\Application\Service\PluginService;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Scheduler\Attribute\AsCronTask;
 
-#[AsCronTask('0 5 * * MON')]
+#[AsCronTask('0 5 * * MON', jitter: 1800)]
 class AutoUpdateTask
 {
     public function __construct(
@@ -28,12 +28,16 @@ class AutoUpdateTask
             return;
         }
 
-
         $pluginService = new PluginService([
             'DATABASE_URL' => $this->databaseUrl,
             'DOCUMENT_ROOT' => $this->rootDir . DIRECTORY_SEPARATOR . 'index.php',
         ]);
 
-        $pluginService->updateAll();
+        $pluginService->composerUpdate();
+        $pluginService->clearFrameworkCache();
+        $pluginService->composerPostInstall();
+        $pluginService->migrations();
+        $pluginService->npmUpdate();
+        $pluginService->npmBuild();
     }
 }

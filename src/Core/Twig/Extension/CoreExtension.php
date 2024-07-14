@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Twig\Extension;
 
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -15,12 +14,6 @@ use Twig\TwigTest;
  */
 class CoreExtension extends AbstractExtension
 {
-    public function __construct(
-        #[Autowire(env: 'bool:default::FORUMIFY_DEMO')]
-        private readonly bool $isDemo,
-    ) {
-    }
-
     public function getFilters(): array
     {
         return [
@@ -31,7 +24,7 @@ class CoreExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('is_demo', fn () => $this->isDemo),
+            new TwigFunction('is_demo', fn () => (bool)($_SERVER['FORUMIFY_DEMO'] ?? false)),
         ];
     }
 

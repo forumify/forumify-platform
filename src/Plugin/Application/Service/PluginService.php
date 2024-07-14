@@ -57,8 +57,8 @@ class PluginService
     private function verifyPackage(string $package): void
     {
         $isDemo = (bool)($_SERVER['FORUMIFY_DEMO'] ?? false);
-        $isHostedInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
-        if (!$isDemo && !$isHostedInstance) {
+        $isCloudInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
+        if (!$isDemo && !$isCloudInstance) {
             return;
         }
 
@@ -72,8 +72,8 @@ class PluginService
             throw new PluginException("$package is not available on demo versions of forumify.");
         }
 
-        if ($isHostedInstance && !in_array('hosted', $pluginAvailability, true)) {
-            throw new PluginException("$package is not available on forumify hosted instances. Either contact support to get the package whitelisted or use the self-hosted version of forumify.");
+        if ($isCloudInstance && !in_array('hosted', $pluginAvailability, true)) {
+            throw new PluginException("$package is not available on forumify cloud. Either contact support to get the package whitelisted or use the self-hosted version of forumify.");
         }
     }
 
