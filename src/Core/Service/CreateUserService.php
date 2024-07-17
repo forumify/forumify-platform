@@ -6,6 +6,7 @@ namespace Forumify\Core\Service;
 
 use Forumify\Core\Entity\User;
 use Forumify\Core\Form\DTO\NewUser;
+use Forumify\Core\Repository\RoleRepository;
 use Forumify\Core\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -13,6 +14,7 @@ class CreateUserService
 {
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly RoleRepository $roleRepository,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly EmailVerificationService $emailVerificationService,
     ) {
@@ -32,6 +34,17 @@ class CreateUserService
             $this->emailVerificationService->sendEmailVerificationEmail($user);
         }
 
+        return $user;
+    }
+
+    public function createAdmin(NewUser $newUser): User
+    {
+        $user = $this->createUser($newUser, false);
+
+        $adminRole = $this->roleRepository->findOneBy(['slug' => 'super-admin']);
+        $user->setRoleEntities([$adminRole]);
+
+        $this->userRepository->save($user);
         return $user;
     }
 }

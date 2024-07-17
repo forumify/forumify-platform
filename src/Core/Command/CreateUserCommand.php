@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Core\Command;
 
 use Forumify\Core\Form\DTO\NewUser;
-use Forumify\Core\Repository\RoleRepository;
-use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\CreateUserService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,8 +19,6 @@ class CreateUserCommand extends Command
     public function __construct(
         private readonly ValidatorInterface $validator,
         private readonly CreateUserService $createUserService,
-        private readonly RoleRepository $roleRepository,
-        private readonly UserRepository $userRepository,
     ) {
         parent::__construct();
     }
@@ -50,13 +46,9 @@ class CreateUserCommand extends Command
             return Command::FAILURE;
         }
 
-        $user = $this->createUserService->createUser($newUser, false);
-        if ($createAsAdmin) {
-            $adminRole = $this->roleRepository->findOneBy(['slug' => 'super-admin']);
-            $user->setRoleEntities([$adminRole]);
-        }
-
-        $this->userRepository->save($user);
+        $user = $createAsAdmin
+            ? $this->createUserService->createAdmin($newUser)
+            : $this->createUserService->createUser($newUser, false);
 
         $io->success("User {$user->getUsername()} created" . ($createAsAdmin ? ' with admin privileges.' : '.'));
         return Command::SUCCESS;
