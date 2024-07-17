@@ -6,6 +6,7 @@ namespace Forumify\Core\Service;
 
 use DateInterval;
 use DateTime;
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Forumify\Core\Entity\User;
@@ -47,7 +48,7 @@ class EmailVerificationService
 
         try {
             $this->mailer->send($email, $user);
-        } catch (TransportExceptionInterface $ex) {
+        } catch (Exception|TransportExceptionInterface $ex) {
             $this->logger->error($ex->getMessage(), ['context' => $ex]);
         }
     }

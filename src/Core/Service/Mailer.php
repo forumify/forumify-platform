@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Service;
 
+use Exception;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\SettingRepository;
+use RuntimeException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -20,7 +22,7 @@ class Mailer
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * @throws Exception|TransportExceptionInterface
      */
     public function send(Email $email, ?User $recipient = null): void
     {
@@ -31,6 +33,10 @@ class Mailer
 
         $isCloudInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
         $fromAddress = $isCloudInstance ? 'noreply@forumify.net' : $this->settingRepository->get('forumify.mailer.from');
+        if (empty($fromAddress)) {
+            throw new RuntimeException('"forumify.mailer.from" setting is not configured.');
+        }
+
         $fromName = $this->settingRepository->get('forumify.title') ?? 'forumify';
         $from = new Address($fromAddress, $fromName);
         $email->from($from);

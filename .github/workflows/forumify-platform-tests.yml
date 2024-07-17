@@ -37,7 +37,6 @@ jobs:
               uses: actions/cache@v3
               with:
                   path: ${{ steps.composer-cache.outputs.dir }}
-                  # Use composer.json for key, if composer.lock is not committed.
                   key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
                   restore-keys: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
 
@@ -49,6 +48,7 @@ jobs:
                   cd tests
                   php bin/console doctrine:database:create --env=test
                   php bin/console doctrine:schema:create --env=test
+                  php bin/console forumify:platform:setting -k forumify.platform_installed --value true
 
             - name: Install PHPUnit
               run: simple-phpunit install

@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 #[AsEventListener('kernel.request')]
 class PlatformInstallSubscriber extends AbstractController
 {
-    private const INSTALLED_SETTING = 'forumify.platform_installed';
+    public const INSTALLED_SETTING = 'forumify.platform_installed';
 
     public function __construct(
         private readonly SettingRepository $settingRepository,
@@ -32,7 +32,7 @@ class PlatformInstallSubscriber extends AbstractController
             return;
         }
 
-        $request  = $event->getRequest();
+        $request = $event->getRequest();
         if ($request->get('skipInstall')) {
             $this->settingRepository->set(self::INSTALLED_SETTING, true);
             $event->setResponse($this->redirectToRoute('forumify_core_index'));
