@@ -60,7 +60,7 @@ class PlatformInstallSubscriber extends AbstractController
             self::INSTALLED_SETTING => true,
             'forumify.title' => $data['forumName'],
         ]);
-        $this->createUserService->createUser($data['adminUser'], false);
+        $this->createUserService->createAdmin($data['adminUser']);
         $event->setResponse($this->redirectToRoute('forumify_core_index'));
     }
 }
