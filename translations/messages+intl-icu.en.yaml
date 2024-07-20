@@ -233,6 +233,8 @@ admin:
         enable_registrations: 'Enable registrations'
         login_method: 'Login method'
         login_method_help: 'Decides how users login, using their username, email, or both.'
+        index: 'Index override'
+        index_help: 'The default path to use as frontend index. For example if you want to display a forum, you can use "forum/example-forum". Leave blank if plan to use a CMS page with an empty url key.'
         enable_auto_updates: 'Enable automatic updates'
         enable_auto_updates_help: 'Automatically keep forumify up to date with security patches. For major releases, you need to manually update in Settings -> Plugins.'
         recaptcha_enabled: 'Enable Google reCAPTCHA'

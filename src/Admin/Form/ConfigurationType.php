@@ -72,6 +72,12 @@ class ConfigurationType extends AbstractType
                 ],
                 'placeholder' => null,
             ])
+            ->add('forumify__index', TextType::class, [
+                'label' => 'admin.configuration.index',
+                'help' => 'admin.configuration.index_help',
+                'required' => false,
+                'empty_data' => ''
+            ])
             ->add('forumify__enable_auto_updates', CheckboxType::class, [
                 'label' => 'admin.configuration.enable_auto_updates',
                 'help' => 'admin.configuration.enable_auto_updates_help',
