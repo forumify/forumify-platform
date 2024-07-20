@@ -1,26 +1,27 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
 {% block body %}
-    {% if app.environment == 'dev' %}
-        {{ dump(exception) }}
-    {% else %}
-        {% set code = exception.statusCode %}
-        <div class="flex justify-center">
-            <div class="card w-50">
-                <div class="card-title">
-                    <h3>
-                        {{ exception.statusCode }}
-                    </h3>
-                </div>
-                <div class="card-body">
-                    {% set transKey = 'error.' ~ code %}
-                    {% set description = transKey|trans %}
-                    {% if transKey == description %}
-                        {{ 'error.unknown'|trans }}
-                    {% else %}
-                        {{ description }}
-                    {% endif %}
-                </div>
+    <div class="flex justify-center mt-10">
+        <div class="card w-50">
+            <div class="card-title">
+                <h3 class="mb-0">
+                    {{ code }}
+                </h3>
+            </div>
+            <div class="card-body">
+                {% set transKey = 'error.' ~ code %}
+                {% set description = transKey|trans %}
+                {% if transKey == description %}
+                    {{ 'error.unknown'|trans }}
+                {% else %}
+                    {{ description }}
+                {% endif %}
             </div>
         </div>
+    </div>
+    {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
+    <div class="box mt-4">
+        <p class="text-small">{{ 'error.admin'|trans }}</p>
+        <pre>{{ debug }}</pre>
+    </div>
     {% endif %}
 {% endblock %}
