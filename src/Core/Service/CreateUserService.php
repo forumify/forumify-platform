@@ -16,7 +16,7 @@ class CreateUserService
         private readonly UserRepository $userRepository,
         private readonly RoleRepository $roleRepository,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly EmailVerificationService $emailVerificationService,
+        private readonly AccountService $accountService,
     ) {
     }
 
@@ -31,7 +31,7 @@ class CreateUserService
         $this->userRepository->save($user);
 
         if ($requireValidation) {
-            $this->emailVerificationService->sendEmailVerificationEmail($user);
+            $this->accountService->sendVerificationEmail($user);
         }
 
         return $user;

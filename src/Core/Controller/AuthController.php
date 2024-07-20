@@ -10,6 +10,7 @@ use Forumify\Core\Service\CreateUserService;
 use Forumify\Core\Service\RecaptchaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,6 +21,10 @@ class AuthController extends AbstractController
     #[Route('/login', name: 'login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        if ($this->getUser() !== null) {
+            return $this->redirectToRoute('forumify_core_index');
+        }
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -48,6 +53,10 @@ class AuthController extends AbstractController
             return $this->redirectToRoute('forumify_core_index');
         }
 
+        if ($this->getUser() !== null) {
+            return $this->redirectToRoute('forumify_core_index');
+        }
+
         $form = $this->createForm(RegisterType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -68,11 +77,5 @@ class AuthController extends AbstractController
         return $this->render('@Forumify/frontend/auth/register.html.twig', [
             'form' => $form->createView(),
         ]);
-    }
-
-    #[Route('/forgot-password', name: 'forgot_password')]
-    public function forgotPassword(): Response
-    {
-        return new Response(status: Response::HTTP_NOT_IMPLEMENTED);
     }
 }

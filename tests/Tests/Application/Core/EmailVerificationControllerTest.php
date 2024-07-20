@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Application\Core;
 
+use DateInterval;
+use DateTime;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Form\DTO\NewUser;
 use Forumify\Core\Service\CreateUserService;
-use Forumify\Core\Service\EmailVerificationService;
+use Forumify\Core\Service\TokenService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class EmailVerificationControllerTest extends WebTestCase
@@ -20,9 +22,13 @@ class EmailVerificationControllerTest extends WebTestCase
         $user = $this->createTestUser();
         $client->loginUser($user);
 
-        /** @var EmailVerificationService $verificationService */
-        $verificationService = self::getContainer()->get(EmailVerificationService::class);
-        $token = $verificationService->createToken($user);
+        /** @var TokenService $tokenService */
+        $tokenService = self::getContainer()->get(TokenService::class);
+        $token = $tokenService->createJwt(
+            $user,
+            (new DateTime())->add(new DateInterval('P1D')),
+            ['verify-email']
+        );
 
         $client->request('GET', '/verify-email/' . $token);
         self::assertSelectorTextContains('.alert-success', 'Your email was verified successfully');

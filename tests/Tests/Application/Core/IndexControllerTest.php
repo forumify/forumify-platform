@@ -16,7 +16,7 @@ class IndexControllerTest extends WebTestCase
         $client->request('GET', '/');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'Welcome to forumify!');
+        self::assertSelectorTextContains('h1', 'No homepage defined');
     }
 
     public function testIndexPage(): void
