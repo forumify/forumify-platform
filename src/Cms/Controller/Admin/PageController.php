@@ -7,9 +7,12 @@ namespace Forumify\Cms\Controller\Admin;
 use Forumify\Cms\Entity\Page;
 use Forumify\Cms\Form\PageType;
 use Forumify\Cms\Repository\PageRepository;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('pages', 'page_')]
@@ -17,6 +20,7 @@ class PageController extends AbstractController
 {
     public function __construct(
         private readonly PageRepository $pageRepository,
+        private readonly KernelInterface $kernel,
     ) {
     }
 
@@ -60,6 +64,7 @@ class PageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $page = $form->getData();
             $this->pageRepository->save($page);
+            $this->clearCache();
 
             $this->addFlash('success', 'flashes.page_saved');
             return $this->redirectToRoute('forumify_admin_cms_page_edit', [
@@ -71,5 +76,12 @@ class PageController extends AbstractController
             'form' => $form->createView(),
             'page' => $page,
         ]);
+    }
+
+    private function clearCache(): void
+    {
+        $application = new Application($this->kernel);
+        $application->setAutoExit(false);
+        $application->run(new ArrayInput(['command' => 'cache:clear', '--no-interaction' => true]));
     }
 }

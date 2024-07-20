@@ -19,9 +19,9 @@
         </div>
     </div>
     {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Administrator').value) %}
-    <div class="box mt-4">
-        <p class="text-small">{{ 'error.admin'|trans }}</p>
-        <pre>{{ debug }}</pre>
-    </div>
+        <div class="box mt-4">
+            <p class="text-small">{{ 'error.admin'|trans }}</p>
+            <pre>{{ debug }}</pre>
+        </div>
     {% endif %}
 {% endblock %}
