@@ -35,7 +35,6 @@ class ErrorSubscriber
         $template = $this->twig->render('@Forumify/frontend/error.html.twig', [
             'exception' => $exception,
             'code' => $statusCode,
-            'debug' => print_r($exception, true),
         ]);
 
         $response = new Response($template);

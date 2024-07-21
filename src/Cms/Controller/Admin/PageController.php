@@ -7,12 +7,11 @@ namespace Forumify\Cms\Controller\Admin;
 use Forumify\Cms\Entity\Page;
 use Forumify\Cms\Form\PageType;
 use Forumify\Cms\Repository\PageRepository;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('pages', 'page_')]
@@ -20,7 +19,8 @@ class PageController extends AbstractController
 {
     public function __construct(
         private readonly PageRepository $pageRepository,
-        private readonly KernelInterface $kernel,
+        #[Autowire('%kernel.project_dir%')]
+        private readonly string $rootDir,
     ) {
     }
 
@@ -80,8 +80,13 @@ class PageController extends AbstractController
 
     private function clearCache(): void
     {
-        $application = new Application($this->kernel);
-        $application->setAutoExit(false);
-        $application->run(new ArrayInput(['command' => 'cache:clear', '--no-interaction' => true]));
+        // run as background process to prevent OOM exceptions
+        $process = new Process([
+            'php',
+            'bin/console',
+            'cache:clear',
+            '--no-interaction'
+        ], $this->rootDir);
+        $process->run();
     }
 }
