@@ -10,6 +10,7 @@ use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\Badge;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -20,7 +21,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class UserType extends AbstractType
 {
-    public function __construct(private readonly Packages $packages)
+    public function __construct(
+        private readonly Packages $packages,
+        private readonly Security $security,
+    )
     {
     }
 
@@ -73,7 +77,7 @@ class UserType extends AbstractType
 
     private function getRoleQueryBuilder(EntityRepository $er): QueryBuilder
     {
-        return $er
+        $qb = $er
             ->createQueryBuilder('r')
             ->andWhere('r.slug != :guest')
             ->andWhere('r.slug != :user')
@@ -81,5 +85,12 @@ class UserType extends AbstractType
                 'guest' => 'guest',
                 'user' => 'user',
             ]);
+
+        if (!$this->security->isGranted('ROLE_SUPER_ADMIN')) {
+            $qb->andWhere('r.slug != :super_admin')
+                ->setParameter('super_admin', 'super-admin');
+        }
+
+        return $qb;
     }
 }
