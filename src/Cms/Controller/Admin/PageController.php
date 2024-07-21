@@ -8,19 +8,18 @@ use Forumify\Cms\Entity\Page;
 use Forumify\Cms\Form\PageType;
 use Forumify\Cms\Repository\PageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Environment;
 
 #[Route('pages', 'page_')]
 class PageController extends AbstractController
 {
     public function __construct(
         private readonly PageRepository $pageRepository,
-        #[Autowire('%kernel.project_dir%')]
-        private readonly string $rootDir,
+        private readonly Environment $twig,
     ) {
     }
 
@@ -64,7 +63,7 @@ class PageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $page = $form->getData();
             $this->pageRepository->save($page);
-            $this->clearCache();
+            $this->clearCache($page);
 
             $this->addFlash('success', 'flashes.page_saved');
             return $this->redirectToRoute('forumify_admin_cms_page_edit', [
@@ -78,15 +77,15 @@ class PageController extends AbstractController
         ]);
     }
 
-    private function clearCache(): void
+    private function clearCache(Page $page): void
     {
-        // run as background process to prevent OOM exceptions
-        $process = new Process([
-            'php',
-            'bin/console',
-            'cache:clear',
-            '--no-interaction'
-        ], $this->rootDir);
-        $process->run();
+        $name = $page->getUrlKey();
+        $cls = $this->twig->getTemplateClass($name);
+        $key = $this->twig->getCache(false)->generateKey($name, $cls);
+
+        $fs = new Filesystem();
+        if ($fs->exists($key)) {
+            $fs->remove($key);
+        }
     }
 }
