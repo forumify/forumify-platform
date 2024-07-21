@@ -108,7 +108,7 @@ class PluginService
         return $this->run([
             'composer',
             'run-script',
-            'post-install-cmd',
+            'auto-scripts',
             '--no-interaction',
         ]);
     }
