@@ -24,7 +24,7 @@ class ConfigurationType extends AbstractType
     {
         $builder
             ->add('forumify__title', TextType::class, [
-                'label' => 'admin.configuration.forum_title'
+                'label' => 'admin.configuration.forum_title',
             ])
             ->add('logo', FileType::class, [
                 'label' => 'admin.configuration.logo',
@@ -72,6 +72,12 @@ class ConfigurationType extends AbstractType
                 ],
                 'placeholder' => null,
             ])
+            ->add('forumify__index', TextType::class, [
+                'label' => 'admin.configuration.index',
+                'help' => 'admin.configuration.index_help',
+                'required' => false,
+                'empty_data' => ''
+            ])
             ->add('forumify__enable_auto_updates', CheckboxType::class, [
                 'label' => 'admin.configuration.enable_auto_updates',
                 'help' => 'admin.configuration.enable_auto_updates_help',
@@ -91,5 +97,15 @@ class ConfigurationType extends AbstractType
                 'label' => 'admin.configuration.recaptcha_site_secret',
                 'required' => false,
             ]);
+
+        $isCloudInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
+        if (!$isCloudInstance) {
+            $builder
+                ->add('forumify__mailer__from', TextType::class, [
+                    'label' => 'admin.configuration.mailer_from',
+                    'help' => 'admin.configuration.mailer_from_help',
+                    'required' => false,
+                ]);
+        }
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Command;
 
+use Forumify\Core\EventSubscriber\PlatformInstallSubscriber;
 use Forumify\Core\Repository\SettingRepository;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -46,6 +47,7 @@ class InstallCommand extends Command
         $io->section('Website configuration');
         $settings = [];
         $settings['forumify.title'] = $io->ask('Forum name');
+        $settings[PlatformInstallSubscriber::INSTALLED_SETTING] = true;
         $this->settingRepository->setBulk($settings);
 
         $io->writeln('Settings stored.');

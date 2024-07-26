@@ -46,7 +46,7 @@ class NewUser
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(#[\SensitiveParameter] string $password): void
     {
         $this->password = $password;
     }
