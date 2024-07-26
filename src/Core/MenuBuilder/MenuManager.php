@@ -4,23 +4,22 @@ declare(strict_types=1);
 
 namespace Forumify\Core\MenuBuilder;
 
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\RuntimeExtensionInterface;
 
 abstract class MenuManager implements RuntimeExtensionInterface
 {
     /** @var array<MenuBuilderInterface> */
     protected array $menuBuilders;
-    private AuthorizationCheckerInterface $authorizationChecker;
 
-    public function __construct(iterable $menuBuilders, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(iterable $menuBuilders, private readonly Security $security)
     {
         foreach ($menuBuilders as $menuBuilder) {
             if ($menuBuilder instanceof MenuBuilderInterface) {
                 $this->menuBuilders[] = $menuBuilder;
             }
         }
-        $this->authorizationChecker = $authorizationChecker;
+
     }
 
     public function getMenu(): Menu
@@ -53,6 +52,6 @@ abstract class MenuManager implements RuntimeExtensionInterface
             return true;
         }
 
-        return $this->authorizationChecker->isGranted($permission);
+        return $this->security->isGranted($permission);
     }
 }

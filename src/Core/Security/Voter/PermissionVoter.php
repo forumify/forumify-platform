@@ -23,33 +23,23 @@ class PermissionVoter extends Voter
         if ($user === null) {
             return false;
         }
-        $permissions = $this->flattenPermissions($user->getRoleEntities()->toArray());
 
+        // Flatten and get unique permissions
+        $permissions = $this->getPermissions($user);
+
+        // Check if the attribute is in the user's permissions
         return in_array($attribute, $permissions, true);
     }
 
-    private function flattenPermissions(array $roles): array
+    private function getPermissions(User $user): array
     {
         $permissions = [];
 
-        foreach ($roles as $role) {
-            $permissions = array_merge($permissions, $this->extractPermissions($role->getPermissions()));
+        // Iterate through each role of the user and collect permissions
+        foreach ($user->getRoleEntities() as $role) {
+            $permissions = array_merge($permissions, $role->getPermissions());
         }
 
         return array_unique($permissions);
-    }
-
-    private function extractPermissions(array $permissions, string $prefix = ''): array
-    {
-        $result = [];
-
-        foreach ($permissions as $key => $value) {
-            if (is_array($value)) {
-                $result = array_merge($result, $this->extractPermissions($value, $prefix . $key . '.'));
-            } else {
-                $result[] = $prefix . $value;
-            }
-        }
-        return $result;
     }
 }

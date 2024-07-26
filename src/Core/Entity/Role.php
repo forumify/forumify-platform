@@ -106,51 +106,11 @@ class Role
 
     public function getPermissions(): array
     {
-        return $this->unflattenPermissions($this->permissions ?? []);
+        return $this->permissions ?? [];
     }
 
     public function setPermissions(array $permissions): void
     {
-        $this->permissions = $this->flattenPermissions($permissions);
-    }
-
-    private function flattenPermissions(array $permissions, string $prefix = ''): array
-    {
-        $flat = [];
-
-        foreach ($permissions as $key => $value) {
-            $fieldName = $prefix . $key;
-
-            if (is_array($value)) {
-                $flat = array_merge($flat, $this->flattenPermissions($value, $fieldName . '.'));
-            } else {
-                $flat[$fieldName] = $prefix . $value;
-            }
-        }
-
-        return $flat;
-    }
-
-    private function unflattenPermissions(array $permissions): array
-    {
-        $nested = [];
-
-        foreach ($permissions as $value) {
-            $keys = explode('.', $value);
-            $permission = array_pop($keys);
-            $array =& $nested;
-
-            foreach ($keys as $part) {
-                if (!isset($array[$part])) {
-                    $array[$part] = [];
-                }
-                $array =& $array[$part];
-            }
-
-            if (!in_array($permission, $array)) {
-                $array[] = $permission;
-            }
-        }
-        return $nested;
+        $this->permissions = $permissions;
     }
 }

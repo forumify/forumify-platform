@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Forumify\Admin\Form;
 
 use Forumify\Core\Entity\Role;
+use Forumify\Core\Repository\PluginRepository;
 use Forumify\ForumifyBundle;
+use Forumify\Plugin\AbstractForumifyPlugin;
 use Forumify\Plugin\Service\PluginService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -16,11 +18,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RoleType extends AbstractType
 {
-    private PluginService $pluginService;
-
-    public function __construct(PluginService $pluginService)
+    public function __construct(private readonly PluginRepository $pluginRepository)
     {
-        $this->pluginService = $pluginService;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -34,20 +33,19 @@ class RoleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $forumifyPermissions = ForumifyBundle::getPermissions();
-        $installedPlugins = $this->pluginService->getInstalledPlugins();
+
+        $activePlugins = $this->pluginRepository->findByActive();
 
         $pluginPermissions = [];
-        foreach ($installedPlugins as $pluginPackage => $pluginInfo) {
-            $pluginClass = $pluginInfo['extra']['forumify-plugin-class'] ?? null;
-            if ($pluginClass !== null && class_exists($pluginClass)) {
-                $pluginInstance = new $pluginClass();
-                if (method_exists($pluginInstance, 'getPermissions')) {
-                    $pluginPermissions = $this->recursiveMerge($pluginPermissions, $pluginInstance::getPermissions());
-                }
+        foreach ($activePlugins as $plugin) {
+            $pluginClass = $plugin->getPluginClass();
+            $pluginInstance = new $pluginClass();
+            if ($pluginInstance instanceof AbstractForumifyPlugin && method_exists($pluginInstance, 'getPermissions')) {
+                $pluginPermissions = array_merge_recursive($pluginPermissions, $pluginInstance::getPermissions());
             }
         }
 
-        $allPermissions = $this->recursiveMerge($forumifyPermissions, $pluginPermissions);
+        $allPermissions = array_merge_recursive($forumifyPermissions, $pluginPermissions);
 
         $builder
             ->add('title', TextType::class)
@@ -65,18 +63,6 @@ class RoleType extends AbstractType
                 'label' => 'Permissions',
                 'data' => $options['data']->getPermissions(),
             ]);
-    }
 
-    private function recursiveMerge(array $array1, array $array2): array
-    {
-        $merged = $array1;
-        foreach ($array2 as $key => $value) {
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = $this->recursiveMerge($merged[$key], $value);
-            } else {
-                $merged[$key] = $value;
-            }
-        }
-        return $merged;
     }
 }

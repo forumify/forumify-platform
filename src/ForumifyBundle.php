@@ -22,14 +22,9 @@ class ForumifyBundle extends AbstractForumifyBundle
 
     ];
 
-
-
     public static function getPermissions(): array
 
     {
         return self::$permissions;
     }
-
-
-
 }

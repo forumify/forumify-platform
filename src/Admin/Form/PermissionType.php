@@ -14,6 +14,14 @@ use Traversable;
 
 class PermissionType extends AbstractType implements DataMapperInterface
 {
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'permissions' => [],
+            'data' => [],
+        ]);
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         foreach ($options['permissions'] as $group => $permission) {
@@ -36,6 +44,7 @@ class PermissionType extends AbstractType implements DataMapperInterface
 
     private function getInitialData(string $group, array $data): array
     {
+
         $initialData = [];
         if (isset($data[$group])) {
             foreach ($data[$group] as $subGroup => $permissions) {
@@ -88,14 +97,49 @@ class PermissionType extends AbstractType implements DataMapperInterface
                 $permissions[] = $name;
             }
         }
-        $data = $permissions;
+        $data = $this->flattenPermissions($permissions);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    private function flattenPermissions(array $permissions, string $prefix = ''): array
     {
-        $resolver->setDefaults([
-            'permissions' => [],
-            'data' => [],
-        ]);
+        $flat = [];
+
+        foreach ($permissions as $key => $value) {
+            $fieldName = $prefix . $key;
+
+            if (is_array($value)) {
+                $flat = array_merge($flat, $this->flattenPermissions($value, $fieldName . '.'));
+            } else {
+                $flat[$fieldName] = $prefix . $value;
+            }
+        }
+
+        return $flat;
+    }
+
+    private function unflattenPermissions(array $permissions): array
+    {
+        $nested = [];
+
+        foreach ($permissions as $value) {
+            if (is_string($value)) {
+                $keys = explode('.', $value);
+                $permission = array_pop($keys);
+                $array =& $nested;
+
+                foreach ($keys as $part) {
+                    if (!isset($array[$part])) {
+                        $array[$part] = [];
+                    }
+                    $array =& $array[$part];
+                }
+
+                if (!in_array($permission, $array)) {
+                    $array[] = $permission;
+                }
+            }
+        }
+
+        return $nested;
     }
 }
