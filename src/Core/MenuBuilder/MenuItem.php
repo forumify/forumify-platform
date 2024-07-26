@@ -12,4 +12,9 @@ class MenuItem
         public readonly array $options = [],
     ) {
     }
+
+    public function getPermission(): ?string
+    {
+        return $this->options['permission'] ?? null;
+    }
 }
