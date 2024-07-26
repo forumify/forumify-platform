@@ -6,6 +6,7 @@ namespace Forumify\Core\Twig\Extension;
 
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigFunction;
 use Twig\TwigTest;
 
 /**
@@ -20,10 +21,17 @@ class CoreExtension extends AbstractExtension
         ];
     }
 
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('is_demo', fn () => (bool)($_SERVER['FORUMIFY_DEMO'] ?? false)),
+        ];
+    }
+
     public function getTests(): array
     {
         return [
-            new TwigTest('instanceof', $this->instanceof(...))
+            new TwigTest('instanceof', $this->instanceof(...)),
         ];
     }
 

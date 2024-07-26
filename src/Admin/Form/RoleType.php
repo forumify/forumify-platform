@@ -49,7 +49,10 @@ class RoleType extends AbstractType
 
         $builder
             ->add('title', TextType::class)
-            ->add('description', TextareaType::class)
+            ->add('description', TextareaType::class, [
+                'required' => false,
+                'empty_data' => '',
+            ])
             ->add('administrator', CheckboxType::class, [
                 'required' => false,
                 'help' => 'role_type.administrator'

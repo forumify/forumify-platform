@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace Forumify\Core\Notification;
 
 use Forumify\Core\Entity\Notification;
+use Forumify\Core\Service\Mailer;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractEmailNotificationType implements NotificationTypeInterface
 {
-    protected readonly MailerInterface $mailer;
+    protected readonly Mailer $mailer;
 
     #[Required]
-    public function setMailer(MailerInterface $mailer): void
+    public function setServices(Mailer $mailer): void
     {
         $this->mailer = $mailer;
     }
@@ -37,10 +36,7 @@ abstract class AbstractEmailNotificationType implements NotificationTypeInterfac
             return;
         }
 
-        $recipient = $notification->getRecipient();
         $email = (new TemplatedEmail())
-            ->from('noreply@forumify.net')
-            ->to(new Address($recipient->getEmail(), $recipient->getUsername()))
             ->subject($this->getTitle($notification))
             ->htmlTemplate($this->getEmailTemplate($notification))
             ->context([
@@ -50,7 +46,7 @@ abstract class AbstractEmailNotificationType implements NotificationTypeInterfac
             ]);
 
         try {
-            $this->mailer->send($email);
+            $this->mailer->send($email, $notification->getRecipient());
         } catch (TransportExceptionInterface $ex) {
             throw new NotificationHandlerException('Unable to send email', $ex->getCode(), $ex);
         }

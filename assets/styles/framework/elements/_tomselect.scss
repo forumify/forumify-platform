@@ -4,6 +4,7 @@
 
 .focus .ts-control,
 .ts-control {
+    background-color: var(--c-elevation-1);
     border: 2px solid var(--border-color);
     border-radius: 8px;
     box-shadow: none;
@@ -42,6 +43,10 @@
         &:hover {
             background-color: rgba(0, 0, 0, 0.03);
         }
+    }
+
+    .active {
+        background-color: var(--c-elevation-2);
     }
 }
 

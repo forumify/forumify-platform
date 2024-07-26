@@ -1,7 +1,9 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
 {% block body %}
-    <h1>Welcome to forumify!</h1>
-    <p class="text-small pb-4">Work in progress.</p>
-    <p>This is your homepage. Right now it's still blank, but soon it'll be full of stuff!</p>
-    <p>To customize this page, create your own page in the admin panel, or overwrite this template.</p>
+    <div class="flex flex-col gap-4">
+        <h1>No homepage defined</h1>
+        <p>You are seeing this message because you do not have a homepage configured.</p>
+        <p>The homepage can be created in the admin panel by adding a page with an empty url key. (Admin > CMS > Pages > '+')</p>
+        <p>If you do not wish to use a homepage, you can configure the index override on the general configuration page. (Admin > Configuration > General)</p>
+    </div>
 {% endblock %}

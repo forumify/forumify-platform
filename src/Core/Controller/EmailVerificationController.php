@@ -8,7 +8,7 @@ use Exception;
 use Firebase\JWT\ExpiredException;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\UserRepository;
-use Forumify\Core\Service\EmailVerificationService;
+use Forumify\Core\Service\AccountService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -17,10 +17,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class EmailVerificationController extends AbstractController
 {
-    #[Route('/verify-email/{token?}', name: 'verify_email')]
+    #[Route('/verify-email/{token?}', name: 'verify_email', requirements: ['token' => '.+'])]
     public function verifyEmail(
         ?string $token,
-        EmailVerificationService $verificationService,
+        AccountService $accountService,
         UserRepository $userRepository,
     ): Response {
         /** @var User $user */
@@ -38,7 +38,7 @@ class EmailVerificationController extends AbstractController
 
         $error = null;
         try {
-            $verificationService->verifyTokenForUser($token, $user);
+            $accountService->verifyEmailVerificationToken($token);
         } catch (ExpiredException) {
             $error = 'expired';
         } catch (Exception) {
@@ -61,7 +61,7 @@ class EmailVerificationController extends AbstractController
     }
 
     #[Route('/verify-email/resend', name: 'verify_email_resend', priority: 1)]
-    public function resendEmailVerification(EmailVerificationService $verificationService): Response
+    public function resendEmailVerification(AccountService $accountService): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -70,7 +70,7 @@ class EmailVerificationController extends AbstractController
             return $this->redirectToRoute('forumify_core_index');
         }
 
-        $verificationService->sendEmailVerificationEmail($user);
+        $accountService->sendVerificationEmail($user);
         return $this->redirectToRoute('forumify_core_verify_email');
     }
 }

@@ -1,0 +1,35 @@
+{% block alerts %}
+    {% block unverified_user_warning %}
+        {% if app.user is not null and app.user.emailVerified == false %}
+            <div class="responsive mb-4">
+                <div class="alert-warning">
+                    {{ 'email_verification.not_verified'|trans }}
+                    <a class="text-underline" href="{{ path('forumify_core_verify_email') }}">{{ 'email_verification.verify'|trans }}</a>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %}
+    {% block demo_warning %}
+        {% if is_demo() %}
+            <div class="responsive mb-4">
+                <div class="alert-warning">
+                    {{ 'demo_warning'|trans }}
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %}
+    {% block flashbag %}
+        {% set flashes = app.flashes %}
+        {% if flashes is not empty %}
+            <div class="responsive flex flex-col gap-2 mb-4 flashbag">
+                {% for type, messages in flashes %}
+                    <div class="alert-{{ type }}">
+                        {% for message in messages %}
+                            <p>{{ message|trans }}</p>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock %}
+{% endblock %}
