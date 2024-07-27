@@ -8,7 +8,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;
 
@@ -18,7 +17,6 @@ class PermissionType extends AbstractType implements DataMapperInterface
     {
         $resolver->setDefaults([
             'permissions' => [],
-            'data' => [],
         ]);
     }
 
@@ -29,117 +27,66 @@ class PermissionType extends AbstractType implements DataMapperInterface
                 $builder->add($group, self::class, [
                     'permissions' => $permission,
                     'label' => $group,
-                    'data' => $this->getInitialData($group, $options['data'])
                 ]);
-            } else {
-                $builder->add($permission, CheckboxType::class, [
-                    'required' => false,
-                    'label' => $permission,
-                    'data' => in_array($permission, $options['data'])
-                ]);
+                continue;
             }
+
+            $builder->add($permission, CheckboxType::class, [
+                'required' => false,
+                'label' => $permission,
+            ]);
         }
+
         $builder->setDataMapper($this);
     }
 
-    private function getInitialData(string $group, array $data): array
+    /**
+     * @inheritDoc
+     */
+    public function mapDataToForms(mixed $viewData, Traversable $forms): void
     {
-
-        $initialData = [];
-        if (isset($data[$group])) {
-            foreach ($data[$group] as $subGroup => $permissions) {
-                if (is_array($permissions)) {
-                    $initialData[$subGroup] = $this->getInitialData($subGroup, $data[$group]);
-                } else {
-                    $initialData[] = $permissions;
-                }
-            }
+        if ($viewData === null) {
+            return;
         }
-        return $initialData;
+
+        $data = [];
+        foreach ($viewData as $value) {
+            $split = explode('.', $value, 2);
+
+            if (count($split) > 1) {
+                $data[$split[0]][] = $split[1];
+                continue;
+            }
+            $data[$split[0]] = true;
+        }
+
+        foreach ($forms as $form) {
+            $formData = $data[$form->getName()] ?? null;
+            $form->setData($formData);
+        }
     }
 
-    public function mapDataToForms(mixed $data, Traversable $forms): void
+    /**
+     * @inheritDoc
+     */
+    public function mapFormsToData(Traversable $forms, &$viewData): void
     {
+        $viewData = [];
+
         foreach ($forms as $form) {
-            if (!$form instanceof FormInterface) {
+            $key = $form->getName();
+            $data = $form->getData();
+
+            if (!is_array($data)) {
+                if ($data) {
+                    $viewData[] = $key;
+                }
                 continue;
             }
 
-            $name = $form->getName();
-            $isChecked = in_array($name, $data, true);
-
-            if ($form->count() > 0) {
-                $this->mapDataToForms($data[$name] ?? [], $form);
-            } else {
-                $form->setData($isChecked);
+            foreach ($data as $item) {
+                $viewData[] = $key . '.' . $item;
             }
         }
-    }
-
-    public function mapFormsToData(Traversable $forms, &$data): void
-    {
-        $permissions = [];
-        foreach ($forms as $form) {
-            if (!$form instanceof FormInterface) {
-                continue;
-            }
-
-            $name = $form->getName();
-            $isChecked = $form->getData();
-
-            if ($form->count() > 0) {
-                $subFormData = [];
-                $this->mapFormsToData($form, $subFormData);
-                if ($isChecked) {
-                    $permissions[$name] = $subFormData;
-                }
-            } elseif ($isChecked) {
-                $permissions[] = $name;
-            }
-        }
-        $data = $this->flattenPermissions($permissions);
-    }
-
-    private function flattenPermissions(array $permissions, string $prefix = ''): array
-    {
-        $flat = [];
-
-        foreach ($permissions as $key => $value) {
-            $fieldName = $prefix . $key;
-
-            if (is_array($value)) {
-                $flat = array_merge($flat, $this->flattenPermissions($value, $fieldName . '.'));
-            } else {
-                $flat[$fieldName] = $prefix . $value;
-            }
-        }
-
-        return $flat;
-    }
-
-    private function unflattenPermissions(array $permissions): array
-    {
-        $nested = [];
-
-        foreach ($permissions as $value) {
-            if (is_string($value)) {
-                $keys = explode('.', $value);
-                $permission = array_pop($keys);
-                $array =& $nested;
-
-                foreach ($keys as $part) {
-                    if (!isset($array[$part])) {
-                        $array[$part] = [];
-                    }
-                    $array =& $array[$part];
-                }
-
-                if (!in_array($permission, $array)) {
-                    $array[] = $permission;
-                }
-            }
-        }
-
-        return $nested;
     }
 }

@@ -103,7 +103,7 @@ class PluginService
     /**
      * @return array<string, array> list of composer.json's for installed forumify plugins
      */
-    public function getInstalledPlugins(): array
+    private function getInstalledPlugins(): array
     {
         $plugins = InstalledVersions::getInstalledPackagesByType('forumify-plugin');
         $themes = InstalledVersions::getInstalledPackagesByType('forumify-theme');

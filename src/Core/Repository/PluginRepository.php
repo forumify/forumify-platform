@@ -13,6 +13,9 @@ class PluginRepository extends AbstractRepository
         return Plugin::class;
     }
 
+    /**
+     * @return array<Plugin>
+     */
     public function findByActive(): array
     {
         return $this->findBy(['active' => true]);
