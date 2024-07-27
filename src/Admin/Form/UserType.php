@@ -24,14 +24,14 @@ class UserType extends AbstractType
     public function __construct(
         private readonly Packages $packages,
         private readonly Security $security,
-    )
-    {
+    ) {
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'is_super_admin' => false,
         ]);
     }
 
@@ -65,6 +65,7 @@ class UserType extends AbstractType
                 'multiple' => true,
                 'autocomplete' => true,
                 'query_builder' => $this->getRoleQueryBuilder(...),
+                'disabled' => $options['is_super_admin'] && !$this->security->isGranted('ROLE_SUPER_ADMIN'),
             ])
             ->add('badges', EntityType::class, [
                 'class' => Badge::class,
@@ -77,7 +78,7 @@ class UserType extends AbstractType
 
     private function getRoleQueryBuilder(EntityRepository $er): QueryBuilder
     {
-        $qb = $er
+        return $er
             ->createQueryBuilder('r')
             ->andWhere('r.slug != :guest')
             ->andWhere('r.slug != :user')
@@ -85,12 +86,5 @@ class UserType extends AbstractType
                 'guest' => 'guest',
                 'user' => 'user',
             ]);
-
-        if (!$this->security->isGranted('ROLE_SUPER_ADMIN')) {
-            $qb->andWhere('r.slug != :super_admin')
-                ->setParameter('super_admin', 'super-admin');
-        }
-
-        return $qb;
     }
 }

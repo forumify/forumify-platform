@@ -42,21 +42,21 @@ class UserTable extends AbstractDoctrineTable
             ])
             ->addColumn('actions', [
                 'label' => '',
-                'field' => 'username',
+                'field' => 'id',
                 'searchable' => false,
                 'sortable' => false,
                 'renderer' => [$this, 'renderActionColumn'],
             ]);
     }
 
-    protected function renderActionColumn(string $username): string
+    protected function renderActionColumn(int $id): string
     {
         if (!$this->security->isGranted('forumify.admin.users.manage')) {
             return '';
         }
 
-        $editUrl = $this->urlGenerator->generate('forumify_admin_user', ['username' => $username]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_user_delete', ['username' => $username]);
+        $editUrl = $this->urlGenerator->generate('forumify_admin_users_edit', ['identifier' => $id]);
+        $deleteUrl = $this->urlGenerator->generate('forumify_admin_users_delete', ['identifier' => $id]);
 
         return "
             <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>

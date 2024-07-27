@@ -104,10 +104,7 @@ save: 'Save'
 flashes:
     acl_saved: 'Access control list saved.'
     account_settings_saved: 'Account settings saved.'
-    badge_saved: 'Badge saved.'
     comment_removed: 'Comment removed.'
-    user_saved: 'User saved.'
-    user_removed: 'User removed.'
     forum_saved: 'Forum saved.'
     forum_removed: 'Forum removed.'
     forum_group_saved: 'Forum group saved.'
@@ -122,8 +119,6 @@ flashes:
     reaction_removed: 'Reaction removed.'
     resource_saved: 'Resource saved.'
     resource_removed: 'Resource removed.'
-    role_saved: 'Role saved.'
-    role_removed: 'Role removed.'
     topic_saved: 'Topic saved.'
     topic_removed: 'Topic removed.'
     settings_saved: 'Global configuration saved.'
@@ -142,8 +137,6 @@ email_verification:
         invalid_token: 'Your verification code is invalid.'
         retry: 'Please try again using the button below.'
 users: 'Users'
-user:
-    delete_warning: 'You are about to delete "{username}".'
 roles: 'Roles'
 role: 'Role'
 create_role: 'Create role'
@@ -326,3 +319,7 @@ admin:
             single: 'role'
             plural: 'roles'
         permissions: 'Permissions'
+    user:
+        crud:
+            single: 'user'
+            plural: 'users'

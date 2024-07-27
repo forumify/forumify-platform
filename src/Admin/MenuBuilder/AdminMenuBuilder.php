@@ -27,7 +27,7 @@ class AdminMenuBuilder implements AdminMenuBuilderInterface
                 'icon' => 'ph ph-gear',
                 'permission' => 'forumify.admin.configuration.manage',
             ]))
-            ->addItem(new MenuItem('Users', $url('forumify_admin_user_list'), [
+            ->addItem(new MenuItem('Users', $url('forumify_admin_users_list'), [
                 'icon' => 'ph ph-user-list',
                 'permission' => 'forumify.admin.users.view',
             ]))
