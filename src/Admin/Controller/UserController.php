@@ -33,6 +33,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{username}', '')]
+    #[IsGranted('forumify.admin.users.manage')]
     public function edit(User $user, Request $request): Response
     {
         $form = $this->createForm(UserType::class, $user);
@@ -60,6 +61,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/{username}/delete', '_delete')]
+    #[IsGranted('forumify.admin.users.manage')]
     public function delete(User $user, Request $request): Response
     {
         if (!$request->get('confirmed')) {

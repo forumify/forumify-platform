@@ -8,14 +8,19 @@ use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Component\Table\AbstractTable;
 use Forumify\Core\Entity\Theme;
 use Forumify\Plugin\Entity\Plugin;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
 #[AsLiveComponent('Forumify\ThemeTable', '@Forumify/components/table/table.html.twig')]
+#[IsGranted('forumify.admin.settings.themes.view')]
 class ThemeTable extends AbstractDoctrineTable
 {
-    public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly Security $security,
+    ) {
         $this->sort = [
             'active' => AbstractTable::SORT_DESC,
             'name' => AbstractTable::SORT_DESC,
@@ -55,6 +60,10 @@ class ThemeTable extends AbstractDoctrineTable
 
     private function renderActions(int $id): string
     {
+        if (!$this->security->isGranted('forumify.admin.settings.themes.manage')) {
+            return '';
+        }
+
         $editUrl = $this->urlGenerator->generate('forumify_admin_themes_edit', ['identifier' => $id]);
 
         return "

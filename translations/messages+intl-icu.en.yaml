@@ -93,7 +93,6 @@ forum_delete_warning: 'You are about to delete "{title}". This will also delete 
 create_forum_group: 'Create group'
 edit_forum_group: 'Edit group'
 forum_group_delete_warning: 'You are about to delete "{title}". This will ungroup all linked forums.'
-empty_group: 'There are no forums in this group.'
 ungrouped: 'Forums without group'
 warning: 'Warning'
 warning_continue: 'Are you sure you want to continue?'
@@ -197,10 +196,10 @@ forum:
                 other {# views}
             }
 admin:
-    badges:
-        badges: 'Badges'
-        create: 'Create Badge'
-        edit: 'Editing Badge "{name}"'
+    badge:
+        crud:
+            single: 'badge'
+            plural: 'badges'
     crud:
         edit: 'Editing {single}'
         create: 'New {single}'
@@ -250,6 +249,7 @@ admin:
         recaptcha_site_secret: 'reCAPTCHA site secret'
         mailer_from: 'Email from'
         mailer_from_help: 'Email address that the platform will use to send emails from.'
+    directory_empty: 'This directory is empty or you do not have permissions to see any items.'
     forum:
         type:
             text: 'Forum'
@@ -312,8 +312,17 @@ admin:
         active_help: 'Only 1 theme can be active at once.'
         css: 'Custom Theme CSS'
         crud:
-            single: theme
-            plural: themes
+            single: 'theme'
+            plural: 'themes'
         config:
             default: 'Default Configuration'
             dark: 'Dark Configuration'
+    reaction:
+        crud:
+            single: 'reaction'
+            plural: 'reactions'
+    role:
+        crud:
+            single: 'role'
+            plural: 'roles'
+        permissions: 'Permissions'

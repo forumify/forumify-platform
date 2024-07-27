@@ -7,14 +7,18 @@ namespace Forumify\Admin\Components\Table;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\UserRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
+#[IsGranted('forumify.admin.users.view')]
 #[AsLiveComponent('UserTable', '@Forumify/components/table/table.html.twig')]
 class UserTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly Security $security,
     ) {
     }
 
@@ -38,16 +42,21 @@ class UserTable extends AbstractDoctrineTable
             ])
             ->addColumn('actions', [
                 'label' => '',
+                'field' => 'username',
                 'searchable' => false,
                 'sortable' => false,
                 'renderer' => [$this, 'renderActionColumn'],
             ]);
     }
 
-    protected function renderActionColumn($_, User $user): string
+    protected function renderActionColumn(string $username): string
     {
-        $editUrl = $this->urlGenerator->generate('forumify_admin_user', ['username' => $user->getUsername()]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_user_delete', ['username' => $user->getUsername()]);
+        if (!$this->security->isGranted('forumify.admin.users.manage')) {
+            return '';
+        }
+
+        $editUrl = $this->urlGenerator->generate('forumify_admin_user', ['username' => $username]);
+        $deleteUrl = $this->urlGenerator->generate('forumify_admin_user_delete', ['username' => $username]);
 
         return "
             <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>

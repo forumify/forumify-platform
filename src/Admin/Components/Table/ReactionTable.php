@@ -6,14 +6,18 @@ namespace Forumify\Admin\Components\Table;
 
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Forum\Entity\Reaction;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
 #[AsLiveComponent('ReactionTable', '@Forumify/components/table/table.html.twig')]
+#[IsGranted('forumify.admin.settings.reactions.view')]
 class ReactionTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly Security $security,
     ) {
     }
 
@@ -30,16 +34,21 @@ class ReactionTable extends AbstractDoctrineTable
             ])
             ->addColumn('actions', [
                 'label' => '',
+                'field' => 'id',
                 'searchable' => false,
                 'sortable' => false,
                 'renderer' => [$this, 'renderActionColumn'],
             ]);
     }
 
-    protected function renderActionColumn($_, Reaction $reaction): string
+    protected function renderActionColumn(int $id): string
     {
-        $editUrl = $this->urlGenerator->generate('forumify_admin_reaction', ['id' => $reaction->getId()]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_reaction_delete', ['id' => $reaction->getId()]);
+        if (!$this->security->isGranted('forumify.admin.settings.reactions.manage')) {
+            return '';
+        }
+
+        $editUrl = $this->urlGenerator->generate('forumify_admin_reactions_edit', ['identifier' => $id]);
+        $deleteUrl = $this->urlGenerator->generate('forumify_admin_reactions_delete', ['identifier' => $id]);
 
         return "
             <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>

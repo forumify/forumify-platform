@@ -1,15 +1,11 @@
 {% for child in form %}
-    <div class="permission-group">
+    <div class="ml-4 mt-1">
         {% if child.vars.compound %}
-            {{ form_label(child, null, { label_attr: { class: 'text-capitalize' } }) }}
-            <div class="permission-subgroup pl-5">
-                {% include '@Forumify/admin/role/permissions.html.twig' with { form: child } %}
-            </div>
+            {{ form_label(child, child.vars.label|humanize, { label_attr: { class: 'text-capitalize' } }) }}
+            {% include '@Forumify/admin/role/permissions.html.twig' with { form: child } %}
         {% else %}
-            <div class="permission-leaf">
-                {{ form_widget(child) }}
-                {{ form_label(child, child.vars.label|humanize) }}
-            </div>
+            {{ form_widget(child) }}
+            {{ form_label(child, child.vars.label|humanize) }}
         {% endif %}
     </div>
 {% endfor %}

@@ -1,20 +1,23 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block title_page %}
-    {{ 'settings'|trans }}
+    {{ directory.label }}
 {% endblock %}
 {% block body %}
     <h2>{{ block('title_page') }}</h2>
     <div class="box mt-4">
         <ul class="flex gap-4">
-            {% for item in items %}
+            {% set entries = directory.entries|filter(item => item.options.permission is not defined or is_granted(item.options.permission)) %}
+            {% for item in entries %}
                 <a class="setting" href="{{ item.location }}">
                     <div class="setting-icon">
                         <i class="{{ item.options.icon }}"></i>
                     </div>
                     <p class="setting-label pt-2">
-                        {{ item.label }}
+                        {{ item.label|capitalize }}
                     </p>
                 </a>
+            {% else %}
+                {{ 'admin.directory_empty'|trans }}
             {% endfor %}
         </ul>
     </div>

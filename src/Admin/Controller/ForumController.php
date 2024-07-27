@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('forumify.admin.forums.view')]
+#[IsGranted('forumify.admin.forums.manage')]
 class ForumController extends AbstractController
 {
     #[Route('/forum/{slug?}', 'forum')]

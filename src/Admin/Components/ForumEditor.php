@@ -17,7 +17,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent('ForumEditor', '@Forumify/admin/components/forum_editor/forum_editor.html.twig')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('forumify.admin.forums.manage')]
 class ForumEditor
 {
     use DefaultActionTrait;

@@ -13,8 +13,11 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('themes', 'themes')]
 class ThemeController extends AbstractCrudController
 {
-    protected bool $allowAdd = false;
+    protected bool $allowCreate = false;
     protected bool $allowDelete = false;
+
+    protected ?string $permissionView = 'forumify.admin.settings.themes.view';
+    protected ?string $permissionEdit = 'forumify.admin.settings.themes.manage';
 
     protected string $formTemplate = '@Forumify/admin/theme/theme.html.twig';
 

@@ -31,9 +31,16 @@ abstract class AbstractCrudController extends AbstractController
     protected string $formTemplate = '@Forumify/admin/crud/form.html.twig';
     protected string $deleteTemplate = '@Forumify/admin/crud/delete.html.twig';
 
-    protected bool $allowAdd = true;
+    // enable/disable routes
+    protected bool $allowCreate = true;
     protected bool $allowEdit = true;
     protected bool $allowDelete = true;
+
+    // permissions, by default access is allowed
+    protected ?string $permissionView = null;
+    protected ?string $permissionCreate = null;
+    protected ?string $permissionEdit = null;
+    protected ?string $permissionDelete = null;
 
     /**
      * @return string The classname for the entity this controller will act on, for example Forum::class
@@ -56,6 +63,10 @@ abstract class AbstractCrudController extends AbstractController
     #[Route('', '_list')]
     public function list(): Response
     {
+        if ($this->permissionView !== null) {
+            $this->denyAccessUnlessGranted($this->permissionView);
+        }
+
         return $this->render($this->listTemplate, $this->templateParams([
             'table' => $this->getTableName(),
         ]));
@@ -64,7 +75,7 @@ abstract class AbstractCrudController extends AbstractController
     #[Route('/create', '_create')]
     public function create(Request $request): Response
     {
-        if (!$this->allowAdd) {
+        if (!$this->can($this->allowCreate, $this->permissionCreate)) {
             $this->addCrudFlash('error', 'admin.crud.create_not_allowed');
             return $this->redirectToRoute($this->getRoute('list'));
         }
@@ -75,7 +86,7 @@ abstract class AbstractCrudController extends AbstractController
     #[Route('/{identifier}/edit', '_edit')]
     public function edit(Request $request, string $identifier): Response
     {
-        if (!$this->allowEdit) {
+        if (!$this->can($this->allowEdit, $this->permissionEdit)) {
             $this->addCrudFlash('error', 'admin.crud.edit_not_allowed');
             return $this->redirectToRoute($this->getRoute('list'));
         }
@@ -91,7 +102,7 @@ abstract class AbstractCrudController extends AbstractController
     #[Route('/{identifier}/delete', '_delete')]
     public function delete(Request $request, string $identifier): Response
     {
-        if (!$this->allowDelete) {
+        if (!$this->can($this->allowDelete, $this->permissionDelete)) {
             $this->addCrudFlash('error', 'admin.crud.delete_not_allowed');
             return $this->redirectToRoute($this->getRoute('list'));
         }
@@ -145,7 +156,7 @@ abstract class AbstractCrudController extends AbstractController
             'translationPrefix' => $this->getTranslationPrefix(),
             'route' => $this->getRoute(),
             'capabilities' => [
-                'create' => $this->allowAdd,
+                'create' => $this->can($this->allowCreate, $this->permissionCreate),
                 'edit' => $this->allowEdit,
                 'delete' => $this->allowDelete,
             ],
@@ -186,6 +197,15 @@ abstract class AbstractCrudController extends AbstractController
             'plural' => $this->translator->trans($prefix . 'plural'),
         ]);
         $this->addFlash($type, $message);
+    }
+
+    private function can(bool $enabled, ?string $permission): bool
+    {
+        if (!$enabled) {
+            return false;
+        }
+
+        return $permission === null || $this->isGranted($permission);
     }
 
     #[Required]

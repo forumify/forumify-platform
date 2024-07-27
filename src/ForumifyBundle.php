@@ -12,12 +12,56 @@ class ForumifyBundle extends AbstractForumifyBundle
     {
         return [
             'admin' => [
-                'dashboard' => ['view'],
-                'configuration' => ['view'],
-                'users' => ['view'],
-                'forums' => ['view'],
-                'cms' => ['view'],
-                'settings' => ['view'],
+                'configuration' => [
+                    'manage',
+                ],
+                'users' => [
+                    'view',
+                    'manage'
+                ],
+                'forums' => [
+                    'manage',
+                ],
+                'cms' => [
+                    'view',
+                    'pages' => [
+                        'view',
+                        'manage'
+                    ],
+                    'resources' => [
+                        'view',
+                        'manage'
+                    ],
+                    'snippets' => [
+                        'view',
+                        'manage'
+                    ]
+                ],
+                'settings' => [
+                    'view',
+                    'badges' => [
+                        'view',
+                        'manage'
+                    ],
+                    'menu_builder' => [
+                        'manage'
+                    ],
+                    'plugins' => [
+                        'manage'
+                    ],
+                    'reactions' => [
+                        'view',
+                        'manage'
+                    ],
+                    'roles' => [
+                        'view',
+                        'manage'
+                    ],
+                    'themes' => [
+                        'view',
+                        'manage'
+                    ],
+                ],
             ],
         ];
     }

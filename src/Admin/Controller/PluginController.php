@@ -12,8 +12,10 @@ use Forumify\Plugin\Service\PluginService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/plugins', 'plugin_')]
+#[IsGranted('forumify.admin.settings.plugins.manage')]
 class PluginController extends AbstractController
 {
     public function __construct(

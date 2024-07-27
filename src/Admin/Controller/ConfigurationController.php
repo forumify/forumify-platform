@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('forumify.admin.configuration.view')]
+#[IsGranted('forumify.admin.configuration.manage')]
 class ConfigurationController extends AbstractController
 {
     public function __construct(

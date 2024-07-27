@@ -19,13 +19,13 @@ class Menu
         }
     }
 
-    public function addItem(Menu|MenuItem $item, ?int $position = 0): void
+    public function addItem(Menu|MenuItem $item, ?int $position = 0): static
     {
         if (!isset($this->items[$position])) {
             $this->items[$position] = $item;
-            return;
+            return $this;
         }
-        $this->addItem($item, $position + 1);
+        return $this->addItem($item, $position + 1);
     }
 
     public function getEntries(): array

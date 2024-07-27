@@ -11,7 +11,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('forumify.admin.forums.manage')]
 class ForumGroupEditController extends AbstractController
 {
     #[Route('forum-group/{id}/edit', 'forum_group_edit')]

@@ -19,11 +19,29 @@ class AdminMenuBuilder implements AdminMenuBuilderInterface
     {
         $url = $this->urlGenerator->generate(...);
 
-        $menu->addItem(new MenuItem('Dashboard', $url('forumify_admin_dashboard'), ['icon' => 'ph ph-gauge', 'permission' => 'forumify.admin.dashboard.view']));
-        $menu->addItem(new MenuItem('Configuration', $url('forumify_admin_configuration'), ['icon' => 'ph ph-gear', 'permission' => 'forumify.admin.configuration.view']));
-        $menu->addItem(new MenuItem('Users', $url('forumify_admin_user_list'), ['icon' => 'ph ph-user-list', 'permission' => 'forumify.admin.users.view']));
-        $menu->addItem(new MenuItem('Forums', $url('forumify_admin_forum'), ['icon' => 'ph ph-chats', 'permission' => 'forumify.admin.forums.view']));
-        $menu->addItem(new MenuItem('CMS', $url('forumify_admin_cms_menu'), ['icon' => 'ph ph-files', 'permission' => 'forumify.admin.cms.view']));
-        $menu->addItem(new MenuItem('Settings', $url('forumify_admin_settings'), ['icon' => 'ph ph-wrench', 'permission' => 'forumify.admin.settings.view']));
+        $menu
+            ->addItem(new MenuItem('Dashboard', $url('forumify_admin_dashboard'), [
+                'icon' => 'ph ph-gauge',
+            ]))
+            ->addItem(new MenuItem('Configuration', $url('forumify_admin_configuration'), [
+                'icon' => 'ph ph-gear',
+                'permission' => 'forumify.admin.configuration.manage',
+            ]))
+            ->addItem(new MenuItem('Users', $url('forumify_admin_user_list'), [
+                'icon' => 'ph ph-user-list',
+                'permission' => 'forumify.admin.users.view',
+            ]))
+            ->addItem(new MenuItem('Forums', $url('forumify_admin_forum'), [
+                'icon' => 'ph ph-chats',
+                'permission' => 'forumify.admin.forums.view',
+            ]))
+            ->addItem(new MenuItem('CMS', $url('forumify_admin_cms_menu'), [
+                'icon' => 'ph ph-files',
+                'permission' => 'forumify.admin.cms.view',
+            ]))
+            ->addItem(new MenuItem('Settings', $url('forumify_admin_settings'), [
+                'icon' => 'ph ph-wrench',
+                'permission' => 'forumify.admin.settings.view',
+            ]));
     }
 }

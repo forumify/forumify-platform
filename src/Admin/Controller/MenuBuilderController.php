@@ -8,8 +8,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('menu-builder', 'menu_builder')]
+#[IsGranted('forumify.admin.settings.menu_builder.manage')]
 class MenuBuilderController extends AbstractController
 {
     #[Route('/', '')]

@@ -32,12 +32,6 @@
             <h4>{{ group is not null ? group.title : 'ungrouped'|trans }}</h4>
         </div>
         <div class="flex gap-2">
-            <a class="btn-link btn-small btn-icon" href="{{ path('forumify_admin_forum_create', {
-                parent: forum ? forum.id : null,
-                group: group is not null ? group.id : null
-            }) }}">
-                <i class="ph ph-plus"></i>
-            </a>
             {% if group is not null %}
                 <a class="btn-link btn-small btn-icon" href="{{ path('forumify_admin_forum_group_edit', { id: group.id }) }}">
                     <i class="ph ph-pencil-simple-line"></i>
@@ -95,9 +89,13 @@
                         </a>
                     </div>
                 </div>
-            {% else %}
-                {{ 'empty_group'|trans }}
             {% endfor %}
+            <a
+                href="{{ path('forumify_admin_forum_create', {parent: forum ? forum.id : null,group: group is not null ? group.id : null}) }}"
+                class="btn-link"
+            >
+                <i class="ph ph-plus"></i>{{ 'create_sub_forum'|trans }}
+            </a>
         </div>
     </div>
 </div>

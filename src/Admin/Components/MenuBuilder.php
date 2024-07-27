@@ -19,7 +19,7 @@ use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent('MenuBuilder', '@Forumify/admin/components/menu_builder/menu_builder.html.twig')]
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('forumify.admin.settings.menu_builder.manage')]
 class MenuBuilder extends AbstractController
 {
     use DefaultActionTrait;

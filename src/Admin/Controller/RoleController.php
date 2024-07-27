@@ -4,64 +4,34 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Controller;
 
+use Forumify\Admin\Crud\AbstractCrudController;
 use Forumify\Admin\Form\RoleType;
 use Forumify\Core\Entity\Role;
-use Forumify\Core\Repository\RoleRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/roles', 'role')]
-class RoleController extends AbstractController
+#[Route('/roles', 'roles')]
+class RoleController extends AbstractCrudController
 {
-    public function __construct(private readonly RoleRepository $roleRepository)
+    protected ?string $permissionView = 'forumify.admin.settings.roles.view';
+    protected ?string $permissionCreate = 'forumify.admin.settings.roles.manage';
+    protected ?string $permissionEdit = 'forumify.admin.settings.roles.manage';
+    protected ?string $permissionDelete = 'forumify.admin.settings.roles.manage';
+
+    protected string $formTemplate = '@Forumify/admin/role/role.html.twig';
+
+    protected function getEntityClass(): string
     {
+        return Role::class;
     }
 
-    #[Route('', '_list')]
-    public function list(): Response
+    protected function getTableName(): string
     {
-        return $this->render('@Forumify/admin/role/role_list.html.twig');
+        return 'RoleTable';
     }
 
-    #[Route('/create', '_create', priority: 1)]
-    public function create(Request $request): Response
+    protected function getForm(?object $data): FormInterface
     {
-        return $this->handleForm($request);
-    }
-
-    #[Route('/{id<\d+>}', '')]
-    public function edit(Role $role, Request $request): Response
-    {
-        return $this->handleForm($request, $role);
-    }
-
-    #[Route('/{id<\d+>}/delete', '_delete')]
-    public function delete(Role $role): Response
-    {
-        $this->roleRepository->remove($role);
-
-        $this->addFlash('success', 'flashes.role_removed');
-        return $this->redirectToRoute('forumify_admin_role_list');
-    }
-
-    private function handleForm(Request $request, ?Role $role = null): Response
-    {
-        $form = $this->createForm(RoleType::class, $role);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $role = $form->getData();
-            $this->roleRepository->save($role);
-
-            $this->addFlash('success', 'flashes.role_saved');
-            return $this->redirectToRoute('forumify_admin_role_list');
-        }
-
-        return $this->render('@Forumify/admin/role/role.html.twig', [
-            'form' => $form->createView(),
-            'role' => $role,
-        ]);
+        return $this->createForm(RoleType::class, $data);
     }
 }

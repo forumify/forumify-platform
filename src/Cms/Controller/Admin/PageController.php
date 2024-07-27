@@ -12,9 +12,11 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Environment;
 
 #[Route('pages', 'page_')]
+#[IsGranted('forumify.admin.cms.pages.view')]
 class PageController extends AbstractController
 {
     public function __construct(
@@ -30,18 +32,21 @@ class PageController extends AbstractController
     }
 
     #[Route('/create', 'create')]
+    #[IsGranted('forumify.admin.cms.pages.manage')]
     public function create(Request $request): Response
     {
         return $this->handleForm($request, null);
     }
 
     #[Route('/{slug}', 'edit')]
+    #[IsGranted('forumify.admin.cms.pages.manage')]
     public function edit(Request $request, Page $page): Response
     {
         return $this->handleForm($request, $page);
     }
 
     #[Route('/{slug}/delete', 'delete')]
+    #[IsGranted('forumify.admin.cms.pages.manage')]
     public function delete(Page $page, Request $request): Response
     {
         if (!$request->get('confirmed')) {
