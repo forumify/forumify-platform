@@ -37,7 +37,7 @@
                         {% block tabpanels %}
                             {% for child in form.permissions %}
                                 <div id="{{ child.vars.id }}">
-                                    {% include '@Forumify/admin/role/permissions_action.html.twig' with {'form': child} %}
+                                    {% include '@Forumify/admin/role/permissions.html.twig' with {'form': child} %}
                                 </div>
                             {% endfor %}
                         {% endblock %}
