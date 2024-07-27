@@ -1,4 +1,5 @@
 {% extends '@Forumify/admin/base.html.twig' %}
+
 {% block title_page %}
     {% if role is not null %}
         role {{ role.title }}
@@ -6,10 +7,52 @@
         {{ 'create_role'|trans }}
     {% endif %}
 {% endblock %}
+
 {% block body %}
-    {% include '@Forumify/admin/components/simple_form.html.twig' with {
-        title: role is not null ? role.title : 'create_role'|trans,
-        form: form,
-        cancelPath: path('forumify_admin_role_list')
-    } only %}
+    <div class="box">
+        {{ form_start(form) }}
+
+        {% embed '@Forumify/components/tabs.html.twig' %}
+            {% block tabs %}
+                <button type="button" class="btn-link" data-tab-id="role">Role</button>
+                <button type="button" class="btn-link" data-tab-id="permission">Permission</button>
+            {% endblock %}
+
+            {% block tabpanels %}
+                <div id="role">
+                    {{ form_row(form.title) }}
+                    {{ form_row(form.description) }}
+                    {{ form_row(form.administrator) }}
+                    {{ form_row(form.moderator) }}
+                </div>
+
+                <div id="permission">
+                    {% embed '@Forumify/components/tabs.html.twig' %}
+                        {% block tabs %}
+                            {% for child in form.permissions %}
+                                <button type="button" class="btn-link text-capitalize" data-tab-id="{{ child.vars.id }}">{{ child.vars.label }}</button>
+                            {% endfor %}
+                        {% endblock %}
+
+                        {% block tabpanels %}
+                            {% for child in form.permissions %}
+                                <div id="{{ child.vars.id }}">
+                                    {% include '@Forumify/admin/role/permissions_action.html.twig' with {'form': child} %}
+                                </div>
+                            {% endfor %}
+                        {% endblock %}
+                    {% endembed %}
+                </div>
+            {% endblock %}
+        {% endembed %}
+
+        <div class="flex justify-center items-center gap-2">
+            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+            {% if cancelPath is defined %}
+                <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+            {% endif %}
+        </div>
+
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

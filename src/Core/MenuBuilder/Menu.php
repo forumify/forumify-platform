@@ -43,4 +43,9 @@ class Menu
         array_multisort($labels, SORT_ASC, $this->items);
         $this->sorted = true;
     }
+
+    public function getPermission(): ?string
+    {
+        return $this->options['permission'] ?? null;
+    }
 }

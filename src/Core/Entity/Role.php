@@ -31,6 +31,9 @@ class Role
     #[ORM\Column(name: '`system`', type: 'boolean')]
     private bool $system = false;
 
+    #[ORM\Column(type: 'simple_array', nullable: true)]
+    private ?array $permissions = [];
+
     /**
      * @var Collection<User>
      */
@@ -99,5 +102,15 @@ class Role
     public function setUsers(Collection $users): void
     {
         $this->users = $users;
+    }
+
+    public function getPermissions(): array
+    {
+        return $this->permissions ?? [];
+    }
+
+    public function setPermissions(array $permissions): void
+    {
+        $this->permissions = $permissions;
     }
 }

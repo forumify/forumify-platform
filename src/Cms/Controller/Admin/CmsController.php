@@ -9,8 +9,10 @@ use Forumify\Core\MenuBuilder\MenuItem;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[IsGranted('forumify.admin.forums.view')]
 class CmsController extends AbstractController
 {
     #[Route('', 'menu')]
