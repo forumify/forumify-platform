@@ -6,15 +6,14 @@ namespace Forumify\Admin\MenuBuilder;
 
 use Forumify\Core\MenuBuilder\MenuManager;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 class AdminMenuManager extends MenuManager
 {
     public function __construct(
-        #[TaggedIterator('forumify.menu_builder.admin')]
+        #[AutowireIterator('forumify.menu_builder.admin')]
         iterable $menuBuilders,
-        private readonly Security $security,
+        Security $security,
     ) {
         parent::__construct($menuBuilders, $security);
     }

@@ -19,7 +19,6 @@ abstract class MenuManager implements RuntimeExtensionInterface
                 $this->menuBuilders[] = $menuBuilder;
             }
         }
-
     }
 
     public function getMenu(): Menu
@@ -29,29 +28,26 @@ abstract class MenuManager implements RuntimeExtensionInterface
             $menuBuilder->build($menu);
         }
 
-        return $this->filterMenuByPermissions($menu);
+        $this->filterMenuByPermissions($menu);
+        return $menu;
     }
 
-    private function filterMenuByPermissions(Menu $menu): Menu
+    private function filterMenuByPermissions(Menu $menu): void
     {
-        $filteredMenu = new Menu();
-        foreach ($menu->getEntries() as $item) {
-            if ($this->hasPermission($item)) {
-                $filteredMenu->addItem($item);
+        foreach ($menu->getEntries() as $pos => $item) {
+            if (!$this->hasPermission($item)) {
+                $menu->removeItemAt($pos);
+                continue;
+            }
+            if ($item instanceof Menu) {
+                $this->filterMenuByPermissions($item);
             }
         }
-
-        return $filteredMenu;
     }
 
     private function hasPermission(Menu|MenuItem $item): bool
     {
         $permission = $item->getPermission();
-
-        if ($permission === null) {
-            return true;
-        }
-
-        return $this->security->isGranted($permission);
+        return $permission === null || $this->security->isGranted($permission);
     }
 }

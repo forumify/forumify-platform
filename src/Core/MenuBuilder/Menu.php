@@ -34,7 +34,12 @@ class Menu
             ksort($this->items);
             $this->sorted = true;
         }
-        return array_values($this->items);
+        return $this->items;
+    }
+
+    public function removeItemAt(int $position): void
+    {
+        unset($this->items[$position]);
     }
 
     public function sortByLabel(): void
