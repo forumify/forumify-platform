@@ -34,6 +34,10 @@ class ForumCreateController extends AbstractController
         $forum->setParent($parent);
         $forum->setGroup($group);
 
+        $maxPosition = $forumRepository->findMaxPosition();
+        $newPosition = ($maxPosition !== null ? $maxPosition : 0) + 1;
+        $forum->setPosition($newPosition);
+
         $form = $this->createForm(ForumType::class, $forum, [
             'is_new' => true,
         ]);

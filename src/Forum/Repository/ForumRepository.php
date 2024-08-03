@@ -30,6 +30,14 @@ class ForumRepository extends AbstractRepository
         return $this->findBy(['parent' => $parent, 'group' => null], ['position' => 'ASC']);
     }
 
+    public function findMaxPosition(): ?int
+    {
+        return $this->createQueryBuilder('f')
+            ->select('MAX(f.position)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
     public function save(object $entity, bool $flush = true): void
     {
         $this->getEntityManager()->persist($entity);
