@@ -34,8 +34,16 @@ class ForumCreateController extends AbstractController
         $forum->setParent($parent);
         $forum->setGroup($group);
 
-        $maxPosition = $forumRepository->findMaxPosition();
-        $newPosition = ($maxPosition !== null ? $maxPosition : 0) + 1;
+        if ($group !== null) {
+            // If the forum is part of a group, increment position within the group
+            $maxPosition = $forumRepository->findMaxPosition($parent, $group);
+            $newPosition = ($maxPosition !== null ? $maxPosition : 0) + 1;
+        } else {
+            // If the forum is ungrouped, increment position within the parent
+            $maxPosition = $forumRepository->findMaxPosition($parent, null);
+            $newPosition = ($maxPosition !== null ? $maxPosition : 0) + 1;
+        }
+
         $forum->setPosition($newPosition);
 
         $form = $this->createForm(ForumType::class, $forum, [
