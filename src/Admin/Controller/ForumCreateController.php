@@ -40,7 +40,12 @@ class ForumCreateController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Forum $forum */
             $forum = $form->getData();
+
+            $position = $forumRepository->getHighestPosition($forum->getParent(), $forum->getGroup());
+            $forum->setPosition($position + 1);
+
             $forumRepository->save($forum);
 
             $this->addFlash('success', 'flashes.forum_saved');

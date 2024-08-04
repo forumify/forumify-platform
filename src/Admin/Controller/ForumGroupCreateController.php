@@ -28,11 +28,12 @@ class ForumGroupCreateController extends AbstractController
         $form = $this->createForm(ForumGroupType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $position = $forumGroupRepository->getHighestPosition($parent) + 1;
-
             $forumGroup = $form->getData();
             $forumGroup->setParentForum($parent);
+
+            $position = $forumGroupRepository->getHighestPosition($parent) + 1;
             $forumGroup->setPosition($position);
+
             $forumGroupRepository->save($forumGroup);
 
             $this->addFlash('success', 'flashes.forum_group_saved');

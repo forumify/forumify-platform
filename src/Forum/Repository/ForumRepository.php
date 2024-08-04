@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Repository;
 
+use Exception;
 use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\ForumGroup;
 
 class ForumRepository extends AbstractRepository
 {
@@ -30,21 +32,27 @@ class ForumRepository extends AbstractRepository
         return $this->findBy(['parent' => $parent, 'group' => null], ['position' => 'ASC']);
     }
 
-    public function save(object $entity, bool $flush = true): void
+    public function getHighestPosition(?Forum $parent, ?ForumGroup $group): int
     {
-        $this->getEntityManager()->persist($entity);
+        $qb = $this->createQueryBuilder('f')
+            ->select('MAX(f.position)');
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+        if ($parent !== null) {
+            $qb->andWhere('f.parent = :parent')->setParameter('parent', $parent);
+        } else {
+            $qb->andWhere('f.parent IS NULL');
         }
-    }
 
-    public function remove(object $entity, bool $flush = true): void
-    {
-        $this->getEntityManager()->remove($entity);
+        if ($group !== null) {
+            $qb->andWhere('f.group = :group')->setParameter('group', $group);
+        } else {
+            $qb->andWhere('f.group IS NULL');
+        }
 
-        if ($flush) {
-            $this->getEntityManager()->flush();
+        try {
+            return $qb->getQuery()->getSingleScalarResult() ?? 0;
+        } catch (Exception) {
+            return 0;
         }
     }
 }

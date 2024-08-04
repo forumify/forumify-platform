@@ -29,9 +29,17 @@ class ForumController extends AbstractController
             : null;
 
         if ($form !== null) {
+            $oldGroupId = $forum->getGroup()?->getId();
+
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
+                /** @var Forum $updated */
                 $updated = $form->getData();
+                if ($updated->getGroup()?->getId() !== $oldGroupId) {
+                    $position = $forumRepository->getHighestPosition($updated->getParent(), $updated->getGroup());
+                    $updated->setPosition($position + 1);
+                }
+
                 $forumRepository->save($updated);
 
                 $this->addFlash('success', 'flashes.forum_saved');
