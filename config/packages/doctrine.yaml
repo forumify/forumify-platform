@@ -1,6 +1,12 @@
 doctrine:
     orm:
         mappings:
+            forumify_api:
+                is_bundle: false
+                type: attribute
+                dir: '%forumify.project_dir%/src/Api/Entity'
+                prefix: Forumify\Api\Entity
+                alias: ForumifyApi
             forumify_core:
                 is_bundle: false
                 type: attribute

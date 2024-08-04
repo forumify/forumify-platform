@@ -1,13 +1,24 @@
-core:
-    resource: ../../src/Core/Controller
-    type: attribute
-    name_prefix: core_
-
 admin:
     resource: ../../src/Admin/Controller
     type: attribute
     name_prefix: admin_
     prefix: admin/
+
+api:
+    resource: ../../src/Api/Controller
+    type: attribute
+    name_prefix: api_
+    prefix: api/
+
+api_platform:
+    resource: .
+    type: api_platform
+    prefix: /api
+
+core:
+    resource: ../../src/Core/Controller
+    type: attribute
+    name_prefix: core_
 
 forum:
     resource: ../../src/Forum/Controller

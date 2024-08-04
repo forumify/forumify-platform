@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
@@ -12,6 +13,7 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Forum\Repository\CommentRepository;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment implements SubscribableInterface
 {

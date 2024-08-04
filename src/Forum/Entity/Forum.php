@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,6 +15,7 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Forum\Repository\ForumRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 class Forum implements HierarchicalInterface, AccessControlledEntityInterface
 {

@@ -6,6 +6,7 @@ namespace Forumify\Core\Service;
 
 use Forumify\Core\Repository\SettingRepository;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\HttpFoundation\Request;
 
 class RecaptchaService
@@ -21,17 +22,21 @@ class RecaptchaService
             return 0;
         }
 
-        $response = (new Client())
-            ->post('https://www.google.com/recaptcha/api/siteverify', [
-                'form_params' => [
-                    'secret' => $this->settingRepository->get('forumify.recaptcha.site_secret'),
-                    'response' => $token
-                ],
-            ])
-            ->getBody()
-            ->getContents();
+        try {
+            $response = (new Client())
+                ->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'form_params' => [
+                        'secret' => $this->settingRepository->get('forumify.recaptcha.site_secret'),
+                        'response' => $token
+                    ],
+                ])
+                ->getBody()
+                ->getContents();
 
-        $result = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-        return $result['success'] ? $result['score'] : 0;
+            $result = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+            return $result['score'] ?? 0;
+        } catch (GuzzleException|\JsonException) {
+            return 0;
+        }
     }
 }

@@ -2,23 +2,25 @@
 
 namespace Forumify\Core\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\UserRepository;
+use Forumify\Core\Security\UserInterface;
 use Forumify\Forum\Entity\Badge;
-use Forumify\Forum\Entity\CommentReaction;
 use Forumify\Forum\Entity\Subscription;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
+    use UserPermissionsTrait;
 
     #[ORM\Column(length: 32, unique: true)]
     private string $username;

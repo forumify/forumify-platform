@@ -6,6 +6,7 @@ namespace Forumify\Core\Entity;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Api\Entity\OAuthClient;
 use Forumify\Core\Repository\RoleRepository;
 
 use function Symfony\Component\String\u;
@@ -39,6 +40,12 @@ class Role
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
     private Collection $users;
+
+    /**
+     * @var Collection<OAuthClient>
+     */
+    #[ORM\ManyToMany(targetEntity: OAuthClient::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
+    private Collection $clients;
 
     public function getTitle(): string
     {

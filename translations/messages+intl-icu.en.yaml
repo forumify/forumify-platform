@@ -323,3 +323,9 @@ admin:
         crud:
             single: 'user'
             plural: 'users'
+    api:
+        api: 'API'
+        clients:
+            crud:
+                single: 'client'
+                plural: 'clients'
