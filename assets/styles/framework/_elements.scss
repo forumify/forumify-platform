@@ -74,10 +74,11 @@ input {
     &:focus {
         transition: ease-in-out 150ms;
         border-color: var(--c-primary-accent);
+    }
 
-        &:disabled {
-            border-color: var(--border-color);
-        }
+    &:disabled {
+        border-color: var(--border-color);
+        background-color: var(--c-elevation-0);
     }
 
     &[multiple="multiple"] {
