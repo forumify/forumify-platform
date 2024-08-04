@@ -25,25 +25,14 @@ class ForumGroupCreateController extends AbstractController
             ? $forumRepository->find($parentId)
             : null;
 
-        // TODO: use repository to get highest position instead of looping
-        $siblings = $forumGroupRepository->findByParent($parent);
-        $highestPosition = 0;
-        foreach ($siblings as $sibling) {
-            if ($sibling->getPosition() > $highestPosition) {
-                $highestPosition = $sibling->getPosition();
-            }
-        }
-        $highestPosition++;
-
-        $group = new ForumGroup();
-        $group->setParentForum($parent);
-        $group->setPosition($highestPosition);
-
-        $form = $this->createForm(ForumGroupType::class, $group);
-
+        $form = $this->createForm(ForumGroupType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $position = $forumGroupRepository->getHighestPosition($parent) + 1;
+
             $forumGroup = $form->getData();
+            $forumGroup->setParentForum($parent);
+            $forumGroup->setPosition($position);
             $forumGroupRepository->save($forumGroup);
 
             $this->addFlash('success', 'flashes.forum_group_saved');
