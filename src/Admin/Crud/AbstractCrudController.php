@@ -32,6 +32,7 @@ abstract class AbstractCrudController extends AbstractController
     protected string $deleteTemplate = '@Forumify/admin/crud/delete.html.twig';
 
     // enable/disable routes
+    protected bool $allowView = true;
     protected bool $allowCreate = true;
     protected bool $allowEdit = true;
     protected bool $allowDelete = true;
@@ -63,8 +64,8 @@ abstract class AbstractCrudController extends AbstractController
     #[Route('', '_list')]
     public function list(): Response
     {
-        if ($this->permissionView !== null) {
-            $this->denyAccessUnlessGranted($this->permissionView);
+        if (!$this->can($this->allowView, $this->permissionView)) {
+            throw $this->createAccessDeniedException();
         }
 
         return $this->render($this->listTemplate, $this->templateParams([

@@ -20,6 +20,10 @@ class SettingsController extends AbstractController
     public function __invoke(UrlGeneratorInterface $u, TranslatorInterface $t): Response
     {
         $menu = new Menu($t->trans('settings'), items: [
+            new MenuItem($t->trans('admin.api.api'), $u->generate('forumify_admin_api'), [
+                'icon' => 'ph ph-devices',
+                'permission' => 'forumify.admin.api.manage'
+            ]),
             new MenuItem($t->trans('roles'), $u->generate('forumify_admin_roles_list'), [
                 'icon' => 'ph ph-lock-key',
                 'permission' => 'forumify.admin.settings.roles.view'

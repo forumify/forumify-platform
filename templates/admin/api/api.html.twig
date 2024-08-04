@@ -1,0 +1,15 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% embed '@Forumify/components/tabs.html.twig' %}
+        {% block tabs %}
+            <button type="button" class="btn-link" data-tab-id="clients">
+                {{ 'admin.api.clients.crud.plural'|trans|capitalize }}
+            </button>
+        {% endblock %}
+        {% block tabpanels %}
+            <div id="clients">
+                {{ component('OAuthClientTable') }}
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

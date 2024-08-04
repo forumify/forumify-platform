@@ -6,8 +6,8 @@ namespace Forumify\Core\Security\Voter;
 
 use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\ACL;
-use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ACLRepository;
+use Forumify\Core\Security\UserInterface;
 use Forumify\Core\Security\VoterAttribute;
 use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -42,7 +42,7 @@ class AccessControlListVoter extends Voter
             return false;
         }
 
-        /** @var User|null $user */
+        /** @var UserInterface|null $user */
         $user = $token->getUser();
         if ($user === null) {
             if ($subject['always_block_guest'] ?? false) {

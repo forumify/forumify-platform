@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,6 +13,7 @@ use Forumify\Core\Entity\ACLParameters;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Forum\Repository\ForumGroupRepository;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: ForumGroupRepository::class)]
 class ForumGroup implements AccessControlledEntityInterface
 {

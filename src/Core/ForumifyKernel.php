@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core;
 
+use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
 use Forumify\Plugin\Entity\Plugin;
@@ -27,6 +28,7 @@ class ForumifyKernel extends Kernel
     public function registerBundles(): iterable
     {
         yield from $this->registerSymfonyBundles();
+        yield new ApiPlatformBundle();
 
         try {
             $connection = DriverManager::getConnection([
