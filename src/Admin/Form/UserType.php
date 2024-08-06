@@ -14,6 +14,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,7 +39,7 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var User $user */
-        $user = $options['data'];
+        $user = $options['data'] ?? null;
 
         $builder
             ->add('username', TextType::class)
@@ -47,7 +48,7 @@ class UserType extends AbstractType
                 'mapped' => false,
                 'label' => 'Avatar',
                 'attr' => [
-                    'preview' => !empty($user->getAvatar())
+                    'preview' => $user !== null && !empty($user->getAvatar())
                         ? $this->packages->getUrl($user->getAvatar(), 'forumify.avatar')
                         : null,
                 ],
