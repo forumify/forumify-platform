@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Core\Twig\Extension;
+namespace Forumify\Plugin\Twig\Extension;
 
 use Forumify\Core\Service\ThemeService;
 use Symfony\Bridge\Twig\AppVariable;

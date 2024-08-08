@@ -43,7 +43,7 @@ class PageTwigLoader implements LoaderInterface
 
     public function exists(string $name): bool
     {
-        if (str_ends_with($name, '.twig')) {
+        if (!empty(pathinfo($name, PATHINFO_EXTENSION))) {
             return false;
         }
 

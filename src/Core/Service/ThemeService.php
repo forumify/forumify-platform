@@ -42,6 +42,8 @@ class ThemeService
             $this->dumpStyleSheets($theme, $modifiedTimestamp);
 
             $metaData = [
+                'themeId' => $theme->getId(),
+                'pluginPackage' => $theme->getPlugin()->getPackage(),
                 'lastModified' => $modifiedTimestamp,
             ];
 

@@ -25,7 +25,7 @@ class ACL
     private string $permission;
 
     /** @var Collection<Role> */
-    #[ORM\ManyToMany(targetEntity: Role::class, cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Role::class, cascade: ['persist'], fetch: 'EAGER')]
     #[ORM\JoinTable(
         'acl_role',
         joinColumns: [new ORM\JoinColumn('acl', onDelete: 'CASCADE')],
