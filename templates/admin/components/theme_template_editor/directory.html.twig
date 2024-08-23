@@ -1,0 +1,35 @@
+<ul class="{% if not root %}ml-3{% endif %}">
+    {% for name, dir in directory %}
+        {% set hasChildren = dir.children is defined %}
+        {% set filePath = path ~ '/' ~ name %}
+        <li>
+            <a
+                class="flex items-center gap-1"
+                {% if hasChildren %}
+                    {{ stimulus_action('forumify/forumify-platform/theme_template_editor', 'toggleDir') }}
+                {% else %}
+                    data-action="live#action"
+                    data-live-action-param="openTemplate"
+                    data-live-path-param="{{ filePath }}"
+                    data-live-data-param="{{ dir|json_encode }}"
+                {% endif %}
+            >
+                {% if hasChildren %}
+                    <i class="ph ph-caret-right"></i>
+                {% else %}
+                    <i class="ph ph-file-html"></i>
+                {% endif %}
+                {{ name }}
+            </a>
+            {% if hasChildren %}
+                <div class="directory-children closed">
+                    {% include '@Forumify/admin/components/theme_template_editor/directory.html.twig' with {
+                        directory: dir.children,
+                        root: false,
+                        path: filePath
+                    } only %}
+                </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

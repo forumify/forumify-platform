@@ -57,6 +57,12 @@
                 "fetch": "eager",
                 "enabled": true,
                 "autoimport": {}
+            },
+            "theme_template_editor": {
+                "main": "dist/theme_template_editor_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
             }
         },
         "importmap": {

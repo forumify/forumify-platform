@@ -310,6 +310,12 @@ admin:
         config:
             default: 'Default Configuration'
             dark: 'Dark Configuration'
+        template_editor:
+            open_file: 'Select a file to start editing.'
+            override: 'Override this template'
+            override_help: 'This template has not been overridden yet. When you create a local copy of a template you may risk it being broken in a future release of the platform, a plugin or the selected theme. Overriding templates is a powerful yet dangerous tool that should only be used by experienced developers, and as a last resort.'
+            override_extends: 'When overriding templates, you should always extend the original template and only override specific blocks to keep as much of the original template as possible.'
+            delete_override: 'Delete local override'
     reaction:
         crud:
             single: 'reaction'

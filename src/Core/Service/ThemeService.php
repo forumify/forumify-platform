@@ -8,6 +8,7 @@ use Forumify\Core\Entity\Theme;
 use Forumify\Core\Repository\ThemeRepository;
 use Forumify\Plugin\AbstractForumifyTheme;
 use League\Flysystem\FilesystemOperator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class ThemeService
@@ -20,6 +21,10 @@ class ThemeService
         private readonly CacheInterface $cache,
         private readonly ThemeRepository $themeRepository,
         private readonly FilesystemOperator $assetStorage,
+        #[Autowire('%twig.default_path%')]
+        private readonly string $twigPath,
+        #[Autowire('%kernel.project_dir%')]
+        private readonly string $rootDir,
     ) {
     }
 
@@ -58,6 +63,18 @@ class ThemeService
 
             return $metaData;
         });
+    }
+
+    public function getTemplateDirectories(?Theme $theme = null): array
+    {
+        $themePackage = $theme === null
+            ? $this->getThemeMetaData()['pluginPackage']
+            : $theme->getPlugin()->getPackage();
+
+        $localDir = "{$this->twigPath}/themes/$themePackage";
+        $themeDir = "{$this->rootDir}/vendor/$themePackage/templates";
+
+        return [$localDir, $themeDir];
     }
 
     private function dumpStyleSheets(Theme $theme, string $key): void

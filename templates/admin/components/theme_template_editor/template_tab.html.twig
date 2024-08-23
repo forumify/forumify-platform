@@ -1,0 +1,26 @@
+<div id="template-tab-{{ file.id }}" class="flex items-center template-tab">
+    <button
+        class="btn-link"
+        {{ stimulus_action(
+            'forumify/forumify-platform/theme_template_editor',
+            'selectTab',
+            null,
+            { fileId: file.id }
+        ) }}
+    >
+        {{ file.name }}
+    </button>
+    <button
+        class="btn-link btn-small btn-icon h-100 border-r"
+        {{ stimulus_action(
+            'forumify/forumify-platform/theme_template_editor',
+            'closeTab',
+            null,
+            { fileId: file.id }
+        )|stimulus_action('live', 'action') }}
+        data-live-action-param="closeTemplate"
+        data-live-id-param="{{ file.id }}"
+    >
+        <i class="ph ph-x"></i>
+    </button>
+</div>

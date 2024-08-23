@@ -1,0 +1,33 @@
+#template-editor {
+    .directory {
+        min-width: 300px;
+        width: 300px;
+        overflow-x: auto;
+        background-color: var(--c-elevation-1);
+        height: 100vh;
+        border-left: var(--border);
+        border-right: var(--border);
+
+        .closed {
+            display: none;
+        }
+    }
+
+    .btn-link {
+        border-radius: 0;
+    }
+
+    .location-tabs,
+    .file-tabs {
+        background-color: var(--c-elevation-1);
+    }
+
+    .template-group {
+        position: relative;
+
+        .template-delete-btn {
+            position: absolute;
+            right: 0;
+        }
+    }
+}

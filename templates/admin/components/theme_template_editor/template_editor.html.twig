@@ -1,0 +1,52 @@
+<div id="{{ file.id }}" class="template-group flex flex-col w-100 h-100 d-none">
+    <div class="border-b location-tabs flex">
+        {% for location in file.locations|keys %}
+            <button
+                id="tab-{{ location }}-{{ file.id }}"
+                class="btn-link location-tab"
+                {{ stimulus_action(
+                    'forumify/forumify-platform/theme_template_editor',
+                    'selectLocation',
+                    null,
+                    { fileId: file.id, location: location }
+                ) }}
+            >
+                {{ location }}
+            </button>
+        {% endfor %}
+    </div>
+    {% for location, value in file.locations %}
+        <div
+            id="editor-{{ location }}-{{ file.id }}"
+            class="template-editor w-100 h-100 d-none"
+            data-location="{{ location }}"
+            {% if value is not null %}data-initial-value="{{ value }}"{% endif %}
+        >
+            {% if value is null %}
+                <div class="w-100 h-100 flex flex-col justify-center items-center gap-4">
+                    <p class="w-50 text-small text-center">{{ 'admin.theme.template_editor.override_help'|trans }}</p>
+                    <p class="w-50 text-small text-center">{{ 'admin.theme.template_editor.override_extends'|trans }}</p>
+                    <button
+                        class="btn-primary"
+                        {{ stimulus_action('live', 'action') }}
+                        data-live-action-param="overrideTemplate"
+                        data-live-id-param="{{ file.id }}"
+                    >
+                        {{ 'admin.theme.template_editor.override'|trans }}
+                    </button>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    {% if file.locations.local is not null %}
+        <button
+            class="btn-link template-delete-btn"
+            {{ stimulus_action('live', 'action') }}
+            data-live-action-param="deleteOverride"
+            data-live-id-param="{{ file.id }}"
+        >
+            <i class="ph ph-file-minus"></i>
+            {{ 'admin.theme.template_editor.delete_override'|trans }}
+        </button>
+    {% endif %}
+</div>

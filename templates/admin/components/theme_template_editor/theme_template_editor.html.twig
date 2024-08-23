@@ -1,0 +1,36 @@
+<div
+    id="template-editor"
+    {{ attributes.add(stimulus_controller('forumify/forumify-platform/theme_template_editor', {
+        themeId: theme.id
+    })) }}
+>
+    {% set directory = this.dirs() %}
+    <div class="flex">
+        <div class="directory flex flex-col p-2">
+            {% include '@Forumify/admin/components/theme_template_editor/directory.html.twig' with {
+                directory: directory,
+                root: true,
+                path: '',
+            } %}
+        </div>
+        <div class="flex-grow flex flex-col">
+            <div class="border-b file-tabs flex flex-wrap">
+                {% for file in this.openFiles %}
+                    {% include '@Forumify/admin/components/theme_template_editor/template_tab.html.twig' %}
+                {% endfor %}
+            </div>
+            <div class="flex justify-center items-center h-100">
+                {% for file in this.openFiles %}
+                    {% include '@Forumify/admin/components/theme_template_editor/template_editor.html.twig' %}
+                {% else %}
+                    {{ 'admin.theme.template_editor.open_file'|trans }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% macro placeholder(props) %}
+    <div class="flex justify-center">
+        {% include '@Forumify/components/loader.html.twig' %}
+    </div>
+{% endmacro %}

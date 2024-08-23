@@ -1,0 +1,6 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block main %}
+    <div style="margin-left: 250px; width: 100%;">
+        {{ component('ThemeTemplateEditor', { theme: theme, loading: 'defer' }) }}
+    </div>
+{% endblock %}

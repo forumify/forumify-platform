@@ -7,7 +7,9 @@ namespace Forumify\Admin\Controller;
 use Forumify\Admin\Crud\AbstractCrudController;
 use Forumify\Admin\Form\ThemeType;
 use Forumify\Core\Entity\Theme;
+use Forumify\Core\Service\ThemeService;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('themes', 'themes')]
