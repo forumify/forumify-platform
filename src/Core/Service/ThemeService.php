@@ -8,6 +8,7 @@ use Forumify\Core\Entity\Theme;
 use Forumify\Core\Repository\ThemeRepository;
 use Forumify\Plugin\AbstractForumifyTheme;
 use League\Flysystem\FilesystemOperator;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 
 class ThemeService
@@ -20,6 +21,10 @@ class ThemeService
         private readonly CacheInterface $cache,
         private readonly ThemeRepository $themeRepository,
         private readonly FilesystemOperator $assetStorage,
+        #[Autowire('%twig.default_path%')]
+        private readonly string $twigPath,
+        #[Autowire('%kernel.project_dir%')]
+        private readonly string $rootDir,
     ) {
     }
 
@@ -60,6 +65,18 @@ class ThemeService
         });
     }
 
+    public function getTemplateDirectories(?Theme $theme = null): array
+    {
+        $themePackage = $theme === null
+            ? $this->getThemeMetaData()['pluginPackage']
+            : $theme->getPlugin()->getPackage();
+
+        $localDir = "{$this->twigPath}/themes/$themePackage";
+        $themeDir = "{$this->rootDir}/vendor/$themePackage/templates";
+
+        return [$localDir, $themeDir];
+    }
+
     private function dumpStyleSheets(Theme $theme, string $key): void
     {
         $plugin = $theme->getPlugin()->getPlugin();
@@ -67,22 +84,23 @@ class ThemeService
             return;
         }
 
-        $css = $theme->getCss();
         ['default' => $defaultVars, 'dark' => $darkVars] = $this->dumpThemeVars($plugin, $theme);
 
         if ($this->assetStorage->directoryExists('themes')) {
             $this->assetStorage->deleteDirectory('themes');
         }
-        $this->assetStorage->createDirectory('themes');
 
-        $system = ":root{{$defaultVars}}@media (prefers-color-scheme: dark) {:root{{$darkVars}}}" . $css;
+        $this->assetStorage->createDirectory('themes');
+        $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'custom', $key), $theme->getCss());
+
+        $system = ":root{{$defaultVars}}@media (prefers-color-scheme: dark) {:root{{$darkVars}}}";
         $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'system', $key), $system);
 
-        $default = ":root{{$defaultVars}}" . $css;
+        $default = ":root{{$defaultVars}}";
         $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'default', $key), $default);
 
         $defaultVars .= $darkVars;
-        $dark = ":root{{$defaultVars}}" . $css;
+        $dark = ":root{{$defaultVars}}";
         $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'dark', $key), $dark);
     }
 

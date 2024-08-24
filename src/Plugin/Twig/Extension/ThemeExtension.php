@@ -35,7 +35,8 @@ class ThemeExtension extends AbstractExtension
         $preference = $app->getRequest()->cookies->get(ThemeService::CURRENT_THEME_COOKIE) ?? 'system';
 
         $links = [
-            $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, $preference, $lastModified), 'forumify.asset')
+            $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, 'custom', $lastModified), 'forumify.asset'),
+            $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, $preference, $lastModified), 'forumify.asset'),
         ];
         foreach ($metaData['stylesheets'] ?? [] as $stylesheet) {
             $links[] = $this->packages->getUrl('themes/' . $stylesheet);
