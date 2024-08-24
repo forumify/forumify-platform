@@ -40,9 +40,6 @@
 
     .option {
         color: var(--c-text-primary);
-        &:hover {
-            background-color: rgba(0, 0, 0, 0.03);
-        }
     }
 
     .active {
@@ -63,5 +60,12 @@
         background: var(--c-primary);
         color: var(--c-primary-text);
         border: none;
+    }
+
+    .disabled {
+        padding-right: var(--spacing-2);
+        &+ .remove {
+            display: none;
+        }
     }
 }

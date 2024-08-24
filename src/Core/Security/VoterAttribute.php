@@ -10,6 +10,8 @@ enum VoterAttribute: string
     case Administrator = 'ADMINISTRATOR';
     case Moderator = 'MODERATOR';
 
+    case AssignRole = 'ASSIGN_ROLE';
+
     case ACL = 'ACCESS_CONTROL_LIST';
 
     case CommentCreate = 'COMMENT_CREATE';

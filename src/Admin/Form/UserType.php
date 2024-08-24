@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Badge;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -60,12 +61,13 @@ class UserType extends AbstractType
             ->add('roleEntities', EntityType::class, [
                 'class' => Role::class,
                 'label' => 'Roles',
-                'choice_label' => 'title',
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
+                'options_as_html' => true,
+                'choice_label' => $this->getChoiceLabel(...),
+                'choice_attr' => $this->getChoiceAttributes(...),
                 'query_builder' => $this->getRoleQueryBuilder(...),
-                'disabled' => $options['is_super_admin'] && !$this->security->isGranted('ROLE_SUPER_ADMIN'),
             ])
             ->add('badges', EntityType::class, [
                 'class' => Badge::class,
@@ -82,9 +84,29 @@ class UserType extends AbstractType
             ->createQueryBuilder('r')
             ->andWhere('r.slug != :guest')
             ->andWhere('r.slug != :user')
+            ->orderBy('r.position', 'ASC')
             ->setParameters([
                 'guest' => 'guest',
                 'user' => 'user',
             ]);
+    }
+
+    private function getChoiceLabel(Role $role): string
+    {
+        $title = $role->getTitle();
+        if ($this->security->isGranted(VoterAttribute::AssignRole->value, $role)) {
+            return $title;
+        }
+
+        return "<div class='disabled'>$title</div>";
+    }
+
+    private function getChoiceAttributes(Role $role): array
+    {
+        if ($this->security->isGranted(VoterAttribute::AssignRole->value, $role)) {
+            return [];
+        }
+
+        return ['disabled' => 'disabled'];
     }
 }

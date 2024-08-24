@@ -93,6 +93,9 @@
     "extra": {
         "symfony": {
             "require": "6.4.*"
+        },
+        "branch-alias": {
+            "dev-master": "0.2.x-dev"
         }
     }
 }

@@ -34,6 +34,9 @@ class Role
     #[ORM\Column(type: 'simple_array', nullable: true)]
     private ?array $permissions = [];
 
+    #[ORM\Column(type: 'integer')]
+    private int $position = 0;
+
     /**
      * @var Collection<User>
      */
@@ -112,5 +115,15 @@ class Role
     public function setPermissions(array $permissions): void
     {
         $this->permissions = $permissions;
+    }
+
+    public function getPosition(): int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): void
+    {
+        $this->position = $position;
     }
 }

@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/users', 'users')]
 class UserController extends AbstractCrudController
 {
+    protected bool $allowCreate = false;
+
     protected ?string $permissionView = 'forumify.admin.users.view';
     protected ?string $permissionCreate = 'forumify.admin.users.manage';
     protected ?string $permissionEdit = 'forumify.admin.users.manage';
@@ -33,9 +35,6 @@ class UserController extends AbstractCrudController
      */
     protected function getForm(?object $data): FormInterface
     {
-        $oldRoles = $data?->getRoles() ?? [];
-        return $this->createForm(UserType::class, $data, [
-            'is_super_admin' => in_array('ROLE_SUPER_ADMIN', $oldRoles, true)
-        ]);
+        return $this->createForm(UserType::class, $data);
     }
 }
