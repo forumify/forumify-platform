@@ -75,11 +75,18 @@
     z-index: 999;
 }
 
-.topic-image {
+.topic-list-image {
     object-fit: contain;
     width: auto;
     max-width: 100%;
     max-height: 300px;
+}
+
+.topic-image {
+    object-fit: contain;
+    width: auto;
+    max-width: 100%;
+    max-height: 600px;
 }
 
 .topic-content {

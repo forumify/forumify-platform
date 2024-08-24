@@ -50,7 +50,7 @@
                             ? asset(topic.image, 'forumify.media')
                             : (setting('forumify.logo') ? asset(setting('forumify.logo'), 'forumify.asset') : asset('bundles/forumify/images/forumify.svg')) %}
                         <div>
-                            <img class="topic-image" src="{{ image }}" alt="">
+                            <img class="topic-list-image" src="{{ image }}" alt="">
                         </div>
                     {% elseif topic.firstComment %}
                         <div class="topic-content">
