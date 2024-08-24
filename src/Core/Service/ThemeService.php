@@ -10,6 +10,7 @@ use Forumify\Plugin\AbstractForumifyTheme;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
+use Twig\Environment;
 
 class ThemeService
 {
@@ -21,6 +22,7 @@ class ThemeService
         private readonly CacheInterface $cache,
         private readonly ThemeRepository $themeRepository,
         private readonly FilesystemOperator $assetStorage,
+        private readonly Environment $twig,
         #[Autowire('%twig.default_path%')]
         private readonly string $twigPath,
         #[Autowire('%kernel.project_dir%')]
@@ -91,7 +93,9 @@ class ThemeService
         }
 
         $this->assetStorage->createDirectory('themes');
-        $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'custom', $key), $theme->getCss());
+
+        $themeCss = $this->twig->createTemplate($theme->getCss());
+        $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'custom', $key), $themeCss->render());
 
         $system = ":root{{$defaultVars}}@media (prefers-color-scheme: dark) {:root{{$darkVars}}}";
         $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'system', $key), $system);
