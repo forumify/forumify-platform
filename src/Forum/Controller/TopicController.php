@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Controller;
 
+use Forumify\Core\Entity\ReadMarker;
+use Forumify\Core\Entity\User;
+use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Forum;
@@ -30,6 +33,7 @@ class TopicController extends AbstractController
         private readonly CreateCommentService $createCommentService,
         private readonly TopicRepository $topicRepository,
         private readonly ReindexLastActivityService $reindexLastActivityService,
+        private readonly ReadMarkerRepository $readMarkerRepository
     ) {
     }
 
@@ -55,6 +59,12 @@ class TopicController extends AbstractController
                 $this->createCommentService->createComment($topic, $commentForm->getData());
                 return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
             }
+        }
+
+        /** @var User|null $user */
+        $user = $this->getUser();
+        if ($user !== null) {
+            $this->readMarkerRepository->read($user, Topic::class, $topic->getId());
         }
 
         $this->topicRepository->incrementViews($topic);

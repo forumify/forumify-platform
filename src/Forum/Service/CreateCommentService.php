@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Service;
 
+use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Event\CommentCreatedEvent;
@@ -17,6 +18,7 @@ class CreateCommentService
         private readonly CommentRepository $commentRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ReindexLastActivityService $reindexLastActivityService,
+        private readonly ReadMarkerRepository $readMarkerRepository,
     ) {
     }
 
@@ -27,6 +29,7 @@ class CreateCommentService
         $comment->setTopic($topic);
         $this->commentRepository->save($comment);
         $this->reindexLastActivityService->reindexAll();
+        $this->readMarkerRepository->unread(Topic::class, $topic->getId());
 
         $this->eventDispatcher->dispatch(new CommentCreatedEvent($comment));
         return $comment;

@@ -10,10 +10,13 @@
             {% for forum in visibleForums %}
                 {% set link = path('forumify_forum_forum', { slug: forum.slug }) %}
                 <li class="forum">
-                    <div class="forum-content">
+                    <div class="flex-grow">
                         <a href="{{ link }}">
                             <h3 class="mb-0">
                                 {{ forum.title }}
+                                {% if not forum|read %}
+                                    <i class="dot"></i>
+                                {% endif %}
                             </h3>
                         </a>
                         <div>
@@ -23,6 +26,9 @@
                                     <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">
                                         <i class="ph ph-arrow-bend-down-right"></i>
                                         {{ subforum.title }}
+                                        {% if not subforum|read %}
+                                            <i class="dot"></i>
+                                        {% endif %}
                                     </a>
                                 {% endfor %}
                             </div>

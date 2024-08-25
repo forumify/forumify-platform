@@ -6,7 +6,9 @@ namespace Forumify\Forum\Component;
 
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
+use Forumify\Core\Entity\ReadMarker;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Repository\MessageRepository;
@@ -35,12 +37,18 @@ class MessageThreadList extends AbstractDoctrineList
         private readonly MessageRepository $messageRepository,
         private readonly Security $security,
         private readonly FormFactoryInterface $formFactory,
+        private readonly ReadMarkerRepository $readMarkerRepository,
     ) {
     }
 
     #[LiveAction]
     public function setSelectedThread(#[LiveArg] int $threadId): void
     {
+        $user = $this->getUser();
+        if (!$this->readMarkerRepository->isRead($user, MessageThread::class, $threadId)) {
+            $this->readMarkerRepository->save(new ReadMarker($user, MessageThread::class, $threadId));
+        }
+
         $this->selectedThreadId = $threadId;
     }
 
@@ -72,8 +80,9 @@ class MessageThreadList extends AbstractDoctrineList
         return $this->messageThreadRepository
             ->createQueryBuilder('mt')
             ->join('mt.participants', 'p')
+            ->join('mt.messages', 'm')
             ->where('p.id = (:userId)')
-            ->orderBy('mt.createdAt', 'DESC')
+            ->orderBy('m.createdAt', 'DESC')
             ->setParameter('userId', $this->getUser());
     }
 

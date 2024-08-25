@@ -234,6 +234,15 @@ iframe {
     border: none;
 }
 
+.dot {
+    width: 8px;
+    height: 8px;
+    margin: 2px var(--spacing-1);
+    display: inline-block;
+    background-color: var(--c-call-to-action);
+    border-radius: 50%;
+}
+
 @import 'elements/alert';
 @import 'elements/table';
 @import 'elements/tabs';
