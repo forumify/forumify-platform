@@ -134,6 +134,9 @@ class PluginService
             // a lot more needs to be broken before this can happen...
         }
 
+        if ($versions === null) {
+            return [];
+        }
         return array_combine(array_column($versions, 'name'), $versions);
     }
 

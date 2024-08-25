@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Plugin\Twig;
 
 use Forumify\Core\Service\ThemeService;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
@@ -66,7 +67,11 @@ class ThemeTemplateLoader implements LoaderInterface
             return $this->cache[$name];
         }
 
-        [$localDir, $themeDir] = $this->themeService->getTemplateDirectories();
+        try {
+            [$localDir, $themeDir] = $this->themeService->getTemplateDirectories();
+        } catch (RuntimeException) {
+            return null;
+        }
 
         $localFile = "$localDir/$name";
         if (is_file($localFile)) {

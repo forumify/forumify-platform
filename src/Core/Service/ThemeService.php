@@ -8,6 +8,7 @@ use Forumify\Core\Entity\Theme;
 use Forumify\Core\Repository\ThemeRepository;
 use Forumify\Plugin\AbstractForumifyTheme;
 use League\Flysystem\FilesystemOperator;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment;
@@ -70,8 +71,12 @@ class ThemeService
     public function getTemplateDirectories(?Theme $theme = null): array
     {
         $themePackage = $theme === null
-            ? $this->getThemeMetaData()['pluginPackage']
+            ? $this->getThemeMetaData()['pluginPackage'] ?? null
             : $theme->getPlugin()->getPackage();
+
+        if ($themePackage === null) {
+            throw new RuntimeException('No theme installed.');
+        }
 
         $localDir = "{$this->twigPath}/themes/$themePackage";
         $themeDir = "{$this->rootDir}/vendor/$themePackage/templates";
