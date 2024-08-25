@@ -32,7 +32,7 @@ class NewMessageThreadType extends AbstractType
             ->add('title', TextType::class)
             ->add('participants', EntityType::class, [
                 'class' => User::class,
-                'choice_label' => 'username',
+                'choice_label' => 'displayName',
                 'multiple' => true,
                 'autocomplete' => true,
                 'query_builder' => $this->addUserFilter(...),

@@ -12,7 +12,9 @@
             <div class="flex gap-4 mb-4">
                 <div>
                     <h2 class="mb-0">{{ user.displayName }}</h2>
-                    <p class="text-small">@{{ user.username }}</p>
+                    {% if not setting('forumify.hide_usernames') %}
+                        <p class="text-small">@{{ user.username }}</p>
+                    {% endif %}
                 </div>
                 {% if app.user is not null %}
                     {% if app.user.id != user.id %}

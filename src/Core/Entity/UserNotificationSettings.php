@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class UserNotificationSettings
 {
     #[ORM\Id]
-    #[ORM\OneToOne(inversedBy: 'notificationSettings', targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'notificationSettings')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private User $user;
 

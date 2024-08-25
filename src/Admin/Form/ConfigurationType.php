@@ -61,6 +61,10 @@ class ConfigurationType extends AbstractType
                 'label' => 'admin.configuration.enable_registrations',
                 'required' => false,
             ])
+            ->add('forumify__hide_usernames', CheckboxType::class, [
+                'label' => 'admin.configuration.hide_usernames',
+                'required' => false,
+            ])
             ->add('forumify__login_method', ChoiceType::class, [
                 'label' => 'admin.configuration.login_method',
                 'help' => 'admin.configuration.login_method_help',

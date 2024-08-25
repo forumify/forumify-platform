@@ -66,8 +66,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Subscription::class, fetch: 'EXTRA_LAZY')]
     private Collection $subscriptions;
 
-    #[ORM\OneToOne(mappedBy: 'user', targetEntity: UserNotificationSettings::class, cascade: ['persist'])]
-    private UserNotificationSettings $notificationSettings;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserNotificationSettings::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+    private Collection $notificationSettings;
 
     /**
      * @var Collection<Badge>
@@ -83,7 +83,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->roles = new ArrayCollection();
-        $this->notificationSettings = new UserNotificationSettings($this);
+        $this->notificationSettings = new ArrayCollection([new UserNotificationSettings($this)]);
         $this->badges = new ArrayCollection();
     }
 
@@ -236,12 +236,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getNotificationSettings(): UserNotificationSettings
     {
-        return $this->notificationSettings ?? new UserNotificationSettings($this);
+        if ($this->notificationSettings->isEmpty()) {
+            $this->notificationSettings = new ArrayCollection([new UserNotificationSettings($this)]);
+        }
+        return $this->notificationSettings->first();
     }
 
     public function setNotificationSettings(UserNotificationSettings $notificationSettings): void
     {
-        $this->notificationSettings = $notificationSettings;
+        $this->notificationSettings = new ArrayCollection([$notificationSettings]);
     }
 
     /**

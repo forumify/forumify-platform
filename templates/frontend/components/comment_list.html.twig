@@ -7,7 +7,9 @@
             {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
             {% include '@Forumify/components/username.html.twig' with { user: item.createdBy, className: 'text-center' } only %}
             {% if item.createdBy %}
-                <span class="text-small">@{{ item.createdBy.username }}</span>
+                {% if not setting('forumify.hide_usernames') %}
+                    <span class="text-small">@{{ item.createdBy.username }}</span>
+                {% endif %}
                 <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
                     {% for badge in item.createdBy.badges %}
                         <div class="avatar-sm flex justify-center items-center">

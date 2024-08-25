@@ -230,6 +230,7 @@ admin:
         default_avatar: 'Default avatar'
         default_avatar_help: 'Avatar to use for users that have no custom avatar.'
         enable_registrations: 'Enable registrations'
+        hide_usernames: 'Hide usernames'
         login_method: 'Login method'
         login_method_help: 'Decides how users login, using their username, email, or both.'
         index: 'Index override'
