@@ -13,6 +13,8 @@ class SettingRepository extends AbstractRepository
 {
     public const CACHE_KEY = 'settings.cache';
 
+    private ?array $settings = null;
+
     public function __construct(
         private readonly CacheInterface $cache,
         ManagerRegistry $registry
@@ -106,6 +108,7 @@ class SettingRepository extends AbstractRepository
     {
         try {
             $this->cache->delete(self::CACHE_KEY);
+            $this->settings = null;
         } catch (InvalidArgumentException) {
             // impossible
         }
@@ -119,8 +122,13 @@ class SettingRepository extends AbstractRepository
      */
     private function getSettingsFromCache(): array
     {
+        if ($this->settings !== null) {
+            return $this->settings;
+        }
+
         try {
-            return $this->cache->get(self::CACHE_KEY, $this->refreshSettingsCache(...));
+            $this->settings = $this->cache->get(self::CACHE_KEY, $this->refreshSettingsCache(...));
+            return $this->settings;
         } catch (InvalidArgumentException) {
             // impossible
         }

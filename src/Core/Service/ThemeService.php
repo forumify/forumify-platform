@@ -19,6 +19,8 @@ class ThemeService
     public const CURRENT_THEME_COOKIE = 'forumify_theme';
     public const THEME_FILE_FORMAT = 'themes/%s-%s.css';
 
+    private ?array $themeMetadata = null;
+
     public function __construct(
         private readonly CacheInterface $cache,
         private readonly ThemeRepository $themeRepository,
@@ -34,11 +36,16 @@ class ThemeService
     public function clearCache(): void
     {
         $this->cache->delete(self::THEME_LAST_MODIFIED_CACHE_KEY);
+        $this->themeMetadata = null;
     }
 
     public function getThemeMetaData(): array
     {
-        return $this->cache->get(self::THEME_LAST_MODIFIED_CACHE_KEY, function (): array {
+        if ($this->themeMetadata !== null) {
+            return $this->themeMetadata;
+        }
+
+        $this->themeMetadata = $this->cache->get(self::THEME_LAST_MODIFIED_CACHE_KEY, function (): array {
             /** @var Theme|null $theme */
             $theme = $this->themeRepository->findOneBy(['active' => true]);
             if ($theme === null) {
@@ -66,6 +73,7 @@ class ThemeService
 
             return $metaData;
         });
+        return $this->themeMetadata;
     }
 
     public function getTemplateDirectories(?Theme $theme = null): array
