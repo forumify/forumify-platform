@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Service;
 
-// TODO: sanitize html haha
 class HTMLSanitizer
 {
     private const TAG_WHITELIST = [
@@ -28,18 +27,16 @@ class HTMLSanitizer
         'ul',
         'ol',
         'li',
-    ];
-
-    private const ATTR_WHITELIST = [
-        'class',
-        'style',
-        'href',
-        'src',
-        'alt',
+        'table',
+        'thead',
+        'tbody',
+        'tr',
+        'th',
+        'td'
     ];
 
     public function sanitize(string $html): string
     {
-        return $html;
+        return strip_tags($html, self::TAG_WHITELIST);
     }
 }
