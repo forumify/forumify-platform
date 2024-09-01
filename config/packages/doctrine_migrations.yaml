@@ -1,3 +1,6 @@
 doctrine_migrations:
     migrations_paths:
         'ForumifyDoctrineMigrations': '%kernel.project_dir%/vendor/forumify/forumify-platform/migrations'
+
+    services:
+        'Doctrine\Migrations\Version\Comparator': 'Forumify\Core\Service\DoctrineVersionComparator'

@@ -285,13 +285,11 @@ admin:
         activate: 'Activate'
         deactivate: 'Deactivate'
         uninstall: 'Uninstall'
-        marketplace: 'Browse Plugins'
+        install: 'Install a Plugin'
+        marketplace_button: 'From the Marketplace'
+        packagist_button: 'From Packagist'
         install_plugin_temp: 'Install Plugin'
-        install_plugin_temp_warning: >
-            This is a temporary method to install plugins.
-            Plugins installed using this method are not guaranteed to continue working, or receive updates, once the marketplace is added.
-            Additionally, these plugins are not validated, so use with caution and only use plugins from developers that you trust.
-            This method of adding plugins will still be available after the release of the marketplace, but only for plugins that aren't published to the marketplace.
+        install_plugin_temp_warning: 'Plugins from composer repositories outside of the forumify repository are not validated by forumify, use with caution and only install plugins from developers that you trust.'
         plugin_package: 'Plugin Package'
         plugin_package_help: 'Insert the plugin''s package name in the <vendor>/<plugin> format, for example "forumify/forumify-donations-plugin".'
         install_risk: 'I understand the risks associated with installing plugins from unknown sources.'
@@ -324,3 +322,15 @@ admin:
         crud:
             single: 'user'
             plural: 'users'
+    marketplace:
+        connect:
+            title: 'Connect a forumify.net account'
+            info: 'Before you can use the marketplace you must connect your forumify instance with an existing forumify.net account.'
+            login: 'Connect account'
+            login_help: 'You will be redirected to the forumify.net login page. The connected account will be used to identify your marketplace purchases, active subscriptions,...'
+            success: 'You successfully connected your forumify instance with your forumify.net account.'
+            error:
+                title: 'We were unable to connect your account.'
+                code_missing: 'The authorization code is missing from forumify.net''s response.'
+                state_mismatch: 'There was a state mismatch between your request and forumify.net''s response.'
+
