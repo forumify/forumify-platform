@@ -43,6 +43,7 @@ class UserType extends AbstractType
 
         $builder
             ->add('username', TextType::class)
+            ->add('displayName', TextType::class)
             ->add('email', TextType::class)
             ->add('newAvatar', FileType::class, [
                 'mapped' => false,
