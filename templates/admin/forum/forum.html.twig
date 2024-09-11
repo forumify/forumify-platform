@@ -34,7 +34,7 @@
             {% endembed %}
             <div class="flex justify-center gap-4">
                 <button class="btn-primary">{{ 'save'|trans }}</button>
-                <a href="{{ path('forumify_admin_forum', { slug: forum.parent }) }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+                <a href="{{ path('forumify_admin_forum', { slug: forum.parent.slug }) }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
             </div>
             {{ form_end(form) }}
         </div>
