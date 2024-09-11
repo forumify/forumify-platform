@@ -28,6 +28,8 @@ date_relative:
         }
 post: 'Post'
 create_topic: 'Post new topic'
+comment:
+    edited: 'Edited on {date} by {user}'
 create_comment: 'Post comment'
 subscribe: 'Subscribe'
 unsubscribe: 'Unsubscribe'
