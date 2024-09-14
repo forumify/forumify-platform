@@ -25,7 +25,7 @@ class ReadMarkerRuntime implements RuntimeExtensionInterface
     {
         $user = $this->security->getUser();
         if (!$user instanceof User) {
-            return false;
+            return true;
         }
 
         foreach ($this->readMarkerCheckers as $checker) {
