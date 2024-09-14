@@ -51,7 +51,7 @@ class ForumControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         // Only parent 1 is visible
-        $forumLinks = $crawler->filter('a[href^="/forum"] h3');
+        $forumLinks = $crawler->filter('h3 a[href^="/forum"]');
         self::assertCount(1, $forumLinks);
         self::assertSame('Parent 1', $forumLinks->text());
 
@@ -62,7 +62,7 @@ class ForumControllerTest extends WebTestCase
 
         // enter parent 1, only child 1 is visible
         $crawler = $client->clickLink('Parent 1');
-        $forumLinks = $crawler->filter('a[href^="/forum"] h3');
+        $forumLinks = $crawler->filter('h3 a[href^="/forum"]');
         self::assertCount(1, $forumLinks);
         self::assertSame('Child 1', $forumLinks->text());
     }
