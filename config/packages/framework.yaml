@@ -12,4 +12,4 @@ framework:
     router:
         default_uri: '%env(DEFAULT_URI)%'
     session:
-        name: '%env(hostname:DEFAULT_URI)%-sessid'
+        name: '%env(slug:hostname:DEFAULT_URI)%-sessid'
