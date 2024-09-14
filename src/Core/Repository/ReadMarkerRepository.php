@@ -59,14 +59,22 @@ class ReadMarkerRepository extends AbstractRepository
         }
     }
 
-    public function read(User $user, string $subject, int $subjectId): void
+    public function read(User $user, string $subject, int $subjectId, bool $flush = true): void
     {
         if ($this->isRead($user, $subject, $subjectId)) {
             return;
         }
 
         $marker = new ReadMarker($user, $subject, $subjectId);
-        $this->save($marker);
+        $this->save($marker, $flush);
+    }
+
+    public function markAllRead(User $user, string $subject, array $subjectIds): void
+    {
+        foreach ($subjectIds as $subjectId) {
+            $this->read($user, $subject, $subjectId, false);
+        }
+        $this->flush();
     }
 
     public function unread(string $subject, int $subjectId): void

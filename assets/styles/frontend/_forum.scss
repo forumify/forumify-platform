@@ -34,11 +34,6 @@
 
 .forum-subforums {
     display: none;
-
-    a + * {
-        margin-left: var(--spacing-2);
-    }
-
     @include min-width-sm {
         display: block;
     }
@@ -209,6 +204,7 @@
 
 .thread-row-inner {
     display: flex;
+    width: 100%;
     align-items: flex-start;
     gap: var(--spacing-2);
 }

@@ -40,6 +40,7 @@ no_activity: 'This user has not posted any content yet.'
 follow: 'Follow'
 unfollow: 'Unfollow'
 no_notifications: 'No notifications'
+mark_read: 'Mark as read'
 notification:
     comment_created: '{author} posted a new comment in "{topic}"'
     comment_title: 'New comment in {topic}'
