@@ -13,3 +13,7 @@ services:
             - '../src/**/Entity/*'
             - '../src/Plugin/Application/*'
             - '../src/Core/ForumifyKernel.php'
+
+    cache.adapter.forumify:
+        class: Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter
+        parent: cache.adapter.filesystem
