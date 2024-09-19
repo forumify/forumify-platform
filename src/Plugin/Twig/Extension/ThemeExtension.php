@@ -25,7 +25,7 @@ class ThemeExtension extends AbstractExtension
         ];
     }
 
-    public function getThemeTags(array $context, bool $allowCustom = false): string
+    public function getThemeTags(array $context, bool $allowCustom = true): string
     {
         $metaData = $this->themeService->getThemeMetaData();
         $lastModified = $metaData['lastModified'] ?? '0';
