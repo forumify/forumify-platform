@@ -196,6 +196,7 @@
 .thread-title {
     max-height: 40px;
     overflow: hidden;
+    text-wrap: wrap;
 }
 
 .thread-active {
@@ -207,6 +208,10 @@
     width: 100%;
     align-items: flex-start;
     gap: var(--spacing-2);
+
+    div {
+        width: calc(100% - 48px);
+    }
 }
 
 .thread {
@@ -236,6 +241,8 @@
 }
 
 .message + * {
+    border-top: var(--border);
+    padding-top: var(--spacing-4);
     margin-top: var(--spacing-2);
 }
 

@@ -22,7 +22,7 @@
                             </div>
                         </div>
                     </div>
-                    <ul class="thread-participants card-body flex items-center">
+                    <ul class="thread-participants flex flex-wrap card-body items-center">
                         {% for participant in this.selectedThread.participants %}
                             <li class="thread-participant">
                                 <a class="flex items-center" href="{{ path('forumify_forum_profile', { username: participant.username }) }}">
