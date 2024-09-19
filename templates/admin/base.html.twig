@@ -15,6 +15,7 @@
     <link rel="icon" type="image/svg+xml" href="{{ asset('bundles/forumify/images/forumify.svg') }}">
     {% block stylesheets %}
         {{ encore_entry_link_tags('admin') }}
+        {{ theme_tags(false) }}
     {% endblock %}
     {% block javascripts %}
         {{ encore_entry_script_tags('admin') }}
