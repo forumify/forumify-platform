@@ -26,6 +26,26 @@ date_relative:
             =1      {# day}
             other   {# days}
         }
+    hours: >-
+        {count, plural,
+            =0      {}
+            =1      {# hour}
+            other   {# hours}
+        }
+    minutes: >-
+        {count, plural,
+            =0      {}
+            =1      {# minute}
+            other   {# minutes}
+        }
+    seconds: >-
+        {count, plural,
+            =0      {}
+            =1      {# second}
+            other   {# seconds}
+        }
+    now: 'Just now'
+    ago: '{relative} ago'
 post: 'Post'
 create_topic: 'Post new topic'
 comment:

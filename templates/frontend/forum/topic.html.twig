@@ -27,7 +27,7 @@
                             {% include '@Forumify/components/username.html.twig' with { user: topic.createdBy } only %}
                         {% endset %}
                         {{ 'created_by'|trans({ author: author })|raw }},
-                        {{ 'date_time_short'|trans({ date: topic.createdAt }) }}
+                        {{ topic.createdAt|format_date }}
                     </div>
                 </div>
             </div>

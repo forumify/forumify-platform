@@ -15,10 +15,8 @@
                         <div>
                             <h3 class="mb-0">{{ this.selectedThread.title }}</h3>
                             <div class="text-small text-secondary">
-                                {% set autor %}
-                                    {% include '@Forumify/components/username.html.twig' with { user: this.selectedThread.createdBy } only %}
-                                {% endset %}
-                                Sent by {{ autor }} at {{ 'date_short_time_short'|trans({ date: this.selectedThread.createdAt }) }}
+                                <p>Sent by {% include '@Forumify/components/username.html.twig' with { user: this.selectedThread.createdBy } only %}</p>
+                                {{ this.selectedThread.createdAt|format_date }}
                             </div>
                         </div>
                     </div>
@@ -73,7 +71,7 @@
                         {{ item.title }}
                         {% if not item|read %}<i class="dot ml-1"></i>{% endif %}
                     </span>
-                    <span class="text-small text-secondary">{{ 'date_short_time_short'|trans({ date: item.createdAt }) }}</span>
+                    <span class="text-small text-secondary">{{ item.createdAt|format_date }}</span>
                 </div>
             </div>
         </div>

@@ -17,7 +17,7 @@
                                 {% include '@Forumify/components/avatar.html.twig' with { user: topic.createdBy, className: 'avatar-xs' } only %}
                                 <span class="flex items-baseline gap-2">
                                     {% include '@Forumify/components/username.html.twig' with { user: topic.createdBy, className: 'topic-author' } only %}
-                                    {{ 'date_time_short'|trans({ date: topic.createdAt }) }}
+                                    {{ topic.createdAt|format_date }}
                                 </span>
                             </div>
                         {% endif %}
@@ -38,7 +38,7 @@
                                 {% include '@Forumify/components/avatar.html.twig' with { user: topic.lastComment.createdBy, className: 'avatar-sm' } only %}
                                 <div>
                                     {% include '@Forumify/components/username.html.twig' with { user: topic.lastComment.createdBy, className: 'topic-author' } only %}
-                                    <p class="text-small">{{ 'date_time_short'|trans({ date: topic.lastComment.createdAt }) }}</p>
+                                    <p class="text-small">{{ topic.lastComment.createdAt|format_date }}</p>
                                 </div>
                             </div>
                         </div>

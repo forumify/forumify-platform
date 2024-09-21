@@ -53,7 +53,7 @@ class AuthControllerTest extends WebTestCase
         $client->request('GET', '/login');
         $crawler = $client->submitForm('Login', [
             '_username' => 'tester@example.org',
-            '_password' => 'test12345'
+            '_password' => 'test12345',
         ]);
 
         $username = $crawler->filter('.header-menu')->text();
@@ -99,7 +99,8 @@ class AuthControllerTest extends WebTestCase
             'register[username]' => 'tester',
             'register[email]' => 'tester@example.org',
             'register[password][first]' => 'test12345',
-            'register[password][second]' => 'test12345'
+            'register[password][second]' => 'test12345',
+            'register[timezone]' => 'UTC',
         ]);
 
         $username = $crawler->filter('.header-menu')->text();

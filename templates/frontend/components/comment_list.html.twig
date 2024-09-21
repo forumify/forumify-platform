@@ -22,13 +22,13 @@
         <div class="comment-content">
             <div class="text-small text-secondary flex justify-between items-end">
                 <span class="mb-2 flex flex-col">
-                    {{ 'date_time_short'|trans({ date: item.createdAt }) }}
+                    {{ item.createdAt|format_date }}
                     {% if item.updatedAt != item.createdAt and item.updatedBy is not null %}
                         {% set editor = item.updatedBy %}
                         <span class="text-light text-extra-small hide-phone">
                             {{ 'comment.edited'|trans({
                                 user: editor.displayName|default(editor.username),
-                                date: 'date_short_time_short'|trans({ date: item.updatedAt })
+                                date: item.updatedAt|format_date
                             }) }}
                         </span>
                     {% endif %}

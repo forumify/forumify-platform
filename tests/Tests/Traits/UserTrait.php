@@ -21,6 +21,7 @@ trait UserTrait
         $user->setUsername($username);
         $user->setEmail($email);
         $user->setPassword($password);
+        $user->setTimezone('UTC');
 
         return self::getContainer()
             ->get(CreateUserService::class)

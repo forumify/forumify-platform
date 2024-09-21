@@ -43,6 +43,7 @@ class EmailVerificationControllerTest extends WebTestCase
         $user->setUsername('tester');
         $user->setEmail('tester@example.org');
         $user->setPassword('test12345');
+        $user->setTimezone('UTC');
 
         return $createUserService->createUser($user);
     }
