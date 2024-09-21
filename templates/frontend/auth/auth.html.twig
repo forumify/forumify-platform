@@ -7,13 +7,13 @@
             <img src="{{ logo }}" alt="logo">
         </div>
         <div class="box">
-            <div class="auth-actions">
+            <div class="flex justify-between">
                 <a href="{{ path('forumify_forum_forum') }}">
                     <i class="ph ph-arrow-left"></i>
                     Back
                 </a>
             </div>
-            <h2 class="auth-title">
+            <h2 class="flex justify-center mt-4 mb-4">
                 {% block form_title %}{% endblock %}
             </h2>
             {% block form %}{% endblock %}

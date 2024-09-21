@@ -26,10 +26,6 @@ class ThemeService
         private readonly ThemeRepository $themeRepository,
         private readonly FilesystemOperator $assetStorage,
         private readonly Environment $twig,
-        #[Autowire('%twig.default_path%')]
-        private readonly string $twigPath,
-        #[Autowire('%kernel.project_dir%')]
-        private readonly string $rootDir,
     ) {
     }
 
@@ -74,22 +70,6 @@ class ThemeService
             return $metaData;
         });
         return $this->themeMetadata;
-    }
-
-    public function getTemplateDirectories(?Theme $theme = null): array
-    {
-        $themePackage = $theme === null
-            ? $this->getThemeMetaData()['pluginPackage'] ?? null
-            : $theme->getPlugin()->getPackage();
-
-        if ($themePackage === null) {
-            throw new RuntimeException('No theme installed.');
-        }
-
-        $localDir = "{$this->twigPath}/themes/$themePackage";
-        $themeDir = "{$this->rootDir}/vendor/$themePackage/templates";
-
-        return [$localDir, $themeDir];
     }
 
     private function dumpStyleSheets(Theme $theme, string $key): void

@@ -5,20 +5,22 @@
     {{ form_start(form, { attr: { id: 'registration-form' } }) }}
     {{ form_widget(form) }}
     <div class="flex justify-center">
-        {% if setting('forumify.recaptcha.enabled') %}
-            <button
-                class="btn-primary g-recaptcha"
-                data-sitekey="{{ setting('forumify.recaptcha.site_key') }}"
-                data-callback='onRegister'
-                data-action='register'
-            >
-                <i class="ph ph-sign-in"></i>{{ 'registration.register'|trans }}
-            </button>
-        {% else %}
-            <button class="btn-primary" type="submit">
-                <i class="ph ph-sign-in"></i>{{ 'registration.register'|trans }}
-            </button>
-        {% endif %}
+        {% block actions %}
+            {% if setting('forumify.recaptcha.enabled') %}
+                <button
+                    class="btn-primary g-recaptcha"
+                    data-sitekey="{{ setting('forumify.recaptcha.site_key') }}"
+                    data-callback='onRegister'
+                    data-action='register'
+                >
+                    <i class="ph ph-sign-in"></i>{{ 'registration.register'|trans }}
+                </button>
+            {% else %}
+                <button class="btn-primary" type="submit">
+                    <i class="ph ph-sign-in"></i>{{ 'registration.register'|trans }}
+                </button>
+            {% endif %}
+        {% endblock %}
     </div>
     {{ form_end(form) }}
 {% endblock %}
