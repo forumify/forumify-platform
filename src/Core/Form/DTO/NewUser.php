@@ -22,7 +22,7 @@ class NewUser
     private string $password;
 
     #[Assert\Timezone]
-    private string $timezone;
+    private ?string $timezone = null;
 
     public function getUsername(): string
     {
@@ -56,7 +56,7 @@ class NewUser
 
     public function getTimezone(): string
     {
-        return $this->timezone;
+        return $this->timezone ?? 'UTC';
     }
 
     public function setTimezone(string $timezone): void

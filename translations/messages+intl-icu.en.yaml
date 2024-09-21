@@ -71,7 +71,7 @@ notification:
     topic_created: '{author} created a new topic in "{forum}"'
     topic_forum: 'A new topic was created in "{forum}".'
     topic_view: 'View topic'
-    message_reply: 'You received a new message from {sender}'
+    message_reply: 'You received a new message in "{title}"'
     message_view: 'View message'
 account_settings:
     title: 'Account Settings'
