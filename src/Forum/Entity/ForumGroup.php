@@ -10,18 +10,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\ACLParameters;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
+use Forumify\Core\Entity\SortableEntityInterface;
+use Forumify\Core\Entity\SortableEntityTrait;
 use Forumify\Forum\Repository\ForumGroupRepository;
 
 #[ORM\Entity(repositoryClass: ForumGroupRepository::class)]
-class ForumGroup implements AccessControlledEntityInterface
+class ForumGroup implements AccessControlledEntityInterface, SortableEntityInterface
 {
     use IdentifiableEntityTrait;
+    use SortableEntityTrait;
 
     #[ORM\Column]
     private string $title;
-
-    #[ORM\Column(type: 'integer')]
-    private int $position = 0;
 
     #[ORM\OneToMany(mappedBy: 'group', targetEntity: Forum::class)]
     #[ORM\OrderBy(['position' => 'ASC'])]
@@ -43,16 +43,6 @@ class ForumGroup implements AccessControlledEntityInterface
     public function setTitle(string $title): void
     {
         $this->title = $title;
-    }
-
-    public function getPosition(): int
-    {
-        return $this->position;
-    }
-
-    public function setPosition(int $position): void
-    {
-        $this->position = $position;
     }
 
     /**

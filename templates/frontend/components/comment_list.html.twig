@@ -13,7 +13,7 @@
                 <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
                     {% for badge in item.createdBy.badges %}
                         <div class="avatar-sm flex justify-center items-center">
-                            <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" alt="{{ badge.name }}">
+                            <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" title="{{ badge.name }}">
                         </div>
                     {% endfor %}
                 </div>

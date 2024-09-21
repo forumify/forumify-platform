@@ -81,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         joinColumns: [new ORM\JoinColumn('user', onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn('badge', onDelete: 'CASCADE')],
     )]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $badges;
 
     public function __construct()

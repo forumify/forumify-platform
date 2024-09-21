@@ -8,16 +8,19 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
+use Forumify\Core\Entity\SortableEntityInterface;
+use Forumify\Core\Entity\SortableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Repository\BadgeRepository;
 
 #[ORM\Entity(BadgeRepository::class)]
-class Badge
+class Badge implements SortableEntityInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
+    use SortableEntityTrait;
 
     #[ORM\Column]
     private string $name;

@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Forumify\Core\Repository;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Event\EntityPostRemoveEvent;
 use Forumify\Core\Event\EntityPostSaveEvent;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -88,5 +91,43 @@ abstract class AbstractRepository extends ServiceEntityRepository
         if ($flush) {
             $this->flush();
         }
+    }
+
+    public function reorder(
+        SortableEntityInterface $entity,
+        string $direction,
+        ?callable $queryMutator = null
+    ): void {
+        $predicate = $direction === 'up' ? '<' : '>';
+        $qb = $this->createQueryBuilder('e')
+            ->where("e.position $predicate :position")
+            ->setParameter('position', $entity->getPosition())
+            ->orderBy('e.position', $direction === 'up' ? 'DESC' : 'ASC')
+            ->setMaxResults(1);
+
+        if ($queryMutator !== null) {
+            $queryMutator($qb);
+        }
+
+        try {
+            $toSwap = $qb->getQuery()->getSingleResult();
+        } catch (NoResultException|NonUniqueResultException) {
+            return;
+        }
+
+        if (!$toSwap) {
+            return;
+        }
+
+        $oldPosition = $entity->getPosition();
+        $newPosition = $toSwap->getPosition();
+        if ($newPosition === $oldPosition) {
+            $newPosition += $direction === 'up' ? -1 : 1;
+        }
+
+        $toSwap->setPosition($oldPosition);
+        $entity->setPosition($newPosition);
+
+        $this->saveAll([$entity, $toSwap]);
     }
 }

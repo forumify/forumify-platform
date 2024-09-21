@@ -45,19 +45,19 @@
     <div class="flex items-start gap-4">
         <div class="card w-30">
             <div class="card-title">
-                {{ 'badges'|trans }}
+                {{ 'profile.badges'|trans }}
             </div>
             <div class="card-body flex flex-wrap">
                 {% for badge in user.badges %}
                     <div class="w-25 p-2 flex flex-col justify-center items-center">
-                        <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" alt="{{ badge.name }}">
+                        <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" title="{{ badge.name }}">
                     </div>
                 {% endfor %}
             </div>
         </div>
         <div class="card w-70">
             <div class="card-title">
-                {{ 'activity'|trans }}
+                {{ 'profile.activity'|trans }}
             </div>
             <div class="card-body">
                 <ul>
@@ -68,7 +68,7 @@
                             </a>
                         </li>
                     {% else %}
-                        {{ 'no_activity'|trans }}
+                        {{ 'profile.no_activity'|trans }}
                     {% endfor %}
                 </ul>
             </div>
