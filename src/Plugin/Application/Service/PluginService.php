@@ -32,13 +32,13 @@ class PluginService
     /**
      * @throws PluginException|JsonException
      */
-    public function composerRequire(string $package, ?string $version = null): string
+    public function composerRequire(string $package): string
     {
-        $this->verifyPackage($package);
-
-        if ($version !== null) {
-            $package .= ':' . $version;
+        if ($versionPos = strpos($package, ':')) {
+            $package = substr($package, 0, $versionPos);
         }
+        $this->verifyPackage($package);
+        $package .= ':*';
 
         return $this->run([
             'composer',
