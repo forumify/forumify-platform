@@ -31,14 +31,15 @@ export default class extends Controller {
   }
 
   updatePlatform({ params }) {
-    const version = '^' + params.split('.').slice(0, 2).join('.');
-    this.updatePackage({ params: { package: 'forumify/forumify-platform', version } });
+    this.updatePackage({ params: { package: 'forumify/forumify-platform', version: params.version } });
   }
 
   updatePackage({ params }) {
     const args = {};
     params.package !== undefined && (args.package = params.package);
-    params.version !== undefined && (args.version = params.version);
+    if (params.version !== undefined) {
+      args.version = '^' + params.version.split('.').slice(0, 2).join('.');
+    }
 
     this.run([
       ['composerUpdate', args],
