@@ -30,13 +30,18 @@ export default class extends Controller {
     ]);
   }
 
-  updatePlatform() {
-    this.updatePackage({ params: { package: 'forumify/forumify-platform' } });
+  updatePlatform({ params }) {
+    const version = '^' + params.split('.').slice(0, 2).join('.');
+    this.updatePackage({ params: { package: 'forumify/forumify-platform', version } });
   }
 
   updatePackage({ params }) {
+    const args = {};
+    params.package !== undefined && (args.package = params.package);
+    params.version !== undefined && (args.version = params.version);
+
     this.run([
-      ['composerUpdate', { package: params.package }],
+      ['composerUpdate', args],
       ['clearFrameworkCache'],
       ['composerPostInstall'],
       ['migrations'],

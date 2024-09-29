@@ -77,12 +77,15 @@ class PluginService
         }
     }
 
-    public function composerUpdate(?string $package = null): string
+    public function composerUpdate(?string $package = null, ?string $version = null): string
     {
         $cmd = ['composer', 'update'];
         if ($package !== null) {
             $cmd[] = $package;
             $cmd[] = '--with-all-dependencies';
+            if ($version !== null) {
+                $cmd[1] = 'require';
+            }
         }
 
         return $this->run([
