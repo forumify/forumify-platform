@@ -12,14 +12,16 @@ use Symfony\Component\Routing\RouterInterface;
 
 class IndexController extends AbstractController
 {
-    public function __construct(private readonly RouterInterface $router)
-    {
+    public function __construct(
+        private readonly RouterInterface $router,
+        private readonly SettingRepository $settingRepository,
+    ) {
     }
 
     #[Route('/', name: 'index', methods: ['GET'], priority: -999)]
-    public function __invoke(SettingRepository $settingRepository): Response
+    public function __invoke(): Response
     {
-        $indexOverride = $settingRepository->get('forumify.index') ?? '/';
+        $indexOverride = $this->settingRepository->get('forumify.index') ?? '/';
         if (!str_starts_with($indexOverride, '/')) {
             $indexOverride = '/' . $indexOverride;
         }

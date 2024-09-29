@@ -18,6 +18,7 @@ class CoreExtension extends AbstractExtension
     {
         return [
             new TwigFilter('short_number', $this->shortNumber(...)),
+            new TwigFilter('format_date', [CoreRuntime::class, 'formatDate'])
         ];
     }
 

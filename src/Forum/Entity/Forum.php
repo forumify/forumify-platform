@@ -11,17 +11,20 @@ use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\ACLParameters;
 use Forumify\Core\Entity\HierarchicalInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
+use Forumify\Core\Entity\SortableEntityInterface;
+use Forumify\Core\Entity\SortableEntityTrait;
 use Forumify\Forum\Repository\ForumRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
-class Forum implements HierarchicalInterface, AccessControlledEntityInterface
+class Forum implements HierarchicalInterface, AccessControlledEntityInterface, SortableEntityInterface
 {
     public const TYPE_TEXT = 'text';
     public const TYPE_IMAGE = 'image';
     public const TYPE_MIXED = 'mixed';
 
     use IdentifiableEntityTrait;
+    use SortableEntityTrait;
 
     #[ORM\Column]
     private string $title = '';
@@ -39,9 +42,6 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     #[ORM\ManyToOne(targetEntity: Forum::class, cascade: ['persist', 'remove'], inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent', onDelete: 'CASCADE')]
     private ?Forum $parent = null;
-
-    #[ORM\Column(type: 'integer')]
-    private int $position = 0;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Forum::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['position' => 'ASC'])]
@@ -120,16 +120,6 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface
     public function setParent(?self $parent): void
     {
         $this->parent = $parent;
-    }
-
-    public function getPosition(): int
-    {
-        return $this->position;
-    }
-
-    public function setPosition(int $position): void
-    {
-        $this->position = $position;
     }
 
     /**

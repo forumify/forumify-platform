@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Components;
 
+use Doctrine\ORM\QueryBuilder;
 use Forumify\Admin\Form\MenuItemType;
 use Forumify\Core\Entity\MenuItem;
 use Forumify\Core\Repository\MenuItemRepository;
@@ -129,36 +130,13 @@ class MenuBuilder extends AbstractController
             return;
         }
 
-        $predicate = $direction === 'up' ? '<' : '>';
-        $qb = $this->menuItemRepository->createQueryBuilder('mi')
-            ->where("mi.position $predicate :position")
-            ->setParameter('position', $item->getPosition())
-            ->orderBy('mi.position', $direction === 'up' ? 'DESC' : 'ASC')
-            ->setMaxResults(1);
-
-        if ($item->getParent() !== null) {
-            $qb->andWhere('mi.parent = :parent')
-                ->setParameter('parent', $item->getParent());
-        } else {
-            $qb->andWhere('mi.parent IS NULL');
-        }
-
-        /** @var MenuItem|null $toSwap */
-        $toSwap = $qb->getQuery()->getSingleResult();
-        if ($toSwap === null) {
-            return;
-        }
-
-        $oldPosition = $item->getPosition();
-        $newPosition = $toSwap->getPosition();
-        if ($oldPosition === $newPosition) {
-            $newPosition += $direction === 'up' ? -1 : 1;
-        }
-
-        $toSwap->setPosition($oldPosition);
-        $item->setPosition($newPosition);
-
-        $this->menuItemRepository->saveAll([$item, $toSwap]);
+        $this->menuItemRepository->reorder($item, $direction, static function (QueryBuilder $qb) use ($item) {
+            if ($item->getParent() !== null) {
+                $qb->andWhere('e.parent = :parent')->setParameter('parent', $item->getParent());
+            } else {
+                $qb->andWhere('e.parent IS NULL');
+            }
+        });
     }
 
     #[LiveAction]

@@ -21,6 +21,9 @@ class NewUser
     #[Assert\Length(min: 8)]
     private string $password;
 
+    #[Assert\Timezone]
+    private ?string $timezone = null;
+
     public function getUsername(): string
     {
         return $this->username;
@@ -49,5 +52,15 @@ class NewUser
     public function setPassword(#[\SensitiveParameter] string $password): void
     {
         $this->password = $password;
+    }
+
+    public function getTimezone(): string
+    {
+        return $this->timezone ?? 'UTC';
+    }
+
+    public function setTimezone(string $timezone): void
+    {
+        $this->timezone = $timezone;
     }
 }

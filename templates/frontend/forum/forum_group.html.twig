@@ -11,25 +11,25 @@
                 {% set link = path('forumify_forum_forum', { slug: forum.slug }) %}
                 <li class="forum">
                     <div class="flex-grow">
-                        <a href="{{ link }}">
+                        <div class="flex items-center gap-1">
                             <h3 class="mb-0">
-                                {{ forum.title }}
-                                {% if not forum|read %}
-                                    <i class="dot"></i>
-                                {% endif %}
+                                <a href="{{ link }}">
+                                    {{ forum.title }}
+                                </a>
                             </h3>
-                        </a>
+                            {{ component('ReadMarker', { item: forum }) }}
+                        </div>
                         <div>
                             {{ forum.content|rich }}
                             <div class="forum-subforums">
                                 {% for subforum in forum.children|filter(subforum => can('view', subforum)) %}
-                                    <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">
-                                        <i class="ph ph-arrow-bend-down-right"></i>
-                                        {{ subforum.title }}
-                                        {% if not subforum|read %}
-                                            <i class="dot"></i>
-                                        {% endif %}
-                                    </a>
+                                    <div class="inline-flex items-baseline gap-1">
+                                        <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">
+                                            <i class="ph ph-arrow-bend-down-right"></i>
+                                            {{ subforum.title }}
+                                        </a>
+                                        {{ component('ReadMarker', { item: subforum }) }}
+                                    </div>
                                 {% endfor %}
                             </div>
                         </div>

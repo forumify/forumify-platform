@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Admin\Components;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\QueryBuilder;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\Repository\ForumGroupRepository;
@@ -43,6 +44,7 @@ class ForumEditor
     }
 
     #[LiveAction]
+    #[IsGranted('forumify.admin.forums.manage')]
     public function reorderGroup(#[LiveArg] int $groupId, #[LiveArg] string $direction): void
     {
         $group = $this->forumGroupRepository->find($groupId);
@@ -50,26 +52,11 @@ class ForumEditor
             return;
         }
 
-        $predicate = $direction === 'up' ? '<' : '>';
-        $siblings = $this->forumGroupRepository->createQueryBuilder('fg')
-            ->where("fg.position $predicate :position")
-            ->setParameter('position', $group->getPosition())
-            ->orderBy('fg.position', $direction === 'up' ? 'DESC' : 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getResult();
-
-        /** @var ForumGroup|false $toSwap */
-        $toSwap = reset($siblings);
-        if ($toSwap === false) {
-            return;
-        }
-
-        $this->swapPositions($group, $toSwap, $direction);
-        $this->forumGroupRepository->saveAll([$group, $toSwap]);
+        $this->forumGroupRepository->reorder($group, $direction);
     }
 
     #[LiveAction]
+    #[IsGranted('forumify.admin.forums.manage')]
     public function reorderForum(#[LiveArg] int $forumId, #[LiveArg] string $direction): void
     {
         $forum = $this->forumRepository->find($forumId);
@@ -77,44 +64,12 @@ class ForumEditor
             return;
         }
 
-        $predicate = $direction === 'up' ? '<' : '>';
-        $qb = $this->forumRepository->createQueryBuilder('f')
-            ->where("f.position $predicate :position")
-            ->setParameter('position', $forum->getPosition())
-            ->orderBy('f.position', $direction === 'up' ? 'DESC' : 'ASC')
-            ->setMaxResults(1);
-
-        if ($forum->getGroup() !== null) {
-            $qb->andWhere('f.group = :group')
-                ->setParameter('group', $forum->getGroup());
-        } else {
-            $qb->andWhere('f.group IS NULL');
-        }
-
-        $siblings = $qb->getQuery()->getResult();
-
-        /** @var Forum|false $toSwap */
-        $toSwap = reset($siblings);
-        if ($toSwap === false) {
-            return;
-        }
-
-        $this->swapPositions($forum, $toSwap, $direction);
-        $this->forumRepository->saveAll([$forum, $toSwap]);
-    }
-
-    private function swapPositions(
-        Forum|ForumGroup $entity,
-        Forum|ForumGroup $toSwap,
-        string $direction
-    ): void {
-        $oldPosition = $entity->getPosition();
-        $newPosition = $toSwap->getPosition();
-        if ($newPosition === $oldPosition) {
-            $newPosition += $direction === 'up' ? -1 : 1;
-        }
-
-        $toSwap->setPosition($oldPosition);
-        $entity->setPosition($newPosition);
+        $this->forumRepository->reorder($forum, $direction, static function (QueryBuilder $qb) use ($forum) {
+            if ($forum->getGroup() !== null) {
+                $qb->andWhere('e.group = :group')->setParameter('group', $forum->getGroup());
+            } else {
+                $qb->andWhere('e.group IS NULL');
+            }
+        });
     }
 }

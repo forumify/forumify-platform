@@ -20,6 +20,7 @@ class HTMLSanitizer
         'a',
         'img',
         'strong',
+        'u',
         'em',
         'blockquote',
         'code',

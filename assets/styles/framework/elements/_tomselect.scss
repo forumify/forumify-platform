@@ -1,6 +1,9 @@
 .ts-wrapper {
     min-height: 40px;
 }
+.ts-control, .ts-wrapper.single.input-active .ts-control {
+    background-color: var(--c-elevation-1);
+}
 
 .focus .ts-control,
 .ts-control {

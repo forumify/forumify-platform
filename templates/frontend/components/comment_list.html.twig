@@ -13,7 +13,7 @@
                 <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
                     {% for badge in item.createdBy.badges %}
                         <div class="avatar-sm flex justify-center items-center">
-                            <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" alt="{{ badge.name }}">
+                            <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" title="{{ badge.name }}">
                         </div>
                     {% endfor %}
                 </div>
@@ -21,7 +21,18 @@
         </div>
         <div class="comment-content">
             <div class="text-small text-secondary flex justify-between items-end">
-                <span class="mb-2">{{ 'date_time_short'|trans({ date: item.createdAt }) }}</span>
+                <span class="mb-2 flex flex-col">
+                    {{ item.createdAt|format_date }}
+                    {% if item.updatedAt != item.createdAt and item.updatedBy is not null %}
+                        {% set editor = item.updatedBy %}
+                        <span class="text-light text-extra-small hide-phone">
+                            {{ 'comment.edited'|trans({
+                                user: editor.displayName|default(editor.username),
+                                date: item.updatedAt|format_date
+                            }) }}
+                        </span>
+                    {% endif %}
+                </span>
                 <div class="comment-toolbar">
                     {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
                         <a class="btn-link btn-small btn-icon text-secondary" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'toggleEdit') }}>

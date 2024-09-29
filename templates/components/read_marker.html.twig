@@ -1,0 +1,12 @@
+<div {{ attributes }}>
+    {% if not item|read %}
+        <a
+            class="btn-link btn-small btn-icon"
+            data-action="live#action"
+            data-live-action-param="markAsRead"
+            title="{{ 'mark_read'|trans }}"
+        >
+            <i class="dot"></i>
+        </a>
+    {% endif %}
+</div>

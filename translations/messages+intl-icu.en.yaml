@@ -26,18 +26,43 @@ date_relative:
             =1      {# day}
             other   {# days}
         }
+    hours: >-
+        {count, plural,
+            =0      {}
+            =1      {# hour}
+            other   {# hours}
+        }
+    minutes: >-
+        {count, plural,
+            =0      {}
+            =1      {# minute}
+            other   {# minutes}
+        }
+    seconds: >-
+        {count, plural,
+            =0      {}
+            =1      {# second}
+            other   {# seconds}
+        }
+    now: 'Just now'
+    ago: '{relative} ago'
 post: 'Post'
 create_topic: 'Post new topic'
+comment:
+    edited: 'Edited on {date} by {user}'
 create_comment: 'Post comment'
 subscribe: 'Subscribe'
 unsubscribe: 'Unsubscribe'
 first: 'First'
 last: 'Last'
-activity: 'Activity'
-no_activity: 'This user has not posted any content yet.'
+profile:
+    activity: 'Activity'
+    no_activity: 'This user has not posted any content yet.'
+    badges: 'Badges'
 follow: 'Follow'
 unfollow: 'Unfollow'
 no_notifications: 'No notifications'
+mark_read: 'Mark as read'
 notification:
     comment_created: '{author} posted a new comment in "{topic}"'
     comment_title: 'New comment in {topic}'
@@ -46,7 +71,7 @@ notification:
     topic_created: '{author} created a new topic in "{forum}"'
     topic_forum: 'A new topic was created in "{forum}".'
     topic_view: 'View topic'
-    message_reply: 'You received a new message from {sender}'
+    message_reply: 'You received a new message in "{title}"'
     message_view: 'View message'
 account_settings:
     title: 'Account Settings'

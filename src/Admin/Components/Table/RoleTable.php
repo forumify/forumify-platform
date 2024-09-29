@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Components\Table;
 
+use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Repository\RoleRepository;
@@ -63,31 +64,9 @@ class RoleTable extends AbstractDoctrineTable
             return;
         }
 
-        $predicate = $direction === 'up' ? '<' : '>';
-        $siblings = $this->roleRepository->createQueryBuilder('r')
-            ->where("r.position $predicate :position")
-            ->setParameter('position', $role->getPosition())
-            ->andWhere('r.system = 0')
-            ->orderBy('r.position', $direction === 'up' ? 'DESC' : 'ASC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getResult();
-
-        $toSwap = reset($siblings);
-        if ($toSwap === false) {
-            return;
-        }
-
-        $oldPosition = $role->getPosition();
-        $newPosition = $toSwap->getPosition();
-        if ($newPosition === $oldPosition) {
-            $newPosition += $direction === 'up' ? -1 : 1;
-        }
-
-        $toSwap->setPosition($oldPosition);
-        $role->setPosition($newPosition);
-
-        $this->roleRepository->saveAll([$role, $toSwap]);
+        $this->roleRepository->reorder($role, $direction, static function (QueryBuilder $qb) {
+            $qb->andWhere('e.system = 0');
+        });
     }
 
     protected function renderSortColumn(int $id, Role $role): string

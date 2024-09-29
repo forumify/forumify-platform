@@ -6,6 +6,7 @@
         <div class="alert-error mb-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
     <form action="{{ app.request.requestUri }}" method="post">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         {% set userIdentifier = setting('forumify.login_method') %}
         {%- set identifierLabel -%}
             {% if userIdentifier == 'email' %}
@@ -16,32 +17,41 @@
                 {{- 'username'|trans -}}
             {% endif %}
         {% endset %}
-        <div class="form-row">
-            <label for="username" class="labels">{{ identifierLabel }}</label>
-            <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="{{ identifierLabel }}">
-        </div>
 
-        <div class="form-row">
-            <label for="password" class="labels">{{ 'password'|trans }}</label>
-            <input type="password" id="password" name="_password" placeholder="{{ 'password'|trans }}">
-        </div>
-
-        <div class="login-actions">
-            <a href="{{ path('forumify_core_forgot_password') }}">{{ 'forgot_password.forgot_password'|trans }}?</a>
-            <div>
-                <input type="checkbox" id="rememberme" name="_remember_me">
-                <label for="rememberme">{{ 'remember_me'|trans }}</label>
+        {% block login_form %}
+            <div class="form-row">
+                <label for="username" class="labels">{{ identifierLabel }}</label>
+                <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="{{ identifierLabel }}">
             </div>
+
+            <div class="form-row">
+                <label for="password" class="labels">{{ 'password'|trans }}</label>
+                <input type="password" id="password" name="_password" placeholder="{{ 'password'|trans }}">
+            </div>
+        {% endblock %}
+
+        {% block forgot_password %}
+            <div class="login-actions">
+                <a href="{{ path('forumify_core_forgot_password') }}">{{ 'forgot_password.forgot_password'|trans }}?</a>
+                <div>
+                    <input type="checkbox" id="rememberme" name="_remember_me" checked>
+                    <label for="rememberme">{{ 'remember_me'|trans }}</label>
+                </div>
+            </div>
+        {% endblock %}
+
+        <div class="flex justify-center mb-4">
+            {% block actions %}
+                <button class="btn-primary" type="submit">
+                    <i class="ph ph-sign-in"></i>{{ 'login'|trans }}
+                </button>
+            {% endblock %}
         </div>
 
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-        <div class="auth-submit">
-            <button class="btn-primary" type="submit">
-                <i class="ph ph-sign-in"></i>{{ 'login'|trans }}
-            </button>
-        </div>
-        {% if setting('forumify.enable_registrations') %}
-            <a class="text-small" href="{{ path('forumify_core_register') }}">{{ 'no_account'|trans }}</a>
-        {% endif %}
+        {% block register %}
+            {% if setting('forumify.enable_registrations') %}
+                <a class="text-small" href="{{ path('forumify_core_register') }}">{{ 'no_account'|trans }}</a>
+            {% endif %}
+        {% endblock %}
     </form>
 {% endblock %}

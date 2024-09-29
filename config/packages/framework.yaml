@@ -11,3 +11,5 @@ framework:
                 base_path: '%forumify.media.storage.path%'
     router:
         default_uri: '%env(DEFAULT_URI)%'
+    session:
+        name: '%env(slug:hostname:DEFAULT_URI)%-sessid'

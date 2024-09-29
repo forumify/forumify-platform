@@ -11,10 +11,11 @@ use Forumify\Core\Repository\RoleRepository;
 use function Symfony\Component\String\u;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
-class Role
+class Role implements SortableEntityInterface
 {
     use IdentifiableEntityTrait;
     use SluggableEntityTrait;
+    use SortableEntityTrait;
 
     #[ORM\Column]
     private string $title;
@@ -33,9 +34,6 @@ class Role
 
     #[ORM\Column(type: 'simple_array', nullable: true)]
     private ?array $permissions = [];
-
-    #[ORM\Column(type: 'integer')]
-    private int $position = 0;
 
     /**
      * @var Collection<User>
@@ -115,15 +113,5 @@ class Role
     public function setPermissions(array $permissions): void
     {
         $this->permissions = $permissions;
-    }
-
-    public function getPosition(): int
-    {
-        return $this->position;
-    }
-
-    public function setPosition(int $position): void
-    {
-        $this->position = $position;
     }
 }

@@ -48,6 +48,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $language = 'en';
 
     #[ORM\Column(nullable: true)]
+    private ?string $timezone = null;
+
+    #[ORM\Column(nullable: true)]
     private ?string $avatar = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -78,6 +81,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         joinColumns: [new ORM\JoinColumn('user', onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn('badge', onDelete: 'CASCADE')],
     )]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $badges;
 
     public function __construct()
@@ -173,6 +177,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLanguage(string $language): void
     {
         $this->language = $language;
+    }
+
+    public function getTimezone(): string
+    {
+        return $this->timezone ?? 'UTC';
+    }
+
+    public function setTimezone(?string $timezone): void
+    {
+        $this->timezone = $timezone;
     }
 
     public function getAvatar(): ?string

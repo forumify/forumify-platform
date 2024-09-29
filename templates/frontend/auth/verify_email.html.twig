@@ -11,18 +11,21 @@
             <p>
                 {{ 'email_verification.no_email'|trans }}
             </p>
-            {% if error is defined %}
-                <div class="alert-error mt-4">
-                    <p>{{ ('email_verification.error.' ~ error)|trans }}</p>
-                    <p>{{ 'email_verification.error.retry'|trans }}</p>
-
-                </div>
-            {% endif %}
+            {% block error %}
+                {% if error is defined %}
+                    <div class="alert-error mt-4">
+                        <p>{{ ('email_verification.error.' ~ error)|trans }}</p>
+                        <p>{{ 'email_verification.error.retry'|trans }}</p>
+                    </div>
+                {% endif %}
+            {% endblock %}
         </div>
         <div class="flex justify-center mt-4">
-            <a class="btn-primary" href="{{ path('forumify_core_verify_email_resend') }}">
-                {{ 'resend_email_verification'|trans }}
-            </a>
+            {% block resend %}
+                <a class="btn-primary" href="{{ path('forumify_core_verify_email_resend') }}">
+                    {{ 'resend_email_verification'|trans }}
+                </a>
+            {% endblock %}
         </div>
     </div>
 {% endblock %}

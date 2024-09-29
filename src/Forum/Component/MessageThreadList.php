@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Component;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Entity\ReadMarker;
@@ -79,11 +80,13 @@ class MessageThreadList extends AbstractDoctrineList
     {
         return $this->messageThreadRepository
             ->createQueryBuilder('mt')
+            ->select('mt, MAX(m.createdAt) AS HIDDEN maxCreatedAt')
+            ->leftJoin('mt.messages', 'm')
             ->join('mt.participants', 'p')
-            ->join('mt.messages', 'm')
-            ->where('p.id = (:userId)')
-            ->orderBy('m.createdAt', 'DESC')
-            ->setParameter('userId', $this->getUser());
+            ->where('p = (:user)')
+            ->setParameter('user', $this->getUser())
+            ->groupBy('mt.id')
+            ->orderBy('maxCreatedAt', 'DESC');
     }
 
     protected function getCount(): int
@@ -92,9 +95,10 @@ class MessageThreadList extends AbstractDoctrineList
             ->createQueryBuilder('mt')
             ->select('COUNT(mt.id)')
             ->join('mt.participants', 'p')
-            ->where('p.id = (:userId)')
-            ->setParameter('userId', $this->getUser())
-            ->getFirstResult();
+            ->where('p = (:user)')
+            ->setParameter('user', $this->getUser())
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     private function getUser(): User

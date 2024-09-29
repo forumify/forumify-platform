@@ -25,7 +25,7 @@ class ThemeExtension extends AbstractExtension
         ];
     }
 
-    public function getThemeTags(array $context): string
+    public function getThemeTags(array $context, bool $allowCustom = true): string
     {
         $metaData = $this->themeService->getThemeMetaData();
         $lastModified = $metaData['lastModified'] ?? '0';
@@ -35,17 +35,29 @@ class ThemeExtension extends AbstractExtension
         $preference = $app->getRequest()->cookies->get(ThemeService::CURRENT_THEME_COOKIE) ?? 'system';
 
         $links = [
-            $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, 'custom', $lastModified), 'forumify.asset'),
             $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, $preference, $lastModified), 'forumify.asset'),
         ];
-        foreach ($metaData['stylesheets'] ?? [] as $stylesheet) {
-            $links[] = $this->packages->getUrl('themes/' . $stylesheet);
+
+        if ($allowCustom) {
+            $links[] = $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, 'custom', $lastModified), 'forumify.asset');
+            foreach ($metaData['stylesheets'] ?? [] as $stylesheet) {
+                $links[] = $this->packages->getUrl('themes/' . $stylesheet);
+            }
         }
 
-        return array_reduce(
+        $tags = array_reduce(
             $links,
             static fn (string $acc, string $link) => "$acc<link rel='stylesheet' href='$link'>",
             ''
         );
+
+        $tags .= "<script type='text/javascript'>
+            let theme = '$preference';
+            if (theme === 'system') {
+                theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default';
+            }
+        </script>";
+
+        return $tags;
     }
 }

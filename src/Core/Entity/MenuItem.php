@@ -10,15 +10,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\MenuItemRepository;
 
 #[ORM\Entity(repositoryClass: MenuItemRepository::class)]
-class MenuItem implements AccessControlledEntityInterface
+class MenuItem implements AccessControlledEntityInterface, SortableEntityInterface
 {
     use IdentifiableEntityTrait;
+    use SortableEntityTrait;
 
     #[ORM\Column]
     private string $name;
-
-    #[ORM\Column(type: 'integer')]
-    private int $position = 0;
 
     #[ORM\Column]
     private string $type;
@@ -50,16 +48,6 @@ class MenuItem implements AccessControlledEntityInterface
     public function setName(string $name): void
     {
         $this->name = $name;
-    }
-
-    public function getPosition(): int
-    {
-        return $this->position;
-    }
-
-    public function setPosition(int $position): void
-    {
-        $this->position = $position;
     }
 
     public function getType(): string

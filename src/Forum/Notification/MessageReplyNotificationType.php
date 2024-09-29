@@ -33,15 +33,21 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
 
     public function getTitle(Notification $notification): string
     {
-        $sender = $this->getMessage($notification)?->getCreatedBy();
+        $message = $this->getMessage($notification);
+        $title = $message?->getThread()->getTitle() ?? '';
+
         return $this->translator->trans('notification.message_reply', [
-            'sender' => $sender?->getDisplayName() ?? 'Deleted',
+            'title' => $title,
         ]);
     }
 
     public function getDescription(Notification $notification): string
     {
-        return u(strip_tags($this->getMessage($notification)?->getContent() ?? ''))
+        $message = $this->getMessage($notification);
+        $sender = $message?->getCreatedBy()?->getDisplayName() ?? 'Deleted';
+        $content = $message?->getContent() ?? '';
+
+        return $sender . ': ' . u(strip_tags($content))
             ->truncate(200, '...', false)
             ->toString();
     }

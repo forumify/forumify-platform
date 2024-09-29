@@ -7,12 +7,12 @@ namespace Forumify\Forum\Service;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
-use Forumify\Core\Service\ReadMarkerCheckerInterface;
+use Forumify\Core\Service\ReadMarkerServiceInterface;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class ForumReadMarkerChecker implements ReadMarkerCheckerInterface
+class ForumReadMarkerService implements ReadMarkerServiceInterface
 {
     public function __construct(
         private readonly ReadMarkerRepository $readMarkerRepository,
@@ -32,6 +32,12 @@ class ForumReadMarkerChecker implements ReadMarkerCheckerInterface
     {
         $topicIds = $this->getTopicIds($subject);
         return $this->readMarkerRepository->areAllRead($user, Topic::class, $topicIds);
+    }
+
+    public function markAsRead(User $user, mixed $subject): void
+    {
+        $topicIds = $this->getTopicIds($subject);
+        $this->readMarkerRepository->markAllRead($user, Topic::class, $topicIds);
     }
 
     private function getTopicIds(Forum $forum): array
