@@ -82,7 +82,7 @@ class PluginService
         $cmd = ['composer', 'update'];
         if ($package !== null) {
             if ($version !== null) {
-                $package .= ':' . $version;
+                $package = '"' . $package . ':' . $version . '"';
                 $cmd[1] = 'require';
             }
 
