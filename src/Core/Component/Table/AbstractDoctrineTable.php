@@ -7,11 +7,13 @@ namespace Forumify\Core\Component\Table;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Repository\AbstractRepository;
+use RuntimeException;
 use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractDoctrineTable extends AbstractTable
 {
     private AbstractRepository $repository;
+    private array $identifiers = [];
 
     abstract protected function getEntityClass(): string;
 
@@ -30,8 +32,9 @@ abstract class AbstractDoctrineTable extends AbstractTable
 
     protected function getTotalCount(array $search): int
     {
+        $ids = implode(',', array_map(static fn (string $id) => "e.$id", $this->identifiers));
         return $this->getQuery($search)
-            ->select('COUNT(e.id)')
+            ->select("COUNT($ids)")
             ->getQuery()
             ->getSingleScalarResult();
     }
@@ -52,8 +55,13 @@ abstract class AbstractDoctrineTable extends AbstractTable
     {
         $repository = $em->getRepository($this->getEntityClass());
         if (!$repository instanceof AbstractRepository) {
-            throw new \RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
+            throw new RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
         }
         $this->repository = $repository;
+
+        $this->identifiers = $em->getClassMetadata($this->getEntityClass())->getIdentifier();
+        if (empty($this->identifiers)) {
+            throw new RuntimeException('Your entity must have at least 1 identifier (#[ORM\Id])');
+        }
     }
 }
