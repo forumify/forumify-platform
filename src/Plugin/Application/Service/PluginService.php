@@ -81,11 +81,13 @@ class PluginService
     {
         $cmd = ['composer', 'update'];
         if ($package !== null) {
-            $cmd[] = $package;
-            $cmd[] = '--with-all-dependencies';
             if ($version !== null) {
+                $package .= ':' . $version;
                 $cmd[1] = 'require';
             }
+
+            $cmd[] = $package;
+            $cmd[] = '--with-all-dependencies';
         }
 
         return $this->run([
