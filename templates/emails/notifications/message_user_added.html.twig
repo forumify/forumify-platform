@@ -1,0 +1,21 @@
+{% extends '@Forumify/emails/base.html.twig' %}
+{% block title %}
+    {{ 'notification.message_user_added'|trans }}
+{% endblock %}
+{% block body %}
+    <h2>{{ 'notification.message_user_added'|trans }}</h2>
+    <hr>
+    <div class="content-block">
+        <p>
+            {{ 'notification.message_user_added_desc'|trans({
+                user: user.displayName,
+                title: messageThread.title
+            }) }}
+        </p>
+    </div>
+    <hr>
+    {% include '@Forumify/emails/components/button.html.twig' with {
+        href: path('forumify_forum_messenger_thread', { id: messageThread.id }),
+        label: 'notification.message_view'|trans
+    } only %}
+{% endblock %}
