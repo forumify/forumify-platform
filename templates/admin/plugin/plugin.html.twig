@@ -30,7 +30,8 @@
                 {% block menu_items %}
                     {% if updateAvailable %}
                         <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePackage', null, {
-                            package: plugin.package
+                            package: plugin.package,
+                            version: plugin.latestVersion
                         }) }}>
                             <i class="ph ph-download"></i>{{ 'admin.plugins.update'|trans }}
                         </a>

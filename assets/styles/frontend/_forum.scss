@@ -224,16 +224,6 @@
     gap: var(--spacing-2);
 }
 
-.thread-participant a {
-    gap: var(--spacing-2);
-}
-
-.thread-participant + * {
-    margin-left: var(--spacing-3);
-    padding-left: var(--spacing-3);
-    border-left: var(--border);
-}
-
 .message {
     display: flex;
     align-items: flex-start;

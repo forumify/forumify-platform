@@ -25,7 +25,7 @@
                         {% if platformVersions['latest-status'] == 'update-possible' %}
                             <span class="ml-2">
                                 {{ 'admin.plugins.update_available'|trans({ version: platformVersions.latest }) }}
-                                <button class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePlatform') }}>
+                                <button class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePlatform', null, { version: platformVersions.latest }) }}>
                                     <i class="ph ph-download"></i>
                                     {{ 'admin.plugins.update'|trans }}
                                 </button>

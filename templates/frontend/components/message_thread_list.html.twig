@@ -22,16 +22,32 @@
                     </div>
                     <ul class="thread-participants flex flex-wrap card-body items-center">
                         {% for participant in this.selectedThread.participants %}
-                            <li class="thread-participant">
-                                <a class="flex items-center" href="{{ path('forumify_forum_profile', { username: participant.username }) }}">
+                            <li class="flex items-center border-r pr-2 mr-2 gap-2">
+                                <a class="flex items-center gap-2" href="{{ path('forumify_forum_profile', { username: participant.username }) }}">
                                     {% include '@Forumify/components/avatar.html.twig' with {
                                         user: participant,
                                         className: 'avatar-sm'
                                     } only %}
                                     {{ participant.displayName }}
                                 </a>
+                                <a
+                                    href="{{ path('forumify_forum_messenger_remove_participant', { id: this.selectedThread.id, participantId: participant.id }) }}"
+                                    class="btn-link btn-icon btn-small"
+                                    title="{{ 'remove_participant'|trans }}"
+                                >
+                                    <i class="ph ph-minus-circle"></i>
+                                </a>
                             </li>
                         {% endfor %}
+                        <li>
+                            <a
+                                href="{{ path('forumify_forum_messenger_add_participant', { id: this.selectedThread.id }) }}"
+                                class="btn-link btn-icon btn-small"
+                                title="{{ 'add_participant'|trans }}"
+                            >
+                                <i class="ph ph-plus-circle"></i>
+                            </a>
+                        </li>
                     </ul>
                 </div>
                 {{ component('MessageList', { lastPageFirst: true, threadId: this.selectedThread.id }) }}

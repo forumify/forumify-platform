@@ -21,7 +21,6 @@ class PlatformInstallSubscriber extends AbstractController
     public function __construct(
         private readonly SettingRepository $settingRepository,
         private readonly CreateUserService $createUserService,
-        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
 
@@ -49,7 +48,7 @@ class PlatformInstallSubscriber extends AbstractController
             $response = $this->render('@Forumify/form/simple_form_page.html.twig', [
                 'title' => 'install',
                 'form' => $form->createView(),
-                'cancelPath' => $this->urlGenerator->generate('forumify_core_index', ['skipInstall' => 1]),
+                'cancelPath' => $this->generateUrl('forumify_core_index', ['skipInstall' => 1]),
             ]);
             $event->setResponse($response);
             return;
