@@ -7,7 +7,7 @@ import 'quill/dist/quill.snow.css'
  * @constructor
  */
 export default function RichTextEditor(element) {
-  return new Quill(element, {
+  const quill = new Quill(element, {
     modules: {
       toolbar: [
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
@@ -22,4 +22,16 @@ export default function RichTextEditor(element) {
     },
     theme: 'snow',
   });
+
+  quill.clipboard.addMatcher(Node.ELEMENT_NODE, (node, delta) => {
+    delta.forEach((d) => {
+      if(d.attributes){
+        d.attributes.color = '';
+        d.attributes.background = '';
+      }
+    });
+    return delta;
+  });
+
+  return quill;
 }
