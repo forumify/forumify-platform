@@ -2,7 +2,13 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
   static values = { token: String }
-  static targets = ['log', 'pluginList', 'progress'];
+  static targets = [
+    'log',
+    'pluginList',
+    'progress',
+    'installMethod',
+    'manualInstall'
+  ];
 
   commandNames = {
     setActive: 'Toggling active state',
@@ -18,6 +24,11 @@ export default class extends Controller {
   inProgress = false;
   progress = 0;
   maxProgress = 0;
+
+  toggleManualInstall() {
+    this.installMethodTarget.classList.toggle('d-none');
+    this.manualInstallTarget.classList.toggle('d-none');
+  }
 
   updateAll() {
     this.run([

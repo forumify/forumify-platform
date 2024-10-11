@@ -1,0 +1,22 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    <h1>{{ 'admin.marketplace.connect.title'|trans }}</h1>
+    <div class="box flex flex-col gap-2">
+        {% if error is defined and error is not empty %}
+            <div class="alert-error">
+                <p class="text-bold mb-2">{{ 'admin.marketplace.connect.error.title'|trans }}</p>
+                {{ ('admin.marketplace.connect.error.' ~ error)|trans }}
+            </div>
+        {% endif %}
+        <p>{{ 'admin.marketplace.connect.info'|trans }}</p>
+        <p class="text-small mb-4">
+            <i class="ph ph-info"></i>
+            {{ 'admin.marketplace.connect.login_help'|trans }}
+        </p>
+        <div class="flex justify-center">
+            <a class="btn-primary" href="{{ path('forumify_admin_marketplace_connect') }}">
+                {{ 'admin.marketplace.connect.login'|trans }}
+            </a>
+        </div>
+    </div>
+{% endblock %}

@@ -13,6 +13,12 @@ doctrine:
                 dir: '%forumify.project_dir%/src/Forum/Entity'
                 prefix: Forumify\Forum\Entity
                 alias: ForumifyForum
+            forumify_oauth:
+                is_bundle: false
+                type: attribute
+                dir: '%forumify.project_dir%/src/OAuth/Entity'
+                prefix: Forumify\OAuth\Entity
+                alias: ForumifyOAuth
             forumify_cms:
                 is_bundle: false
                 type: attribute
