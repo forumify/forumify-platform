@@ -29,13 +29,27 @@
     }
 
     ul li {
-        list-style-type: circle;
+        list-style-type: disc;
         margin-left: var(--spacing-6);
     }
 
     ol li {
         list-style-type: decimal;
         margin-left: var(--spacing-6);
+
+        &[data-list="bullet"] {
+            list-style-type: disc;
+        }
+
+        &[class*=ql-indent] {
+            margin-left: calc(13 * var(--spacing-6));
+        }
+
+        @for $i from 1 through 12 {
+            &.ql-indent-#{$i} {
+                margin-left: calc(#{$i + 1} * var(--spacing-6));
+            }
+        }
     }
 
     code {
