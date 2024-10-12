@@ -44,7 +44,7 @@ class Menu
 
     public function sortByLabel(): void
     {
-        $labels = array_map(static fn (Menu|MenuItem $child) => $child->label, $this->items);
+        $labels = array_map(static fn (Menu|MenuItem $child) => ucfirst($child->label), $this->items);
         array_multisort($labels, SORT_ASC, $this->items);
         $this->sorted = true;
     }

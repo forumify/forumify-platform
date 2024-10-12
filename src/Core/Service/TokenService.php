@@ -7,12 +7,13 @@ namespace Forumify\Core\Service;
 use DateTime;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use SensitiveParameter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class TokenService
 {
     public function __construct(
-        #[\SensitiveParameter]
+        #[SensitiveParameter]
         private readonly string $appSecret
     ) {
     }
@@ -26,7 +27,7 @@ class TokenService
         ], $this->appSecret, 'HS256');
     }
 
-    public function decodeToken(string $token): array
+    public function decodeToken(#[SensitiveParameter] string $token): array
     {
         return (array)JWT::decode($token, new Key($this->appSecret, 'HS256'));
     }

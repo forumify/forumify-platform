@@ -18,6 +18,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/token', 'token')]
 class TokenController extends AbstractController
 {
+    private const GRANT_TYPES = [
+        'authorization_code'
+    ];
+
     public function __invoke(
         Request $request,
         OAuthClientRepository $clientRepository,
@@ -32,7 +36,17 @@ class TokenController extends AbstractController
             'redirect_uri',
         ], $request->request);
 
-        if (!in_array($params['grant_type'], ['authorization_code', 'client_credentials'], true)) {
+        $authHeader = $request->headers->get('Authorization');
+        if ($authHeader !== null && str_starts_with($authHeader, 'Basic')) {
+            $basicToken = substr($authHeader, strpos($authHeader, ' '));
+            $basicAuth = explode(':', base64_decode($basicToken));
+            if (count($basicAuth) === 2) {
+                $params['client_id'] = $basicAuth[0];
+                $params['client_secret'] = $basicAuth[1];
+            }
+        }
+
+        if (!in_array($params['grant_type'], self::GRANT_TYPES, true)) {
             return $this->json([
                 'error' => 'unsupported_grant_type',
                 'error_description' => "\"{$params['grant_type']}\" is not a supported grant_type.",

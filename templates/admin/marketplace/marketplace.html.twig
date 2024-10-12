@@ -1,4 +1,7 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block body %}
-hi
+    <h3>Your forumify.net account was successfully linked.</h3>
+    <p>The marketplace is still a work in progress. For now you can only install plugins from packagist using their package names.</p>
+    <p class="mb-4">Discover plugins on the <a href="https://forumify.net/marketplace" target="_blank">forumify marketplace</a>.</p>
+    <a href="{{ path('forumify_admin_plugin_list') }}">Back to plugins.</a>
 {% endblock %}
