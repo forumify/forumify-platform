@@ -11,7 +11,7 @@ use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReply;
 use Forumify\Forum\Form\NewMessageThread;
-use Forumify\Forum\Notification\MessageUserAddedNotificationType;
+use Forumify\Forum\Notification\MessageReplyNotificationType;
 use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -58,7 +58,7 @@ class MessageService
             }
 
             $this->notificationService->sendNotification(new Notification(
-                MessageUserAddedNotificationType::TYPE,
+                MessageReplyNotificationType::TYPE,
                 $participant,
                 ['message' => $message]
             ));
