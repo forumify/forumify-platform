@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Controller;
 
+use Forumify\Core\Exception\UserAlreadyExistsException;
 use Forumify\Core\Form\RegisterType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\CreateUserService;
@@ -56,6 +57,7 @@ class AuthController extends AbstractController
             return $this->redirectToRoute('forumify_core_index');
         }
 
+        $error = null;
         $form = $this->createForm(RegisterType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -68,13 +70,18 @@ class AuthController extends AbstractController
                 }
             }
 
-            $user = $createUserService->createUser($form->getData());
-            $security->login($user, 'security.authenticator.form_login.main');
-            return $this->redirectToRoute('forumify_core_verify_email');
+            try {
+                $user = $createUserService->createUser($form->getData());
+                $security->login($user, 'security.authenticator.form_login.main');
+                return $this->redirectToRoute('forumify_core_verify_email');
+            } catch (UserAlreadyExistsException) {
+                $error = 'registration.validation_error.username_already_exists';
+            }
         }
 
         return $this->render('@Forumify/frontend/auth/register.html.twig', [
             'form' => $form->createView(),
+            'error' => $error,
         ]);
     }
 }

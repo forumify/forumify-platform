@@ -105,6 +105,7 @@ registration:
     validation_error:
         username_alphanumeric: 'Username can only contain letters, numbers, underscores and hyphens.'
         username_one_letter: 'Username must contain at least one letter.'
+        username_already_exists: 'The chosen username or email already exists.'
 registrations_disabled: 'Registrations are not enabled for this website.'
 forgot_password:
     find_account: 'Find your account'

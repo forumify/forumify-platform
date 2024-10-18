@@ -3,6 +3,9 @@
 {% block form_title %}Register{% endblock %}
 {% block form %}
     {{ form_start(form, { attr: { id: 'registration-form' } }) }}
+    {% if error is not null %}
+        <div class="alert-error mb-6">{{ error|trans }}</div>
+    {% endif %}
     {{ form_widget(form) }}
     <div class="flex justify-center">
         {% block actions %}
