@@ -64,5 +64,26 @@
         border: none;
         background-color: var(--c-elevation-3);
     }
-}
 
+    .ql-mention-list {
+        @include box-shadow;
+        min-width: 180px;
+        z-index: 999;
+        background-color: var(--c-elevation-2);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ql-mention-list-item {
+        @extend .btn-link;
+
+        &.selected {
+            background-color: var(--c-hover);
+            transition: ease-in-out 150ms;
+        }
+    }
+
+    .mention {
+        text-decoration: underline;
+    }
+}

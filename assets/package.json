@@ -46,6 +46,12 @@
                 "enabled": true,
                 "autoimport": {}
             },
+            "rich_text": {
+                "main": "dist/rich_text_controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {}
+            },
             "tabs": {
                 "main": "dist/tabs_controller.js",
                 "fetch": "eager",
@@ -74,7 +80,8 @@
         "@phosphor-icons/web": "^2.0.3",
         "@popperjs/core": "^2.11.8",
         "ace-builds": "^1.32.8",
-        "quill": "^2.0.2"
+        "quill": "^2.0.2",
+        "quill-mention": "^6.0.1"
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",

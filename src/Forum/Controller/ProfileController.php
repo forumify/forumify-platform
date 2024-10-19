@@ -36,4 +36,12 @@ class ProfileController extends AbstractController
             'followingCount' => $followingCount,
         ]);
     }
+
+    #[Route('/profile/{id}', 'profile_id', requirements: ['id' => '\d+'], priority: 1)]
+    public function profileById(User $user): Response
+    {
+        return $this->redirectToRoute('forumify_forum_profile', [
+            'username' => $user->getUsername()
+        ], Response::HTTP_MOVED_PERMANENTLY);
+    }
 }

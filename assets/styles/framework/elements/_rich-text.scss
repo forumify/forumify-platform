@@ -99,4 +99,15 @@
     img {
         max-width: 100%;
     }
+
+    .mention {
+        color: var(--c-primary);
+        font-weight: 500;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--c-primary-accent);
+            transition: color ease-in-out 100ms;
+        }
+    }
 }

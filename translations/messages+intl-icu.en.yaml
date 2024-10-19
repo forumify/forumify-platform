@@ -75,6 +75,10 @@ notification:
     message_view: 'View message'
     message_user_added: 'You''ve been added to a message thread'
     message_user_added_desc: '{user} added you as a participant in the "{title}" thread.'
+    mention_generic: 'You were mentioned.'
+    mention_generic_view: 'View'
+    mention_comment: '{author} mentioned you in a comment.'
+    mention_message: '{author} mentioned you in a message.'
 account_settings:
     title: 'Account Settings'
     notification_settings: 'Notification Settings'

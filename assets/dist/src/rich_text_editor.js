@@ -1,5 +1,6 @@
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css'
+import 'quill-mention/autoregister';
 
 /**
  * @param {HTMLElement} element
@@ -19,6 +20,20 @@ export default function RichTextEditor(element) {
         [{ 'color': [] }, { 'background': [] }],
         ['clean']
       ],
+      mention: {
+        allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
+        mentionDenotationChars: ["@"],
+        source: function(searchTerm, renderList) {
+          if (searchTerm.length === 0) {
+            renderList([]);
+          }
+
+          fetch('/users/search?query=' + searchTerm)
+            .then((res) => res.json())
+            .then((users) => users.map((user) => ({ id: user.id, value: user.displayName || user.username })))
+            .then((users) => renderList(users))
+        }
+      }
     },
     theme: 'snow',
   });

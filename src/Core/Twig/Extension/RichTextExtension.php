@@ -24,6 +24,6 @@ class RichTextExtension extends AbstractExtension
     private function richText(string $content): string
     {
         $sanitized = $this->sanitizer->sanitize($content);
-        return "<div class='rich-text'>$sanitized</div>";
+        return "<div class='rich-text' data-controller='forumify--forumify-platform--rich-text'>$sanitized</div>";
     }
 }

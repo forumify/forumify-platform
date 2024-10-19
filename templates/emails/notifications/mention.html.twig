@@ -1,0 +1,18 @@
+{% extends '@Forumify/emails/base.html.twig' %}
+{% block title %}
+    {{ this.title(notification) }}
+{% endblock %}
+{% block body %}
+    <h2>{{ this.title(notification) }}</h2>
+    <hr>
+    <div class="content-block">
+        {% set authorLink = absolute_url(path('forumify_forum_profile', { username: subject.createdBy.username })) %}
+        <p><a href="{{ authorLink }}">{{ subject.createdBy.displayName }}</a> replied:</p>
+        <p>{{ subject.content|striptags|u.truncate(400, '...', false) }}</p>
+    </div>
+    <hr>
+    {% include '@Forumify/emails/components/button.html.twig' with {
+        href: absolute_url(this.url(notification)),
+        label: 'notification.mention_generic_view'|trans,
+    } only %}
+{% endblock %}
