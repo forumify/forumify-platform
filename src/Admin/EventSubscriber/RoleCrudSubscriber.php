@@ -25,6 +25,10 @@ class RoleCrudSubscriber implements EventSubscriberInterface
 
     public function preSaveRole(PreSaveCrudEvent $event): void
     {
+        if (!$event->isNew()) {
+            return;
+        }
+
         /** @var Role $role */
         $role = $event->getEntity();
 
