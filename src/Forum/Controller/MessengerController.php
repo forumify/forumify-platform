@@ -9,10 +9,13 @@ use Forumify\Core\Entity\Notification;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Service\HTMLSanitizer;
+use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReplyType;
 use Forumify\Forum\Form\NewMessageThreadType;
 use Forumify\Forum\Notification\MessageUserAddedNotificationType;
+use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Forumify\Forum\Service\MessageService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -140,5 +143,22 @@ class MessengerController extends AbstractController
 
         $this->addFlash('success', 'flashes.messenger_participants_removed');
         return $this->redirectToRoute('forumify_forum_messenger_thread', ['id' => $thread->getId()]);
+    }
+
+    #[Route('/message/{id}/edit', '_message_edit', methods: ['POST'])]
+    public function editMessage(
+        Message $message,
+        Request $request,
+        MessageRepository $messageRepository,
+        HTMLSanitizer $sanitizer,
+    ): Response {
+        if ($this->getUser()?->getUserIdentifier() !== $message->getCreatedBy()?->getUserIdentifier()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $message->setContent($request->getContent());
+        $messageRepository->save($message);
+
+        return new Response($sanitizer->sanitize($message->getContent()));
     }
 }

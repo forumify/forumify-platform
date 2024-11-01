@@ -226,8 +226,24 @@
 
 .message {
     display: flex;
+    position: relative;
     align-items: flex-start;
     gap: var(--spacing-2);
+
+    .message-toolbar {
+        opacity: 0;
+        transition: opacity 200ms;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    &:hover {
+        .message-toolbar {
+            opacity: 1;
+            transition: opacity 200ms;
+        }
+    }
 }
 
 .message + * {
