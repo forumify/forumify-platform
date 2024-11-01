@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Service;
 
-use Forumify\Core\Entity\Notification;
-use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
+use Forumify\Forum\Event\MessageCreatedEvent;
 use Forumify\Forum\Form\MessageReply;
 use Forumify\Forum\Form\NewMessageThread;
-use Forumify\Forum\Notification\MessageReplyNotificationType;
 use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class MessageService
@@ -21,9 +20,9 @@ class MessageService
     public function __construct(
         private readonly MessageRepository $messageRepository,
         private readonly MessageThreadRepository $messageThreadRepository,
-        private readonly NotificationService $notificationService,
         private readonly Security $security,
         private readonly ReadMarkerRepository $readMarkerRepository,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -51,17 +50,6 @@ class MessageService
         $this->messageRepository->save($message);
         $this->readMarkerRepository->unread(MessageThread::class, $thread->getId());
 
-        foreach ($thread->getParticipants() as $participant) {
-            $sender = $message->getCreatedBy();
-            if ($sender === null || $sender->getUserIdentifier() === $participant->getUserIdentifier()) {
-                continue;
-            }
-
-            $this->notificationService->sendNotification(new Notification(
-                MessageReplyNotificationType::TYPE,
-                $participant,
-                ['message' => $message]
-            ));
-        }
+        $this->eventDispatcher->dispatch(new MessageCreatedEvent($message));
     }
 }

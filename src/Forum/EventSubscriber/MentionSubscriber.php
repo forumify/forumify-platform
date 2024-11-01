@@ -6,21 +6,15 @@ namespace Forumify\Forum\EventSubscriber;
 
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Entity\User;
-use Forumify\Core\Event\EntityPostSaveEvent;
 use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Repository\UserRepository;
-use Forumify\Core\Security\Voter\AccessControlListVoter;
 use Forumify\Core\Security\VoterAttribute;
-use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Event\CommentCreatedEvent;
+use Forumify\Forum\Event\MessageCreatedEvent;
 use Forumify\Forum\Notification\MentionNotificationType;
 use Forumify\Forum\Security\UserToken;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class MentionSubscriber implements EventSubscriberInterface
 {
@@ -35,7 +29,7 @@ class MentionSubscriber implements EventSubscriberInterface
     {
         return [
             CommentCreatedEvent::class => 'onCommentCreated',
-            EntityPostSaveEvent::getName(Message::class) => 'onMessageCreated',
+            MessageCreatedEvent::class => 'onMessageCreated',
         ];
     }
 
@@ -70,10 +64,9 @@ class MentionSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function onMessageCreated(EntityPostSaveEvent $event): void
+    public function onMessageCreated(MessageCreatedEvent $event): void
     {
-        /** @var Message $message */
-        $message = $event->getEntity();
+        $message = $event->getMessage();
         $recipients = $this->getUsersToMention($message->getContent());
 
         $messageThreadParticipantIds = $message->getThread()
