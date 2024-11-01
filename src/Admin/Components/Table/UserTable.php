@@ -6,7 +6,6 @@ namespace Forumify\Admin\Components\Table;
 
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\User;
-use Forumify\Core\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;

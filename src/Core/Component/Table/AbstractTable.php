@@ -31,6 +31,9 @@ abstract class AbstractTable
     #[LiveProp]
     public array $sort = [];
 
+    #[LiveProp]
+    public string $class = '';
+
     /** @var array<array> */
     private array $columns = [];
     private ?TableResult $result = null;

@@ -6,6 +6,9 @@
             {% block tabs %}
                 <button type="button" class="btn-link" data-tab-id="role">{{ 'admin.role.crud.single'|trans|capitalize }}</button>
                 <button type="button" class="btn-link" data-tab-id="permission">{{ 'admin.role.permissions'|trans }}</button>
+                {% if data is not null %}
+                    <button type="button" class="btn-link" data-tab-id="users">{{ 'admin.role.users'|trans }}</button>
+                {% endif %}
             {% endblock %}
             {% block tabpanels %}
                 <div id="role">
@@ -13,6 +16,12 @@
                     {{ form_row(form.description) }}
                     {{ form_row(form.administrator) }}
                     {{ form_row(form.moderator) }}
+                    <div class="flex justify-center items-center gap-2">
+                        <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+                        {% if cancelPath is defined %}
+                            <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+                        {% endif %}
+                    </div>
                 </div>
                 <div id="permission">
                     {% embed '@Forumify/components/tabs.html.twig' %}
@@ -29,15 +38,21 @@
                             {% endfor %}
                         {% endblock %}
                     {% endembed %}
+                    <div class="flex justify-center items-center gap-2">
+                        <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+                        {% if cancelPath is defined %}
+                            <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+                        {% endif %}
+                    </div>
                 </div>
+                {% if data is not null %}
+                    <div id="users">
+                        {{ component('Forumify\\UsersInRoleTable', { class: 'clear-shadow', roleId: data.id }) }}
+                    </div>
+                {% endif %}
             {% endblock %}
         {% endembed %}
-        <div class="flex justify-center items-center gap-2">
-            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
-            {% if cancelPath is defined %}
-                <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
-            {% endif %}
-        </div>
+
         {{ form_end(form) }}
     </div>
 {% endblock %}

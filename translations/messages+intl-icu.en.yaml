@@ -355,6 +355,7 @@ admin:
             single: 'role'
             plural: 'roles'
         permissions: 'Permissions'
+        users: 'Users'
     user:
         crud:
             single: 'user'

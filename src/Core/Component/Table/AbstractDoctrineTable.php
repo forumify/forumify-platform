@@ -39,7 +39,7 @@ abstract class AbstractDoctrineTable extends AbstractTable
             ->getSingleScalarResult();
     }
 
-    private function getQuery(array $search): QueryBuilder
+    protected function getQuery(array $search): QueryBuilder
     {
         $qb = $this->repository->createQueryBuilder('e');
         foreach ($search as $column => $value) {
