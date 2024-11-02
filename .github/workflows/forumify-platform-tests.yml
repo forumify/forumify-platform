@@ -1,4 +1,4 @@
-name: Run forumify/forumify-platform tests
+name: Automated Tests
 on: [ push, pull_request ]
 
 jobs:

@@ -1,4 +1,4 @@
-name: Run forumify/forumify-platform tests
+name: Code Quality
 on: [ push, pull_request ]
 
 jobs:
@@ -12,10 +12,13 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          tools: phpcs, phpstan
+          tools: composer, phpcs, phpstan
 
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: composer install
 
       - name: Run quality checks
         run: |
