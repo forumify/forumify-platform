@@ -10,7 +10,6 @@ use Forumify\Forum\Notification\CommentCreatedNotificationType;
 use Forumify\Forum\Service\SubscriptionService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-
 class AutoSubscribeSubscriber implements EventSubscriberInterface
 {
     public function __construct(private readonly SubscriptionService $subService)

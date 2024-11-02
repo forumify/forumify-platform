@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
@@ -31,8 +32,13 @@ class Badge implements SortableEntityInterface
     #[ORM\Column]
     private string $image;
 
-    #[ORM\ManyToMany(targetEntity: User::class)]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'badges')]
     private Collection $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     public function getName(): string
     {
@@ -62,5 +68,15 @@ class Badge implements SortableEntityInterface
     public function setImage(string $image): void
     {
         $this->image = $image;
+    }
+
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function setUsers(Collection $users): void
+    {
+        $this->users = $users;
     }
 }

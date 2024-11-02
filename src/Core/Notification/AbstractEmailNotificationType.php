@@ -12,7 +12,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractEmailNotificationType implements NotificationTypeInterface
 {
-    protected readonly Mailer $mailer;
+    protected Mailer $mailer;
 
     #[Required]
     public function setServices(Mailer $mailer): void

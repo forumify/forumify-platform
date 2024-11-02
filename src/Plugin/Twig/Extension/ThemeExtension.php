@@ -32,7 +32,7 @@ class ThemeExtension extends AbstractExtension
 
         /** @var AppVariable $app */
         $app = $context['app'];
-        $preference = $app->getRequest()->cookies->get(ThemeService::CURRENT_THEME_COOKIE) ?? 'system';
+        $preference = $app->getRequest()?->cookies->get(ThemeService::CURRENT_THEME_COOKIE) ?? 'system';
 
         $links = [
             $this->packages->getUrl(sprintf(ThemeService::THEME_FILE_FORMAT, $preference, $lastModified), 'forumify.asset'),

@@ -1,0 +1,11 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+parameters:
+    level: 5
+    paths:
+        - src
+    ignoreErrors:
+        -
+            message: '#Property .+ is never written, only read.#'
+            path: src/**/Entity/*

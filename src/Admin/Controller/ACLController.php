@@ -31,14 +31,16 @@ class ACLController extends AbstractController
         $entity = $entityManager->getRepository($entityClass)->find($entityId);
 
         if ($entity === null) {
-            throw $this->createNotFoundException(sprintf('Unable to find %s with id %s',
+            throw $this->createNotFoundException(sprintf(
+                'Unable to find %s with id %s',
                 $entityClass,
                 $entityId
             ));
         }
 
         if (!$entity instanceof AccessControlledEntityInterface) {
-            throw new \InvalidArgumentException(sprintf('%s is not controlled by ACL, please implement %s',
+            throw new \InvalidArgumentException(sprintf(
+                '%s is not controlled by ACL, please implement %s',
                 get_class($entity),
                 AccessControlledEntityInterface::class,
             ));

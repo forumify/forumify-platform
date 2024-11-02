@@ -27,17 +27,14 @@ class AccessControlListVoter extends Voter
     }
 
     /**
-     * @param array $subject
-     *      [
-     *          'entity' => AccessControlledEntityInterface,
-     *          'permission' => string,
-     *          'always_block_guest' => bool
-     *      ]
+     * @param array{
+     *     'entity': AccessControlledEntityInterface,
+     *     'permission': string
+     * } $subject
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $this->validateSubject($subject);
-        /** @var AccessControlledEntityInterface $entity */
         ['permission' => $permission, 'entity' => $entity] = $subject;
 
         /** @var User|null $user */
@@ -61,9 +58,6 @@ class AccessControlListVoter extends Voter
     private function voteOnACL(?User $user, ACL $acl): bool
     {
         if ($user === null) {
-            if ($subject['always_block_guest'] ?? false) {
-                return false;
-            }
             return $this->isGuestAllowed($acl);
         }
 

@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Component;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Entity\ReadMarker;
@@ -12,10 +13,8 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\MessageThread;
-use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -35,9 +34,7 @@ class MessageThreadList extends AbstractDoctrineList
 
     public function __construct(
         private readonly MessageThreadRepository $messageThreadRepository,
-        private readonly MessageRepository $messageRepository,
         private readonly Security $security,
-        private readonly FormFactoryInterface $formFactory,
         private readonly ReadMarkerRepository $readMarkerRepository,
     ) {
     }
@@ -91,14 +88,18 @@ class MessageThreadList extends AbstractDoctrineList
 
     protected function getCount(): int
     {
-        return $this->messageThreadRepository
-            ->createQueryBuilder('mt')
-            ->select('COUNT(mt.id)')
-            ->join('mt.participants', 'p')
-            ->where('p = (:user)')
-            ->setParameter('user', $this->getUser())
-            ->getQuery()
-            ->getSingleScalarResult();
+        try {
+            return $this->messageThreadRepository
+                ->createQueryBuilder('mt')
+                ->select('COUNT(mt.id)')
+                ->join('mt.participants', 'p')
+                ->where('p = (:user)')
+                ->setParameter('user', $this->getUser())
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException) {
+            return 0;
+        }
     }
 
     private function getUser(): User

@@ -78,7 +78,6 @@ class MentionNotificationType extends AbstractEmailNotificationType
         return empty($url)
             ? ''
             : $this->packages->getUrl($url, 'forumify.avatar');
-
     }
 
     public function getUrl(Notification $notification): string

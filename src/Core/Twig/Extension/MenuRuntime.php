@@ -30,7 +30,7 @@ class MenuRuntime implements RuntimeExtensionInterface
         iterable $menuTypes,
     ) {
         foreach ($menuTypes as $menuType) {
-            if  ($menuType instanceof MenuTypeInterface) {
+            if ($menuType instanceof MenuTypeInterface) {
                 $this->menuTypes[$menuType->getType()] = $menuType;
             }
         }

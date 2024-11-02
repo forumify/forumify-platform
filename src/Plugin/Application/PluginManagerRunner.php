@@ -46,7 +46,7 @@ class PluginManagerRunner implements RunnerInterface
 
         $fn = $body['fn'] ?? null;
         if ($fn === null || !method_exists($this->pluginService, $fn)) {
-           return $this->error('Function not set or missing.', Response::HTTP_BAD_REQUEST);
+            return $this->error('Function not set or missing.', Response::HTTP_BAD_REQUEST);
         }
 
         try {

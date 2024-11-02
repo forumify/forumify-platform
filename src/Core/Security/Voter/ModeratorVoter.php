@@ -44,7 +44,7 @@ class ModeratorVoter extends Voter
             Topic::class => $subject->getForum(),
             Comment::class => $subject->getTopic()->getForum(),
             default => $subject,
-        };
+         };
 
         if (!$subject instanceof AccessControlledEntityInterface) {
             return true;

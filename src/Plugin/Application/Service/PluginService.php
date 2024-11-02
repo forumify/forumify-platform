@@ -132,6 +132,7 @@ class PluginService
             $versions = json_decode($output, true, 512, JSON_THROW_ON_ERROR)['installed'] ?? [];
         } catch (JsonException) {
             // a lot more needs to be broken before this can happen...
+            $versions = null;
         }
 
         if ($versions === null) {

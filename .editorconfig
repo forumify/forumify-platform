@@ -7,3 +7,6 @@ insert_final_newline = true
 
 [*.{js,jsx,ts,tsx}]
 indent_size = 2
+
+[.github/workflows/*.{yml,yaml}]
+indent_size = 2

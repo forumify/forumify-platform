@@ -13,7 +13,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class CommentVoter extends Voter
 {
-    public function __construct(private readonly Security $security) { }
+    public function __construct(private readonly Security $security)
+    {
+    }
 
     protected function supports(string $attribute, mixed $subject): bool
     {

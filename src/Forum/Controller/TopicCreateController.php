@@ -24,7 +24,6 @@ class TopicCreateController extends AbstractController
         $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
             'permission' => 'create_topic',
             'entity' => $forum,
-            'always_block_guest' => true,
         ]);
 
         $form = $this->createForm(TopicType::class, null, ['forum' => $forum]);

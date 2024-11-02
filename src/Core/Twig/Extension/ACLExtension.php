@@ -28,7 +28,8 @@ class ACLExtension extends AbstractExtension
     private function aclParameters(object $object): array
     {
         if (!$object instanceof AccessControlledEntityInterface) {
-            throw new \InvalidArgumentException(sprintf('To retrieve ACL parameters, %s must implement %s',
+            throw new \InvalidArgumentException(sprintf(
+                'To retrieve ACL parameters, %s must implement %s',
                 get_class($object),
                 AccessControlledEntityInterface::class
             ));

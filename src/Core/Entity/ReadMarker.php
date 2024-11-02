@@ -23,7 +23,8 @@ class ReadMarker
     #[ORM\Column(type: 'integer')]
     private int $subjectId;
 
-    public function __construct(User $user, string $subject, int $subjectId) {
+    public function __construct(User $user, string $subject, int $subjectId)
+    {
         $this->user = $user;
         $this->subject = $subject;
         $this->subjectId = $subjectId;

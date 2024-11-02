@@ -73,9 +73,9 @@ abstract class AbstractTable
         }
 
         $this->sort[$column] = match ($this->sort[$column] ?? null) {
-            null => self::SORT_ASC,
             self::SORT_ASC => self::SORT_DESC,
             self::SORT_DESC => null,
+            default => self::SORT_ASC,
         };
     }
 

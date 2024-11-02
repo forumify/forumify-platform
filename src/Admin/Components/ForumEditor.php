@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Components;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Forum\Entity\Forum;
-use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\Repository\ForumGroupRepository;
 use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -28,7 +26,6 @@ class ForumEditor
 
     public function __construct(
         private readonly ForumRepository $forumRepository,
-        private readonly EntityManagerInterface $em,
         private readonly ForumGroupRepository $forumGroupRepository,
     ) {
     }

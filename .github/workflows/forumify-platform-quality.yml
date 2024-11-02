@@ -1,0 +1,23 @@
+name: Run forumify/forumify-platform tests
+on: [ push, pull_request ]
+
+jobs:
+  quality:
+    name: phpcs
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: phpcs, phpstan
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run quality checks
+        run: |
+          phpcs -s --standard=phpcs.xml
+          phpstan analyze -v

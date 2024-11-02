@@ -13,11 +13,14 @@ use Forumify\Core\Twig\Extension\MenuRuntime;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class ClearMenuCacheSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly CacheInterface $cache)
-    {
+    public function __construct(
+        /** @var CacheInterface&TagAwareCacheInterface */
+        private readonly CacheInterface $cache
+    ) {
     }
 
     public static function getSubscribedEvents(): array

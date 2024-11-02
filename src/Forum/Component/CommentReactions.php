@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Component;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\CommentReaction;
@@ -37,7 +39,7 @@ class CommentReactions
     #[LiveAction]
     public function toggleReaction(#[LiveArg] int $reactionId, #[LiveArg] bool $allowRemove = true): void
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->security->getUser();
         if ($user === null) {
             return;
@@ -86,23 +88,27 @@ class CommentReactions
 
     public function hasUserReacted(int $reactionId): bool
     {
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->security->getUser();
         if ($user === null) {
             return false;
         }
 
-        $count = $this->commentReactionRepository
-            ->createQueryBuilder('cr')
-            ->select('COUNT(cr.id)')
-            ->where('cr.comment = :commentId')
-            ->andWhere('cr.user = :userId')
-            ->andWhere('cr.reaction = :reactionId')
-            ->setParameter('commentId', $this->comment->getId())
-            ->setParameter('userId', $user->getId())
-            ->setParameter('reactionId', $reactionId)
-            ->getQuery()
-            ->getSingleScalarResult();
+        try {
+            $count = $this->commentReactionRepository
+                ->createQueryBuilder('cr')
+                ->select('COUNT(cr.id)')
+                ->where('cr.comment = :commentId')
+                ->andWhere('cr.user = :userId')
+                ->andWhere('cr.reaction = :reactionId')
+                ->setParameter('commentId', $this->comment->getId())
+                ->setParameter('userId', $user->getId())
+                ->setParameter('reactionId', $reactionId)
+                ->getQuery()
+                ->getSingleScalarResult();
+        } catch (NoResultException|NonUniqueResultException) {
+            return false;
+        }
 
         return $count > 0;
     }

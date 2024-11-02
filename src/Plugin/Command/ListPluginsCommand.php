@@ -38,11 +38,11 @@ class ListPluginsCommand extends Command
 
     private function transformPlugin(Plugin $plugin): array
     {
-        $metadata = $plugin->getPlugin()?->getPluginMetadata();
+        $metadata = $plugin->getPlugin()->getPluginMetadata();
         return [
             $plugin->getId(),
-            $metadata?->name ?? 'Unknown',
-            $metadata?->author ?? 'Unknown',
+            $metadata->name,
+            $metadata->author,
             $plugin->isActive(),
         ];
     }
