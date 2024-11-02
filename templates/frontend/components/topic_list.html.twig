@@ -6,11 +6,12 @@
                 <a class="topic-link" href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}"></a>
                 <div class="flex gap-4 mb-2 mt-2">
                     <div class="flex-grow">
-                        <h4 class="mb-0 flex flex-row items-center gap-2 text-subtitle">
+                        <h4 class="mb-0 flex flex-row items-center gap-1 text-subtitle">
                             {% if topic.pinned %}<i class="ph ph-push-pin"></i>{% endif %}
                             {% if topic.locked %}<i class="ph ph-lock"></i>{% endif %}
                             {% if topic.hidden %}<i class="ph ph-eye-slash"></i>{% endif %}
                             {{ topic.title }}
+                            {{ component('ReadMarker', { item: topic }) }}
                         </h4>
                         {% if forum.displaySettings.showTopicAuthor %}
                             <div class="flex items-center gap-2 text-small">
