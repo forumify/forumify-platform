@@ -41,4 +41,6 @@ abstract class AbstractMenuType implements MenuTypeInterface
             'entity' => $item,
         ]);
     }
+
+    abstract protected function render(MenuItem $item): string;
 }

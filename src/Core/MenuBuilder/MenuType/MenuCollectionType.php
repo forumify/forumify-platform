@@ -6,8 +6,6 @@ namespace Forumify\Core\MenuBuilder\MenuType;
 
 use Forumify\Core\Entity\MenuItem;
 use Forumify\Core\MenuBuilder\MenuTypeInterface;
-use Forumify\Core\Security\VoterAttribute;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Twig\Environment;
 
@@ -22,7 +20,6 @@ class MenuCollectionType extends AbstractMenuType
         #[TaggedIterator('forumify.menu_builder.type')]
         iterable $menuTypes,
         private readonly Environment $twig,
-        private readonly Security $security,
     ) {
         foreach ($menuTypes as $menuType) {
             if ($menuType instanceof MenuTypeInterface) {
@@ -40,20 +37,12 @@ class MenuCollectionType extends AbstractMenuType
     {
         $menuHtml = '';
         foreach ($item->getChildren() as $child) {
-            $canView = $this->security->isGranted(VoterAttribute::ACL->value, [
-                'entity' => $child,
-                'permission' => 'view',
-            ]);
-            if (!$canView) {
-                continue;
-            }
-
             $menuType = $this->menuTypes[$child->getType()] ?? null;
             if ($menuType === null) {
                 continue;
             }
 
-            $menuHtml .= $menuType->render($child);
+            $menuHtml .= $menuType->buildItem($child);
         }
 
         return $this->twig->render('@Forumify/frontend/menu/collection.html.twig', [
