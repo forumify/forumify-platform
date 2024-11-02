@@ -40,8 +40,14 @@ class MessageThreadList extends AbstractDoctrineList
     }
 
     #[LiveAction]
-    public function setSelectedThread(#[LiveArg] int $threadId): void
+    public function setSelectedThread(#[LiveArg] ?int $threadId = null): void
     {
+        if ($threadId === null) {
+            $this->selectedThreadId = null;
+            $this->selectedThread = null;
+            return;
+        }
+
         $user = $this->getUser();
         if (!$this->readMarkerRepository->isRead($user, MessageThread::class, $threadId)) {
             $this->readMarkerRepository->save(new ReadMarker($user, MessageThread::class, $threadId));

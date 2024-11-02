@@ -179,7 +179,18 @@
 }
 
 .thread-list {
-    width: 25%;
+    width: 100%;
+
+    @include min-width-lg {
+        width: 25%;
+    }
+
+    &.thread-selected {
+        display: none;
+        @include min-width-lg {
+            display: block;
+        }
+    }
 
     .card-body {
         padding-left: 0;
@@ -215,7 +226,17 @@
 }
 
 .thread {
-    width: 75%;
+    width: 100%;
+    display: none;
+
+    @include min-width-lg {
+        display: block;
+        width: 75%;
+    }
+
+    &.thread-selected {
+        display: block;
+    }
 }
 
 .thread-header {

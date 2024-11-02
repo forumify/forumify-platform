@@ -2,11 +2,16 @@
 
 {% block container %}
     <div class="messenger">
-        <div class="thread-list">
+        <div class="thread-list {% if this.selectedThread is not null %}thread-selected{% endif %}">
             {{ parent() }}
         </div>
-        <div class="thread">
+        <div class="thread {% if this.selectedThread is not null %}thread-selected{% endif %}">
             {% if this.selectedThread is not null %}
+                <div class="mb-4 hide-desktop">
+                    <button type="button" class="btn-icon btn-link" {{ live_action('setSelectedThread') }}>
+                        <i class="ph ph-arrow-left"></i>
+                    </button>
+                </div>
                 <div class="card mb-4">
                     <div class="thread-header card-title justify-start p-4">
                         {% include '@Forumify/components/avatar.html.twig' with {
