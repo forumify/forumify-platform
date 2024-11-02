@@ -75,7 +75,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<Badge>
      */
-    #[ORM\ManyToMany(targetEntity: Badge::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+    #[ORM\ManyToMany(targetEntity: Badge::class, inversedBy: 'users', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     #[ORM\JoinTable(
         'user_badge',
         joinColumns: [new ORM\JoinColumn('user', onDelete: 'CASCADE')],
