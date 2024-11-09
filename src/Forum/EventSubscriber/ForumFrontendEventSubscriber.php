@@ -2,27 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Forum\Controller;
+namespace Forumify\Forum\EventSubscriber;
 
-use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Event\FrontendEvents;
+use Forumify\Core\Event\FrontendRenderEvent;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\Repository\ForumRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ForumController extends AbstractController
+class ForumFrontendEventSubscriber implements EventSubscriberInterface
 {
-    #[Route('/forum/{slug?}', name: 'forum')]
-    public function __invoke(ForumRepository $forumRepository, ?Forum $forum = null): Response
+    public static function getSubscribedEvents(): array
     {
-        if ($forum !== null) {
-            $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
-                'permission' => 'view',
-                'entity' => $forum
-            ]);
-        }
+        return [
+            FrontendEvents::getName(FrontendEvents::RENDER, Forum::class) => 'setTemplateParams',
+        ];
+    }
+
+    public function setTemplateParams(FrontendRenderEvent $renderEvent): void
+    {
+        /** @var ForumRepository $forumRepository */
+        $forumRepository = $renderEvent->repository;
+        /** @var Forum|null $forum */
+        $forum = $renderEvent->item;
 
         $ungroupedForums = [];
         $groups = [];
@@ -38,10 +41,10 @@ class ForumController extends AbstractController
 
         uasort($groups, static fn (ForumGroup $a, ForumGroup $b) => $a->getPosition() - $b->getPosition());
 
-        return $this->render('@Forumify/frontend/forum/list.html.twig', [
+        $renderEvent->templateParameters = [
             'forum' => $forum,
             'ungroupedForums' => $ungroupedForums,
             'groups' => $groups,
-        ]);
+        ];
     }
 }
