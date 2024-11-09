@@ -38,13 +38,9 @@ class ForumFrontendEventSubscriber implements EventSubscriberInterface
             }
             $groups[$group->getId()] = $group;
         }
+        $renderEvent->templateParameters['ungroupedForums'] = $ungroupedForums;
 
         uasort($groups, static fn (ForumGroup $a, ForumGroup $b) => $a->getPosition() - $b->getPosition());
-
-        $renderEvent->templateParameters = [
-            'forum' => $forum,
-            'ungroupedForums' => $ungroupedForums,
-            'groups' => $groups,
-        ];
+        $renderEvent->templateParameters['groups'] = $groups;
     }
 }
