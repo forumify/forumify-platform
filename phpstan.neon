@@ -7,5 +7,7 @@ parameters:
         - src
     ignoreErrors:
         -
-            message: '#Property .+ is never written, only read.#'
+            messages:
+                - '#Property .+ is never written, only read.#'
+                - '#Property .+ is never assigned .+ so it can be removed from the property type.#'
             path: src/**/Entity/*

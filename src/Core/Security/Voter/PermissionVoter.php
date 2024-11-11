@@ -13,7 +13,7 @@ class PermissionVoter extends Voter
 {
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return is_string($attribute);
+        return true;
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -24,20 +24,17 @@ class PermissionVoter extends Voter
             return false;
         }
 
-        // Flatten and get unique permissions
         $permissions = $this->getPermissions($user);
-
-        // Check if the attribute is in the user's permissions
         return in_array($attribute, $permissions, true);
     }
 
     private function getPermissions(User $user): array
     {
         $permissions = [];
-
-        // Iterate through each role of the user and collect permissions
         foreach ($user->getRoleEntities() as $role) {
-            $permissions = array_merge($permissions, $role->getPermissions());
+            foreach ($role->getPermissions() as $permission) {
+                $permissions[] = $permission;
+            }
         }
 
         return array_unique($permissions);

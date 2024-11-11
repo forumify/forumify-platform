@@ -69,7 +69,7 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param array<string, string|array> $viewData
+     * @param array<string, mixed> $viewData
      * @param Traversable<FormInterface> $forms
      */
     public function mapDataToForms(mixed $viewData, Traversable $forms): void
@@ -84,7 +84,7 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
 
     /**
      * @param Traversable<FormInterface> $forms
-     * @param array<string, string|array> $viewData
+     * @param array<string, mixed> $viewData
      */
     public function mapFormsToData(Traversable $forms, mixed &$viewData): void
     {
