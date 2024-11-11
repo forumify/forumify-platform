@@ -51,7 +51,7 @@
         "twig/cssinliner-extra": "^3.7",
         "twig/extra-bundle": "^3.7",
         "twig/string-extra": "^3.7",
-        "twig/twig": "^2.12|^3.0",
+        "twig/twig": "^3.11.2",
         "symfony/scheduler": "6.4.*",
         "dragonmantank/cron-expression": "^3.3",
         "twig/cache-extra": "^3.10"
