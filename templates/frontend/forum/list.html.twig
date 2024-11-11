@@ -1,5 +1,4 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
-{% set forum = item %}
 {% block title_page %}
     {{- forum is not null ? forum.title : 'forum' -}}
 {% endblock %}
