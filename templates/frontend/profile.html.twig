@@ -61,7 +61,7 @@
             </div>
             <div class="card-body">
                 <ul>
-                    {% for comment in comments|filter(comment => can('view', comment.topic.forum)) %}
+                    {% for comment in comments %}
                         <li class="flex flex-col items-start">
                             <a class="pb-1" href="{{ path('forumify_forum_topic', { slug: comment.topic.slug }) }}">
                                 {{ comment.topic.title }}

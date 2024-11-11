@@ -7,16 +7,22 @@ namespace Forumify\Core\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Forumify\Core\Entity\ACL;
 use Forumify\Core\Entity\SortableEntityInterface;
+use Forumify\Core\Entity\User;
 use Forumify\Core\Event\EntityPostRemoveEvent;
 use Forumify\Core\Event\EntityPostSaveEvent;
+use Forumify\Core\Security\VoterAttribute;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractRepository extends ServiceEntityRepository
 {
     private EventDispatcherInterface $eventDispatcher;
+    private Security $security;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -24,9 +30,12 @@ abstract class AbstractRepository extends ServiceEntityRepository
     }
 
     #[Required]
-    public function setServices(EventDispatcherInterface $eventDispatcher): void
-    {
+    public function setServices(
+        EventDispatcherInterface $eventDispatcher,
+        Security $security,
+    ): void {
         $this->eventDispatcher = $eventDispatcher;
+        $this->security = $security;
     }
 
     protected function getEntityName(): string
@@ -129,5 +138,39 @@ abstract class AbstractRepository extends ServiceEntityRepository
         $entity->setPosition($newPosition);
 
         $this->saveAll([$entity, $toSwap]);
+    }
+
+    protected function addACLToQuery(
+        QueryBuilder $qb,
+        string $permission,
+        ?string $entity = null,
+        ?string $alias = 'e',
+        ?string $identifier = 'id',
+    ): QueryBuilder {
+        if ($this->security->isGranted(VoterAttribute::SuperAdmin->value)) {
+            return $qb;
+        }
+
+        $entity ??= $this->getEntityName();
+        $qb->innerJoin(ACL::class, 'acl', 'WITH', "acl.entity = :entity AND acl.entityId = $alias.$identifier AND acl.permission = :permission")
+            ->innerJoin('acl.roles', 'r')
+            ->setParameter('permission', $permission)
+            ->setParameter('entity', $entity);
+
+        $user = $this->security->getUser();
+        if ($user instanceof User) {
+            $qb->leftJoin('r.users', 'u')
+                ->andWhere($qb->expr()->orX(
+                    'u.id = :userId',
+                    'r.slug = :userRole'
+                ))
+                ->setParameter('userId', $user->getId())
+                ->setParameter('userRole', 'user');
+        } else {
+            $qb->andWhere('r.slug = :guestRole')
+                ->setParameter('guestRole', 'guest');
+        }
+
+        return $qb;
     }
 }

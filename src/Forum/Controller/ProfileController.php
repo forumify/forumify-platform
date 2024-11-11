@@ -31,7 +31,7 @@ class ProfileController extends AbstractController
             'user' => $user,
             'topicCount' => $this->topicRepository->count(['createdBy' => $user]),
             'commentCount' => $this->commentRepository->count(['createdBy' => $user]),
-            'comments' => $this->commentRepository->findBy(['createdBy' => $user], ['createdAt' => 'DESC'], 10),
+            'comments' => $this->commentRepository->getUserLastComments($user),
             'followerCount' => $followerCount,
             'followingCount' => $followingCount,
         ]);
