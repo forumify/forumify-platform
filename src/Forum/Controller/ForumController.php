@@ -2,30 +2,27 @@
 
 declare(strict_types=1);
 
-namespace Forumify\Forum\EventSubscriber;
+namespace Forumify\Forum\Controller;
 
-use Forumify\Core\Event\FrontendEvents;
-use Forumify\Core\Event\FrontendRenderEvent;
+use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\Repository\ForumRepository;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
-class ForumFrontendEventSubscriber implements EventSubscriberInterface
+class ForumController extends AbstractController
 {
-    public static function getSubscribedEvents(): array
+    #[Route('/forum/{slug?}', name: 'forum')]
+    public function __invoke(ForumRepository $forumRepository, ?Forum $forum = null): Response
     {
-        return [
-            FrontendEvents::getName(FrontendEvents::RENDER, Forum::class) => 'setTemplateParams',
-        ];
-    }
-
-    public function setTemplateParams(FrontendRenderEvent $renderEvent): void
-    {
-        /** @var ForumRepository $forumRepository */
-        $forumRepository = $renderEvent->repository;
-        /** @var Forum|null $forum */
-        $forum = $renderEvent->item;
+        if ($forum !== null) {
+            $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
+                'permission' => 'view',
+                'entity' => $forum
+            ]);
+        }
 
         $ungroupedForums = [];
         $groups = [];
@@ -41,10 +38,10 @@ class ForumFrontendEventSubscriber implements EventSubscriberInterface
 
         uasort($groups, static fn (ForumGroup $a, ForumGroup $b) => $a->getPosition() - $b->getPosition());
 
-        $renderEvent->templateParameters = [
+        return $this->render('@Forumify/frontend/forum/list.html.twig', [
             'forum' => $forum,
             'ungroupedForums' => $ungroupedForums,
             'groups' => $groups,
-        ];
+        ]);
     }
 }

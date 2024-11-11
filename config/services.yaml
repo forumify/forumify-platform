@@ -10,6 +10,7 @@ services:
         exclude:
             - '../src/**/DataFixture/*'
             - '../src/**/DependencyInjection/*'
+            - '../src/**/Entity/*'
             - '../src/Plugin/Application/*'
             - '../src/Core/ForumifyKernel.php'
 

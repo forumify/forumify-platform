@@ -2,10 +2,6 @@ forumify:
     resource: routes/forumify.yaml
     name_prefix: forumify_
 
-frontend_attribute:
-    resource: .
-    type: frontend_attribute
-
 plugin_routes:
     resource: .
     type: forumify_plugin

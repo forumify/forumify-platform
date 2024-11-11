@@ -7,7 +7,6 @@ namespace Forumify\Forum\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Forumify\Core\Attribute\AsFrontend;
 use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\ACLParameters;
 use Forumify\Core\Entity\HierarchicalInterface;
@@ -16,15 +15,7 @@ use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Entity\SortableEntityTrait;
 use Forumify\Forum\Repository\ForumRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Routing\Route;
 
-#[AsFrontend(
-    name: 'forumify_forum_forum',
-    route: new Route('/forum/{slug?}'),
-    template: '@Forumify/frontend/forum/list.html.twig',
-    identifier: 'slug',
-    permission: 'view',
-)]
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 class Forum implements HierarchicalInterface, AccessControlledEntityInterface, SortableEntityInterface
 {
