@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Core\Security\Voter;
 
 use Forumify\Core\Entity\AccessControlledEntityInterface;
-use Forumify\Core\Entity\ACL;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ACLRepository;
 use Forumify\Core\Security\VoterAttribute;
@@ -39,35 +38,13 @@ class AccessControlListVoter extends Voter
 
         /** @var User|null $user */
         $user = $token->getUser();
-        $memoKey = $this->getMemoKey($entity, $permission, $user);
-        if (isset($this->aclMemo[$memoKey])) {
-            return $this->aclMemo[$memoKey];
+        $userId = (string)($user?->getId() ?? 'guest');
+        if (!isset($this->aclMemo[$userId])) {
+            $this->aclMemo[$userId] = $this->createACLLookup($user);
         }
 
-        $acl = $this->aclRepository->findOneByEntityAndPermission($entity, $permission);
-        if ($acl === null) {
-            return false;
-        }
-
-        $result = $this->voteOnACL($user, $acl);
-        $this->aclMemo[$memoKey] = $result;
-
-        return $result;
-    }
-
-    private function voteOnACL(?User $user, ACL $acl): bool
-    {
-        if ($user === null) {
-            return $this->isGuestAllowed($acl);
-        }
-
-        $userRoles = $user->getRoles();
-        foreach ($acl->getRoles() as $role) {
-            if (in_array($role->getRoleName(), $userRoles, true)) {
-                return true;
-            }
-        }
-        return false;
+        $acl = $entity->getACLParameters();
+        return $this->aclMemo[$userId][$acl->entity][$acl->entityId][$permission] ?? false;
     }
 
     private function validateSubject(array $subject): void
@@ -81,21 +58,15 @@ class AccessControlListVoter extends Voter
         }
     }
 
-    private function isGuestAllowed(ACL $acl): bool
+    private function createACLLookup(?User $user): array
     {
-        foreach ($acl->getRoles() as $role) {
-            if ($role->getRoleName() === 'ROLE_GUEST') {
-                return true;
-            }
+        $lookup = [];
+        $acls = $this->aclRepository->findByUser($user);
+        foreach ($acls as $acl) {
+            ['entity' => $entity, 'entityId' => $entityId, 'permission' => $permission] = $acl;
+            $lookup[$entity][$entityId][$permission] = true;
         }
-        return false;
-    }
 
-    private function getMemoKey(AccessControlledEntityInterface $entity, string $permission, ?User $user): string
-    {
-        $userIdentifier = $user?->getUserIdentifier() ?? 'GUEST';
-
-        $aclParameters = $entity->getACLParameters();
-        return $userIdentifier . '-' . $aclParameters->entity . '(' . $aclParameters->entityId . ')' . '::' . $permission;
+        return $lookup;
     }
 }
