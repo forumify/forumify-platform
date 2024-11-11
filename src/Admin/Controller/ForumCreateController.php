@@ -49,9 +49,7 @@ class ForumCreateController extends AbstractController
             $forumRepository->save($forum);
 
             $this->addFlash('success', 'flashes.forum_saved');
-            return $this->redirectToRoute('forumify_admin_forum', [
-                'slug' => $parent?->getSlug(),
-            ]);
+            return $this->redirectToRoute('forumify_admin_acl', (array)$forum->getACLParameters());
         }
 
         return $this->render('@Forumify/admin/forum/create.html.twig', [

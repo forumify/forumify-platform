@@ -28,6 +28,7 @@ class ForumGroupCreateController extends AbstractController
         $form = $this->createForm(ForumGroupType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var ForumGroup $forumGroup */
             $forumGroup = $form->getData();
             $forumGroup->setParentForum($parent);
 
@@ -37,9 +38,7 @@ class ForumGroupCreateController extends AbstractController
             $forumGroupRepository->save($forumGroup);
 
             $this->addFlash('success', 'flashes.forum_group_saved');
-            return $this->redirectToRoute('forumify_admin_forum', $parent === null ? [] : [
-                'slug' => $parent->getSlug()
-            ]);
+            return $this->redirectToRoute('forumify_admin_acl', (array)$forumGroup->getACLParameters());
         }
 
         return $this->render('@Forumify/admin/forum/group.html.twig', [
