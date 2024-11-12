@@ -39,7 +39,7 @@ class ACLRepository extends AbstractRepository
 
     /**
      * @param User|null $user
-     * @return array<array, array{ entity: string, entityId: string, permission: string }>
+     * @return array<array{ entity: string, entityId: string, permission: string }>
      */
     public function findByUser(?User $user): array
     {
