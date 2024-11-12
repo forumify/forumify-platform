@@ -34,8 +34,8 @@
                             </div>
                         </div>
                     </div>
-                    {% if forum.displaySettings.showLastCommentBy and forum.lastComment %}
-                        {% set lastComment = forum.lastComment %}
+                    {% set lastComment = forum|last_comment %}
+                    {% if lastComment is not null %}
                         {% set topic = lastComment.topic %}
                         <div class="forum-last-comment">
                             {% include '@Forumify/components/avatar.html.twig' with {

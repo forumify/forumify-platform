@@ -30,20 +30,29 @@ class ForumReadMarkerService implements ReadMarkerServiceInterface
      */
     public function read(User $user, mixed $subject): bool
     {
-        $topicIds = $this->getTopicIds($subject);
+        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
+        $topicIds = $this->getTopicIds($user, $subject, $canViewHidden);
         return $this->readMarkerRepository->areAllRead($user, Topic::class, $topicIds);
     }
 
     public function markAsRead(User $user, mixed $subject): void
     {
-        $topicIds = $this->getTopicIds($subject);
+        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
+        $topicIds = $this->getTopicIds($user, $subject, $canViewHidden);
         $this->readMarkerRepository->markAllRead($user, Topic::class, $topicIds);
     }
 
-    private function getTopicIds(Forum $forum): array
+    private function getTopicIds(User $user, Forum $forum, bool $canViewHidden): array
     {
-        $ownTopicIds = $forum->getTopics()
-            ->filter(fn (Topic $topic) => !$topic->isHidden() || $this->security->isGranted(VoterAttribute::Moderator->value))
+        $onlyShowOwnTopics = $forum->getDisplaySettings()->isOnlyShowOwnTopics();
+        $canViewAll = !$onlyShowOwnTopics || $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $forum, 'permission' => 'show_all_topics']);
+
+        $visibleTopics = $canViewAll
+            ? $forum->getTopics()
+            : $forum->getTopics()->filter(fn (Topic $topic) => $topic->getCreatedBy()?->getId() === $user->getId());
+
+        $ownTopicIds = $visibleTopics
+            ->filter(fn (Topic $topic) => !$topic->isHidden() || $canViewHidden)
             ->map(fn (Topic $topic) => $topic->getId())
             ->toArray();
 
@@ -52,7 +61,7 @@ class ForumReadMarkerService implements ReadMarkerServiceInterface
                 'permission' => 'view',
                 'entity' => $subForum,
             ]))
-            ->map(fn (Forum $subForum) => $this->getTopicIds($subForum))
+            ->map(fn (Forum $subForum) => $this->getTopicIds($user, $subForum, $canViewHidden))
             ->toArray();
 
         return array_merge($ownTopicIds, ...$childTopicIds);

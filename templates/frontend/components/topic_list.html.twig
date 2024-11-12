@@ -41,14 +41,15 @@
                             {% endif %}
                         </div>
                     {% endif %}
-                    {% if forum.displaySettings.showTopicLastCommentBy and topic.lastComment %}
+                    {% set lastComment = topic|last_comment %}
+                    {% if lastComment is not null %}
                         <div class="flex flex-col w-25 hide-phone hide-tablet">
                             <p class="text-small mb-1">{{ 'forum.topic.last_comment_by'|trans }}</p>
                             <div class="flex gap-2">
-                                {% include '@Forumify/components/avatar.html.twig' with { user: topic.lastComment.createdBy, className: 'avatar-sm' } only %}
+                                {% include '@Forumify/components/avatar.html.twig' with { user: lastComment.createdBy, className: 'avatar-sm' } only %}
                                 <div>
-                                    {% include '@Forumify/components/username.html.twig' with { user: topic.lastComment.createdBy, className: 'topic-author' } only %}
-                                    <p class="text-small">{{ topic.lastComment.createdAt|format_date }}</p>
+                                    {% include '@Forumify/components/username.html.twig' with { user: lastComment.createdBy, className: 'topic-author' } only %}
+                                    <p class="text-small">{{ lastComment.createdAt|format_date }}</p>
                                 </div>
                             </div>
                         </div>

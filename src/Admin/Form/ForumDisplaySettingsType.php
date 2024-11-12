@@ -24,18 +24,27 @@ class ForumDisplaySettingsType extends AbstractType
         $builder
             ->add('showTopicAuthor', CheckboxType::class, [
                 'required' => false,
+                'help' => 'admin.forum.display_settings_help.show_topic_author'
             ])
             ->add('showTopicStatistics', CheckboxType::class, [
                 'required' => false,
+                'help' => 'admin.forum.display_settings_help.show_topic_statistics'
             ])
             ->add('showTopicLastCommentBy', CheckboxType::class, [
                 'required' => false,
+                'help' => 'admin.forum.display_settings_help.show_topic_last_comment_by'
             ])
             ->add('showTopicPreview', CheckboxType::class, [
                 'required' => false,
+                'help' => 'admin.forum.display_settings_help.show_topic_preview'
             ])
             ->add('showLastCommentBy', CheckboxType::class, [
                 'required' => false,
+                'help' => 'admin.forum.display_settings_help.show_topic_last_comment_by'
+            ])
+            ->add('onlyShowOwnTopics', CheckboxType::class, [
+                'required' => false,
+                'help' => 'admin.forum.display_settings_help.only_show_own_topics'
             ]);
     }
 }

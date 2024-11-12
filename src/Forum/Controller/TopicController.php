@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Controller;
 
-use Forumify\Core\Entity\ReadMarker;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
@@ -16,7 +15,7 @@ use Forumify\Forum\Form\TopicData;
 use Forumify\Forum\Form\TopicType;
 use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
-use Forumify\Forum\Service\ReindexLastActivityService;
+use Forumify\Forum\Service\LastCommentService;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,8 +31,8 @@ class TopicController extends AbstractController
     public function __construct(
         private readonly CreateCommentService $createCommentService,
         private readonly TopicRepository $topicRepository,
-        private readonly ReindexLastActivityService $reindexLastActivityService,
-        private readonly ReadMarkerRepository $readMarkerRepository
+        private readonly LastCommentService $lastCommentService,
+        private readonly ReadMarkerRepository $readMarkerRepository,
     ) {
     }
 
@@ -154,7 +153,7 @@ class TopicController extends AbstractController
         $topic->setHidden(!$topic->isHidden());
 
         $this->topicRepository->save($topic);
-        $this->reindexLastActivityService->reindexAll();
+        $this->lastCommentService->clearCache();
 
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
     }
@@ -176,7 +175,7 @@ class TopicController extends AbstractController
             $topic = $form->getData();
             if ($this->isGranted(VoterAttribute::Moderator->value, $topic->getForum())) {
                 $this->topicRepository->save($topic);
-                $this->reindexLastActivityService->reindexAll();
+                $this->lastCommentService->clearCache();
 
                 $this->addFlash('success', 'forum.topic.flashes.topic_moved');
                 return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
@@ -196,7 +195,7 @@ class TopicController extends AbstractController
     {
         $forum = $topic->getForum();
         $this->topicRepository->remove($topic);
-        $this->reindexLastActivityService->reindexAll();
+        $this->lastCommentService->clearCache();
 
         $this->addFlash('success', 'flashes.topic_removed');
         return $this->redirectToRoute('forumify_forum_forum', ['slug' => $forum->getSlug()]);

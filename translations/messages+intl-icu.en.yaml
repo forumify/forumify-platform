@@ -286,6 +286,7 @@ admin:
         mailer_from_help: 'Email address that the platform will use to send emails from.'
     directory_empty: 'This directory is empty or you do not have permissions to see any items.'
     forum:
+        acl: 'Permissions'
         type:
             text: 'Text Board'
             image: 'Image Board'
@@ -301,6 +302,13 @@ admin:
             </ul>
         general: 'General'
         display_settings: 'Display Settings'
+        display_settings_help:
+            show_topic_author: 'Show or hide the topic author that is displayed below the topic title.'
+            show_topic_statistics: 'Show or hide the statistics that are shown beside the last comment.'
+            show_topic_last_comment_by: 'Show or hide the last comment by in the topic list.'
+            show_topic_preview: 'Show a truncated preview of the first comment of each topic in the list.'
+            show_last_comment_by: 'Show or hide the last comment author on this forum in the forum list.'
+            only_show_own_topics: 'Only show the user''s own topics in this forum. This setting enables the "show all topics" permission to ignore this setting.'
     menu_builder:
         title: 'Menu Builder'
         create_collection_item: 'Add Item'

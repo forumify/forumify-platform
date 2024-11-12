@@ -50,4 +50,38 @@ class CommentRepository extends AbstractRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findLastCommentForForumAndUserId(
+        Forum $forum,
+        string $userId,
+        bool $canViewAll,
+        bool $canViewHidden,
+    ): ?Comment {
+        $qb = $this->createQueryBuilder('c')
+            ->join('c.topic', 't')
+            ->innerJoin('t.forum', 'f', 'WITH', 'f.id = :forumId')
+            ->setParameter('forumId', $forum->getId())
+            ->orderBy('c.createdAt', 'DESC')
+            ->setMaxResults(1);
+
+        if (!$canViewHidden) {
+            $qb->andWhere('t.hidden = 0');
+        }
+
+        if (!$canViewAll) {
+            $qb->join('t.createdBy', 'author')
+                ->andWhere('author.id = :userId')
+                ->setParameter('userId', $userId);
+        }
+
+        $this->addACLToQuery($qb, 'view', Forum::class, 'f');
+
+        try {
+            return $qb
+                ->getQuery()
+                ->getOneOrNullResult();
+        } catch (NonUniqueResultException) {
+            return null;
+        }
+    }
 }

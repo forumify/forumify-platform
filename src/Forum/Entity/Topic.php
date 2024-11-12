@@ -41,10 +41,6 @@ class Topic implements SubscribableInterface
 
     #[ORM\ManyToOne(targetEntity: Comment::class, fetch: 'EAGER')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    private ?Comment $lastComment = null;
-
-    #[ORM\ManyToOne(targetEntity: Comment::class, fetch: 'EAGER')]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Comment $answer = null;
 
     #[ORM\Column(type: 'boolean')]
@@ -129,16 +125,6 @@ class Topic implements SubscribableInterface
     public function setFirstComment(?Comment $firstComment): void
     {
         $this->firstComment = $firstComment;
-    }
-
-    public function getLastComment(): ?Comment
-    {
-        return $this->lastComment;
-    }
-
-    public function setLastComment(?Comment $lastComment): void
-    {
-        $this->lastComment = $lastComment;
     }
 
     public function isLocked(): bool

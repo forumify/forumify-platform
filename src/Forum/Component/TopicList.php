@@ -30,14 +30,27 @@ class TopicList extends AbstractDoctrineList
         $qb = $this->topicRepository
             ->createQueryBuilder('t')
             ->where('t.forum = :forum')
-            ->join('t.lastComment', 'lc')
+            ->join('t.comments', 'tc')
             ->orderBy('t.pinned', 'DESC')
-            ->addOrderBy('lc.createdAt', 'DESC')
+            ->addOrderBy('tc.createdAt', 'DESC')
             ->setParameter('forum', $this->forum);
 
         $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
         if (!$canViewHidden) {
             $qb->andWhere('t.hidden = 0');
+        }
+
+        $canOnlyShowOwnSetting = $this->forum->getDisplaySettings()->isOnlyShowOwnTopics();
+        if ($canOnlyShowOwnSetting) {
+            $canSeeAll = $this->security->isGranted(VoterAttribute::ACL->value, [
+                'entity' => $this->forum,
+                'permission' => 'show_all_topics'
+            ]);
+            if (!$canSeeAll) {
+                $user = $this->security->getUser();
+                $qb->andWhere('t.createdBy = :author')
+                    ->setParameter('author', $user);
+            }
         }
 
         return $qb;

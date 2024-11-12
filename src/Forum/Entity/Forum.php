@@ -59,10 +59,6 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $groups;
 
-    #[ORM\ManyToOne(targetEntity: Comment::class)]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    private ?Comment $lastComment = null;
-
     #[ORM\Embedded(class: ForumDisplaySettings::class, columnPrefix: 'display_settings_')]
     private ForumDisplaySettings $displaySettings;
 
@@ -173,16 +169,6 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
         $this->groups = $groups;
     }
 
-    public function getLastComment(): ?Comment
-    {
-        return $this->lastComment;
-    }
-
-    public function setLastComment(?Comment $lastComment): void
-    {
-        $this->lastComment = $lastComment;
-    }
-
     public function getDisplaySettings(): ForumDisplaySettings
     {
         return $this->displaySettings;
@@ -190,7 +176,11 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
 
     public function getACLPermissions(): array
     {
-        return ['view', 'create_topic', 'create_comment'];
+        $permissions = ['view', 'create_topic', 'create_comment'];
+        if ($this->getDisplaySettings()->isOnlyShowOwnTopics()) {
+            $permissions[] = 'show_all_topics';
+        }
+        return $permissions;
     }
 
     public function getACLParameters(): ACLParameters

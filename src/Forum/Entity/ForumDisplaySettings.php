@@ -24,6 +24,9 @@ class ForumDisplaySettings
     #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $showLastCommentBy = true;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $onlyShowOwnTopics = false;
+
     public function isShowTopicAuthor(): bool
     {
         return $this->showTopicAuthor;
@@ -72,5 +75,15 @@ class ForumDisplaySettings
     public function setShowLastCommentBy(bool $showLastCommentBy): void
     {
         $this->showLastCommentBy = $showLastCommentBy;
+    }
+
+    public function isOnlyShowOwnTopics(): bool
+    {
+        return $this->onlyShowOwnTopics;
+    }
+
+    public function setOnlyShowOwnTopics(bool $onlyShowOwnTopics): void
+    {
+        $this->onlyShowOwnTopics = $onlyShowOwnTopics;
     }
 }

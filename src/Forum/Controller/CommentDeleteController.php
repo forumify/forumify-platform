@@ -6,17 +6,18 @@ namespace Forumify\Forum\Controller;
 
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Comment;
+use Forumify\Forum\Event\CommentDeletedEvent;
 use Forumify\Forum\Repository\CommentRepository;
-use Forumify\Forum\Service\ReindexLastActivityService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CommentDeleteController extends AbstractController
 {
     public function __construct(
         private readonly CommentRepository $commentRepository,
-        private readonly ReindexLastActivityService $reindexLastActivityService,
+        private readonly EventDispatcherInterface $eventDispatcher
     ) {
     }
 
@@ -27,7 +28,7 @@ class CommentDeleteController extends AbstractController
 
         $topic = $comment->getTopic();
         $this->commentRepository->remove($comment);
-        $this->reindexLastActivityService->reindexAll();
+        $this->eventDispatcher->dispatch(new CommentDeletedEvent($comment));
 
         if ($topic->getComments()->isEmpty()) {
             return $this->redirectToRoute('forumify_forum_topic_delete', ['slug' => $topic->getSlug()]);

@@ -1,11 +1,15 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block body %}
     {% set slug = forum is not null and forum.parent is not null ? forum.parent.slug : null %}
-    <div class="mb-4">
+    <div class="mb-4 flex justify-between items-end">
         {% if forum is not null %}
-            <a class="btn-link btn-small" href="{{ path('forumify_admin_forum', { slug: slug }) }}">
+            <a class="btn-link" href="{{ path('forumify_admin_forum', { slug: slug }) }}">
                 <i class="ph ph-arrow-left"></i>
                 {{ forum.parent.title ?? 'index'|trans }}
+            </a>
+            <a class="btn-link" href="{{ path('forumify_admin_acl', forum|acl_parameters) }}">
+                <i class="ph ph-lock"></i>
+                {{ 'admin.forum.acl'|trans }}
             </a>
         {% else %}
             <h4>{{ 'index'|trans }}</h4>
