@@ -1,6 +1,7 @@
 {% extends '@Forumify/components/list.html.twig' %}
 {% block row %}
-    <li class="comment" {{ stimulus_controller('forumify/forumify-platform/comment_edit', {
+    {% set isAnswer = topic.answer is not null and topic.answer.id == item.id %}
+    <li class="comment{% if isAnswer %} answer{% endif %}" {{ stimulus_controller('forumify/forumify-platform/comment_edit', {
         updateUrl: path('forumify_forum_comment_edit', { id: item.id })
     }) }}>
         <div class="comment-author">
@@ -59,7 +60,21 @@
                     </div>
                 </div>
             {% endif %}
-            {{ component('CommentReactions', { comment: item }) }}
+            {% set showAnswerButton = item|can_mark_as_answer %}
+            <div class="flex gap-2 items-end{% if showAnswerButton or isAnswer %} justify-between{% else %} justify-end{% endif %}">
+                {% if showAnswerButton %}
+                    <a href="{{ path('forumify_forum_comment_answer', { id: item.id }) }}" class="btn-primary mt-4">
+                        <i class="ph ph-check-circle"></i>
+                        {{ 'forum.comment.mark_answer'|trans }}
+                    </a>
+                {% elseif isAnswer %}
+                    <div class="alert-success p-2 mt-4 text-small">
+                        <i class="ph ph-check-circle"></i>
+                        {{ 'forum.comment.is_answer'|trans }}
+                    </div>
+                {% endif %}
+                {{ component('CommentReactions', { comment: item }) }}
+            </div>
             <div class="hide-phone">
                 {% if item.createdBy.signature|default('')|striptags %}
                     <hr class="mt-2 mb-2">

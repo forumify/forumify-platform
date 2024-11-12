@@ -17,6 +17,7 @@ enum VoterAttribute: string
     case CommentCreate = 'COMMENT_CREATE';
     case CommentEdit = 'COMMENT_EDIT';
     case CommentDelete = 'COMMENT_DELETE';
+    case CommentMarkAsAnswer = 'COMMENT_MARK_AS_ANSWER';
 
     case MessageThreadCreate = 'MESSAGE_THREAD_CREATE';
     case MessageThreadView = 'MESSAGE_THREAD_VIEW';

@@ -27,7 +27,7 @@ class TopicType extends AbstractType
         $forumType = $options['forum']?->getType();
 
         $builder->add('title', TextType::class);
-        if ($forumType !== Forum::TYPE_TEXT) {
+        if (in_array($forumType, [Forum::TYPE_IMAGE, Forum::TYPE_MIXED], true)) {
             $builder->add('image', FileType::class, [
                 'required' => $forumType === Forum::TYPE_IMAGE,
             ]);

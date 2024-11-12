@@ -22,6 +22,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     public const TYPE_TEXT = 'text';
     public const TYPE_IMAGE = 'image';
     public const TYPE_MIXED = 'mixed';
+    public const TYPE_SUPPORT = 'support';
 
     use IdentifiableEntityTrait;
     use SortableEntityTrait;

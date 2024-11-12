@@ -198,6 +198,10 @@ plugin:
 file_upload:
     drop_text: 'Drop files here or click to open dialog.'
 forum:
+    comment:
+        mark_answer: 'Mark as answer'
+        is_answer: 'The author of this topic marked this comment as the answer.'
+        marked_as_answer: 'Comment marked as answer.'
     topic:
         actions:
             edit: 'Edit'
@@ -283,15 +287,18 @@ admin:
     directory_empty: 'This directory is empty or you do not have permissions to see any items.'
     forum:
         type:
-            text: 'Forum'
+            text: 'Text Board'
             image: 'Image Board'
-            mixed: 'Mixed'
+            mixed: 'Mixed Board'
+            support: 'Support Board'
         type_placeholder: 'Please select a forum type'
         type_help: >
-            Type "Forum" does not allow images on topics, like a traditional forum.
-            Type "Image Board" requires all topics to have an initial image, like 4chan.
-            Type "Mixed" allows images on topics, but it is not required, like Reddit.
-            The type of a forum can be changed later, however, going from "Forum" to "Image Board" will set your forum's logo on all topics.
+            <ul>
+                <li>- <strong>Text Boards</strong> are for a classical forum experience.
+                <li>- <strong>Image Boards</strong> enforce users to upload an image along with their topic.
+                <li>- <strong>Mixed Boards</strong> are image boards, but the option to upload an image is optional.
+                <li>- <strong>Support Boards</strong> are for users to ask questions, and they can mark an answer.
+            </ul>
         general: 'General'
         display_settings: 'Display Settings'
     menu_builder:

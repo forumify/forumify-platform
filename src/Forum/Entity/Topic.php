@@ -43,6 +43,10 @@ class Topic implements SubscribableInterface
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Comment $lastComment = null;
 
+    #[ORM\ManyToOne(targetEntity: Comment::class, fetch: 'EAGER')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    private ?Comment $answer = null;
+
     #[ORM\Column(type: 'boolean')]
     private bool $locked = false;
 
@@ -175,5 +179,15 @@ class Topic implements SubscribableInterface
     public function setViews(int $views): void
     {
         $this->views = $views;
+    }
+
+    public function getAnswer(): ?Comment
+    {
+        return $this->answer;
+    }
+
+    public function setAnswer(?Comment $answer): void
+    {
+        $this->answer = $answer;
     }
 }

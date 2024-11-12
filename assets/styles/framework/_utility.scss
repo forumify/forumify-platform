@@ -168,6 +168,10 @@
     }
 }
 
+.rounded {
+    border-radius: var(--border-radius);
+}
+
 .clear-background {
     background: none !important;
 }

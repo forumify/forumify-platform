@@ -5,6 +5,15 @@
             <li class="flex flex-col topic-row justify-between {% if topic.hidden %}topic-hidden{% endif %}">
                 <a class="topic-link" href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}"></a>
                 <div class="flex gap-4 mb-2 mt-2">
+                    {% if topic.forum.type == 'support' %}
+                        <div class="flex justify-center items-center">
+                            {% if topic.answer is null %}
+                                <i class="ph ph-question alert-info p-2 rounded text-huge"></i>
+                            {% else %}
+                                <i class="ph ph-check-circle alert-success p-2 rounded text-huge"></i>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                     <div class="flex-grow">
                         <h4 class="mb-0 flex flex-row items-center gap-1 text-subtitle">
                             {% if topic.pinned %}<i class="ph ph-push-pin"></i>{% endif %}

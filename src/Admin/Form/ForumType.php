@@ -45,9 +45,11 @@ class ForumType extends AbstractType
                     'admin.forum.type.text' => Forum::TYPE_TEXT,
                     'admin.forum.type.image' => Forum::TYPE_IMAGE,
                     'admin.forum.type.mixed' => Forum::TYPE_MIXED,
+                    'admin.forum.type.support' => Forum::TYPE_SUPPORT,
                 ],
                 'placeholder' => 'admin.forum.type_placeholder',
-                'help' => 'admin.forum.type_help'
+                'help' => 'admin.forum.type_help',
+                'help_html' => true,
             ])
             ->add('content', RichTextEditorType::class, [
                 'required' => false,

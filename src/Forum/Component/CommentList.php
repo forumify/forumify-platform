@@ -23,11 +23,21 @@ class CommentList extends AbstractDoctrineList
 
     protected function getQueryBuilder(): QueryBuilder
     {
-        return $this->commentRepository
-            ->createQueryBuilder('c')
+        $qb = $this->commentRepository->createQueryBuilder('c');
+        $qb
+            ->innerJoin('c.topic', 't')
+            ->leftJoin('t.firstComment', 'tfc')
+            ->leftJoin('t.answer', 'ta')
             ->where('c.topic = :topic')
-            ->orderBy('c.createdAt', 'ASC')
+            ->orderBy('CASE
+                WHEN c.id = tfc.id THEN 0
+                WHEN c.id = ta.id THEN 1
+                ELSE 2
+                END', 'ASC')
+            ->addOrderBy('c.createdAt', 'ASC')
             ->setParameter('topic', $this->topic);
+
+        return $qb;
     }
 
     protected function getCount(): int
