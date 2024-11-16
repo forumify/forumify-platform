@@ -1,0 +1,17 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block body %}
+    <div class="flex justify-center mt-10">
+        <div class="card w-50">
+            <div class="card-title">
+                <h3 class="mb-0">
+                    {{ plugin.plugin.pluginMetadata.name }}: {{ 'error.plugin_version.not_installed'|trans }}
+                </h3>
+            </div>
+            <div class="card-body">
+                {{ 'error.plugin_version.versions'|trans({
+                    versions: requiredVersion.versions|map('ucwords')|join(', ')
+                }) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
