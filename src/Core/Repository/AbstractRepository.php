@@ -19,6 +19,10 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
+/**
+ * @template T of object
+ * @template-extends ServiceEntityRepository<T>
+ */
 abstract class AbstractRepository extends ServiceEntityRepository
 {
     private EventDispatcherInterface $eventDispatcher;

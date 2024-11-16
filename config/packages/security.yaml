@@ -1,0 +1,12 @@
+security:
+    providers:
+        forumify_user_provider:
+            entity:
+                class: Forumify\Core\Entity\User
+        forumify_oauth_client_provider:
+            entity:
+                class: Forumify\OAuth\Entity\OAuthClient
+                property: 'clientId'
+        forumify_chain_provider:
+            chain:
+                providers: ['forumify_user_provider', 'forumify_oauth_client_provider']

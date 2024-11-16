@@ -36,6 +36,9 @@ class Plugin
     #[ORM\Column(options: ['default' => self::TYPE_PLUGIN])]
     private string $type;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $subscriptionVersion = null;
+
     private ?PluginInterface $plugin = null;
 
     public function getPackage(): string
@@ -96,6 +99,16 @@ class Plugin
     public function setType(string $type): void
     {
         $this->type = $type;
+    }
+
+    public function getSubscriptionVersion(): ?string
+    {
+        return $this->subscriptionVersion;
+    }
+
+    public function setSubscriptionVersion(?string $subscriptionVersion): void
+    {
+        $this->subscriptionVersion = $subscriptionVersion;
     }
 
     public function getPlugin(): PluginInterface

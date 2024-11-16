@@ -36,6 +36,7 @@
             </div>
             <p>{{ 'admin.plugins.platform.description'|trans }}</p>
         </div>
+        <h3>{{ 'admin.plugins.plugins'|trans }}</h3>
         <div class="rich-text d-none" {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'log') }}>
             <div class="alert-error d-none mb-4">
                 {{ 'admin.plugins.errors'|trans }}
@@ -64,7 +65,7 @@
                             emptyText: 'admin.plugins.no_active_plugins'|trans,
                         } only %}
                         {% if inactivePlugins|length > 0 %}
-                            <h2 class="mt-6">{{ 'admin.plugins.inactive_plugins'|trans }}</h2>
+                            <h3 class="mt-6">{{ 'admin.plugins.inactive_plugins'|trans }}</h3>
                             {% include '@Forumify/admin/plugin/plugin_list.html.twig' with {
                                 plugins: inactivePlugins,
                                 emptyText: ''
@@ -80,6 +81,20 @@
                     </div>
                 {% endblock %}
             {% endembed %}
+            {% if marketplaceCustomer is not null %}
+                <div class="mt-4">
+                    <h3 class="mb-0">{{ 'admin.plugins.available_plugins'|trans }}</h3>
+                    <p class="text-small">{{ 'admin.plugins.available_plugins_help'|trans }}</p>
+                    <a href="https://forumify.net/marketplace" target="_blank">
+                        {{ 'admin.plugins.plugins_browse'|trans }}
+                        <i class="ph ph-arrow-square-up-right"></i>
+                    </a>
+                    {% include '@Forumify/admin/plugin/marketplace_list.html.twig' with {
+                        showInstallButton: true,
+                        plugins: marketplacePlugins|filter(p => not p.installed)
+                    } %}
+                </div>
+            {% endif %}
         </div>
         <div
             class="flex flex-col items-center justify-start d-none"

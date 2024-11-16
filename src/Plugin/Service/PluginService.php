@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Plugin\Service;
 
 use Composer\InstalledVersions;
+use Forumify\Admin\Service\MarketplaceService;
 use Forumify\Core\Repository\PluginRepository;
 use Forumify\Plugin\Application\Service\PluginService as ApplicationPluginService;
 use Forumify\Plugin\Entity\Plugin;
@@ -26,6 +27,7 @@ class PluginService
         private readonly string $rootDir,
         private readonly PluginRepository $pluginRepository,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly MarketplaceService $marketplaceService,
     ) {
     }
 
@@ -37,6 +39,8 @@ class PluginService
             array_map(static fn (Plugin $plugin) => $plugin->getPackage(), $allPlugins),
             $allPlugins,
         );
+
+        $marketplaceSubscriptionVersions = $this->getMarketplaceSubscriptionVersions();
 
         $plugins = [];
         $installedPlugins = $this->getInstalledPlugins();
@@ -62,6 +66,9 @@ class PluginService
 
             $pluginClass = $composerJson['extra']['forumify-plugin-class'];
             $plugin->setPluginClass($pluginClass);
+
+            $marketplaceVersion = $marketplaceSubscriptionVersions[$package] ?? null;
+            $plugin->setSubscriptionVersion($marketplaceVersion);
 
             $this->pluginRepository->save($plugin, false);
             $this->eventDispatcher->dispatch(new PluginRefreshedEvent($plugin));
@@ -132,5 +139,24 @@ class PluginService
         }
 
         return $foundPlugins;
+    }
+
+    private function getMarketplaceSubscriptionVersions(): ?array
+    {
+        try {
+            $customer = $this->marketplaceService->getCustomer();
+        } catch (\Exception) {
+            $customer = null;
+        }
+
+        if ($customer === null) {
+            return [];
+        }
+
+        $subscriptions = [];
+        foreach ($customer['subscriptions'] ?? [] as $subscription) {
+            $subscriptions[$subscription['package']] = $subscription['versionKey'];
+        }
+        return $subscriptions;
     }
 }

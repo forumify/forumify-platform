@@ -7,9 +7,10 @@ namespace Forumify\OAuth\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\OAuth\Repository\OAuthClientRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: OAuthClientRepository::class)]
-class OAuthClient
+class OAuthClient implements UserInterface
 {
     use IdentifiableEntityTrait;
 
@@ -32,6 +33,11 @@ class OAuthClient
         $this->clientId = $clientId;
     }
 
+    public function getUserIdentifier(): string
+    {
+        return $this->getClientId();
+    }
+
     public function getClientSecret(): string
     {
         return $this->clientSecret;
@@ -50,5 +56,14 @@ class OAuthClient
     public function setRedirectUris(array $redirectUris): void
     {
         $this->redirectUris = $redirectUris;
+    }
+
+    public function getRoles(): array
+    {
+        return ['ROLE_USER', 'ROLE_OAUTH_CLIENT'];
+    }
+
+    public function eraseCredentials(): void
+    {
     }
 }

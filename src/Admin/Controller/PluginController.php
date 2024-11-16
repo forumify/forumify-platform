@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Controller;
 
+use Forumify\Admin\Service\MarketplaceService;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\PluginRepository;
 use Forumify\Core\Service\TokenService;
@@ -26,7 +27,7 @@ class PluginController extends AbstractController
     }
 
     #[Route('', 'list')]
-    public function list(): Response
+    public function list(MarketplaceService $marketplaceService): Response
     {
         $activePlugins = $this->pluginRepository->findBy(['active' => true, 'type' => Plugin::TYPE_PLUGIN], ['package' => 'ASC']);
         $inactivePlugins = $this->pluginRepository->findBy(['active' => false, 'type' => Plugin::TYPE_PLUGIN], ['package' => 'ASC']);
@@ -43,6 +44,22 @@ class PluginController extends AbstractController
             ['plugin-manager'],
         );
 
+        try {
+            $marketplaceCustomer = $marketplaceService->getCustomer();
+        } catch (\Exception) {
+            $marketplaceCustomer = null;
+        }
+
+        $marketplacePlugins = [];
+        if ($marketplaceCustomer !== null) {
+            foreach ($marketplaceCustomer['subscriptions'] as $subscription) {
+                $isInstalled = isset($latestVersions[$subscription['package']]);
+                $subscription['installed'] = $isInstalled;
+
+                $marketplacePlugins[] = $subscription;
+            }
+        }
+
         return $this->render('@Forumify/admin/plugin/plugin_manager.html.twig', [
             'activePlugins' => $activePlugins,
             'inactivePlugins' => $inactivePlugins,
@@ -50,6 +67,8 @@ class PluginController extends AbstractController
             'pluginService' => $this->pluginService,
             'platformVersions' => $platformVersions,
             'ajaxAuthToken' => $ajaxAuthToken,
+            'marketplaceCustomer' => $marketplaceCustomer,
+            'marketplacePlugins' => $marketplacePlugins,
         ]);
     }
 

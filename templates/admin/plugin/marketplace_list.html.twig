@@ -1,0 +1,44 @@
+<div class="box p-0 mt-4">
+    <table>
+        <thead>
+        <tr>
+            <th class="text-left">{{ 'admin.plugins.plugin'|trans }}</th>
+            <th class="text-left">{{ 'admin.plugins.version'|trans }}</th>
+            <th class="text-right">{{ 'admin.plugins.installed'|trans }}</th>
+            {% if showInstallButton %}
+                <th></th>
+            {% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for plugin in plugins %}
+            <tr>
+                <td>{{ plugin.name }}</td>
+                <td>{{ plugin.version }}</td>
+                <td class="text-right">
+                    {% if plugin.installed %}
+                        <i class="ph ph-check-circle" style="color: #00FF00"></i>
+                    {% else %}
+                        <i class="ph ph-x-circle"></i>
+                    {% endif %}
+                </td>
+                {% if showInstallButton %}
+                    <td class="text-right">
+                        <button class="btn-outlined" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'install', null, {
+                            package: plugin.package
+                        }) }}>
+                            {{ 'admin.plugins.install_plugin'|trans }}
+                        </button>
+                    </td>
+                {% endif %}
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3" class="text-center pt-2 pb-2">
+                    {{ 'admin.plugins.all_plugins_installed'|trans }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>

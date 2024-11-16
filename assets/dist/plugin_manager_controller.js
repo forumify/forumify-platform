@@ -59,9 +59,9 @@ export default class extends Controller {
   install(event) {
     event.preventDefault();
 
-    const packageInput = event.target.querySelector('#plugin-package');
+    const pkg = event.params.package || event.target.querySelector('#plugin-package').value;
     this.run([
-      ['composerRequire', { package: packageInput.value }],
+      ['composerRequire', { package: pkg }],
       ['clearFrameworkCache'],
       ['composerPostInstall'],
       ['npmUpdate'],

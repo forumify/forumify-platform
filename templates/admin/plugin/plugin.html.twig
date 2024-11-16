@@ -2,10 +2,15 @@
 {% set updateAvailable = plugin.version != plugin.latestVersion %}
 <li class="flex{{ loop.last ? '' : ' mb-4' }}{{ loop.first ? '' : ' mt-4' }}">
     <div class="w-75">
-        <div class="flex items-baseline gap-1">
+        <div class="flex items-baseline gap-2">
             <h3>{{ metadata.name }}</h3>
+            {% if plugin.subscriptionVersion %}
+                <div class="alert-success rounded text-small p-1 pl-2 pr-2">
+                    <span class="text-black">{{ plugin.subscriptionVersion|upper }}</span>
+                </div>
+            {% endif %}
             <span class="text-small">
-                ({{ plugin.package }}@{{ plugin.version }})
+                ({{ plugin.version }})
                 {% if updateAvailable %}
                     <span class="ml-2">
                         <i class="ph ph-download"></i>

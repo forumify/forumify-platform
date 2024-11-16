@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Controller;
 
+use Exception;
+use Forumify\Admin\Exception\MarketplaceNotConnectedException;
 use Forumify\Admin\Service\MarketplaceConnectService;
+use Forumify\Admin\Service\MarketplaceService;
+use Forumify\Core\Repository\PluginRepository;
+use Forumify\Plugin\Service\PluginService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,13 +21,32 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class MarketplaceController extends AbstractController
 {
     #[Route('', '')]
-    public function __invoke(MarketplaceConnectService $connectService): Response
-    {
-        if (!$connectService->isConnected()) {
+    public function __invoke(
+        MarketplaceService $marketplace,
+        PluginService $pluginService,
+    ): Response {
+        $error = null;
+        try {
+            $customer = $marketplace->getCustomer();
+        } catch (MarketplaceNotConnectedException) {
             return $this->render('@Forumify/admin/marketplace/connect.html.twig');
+        } catch (Exception $ex) {
+            $customer = null;
+            $error = $ex->getMessage();
         }
 
-        return $this->render('@Forumify/admin/marketplace/marketplace.html.twig');
+        if ($customer !== null) {
+            $latestVersions = $pluginService->getLatestVersions();
+            foreach ($customer['subscriptions'] as &$subscription) {
+                $isInstalled = isset($latestVersions[$subscription['package']]);
+                $subscription['installed'] = $isInstalled;
+            }
+        }
+
+        return $this->render('@Forumify/admin/marketplace/marketplace.html.twig', [
+            'customer' => $customer,
+            'error' => $error,
+        ]);
     }
 
     #[Route('/connect', '_connect')]

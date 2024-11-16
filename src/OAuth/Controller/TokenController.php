@@ -7,9 +7,11 @@ namespace Forumify\OAuth\Controller;
 use DateInterval;
 use DateTime;
 use Forumify\Core\Service\TokenService;
+use Forumify\OAuth\GrantType\GrantTypeInterface;
 use Forumify\OAuth\Repository\OAuthAuthorizationCodeRepository;
 use Forumify\OAuth\Repository\OAuthClientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,22 +20,21 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/token', 'token')]
 class TokenController extends AbstractController
 {
-    private const GRANT_TYPES = [
-        'authorization_code'
-    ];
-
+    /**
+     * @param iterable<GrantTypeInterface> $grantTypes
+     */
     public function __invoke(
         Request $request,
         OAuthClientRepository $clientRepository,
         OAuthAuthorizationCodeRepository $authorizationCodeRepository,
         TokenService $tokenService,
+        #[AutowireIterator('forumify.oauth.grant_type')]
+        iterable $grantTypes,
     ): JsonResponse {
         $params = $this->getParams([
             'grant_type',
-            'code',
             'client_id',
             'client_secret',
-            'redirect_uri',
         ], $request->request);
 
         $authHeader = $request->headers->get('Authorization');
@@ -44,14 +45,6 @@ class TokenController extends AbstractController
                 $params['client_id'] = $basicAuth[0];
                 $params['client_secret'] = $basicAuth[1];
             }
-        }
-
-        if (!in_array($params['grant_type'], self::GRANT_TYPES, true)) {
-            return $this->json([
-                'error' => 'unsupported_grant_type',
-                'error_description' => "\"{$params['grant_type']}\" is not a supported grant_type.",
-                'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
-            ]);
         }
 
         $client = $clientRepository->findOneBy([
@@ -67,48 +60,24 @@ class TokenController extends AbstractController
             ]);
         }
 
-        $authCode = $authorizationCodeRepository->findOneBy([
-            'client' => $client,
-            'code' => $params['code'],
-        ]);
+        /** @var GrantTypeInterface|null $grantType */
+        $grantType = null;
+        foreach ($grantTypes as $type) {
+            if ($type->getGrantType() === $params['grant_type']) {
+                $grantType = $type;
+                break;
+            }
+        }
 
-        $now = new DateTime();
-        if ($authCode === null || $authCode->getValidUntil() < $now) {
+        if ($grantType === null) {
             return $this->json([
-                'error' => 'access_denied',
-                'error_description' => 'The authorization code is not valid or expired.',
+                'error' => 'unsupported_grant_type',
+                'error_description' => "\"{$params['grant_type']}\" is not a supported grant_type.",
                 'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
             ]);
         }
 
-        if ($authCode->getRedirectUri() !== null && $authCode->getRedirectUri() !== $params['redirect_uri']) {
-            return $this->json([
-                'error' => 'access_denied',
-                'error_description' => 'The authorization code was created for a different redirect uri.',
-                'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
-            ]);
-        }
-
-        $authorizationCodeRepository->remove($authCode);
-
-        $scope = trim($authCode->getScope()) ?: [];
-        if (!empty($scope)) {
-            $scope = preg_replace('/\s+/', ' ', $scope);
-            $scope = explode(' ', $scope);
-        }
-
-        $now = new DateTime();
-        $expireAt = (clone $now)->add(new DateInterval('PT1H'));
-        $expireInSeconds = $expireAt->getTimestamp() - $now->getTimestamp();
-        $accessToken = $tokenService->createJwt($authCode->getUser(), $expireAt, $scope);
-        $refreshToken = $tokenService->createJwt($authCode->getUser(), (new DateTime())->add(new DateInterval('P1M')));
-
-        return $this->json([
-            'token_type' => 'bearer',
-            'access_token' => $accessToken,
-            'expires_in' => $expireInSeconds,
-            'refresh_token' => $refreshToken,
-        ], headers: ['cache-control' => 'no-store']);
+        return $grantType->respondToRequest($request, $client);
     }
 
     private function getParams(array $fields, InputBag $bag): array

@@ -1,7 +1,40 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block body %}
-    <h3>Your forumify.net account was successfully linked.</h3>
-    <p>The marketplace is still a work in progress. For now you can only install plugins from packagist using their package names.</p>
-    <p class="mb-4">Discover plugins on the <a href="https://forumify.net/marketplace" target="_blank">forumify marketplace</a>.</p>
-    <a href="{{ path('forumify_admin_plugin_list') }}">Back to plugins.</a>
+    <div class="mb-2">
+        <a class="btn-link" href="{{ path('forumify_admin_plugin_list') }}">
+            <i class="ph ph-arrow-left"></i>
+            {{ 'admin.marketplace.back'|trans }}
+        </a>
+    </div>
+    <h2>{{ 'admin.marketplace.title'|trans }}</h2>
+    {% if customer is not null %}
+        <div class="mb-2">
+            <i class="ph ph-check-circle" style="color: #00FF00"></i>
+            {{ 'admin.marketplace.customer_linked'|trans }}
+        </div>
+        <div class="flex flex-col gap-2">
+            <a href="https://forumify.net/marketplace/customer/{{ customer.id }}" target="_blank">
+                <i class="ph ph-arrow-bend-down-right"></i>
+                {{ 'admin.marketplace.manage_subscriptions'|trans }}
+            </a>
+            <a href="https://forumify.net/marketplace" target="_blank">
+                <i class="ph ph-arrow-bend-down-right"></i>
+                {{ 'admin.marketplace.discover_plugins'|trans }}
+            </a>
+        </div>
+        {% include '@Forumify/admin/plugin/marketplace_list.html.twig' with {
+            plugins: customer.subscriptions,
+            showInstallButton: false,
+        } %}
+    {% endif %}
+    {% if error is not null %}
+        <div class="alert-error">
+            <p class="mb-2">
+                <i class="ph ph-warning-circle"></i>
+                {{ 'admin.marketplace.error'|trans }}
+            </p>
+            <p>{{ 'admin.marketplace.error_details'|trans }}</p>
+            <pre class="mb-0 mt-2">{{ error }}</pre>
+        </div>
+    {% endif %}
 {% endblock %}
