@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Core\Component\Table;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -38,6 +39,7 @@ abstract class AbstractTable
     private array $columns = [];
     private ?TableResult $result = null;
     private ColumnConfigurationProcessor $columnConfigurationProcessor;
+    private UrlGeneratorInterface $urlGenerator;
 
     abstract protected function buildTable(): void;
 
@@ -49,6 +51,12 @@ abstract class AbstractTable
     public function setColumnConfigurationProcessor(ColumnConfigurationProcessor $processor): void
     {
         $this->columnConfigurationProcessor = $processor;
+    }
+
+    #[Required]
+    public function setUrlGenerator(UrlGeneratorInterface $urlGenerator): void
+    {
+        $this->urlGenerator = $urlGenerator;
     }
 
     #[LiveAction]
@@ -147,5 +155,11 @@ abstract class AbstractTable
         }
 
         return $rows;
+    }
+
+    protected function renderAction(string $path, array $pathArguments, string $icon): string
+    {
+        $url = $this->urlGenerator->generate($path, $pathArguments);
+        return "<a class='btn-link btn-icon btn-small' href='$url'><i class='ph ph-$icon'></i></a>";
     }
 }

@@ -22,6 +22,10 @@ class CoreRuntime implements RuntimeExtensionInterface
 
     public function formatDate(DateTime|DateTimeImmutable|null $date): string
     {
+        if ($date === null) {
+            return '';
+        }
+
         $t = $this->translator->trans(...);
 
         $past = ($date ?? new DateTime())->getTimestamp();

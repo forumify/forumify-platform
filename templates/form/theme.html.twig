@@ -13,7 +13,7 @@
         <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
         {{- block('form_label_content') -}}
         {% if not required -%}
-            <span class="text-small text-small text-italic"><i class="ph ph-dot"></i>{{ 'optional'|trans }}</span>
+            <span class="text-small text-small text-italic text-secondary"><i class="ph ph-dot"></i>{{ 'optional'|trans }}</span>
         {%- endif -%}
         </{{ element|default('label') }}>
     {%- endif -%}

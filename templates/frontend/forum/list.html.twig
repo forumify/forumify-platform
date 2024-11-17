@@ -13,13 +13,37 @@
 {% endblock %}
 {% block body %}
     {{ component('Breadcrumbs', { entity: forum }) }}
+    {% set hasChildren = forum is not null and forum.children.count > 0 %}
     {% if forum is not null %}
-        <div class="mb-4">
-            <h1 class="mb-0">{{ forum.title }}</h1>
-            {% if forum.content|striptags %}
-                {{ forum.content|rich }}
-            {% endif %}
-        </div>
+        {% if hasChildren %}
+            <div class="mb-4">
+                <h1 class="mb-0">{{ forum.title }}</h1>
+                {% if forum.content|striptags %}
+                    {{ forum.content|rich }}
+                {% endif %}
+            </div>
+        {% elseif forum is not null %}
+            <div class="flex justify-between mb-4">
+                <div>
+                    <h1 class="mb-0">{{ forum.title }}</h1>
+                    {% if forum.content|striptags %}
+                        {{ forum.content|rich }}
+                    {% endif %}
+                </div>
+                <div class="flex justify-end gap-2 mb-4">
+                    {{ component('SubscribeButton', {
+                        entityId: forum.id,
+                        subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
+                    }) }}
+                    {% if can('create_topic', forum) %}
+                        <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
+                            <i class="ph ph-chats"></i>
+                            {{ 'create_topic'|trans }}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
     {% endif %}
     {% if groups is not empty or ungroupedForums is not empty %}
         <div class="forum-list">
@@ -39,18 +63,20 @@
         </div>
     {% endif %}
     {% if forum is not null %}
-        <div class="flex justify-end gap-2 mt-6 mb-4">
-            {{ component('SubscribeButton', {
-                entityId: forum.id,
-                subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
-            }) }}
-            {% if can('create_topic', forum) %}
-                <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
-                    <i class="ph ph-chats"></i>
-                    {{ 'create_topic'|trans }}
-                </a>
-            {% endif %}
-        </div>
+        {% if hasChildren %}
+            <div class="flex justify-end gap-2 mt-6 mb-4">
+                {{ component('SubscribeButton', {
+                    entityId: forum.id,
+                    subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
+                }) }}
+                {% if can('create_topic', forum) %}
+                    <a class="btn-primary" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
+                        <i class="ph ph-chats"></i>
+                        {{ 'create_topic'|trans }}
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
         {% if forum.topics is not empty %}
             {{ component('TopicList', { forum: forum }) }}
         {% endif %}
