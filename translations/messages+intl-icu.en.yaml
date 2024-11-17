@@ -46,6 +46,7 @@ date_relative:
         }
     now: 'Just now'
     ago: '{relative} ago'
+optional: 'Optional'
 post: 'Post'
 create_topic: 'Post new topic'
 comment:
