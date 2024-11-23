@@ -20,10 +20,14 @@ class CoreRuntime implements RuntimeExtensionInterface
     ) {
     }
 
-    public function formatDate(DateTime|DateTimeImmutable|null $date): string
+    public function formatDate(DateTime|DateTimeImmutable|null $date, ?bool $alwaysAbsolute = false): string
     {
         if ($date === null) {
             return '';
+        }
+
+        if ($alwaysAbsolute) {
+            return $this->getAbsolute($date);
         }
 
         $t = $this->translator->trans(...);
@@ -50,6 +54,11 @@ class CoreRuntime implements RuntimeExtensionInterface
             return $this->translator->trans('date_relative.now');
         }
 
+        return $this->getAbsolute($date);
+    }
+
+    private function getAbsolute(DateTime $date): string
+    {
         $user = $this->security->getUser();
         $timezone = $user instanceof User ? $user->getTimezone() : 'UTC';
         $date->setTimezone(new DateTimeZone($timezone));

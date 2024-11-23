@@ -95,6 +95,9 @@ class Role implements SortableEntityInterface
         return $this->system;
     }
 
+    /**
+     * @return Collection<User>
+     */
     public function getUsers(): Collection
     {
         return $this->users;

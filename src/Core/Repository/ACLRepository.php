@@ -9,6 +9,9 @@ use Forumify\Core\Entity\ACL;
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 
+/**
+ * @template-extends AbstractRepository<ACL>
+ */
 class ACLRepository extends AbstractRepository
 {
     public static function getEntityClass(): string
