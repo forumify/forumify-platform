@@ -105,7 +105,10 @@ class PluginService
 
     public function composerPostInstall(): string
     {
-        return $this->run([
+        // TODO: move this to the plugin_manager_controller.js
+        //       this is temporary for instances going from 0.3 to 0.4
+        $output = $this->migrations();
+        return $output . PHP_EOL . $this->run([
             'composer',
             'run-script',
             'auto-scripts',
