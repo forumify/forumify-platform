@@ -35,7 +35,6 @@ class GenericNotificationType implements NotificationTypeInterface
         return empty($context['description'])
             ? ''
             : $this->translator->trans($context['description'], $context['descriptionParams']);
-
     }
 
     public function getImage(Notification $notification): string

@@ -141,7 +141,7 @@ class PluginService
         return $foundPlugins;
     }
 
-    private function getMarketplaceSubscriptionVersions(): ?array
+    private function getMarketplaceSubscriptionVersions(): array
     {
         try {
             $customer = $this->marketplaceService->getCustomer();

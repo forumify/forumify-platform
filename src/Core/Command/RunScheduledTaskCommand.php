@@ -24,8 +24,7 @@ class RunScheduledTaskCommand extends Command
     public function __construct(
         #[Autowire('@scheduler.messenger.service_call_message_handler')]
         private readonly ServiceCallMessageHandler $serviceCallMessageHandler
-    )
-    {
+    ) {
         parent::__construct();
     }
 
@@ -46,7 +45,7 @@ class RunScheduledTaskCommand extends Command
         ]);
 
         $messageBus = new MessageBus([
-            new HandleMessageMiddleware($handlersLocator)
+            new HandleMessageMiddleware($handlersLocator),
         ]);
 
         $io = new SymfonyStyle($input, $output);

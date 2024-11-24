@@ -22,9 +22,7 @@ class CoreRuntime implements RuntimeExtensionInterface
 
     public function formatDate(DateTime|DateTimeImmutable|null $date, ?bool $alwaysAbsolute = false): string
     {
-        if ($date === null) {
-            return '';
-        }
+        $date ??= new DateTime();
 
         if ($alwaysAbsolute) {
             return $this->getAbsolute($date);
@@ -32,7 +30,7 @@ class CoreRuntime implements RuntimeExtensionInterface
 
         $t = $this->translator->trans(...);
 
-        $past = ($date ?? new DateTime())->getTimestamp();
+        $past = $date->getTimestamp();
         $now = (new DateTime())->getTimestamp();
 
         $diff = abs($now - $past);

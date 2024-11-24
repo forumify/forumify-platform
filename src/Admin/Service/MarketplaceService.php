@@ -20,14 +20,14 @@ class MarketplaceService
     }
 
     /**
-     * @throws MarketplaceNotConnectedException
+     * @throws MarketplaceNotConnectedException|MarketplaceTokenException
      */
     public function getCustomer(): ?array
     {
         try {
             $response = $this->getClient()->get('/api/marketplace/customers/self')->getBody()->getContents();
             $customer = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException|GuzzleException|MarketplaceTokenException) {
+        } catch (JsonException|GuzzleException) {
             return null;
         }
 
