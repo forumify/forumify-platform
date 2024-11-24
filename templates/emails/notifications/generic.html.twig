@@ -1,0 +1,18 @@
+{% extends '@Forumify/emails/base.html.twig' %}
+{% block title %}
+    {{ this.title(notification) }}
+{% endblock %}
+{% block body %}
+    <h2>{{ this.title(notification) }}</h2>
+    <hr>
+    <div class="content-block">
+        {{ this.description(notification) }}
+    </div>
+    <hr>
+    {% if this.url(notification) and this.emailActionLabel(notification) %}
+        {% include '@Forumify/emails/components/button.html.twig' with {
+            href: absolute_url(this.url(notification)),
+            label: this.emailActionLabel(notification)|trans,
+        } only %}
+    {% endif %}
+{% endblock %}

@@ -9,6 +9,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class PluginVersionChecker
 {
+    private array $installedVersionCache = [];
+
     public function __construct(
         private readonly PluginRepository $pluginRepository,
         #[Autowire('%kernel.environment%')]
@@ -27,10 +29,17 @@ class PluginVersionChecker
             $versions = [$versions];
         }
 
+        if (isset($this->installedVersionCache[$pluginPackage])) {
+            return $this->installedVersionCache[$pluginPackage];
+        }
+
         $plugin = $this->pluginRepository->findOneBy(['package' => $pluginPackage]);
         if ($plugin === null) {
+            $this->installedVersionCache[$pluginPackage] = false;
             return false;
         }
-        return in_array($plugin->getSubscriptionVersion(), $versions, true);
+
+        $this->installedVersionCache[$pluginPackage] = in_array($plugin->getSubscriptionVersion(), $versions, true);
+        return $this->installedVersionCache[$pluginPackage];
     }
 }
