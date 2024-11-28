@@ -6,10 +6,10 @@
 
 <div align="center">
     
-[![Latest Stable Version](http://poser.pugx.org/forumify/forumify-platform/v)](https://packagist.org/packages/forumify/forumify-platform)
-[![Total Downloads](http://poser.pugx.org/forumify/forumify-platform/downloads)](https://packagist.org/packages/forumify/forumify-platform)
-[![License](http://poser.pugx.org/forumify/forumify-platform/license)](https://packagist.org/packages/forumify/forumify-platform)
-[![PHP Version Require](http://poser.pugx.org/forumify/forumify-platform/require/php)](https://packagist.org/packages/forumify/forumify-platform)
+[![Latest Stable Version](https://poser.pugx.org/forumify/forumify-platform/v)](https://packagist.org/packages/forumify/forumify-platform)
+[![Total Downloads](https://poser.pugx.org/forumify/forumify-platform/downloads)](https://packagist.org/packages/forumify/forumify-platform)
+[![License](https://poser.pugx.org/forumify/forumify-platform/license)](https://packagist.org/packages/forumify/forumify-platform)
+[![PHP Version Require](https://poser.pugx.org/forumify/forumify-platform/require/php)](https://packagist.org/packages/forumify/forumify-platform)
     
 </div>
 
