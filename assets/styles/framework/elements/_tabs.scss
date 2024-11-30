@@ -2,13 +2,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--spacing-2);
-    border-bottom: var(--border);
     margin-bottom: var(--spacing-4);
-
-    [role="tab"] {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-    }
 
     .active {
         background-color: rgba(0, 0, 0, 0.05);

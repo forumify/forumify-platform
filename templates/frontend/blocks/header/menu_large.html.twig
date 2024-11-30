@@ -5,7 +5,7 @@
     {% if app.user is not null %}
         <div class="flex flex-row">
             <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
-                <a class="btn-link header-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+                <a class="btn-link header-menu pl-2" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
                     {% include '@Forumify/components/avatar.html.twig' with {
                         user: app.user,
                         className: 'avatar-sm',

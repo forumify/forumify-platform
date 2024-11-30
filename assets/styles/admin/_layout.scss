@@ -14,14 +14,15 @@ $navigationWidth: 250px;
     display: flex;
     flex-direction: column;
     border-bottom: var(--border);
+    padding: var(--spacing-2);
+    gap: var(--spacing-2);
 }
 
 .navigation-row {
     display: flex;
     align-items: center;
     padding-left: var(--spacing-4);
-    height: 60px;
-    border-radius: 0;
+    height: 40px;
     .logo {
         width: 32px;
         height: 32px;
