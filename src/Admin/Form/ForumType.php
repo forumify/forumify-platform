@@ -64,6 +64,10 @@ class ForumType extends AbstractType
             ])
             ->add('parent', HiddenType::class, [
                 'data' => $parentId,
+            ])
+            ->add('topicTemplate', RichTextEditorType::class, [
+                'required' => false,
+                'help' => 'admin.forum.topic_template_help'
             ]);
 
         if (!$options['is_new']) {

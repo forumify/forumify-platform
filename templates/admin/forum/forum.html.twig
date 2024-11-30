@@ -26,10 +26,11 @@
                 {% endblock %}
                 {% block tabpanels %}
                     <div id="general">
+                        {{ form_row(form.group) }}
                         {{ form_row(form.title) }}
                         {{ form_row(form.type) }}
                         {{ form_row(form.content) }}
-                        {{ form_row(form.group) }}
+                        {{ form_row(form.topicTemplate) }}
                     </div>
                     <div id="display-settings">
                         {{ form_widget(form.displaySettings) }}

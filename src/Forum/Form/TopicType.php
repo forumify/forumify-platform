@@ -24,7 +24,9 @@ class TopicType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $forumType = $options['forum']?->getType();
+        /** @var Forum|null $forum */
+        $forum = $options['forum'];
+        $forumType = $forum?->getType();
 
         $builder->add('title', TextType::class);
         if (in_array($forumType, [Forum::TYPE_IMAGE, Forum::TYPE_MIXED], true)) {
@@ -34,7 +36,10 @@ class TopicType extends AbstractType
         }
 
         if (empty($options['data'])) {
-            $builder->add('content', RichTextEditorType::class);
+            $template = $forum?->getTopicTemplate() ?? '';
+            $builder->add('content', RichTextEditorType::class, [
+                'data' => $template,
+            ]);
         }
     }
 }

@@ -62,6 +62,9 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     #[ORM\Embedded(class: ForumDisplaySettings::class, columnPrefix: 'display_settings_')]
     private ForumDisplaySettings $displaySettings;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $topicTemplate = null;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
@@ -172,6 +175,16 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     public function getDisplaySettings(): ForumDisplaySettings
     {
         return $this->displaySettings;
+    }
+
+    public function getTopicTemplate(): ?string
+    {
+        return $this->topicTemplate;
+    }
+
+    public function setTopicTemplate(?string $topicTemplate): void
+    {
+        $this->topicTemplate = $topicTemplate;
     }
 
     public function getACLPermissions(): array
