@@ -39,7 +39,7 @@ class TopicControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         $client->submitForm('Post comment', [
-            'comment[content]' => '<p id="test-comment">Test Comment</p>',
+            'new_comment[content]' => '<p id="test-comment">Test Comment</p>',
         ]);
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('#test-comment');
