@@ -2,16 +2,18 @@
     <img src="./public/images/forumify.svg" width="250" height="250">
 </p>
 
-# Forumify Platform
-
 <div align="center">
     
 [![Latest Stable Version](https://poser.pugx.org/forumify/forumify-platform/v)](https://packagist.org/packages/forumify/forumify-platform)
 [![Total Downloads](https://poser.pugx.org/forumify/forumify-platform/downloads)](https://packagist.org/packages/forumify/forumify-platform)
 [![License](https://poser.pugx.org/forumify/forumify-platform/license)](https://packagist.org/packages/forumify/forumify-platform)
 [![PHP Version Require](https://poser.pugx.org/forumify/forumify-platform/require/php)](https://packagist.org/packages/forumify/forumify-platform)
+![PHPStan](https://img.shields.io/badge/CodeStyle-PSR12-green.svg)
+![PHPStan](https://img.shields.io/badge/PHPStan-level%205-yellow.svg)
     
 </div>
+
+# Forumify Platform
 
 **A modern open-source forum experience**
 
