@@ -30,10 +30,13 @@ class PluginRouteLoader extends Loader
     {
         $routeCollection = new RouteCollection();
 
-        /** @var Plugin $plugin */
         foreach ($this->pluginRepository->findByActive() as $plugin) {
             $bundleClass = $plugin->getPluginClass();
             $bundle = new $bundleClass();
+
+            if (!$bundle instanceof AbstractForumifyBundle) {
+                continue;
+            }
 
             if ($this->bundleHasRoutes($bundle)) {
                 $this->loadBundleRoutes($bundle, $routeCollection);

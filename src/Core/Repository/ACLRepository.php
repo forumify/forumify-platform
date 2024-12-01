@@ -10,7 +10,7 @@ use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 
 /**
- * @template-extends AbstractRepository<ACL>
+ * @extends AbstractRepository<ACL>
  */
 class ACLRepository extends AbstractRepository
 {

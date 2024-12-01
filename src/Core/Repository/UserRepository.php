@@ -7,6 +7,9 @@ use Forumify\Core\Entity\User;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * @extends AbstractRepository<User>
+ */
 class UserRepository extends AbstractRepository implements UserLoaderInterface
 {
     public function __construct(

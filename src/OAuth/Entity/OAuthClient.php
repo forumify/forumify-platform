@@ -14,20 +14,32 @@ class OAuthClient implements UserInterface
 {
     use IdentifiableEntityTrait;
 
+    /**
+     * @var non-empty-string
+     */
     #[ORM\Column(unique: true)]
     private string $clientId;
 
     #[ORM\Column]
     private string $clientSecret;
 
+    /**
+     * @var array<string>
+     */
     #[ORM\Column(type: 'simple_array')]
     private array $redirectUris = [];
 
+    /**
+     * @return non-empty-string
+     */
     public function getClientId(): string
     {
         return $this->clientId;
     }
 
+    /**
+     * @param non-empty-string $clientId
+     */
     public function setClientId(string $clientId): void
     {
         $this->clientId = $clientId;
@@ -48,16 +60,23 @@ class OAuthClient implements UserInterface
         $this->clientSecret = $clientSecret;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getRedirectUris(): array
     {
         return $this->redirectUris;
     }
 
+    /**
+     * @param array<string> $redirectUris
+     */
     public function setRedirectUris(array $redirectUris): void
     {
         $this->redirectUris = $redirectUris;
     }
 
+    /** @inheritDoc */
     public function getRoles(): array
     {
         return ['ROLE_USER', 'ROLE_OAUTH_CLIENT'];

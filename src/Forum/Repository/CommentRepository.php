@@ -11,6 +11,9 @@ use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 
+/**
+ * @extends AbstractRepository<Comment>
+ */
 class CommentRepository extends AbstractRepository
 {
     public static function getEntityClass(): string
@@ -35,6 +38,9 @@ class CommentRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @return array<Comment>
+     */
     public function getUserLastComments(User $user): array
     {
         $qb = $this

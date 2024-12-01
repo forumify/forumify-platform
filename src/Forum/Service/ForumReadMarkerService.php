@@ -42,6 +42,9 @@ class ForumReadMarkerService implements ReadMarkerServiceInterface
         $this->readMarkerRepository->markAllRead($user, Topic::class, $topicIds);
     }
 
+    /**
+     * @return array<int>
+     */
     private function getTopicIds(User $user, Forum $forum, bool $canViewHidden): array
     {
         $onlyShowOwnTopics = $forum->getDisplaySettings()->isOnlyShowOwnTopics();

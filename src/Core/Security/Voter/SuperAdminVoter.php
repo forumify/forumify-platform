@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 /**
  * Super admins can do EVERYTHING on ALL ENTITIES.
  * Only the website owner/administrator should need this role.
+ *
+ * @extends Voter<string, mixed>
  */
 class SuperAdminVoter extends Voter
 {

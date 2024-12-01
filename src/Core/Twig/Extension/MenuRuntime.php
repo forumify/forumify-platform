@@ -22,6 +22,9 @@ class MenuRuntime implements RuntimeExtensionInterface
      */
     private array $menuTypes;
 
+    /**
+     * @param iterable<MenuTypeInterface|mixed> $menuTypes
+     */
     public function __construct(
         private readonly MenuItemRepository $menuItemRepository,
         private readonly Security $security,

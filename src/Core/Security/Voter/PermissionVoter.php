@@ -9,8 +9,14 @@ use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, mixed>
+ */
 class PermissionVoter extends Voter
 {
+    /** @var array<string>|null */
+    private ?array $permissions = null;
+
     protected function supports(string $attribute, mixed $subject): bool
     {
         return true;
@@ -28,8 +34,15 @@ class PermissionVoter extends Voter
         return in_array($attribute, $permissions, true);
     }
 
+    /**
+     * @return array<string>
+     */
     private function getPermissions(User $user): array
     {
+        if ($this->permissions !== null) {
+            return $this->permissions;
+        }
+
         $permissions = [];
         foreach ($user->getRoleEntities() as $role) {
             foreach ($role->getPermissions() as $permission) {
@@ -37,6 +50,7 @@ class PermissionVoter extends Voter
             }
         }
 
-        return array_unique($permissions);
+        $this->permissions = array_unique($permissions);
+        return $this->permissions;
     }
 }

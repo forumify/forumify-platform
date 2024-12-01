@@ -30,12 +30,16 @@ class Notifications extends AbstractController
     #[LiveAction]
     public function markAsRead(): void
     {
-        foreach ($this->getNotifications() as $notification) {
+        $notifications = $this->getNotifications();
+        foreach ($notifications as $notification) {
             $notification->setSeen(true);
         }
-        $this->notificationRepository->saveAll($this->notifications);
+        $this->notificationRepository->saveAll($notifications);
     }
 
+    /**
+     * @return array<Notification>
+     */
     public function getNotifications(): array
     {
         if ($this->notifications !== null) {

@@ -21,7 +21,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 /**
  * @template T of object
- * @template-extends ServiceEntityRepository<T>
+ * @extends ServiceEntityRepository<T>
  */
 abstract class AbstractRepository extends ServiceEntityRepository
 {
@@ -47,6 +47,9 @@ abstract class AbstractRepository extends ServiceEntityRepository
         return static::getEntityClass();
     }
 
+    /**
+     * @return class-string<T>
+     */
     abstract public static function getEntityClass(): string;
 
     public function save(object $entity, bool $flush = true): void

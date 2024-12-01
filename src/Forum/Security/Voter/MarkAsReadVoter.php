@@ -11,6 +11,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Comment>
+ */
 class MarkAsReadVoter extends Voter
 {
     public function __construct(private readonly Security $security)
@@ -22,12 +25,6 @@ class MarkAsReadVoter extends Voter
         return $attribute === VoterAttribute::CommentMarkAsAnswer->value && $subject instanceof Comment;
     }
 
-    /**
-     * @param string $attribute
-     * @param Comment $subject
-     * @param TokenInterface $token
-     * @return bool
-     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();

@@ -15,6 +15,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<NewMessageThread>
+ */
 class NewMessageThreadType extends AbstractType
 {
     public function __construct(private readonly Security $security)
@@ -40,6 +43,9 @@ class NewMessageThreadType extends AbstractType
             ->add('message', RichTextEditorType::class);
     }
 
+    /**
+     * @param EntityRepository<User> $er
+     */
     private function addUserFilter(EntityRepository $er): QueryBuilder
     {
         $loggedInUser = $this->security->getUser();

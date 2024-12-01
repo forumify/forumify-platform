@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Core\Twig\Extension;
 
 use Forumify\Core\Entity\AccessControlledEntityInterface;
+use Forumify\Core\Entity\ACLParameters;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -25,6 +26,9 @@ class ACLExtension extends AbstractExtension
         ];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function aclParameters(object $object): array
     {
         if (!$object instanceof AccessControlledEntityInterface) {

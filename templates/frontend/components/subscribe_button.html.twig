@@ -1,5 +1,5 @@
 <div {{ attributes }}>
-    {% if this.user is null %}
+    {% if app.user is null %}
         <a class="{{ this.buttonClass }}" href="{{ path('forumify_core_login', { '_target_path': app.request.requestUri }) }}">
             {% if this.subscribeIcon is not empty %}
                 <i class="{{ this.subscribeIcon }}"></i>

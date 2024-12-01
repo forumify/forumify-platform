@@ -44,10 +44,16 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     #[ORM\JoinColumn(name: 'parent', onDelete: 'CASCADE')]
     private ?Forum $parent = null;
 
+    /**
+     * @var Collection<int, Forum>
+     */
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Forum::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $children;
 
+    /**
+     * @var Collection<int, Topic>
+     */
     #[ORM\OneToMany(mappedBy: 'forum', targetEntity: Topic::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private Collection $topics;
@@ -55,6 +61,9 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     #[ORM\ManyToOne(targetEntity: ForumGroup::class, inversedBy: 'forums')]
     private ?ForumGroup $group = null;
 
+    /**
+     * @var Collection<int, ForumGroup>
+     */
     #[ORM\OneToMany(mappedBy: 'parentForum', targetEntity: ForumGroup::class)]
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $groups;
@@ -123,13 +132,16 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     }
 
     /**
-     * @return Collection<Forum>
+     * @return Collection<int, Forum>
      */
     public function getChildren(): Collection
     {
         return $this->children;
     }
 
+    /**
+     * @param Collection<int, Forum>|array<Forum> $children
+     */
     public function setChildren(Collection|array $children): void
     {
         $this->children = $children instanceof Collection
@@ -138,13 +150,16 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     }
 
     /**
-     * @return Collection<Topic>
+     * @return Collection<int, Topic>
      */
     public function getTopics(): Collection
     {
         return $this->topics;
     }
 
+    /**
+     * @param Collection<int, Topic>|array<Topic> $topics
+     */
     public function setTopics(Collection|array $topics): void
     {
         $this->topics = $topics instanceof Collection
@@ -162,11 +177,17 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
         $this->group = $group;
     }
 
+    /**
+     * @return Collection<int, ForumGroup>
+     */
     public function getGroups(): Collection
     {
         return $this->groups;
     }
 
+    /**
+     * @param Collection<int, ForumGroup> $groups
+     */
     public function setGroups(Collection $groups): void
     {
         $this->groups = $groups;

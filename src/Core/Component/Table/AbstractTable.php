@@ -13,6 +13,16 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
+/**
+ * @phpstan-type ColumnDef array{
+ *     label: string|null,
+ *     field: string|null,
+ *     searchable: bool|null,
+ *     sortable: bool|null,
+ *     renderer: callable|null,
+ *     class: string|null,
+ * }
+ */
 abstract class AbstractTable
 {
     public const SORT_ASC = 'ASC';
@@ -26,16 +36,22 @@ abstract class AbstractTable
     #[LiveProp(writable: true)]
     public int $limit = 20;
 
+    /**
+     * @var array<string, string>
+     */
     #[LiveProp(writable: true)]
     public array $search = [];
 
+    /**
+     * @var array<string, "ASC"|"DESC"|null>
+     */
     #[LiveProp]
     public array $sort = [];
 
     #[LiveProp]
     public string $class = '';
 
-    /** @var array<array> */
+    /** @var array<string, ColumnDef> */
     private array $columns = [];
     private ?TableResult $result = null;
     private ColumnConfigurationProcessor $columnConfigurationProcessor;
@@ -97,12 +113,25 @@ abstract class AbstractTable
         }
     }
 
+    /**
+     * @param array{
+     *     label?: string,
+     *     field?: string,
+     *     searchable?: bool,
+     *     sortable?: bool,
+     *     renderer?: callable,
+     *     class?: string,
+     * } $column
+     */
     protected function addColumn(string $name, array $column): static
     {
         $this->columns[$name] = $this->columnConfigurationProcessor->process($column);
         return $this;
     }
 
+    /**
+     * @return array<string, ColumnDef>
+     */
     public function getColumns(): array
     {
         if (empty($this->columns)) {

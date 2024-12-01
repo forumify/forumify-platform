@@ -7,18 +7,31 @@ namespace Forumify\Core\Service;
 use Forumify\Core\Entity\Theme;
 use Forumify\Core\Repository\ThemeRepository;
 use Forumify\Plugin\AbstractForumifyTheme;
+use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
+use Psr\Cache\InvalidArgumentException;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\SyntaxError;
 
+/**
+ * @phpstan-type ThemeMetaData array{
+ *     themeId?: int,
+ *     pluginPackage?: string,
+ *     lastModified?: string,
+ *     stylesheets?: string[],
+ * }
+ */
 class ThemeService
 {
     public const THEME_LAST_MODIFIED_CACHE_KEY = 'forumify.theme.last_modified';
     public const CURRENT_THEME_COOKIE = 'forumify_theme';
     public const THEME_FILE_FORMAT = 'themes/%s-%s.css';
 
+    /** @var ThemeMetaData|null */
     private ?array $themeMetadata = null;
 
     public function __construct(
@@ -31,10 +44,16 @@ class ThemeService
 
     public function clearCache(): void
     {
-        $this->cache->delete(self::THEME_LAST_MODIFIED_CACHE_KEY);
+        try {
+            $this->cache->delete(self::THEME_LAST_MODIFIED_CACHE_KEY);
+        } catch (InvalidArgumentException) {
+        }
         $this->themeMetadata = null;
     }
 
+    /**
+     * @return ThemeMetaData
+     */
     public function getThemeMetaData(): array
     {
         if ($this->themeMetadata !== null) {
@@ -81,26 +100,32 @@ class ThemeService
 
         ['default' => $defaultVars, 'dark' => $darkVars] = $this->dumpThemeVars($plugin, $theme);
 
-        if ($this->assetStorage->directoryExists('themes')) {
-            $this->assetStorage->deleteDirectory('themes');
+        try {
+            if ($this->assetStorage->directoryExists('themes')) {
+                $this->assetStorage->deleteDirectory('themes');
+            }
+
+            $this->assetStorage->createDirectory('themes');
+
+            $themeCss = $this->twig->createTemplate($theme->getCss());
+            $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'custom', $key), $themeCss->render());
+
+            $system = ":root{{$defaultVars}}@media (prefers-color-scheme: dark) {:root{{$darkVars}}}";
+            $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'system', $key), $system);
+
+            $default = ":root{{$defaultVars}}";
+            $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'default', $key), $default);
+
+            $defaultVars .= $darkVars;
+            $dark = ":root{{$defaultVars}}";
+            $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'dark', $key), $dark);
+        } catch (FilesystemException|LoaderError|SyntaxError) {
         }
-
-        $this->assetStorage->createDirectory('themes');
-
-        $themeCss = $this->twig->createTemplate($theme->getCss());
-        $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'custom', $key), $themeCss->render());
-
-        $system = ":root{{$defaultVars}}@media (prefers-color-scheme: dark) {:root{{$darkVars}}}";
-        $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'system', $key), $system);
-
-        $default = ":root{{$defaultVars}}";
-        $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'default', $key), $default);
-
-        $defaultVars .= $darkVars;
-        $dark = ":root{{$defaultVars}}";
-        $this->assetStorage->write(sprintf(self::THEME_FILE_FORMAT, 'dark', $key), $dark);
     }
 
+    /**
+     * @return array{default: string, dark: string}
+     */
     private function dumpThemeVars(AbstractForumifyTheme $plugin, Theme $theme): array
     {
         $config = ['default' => [], 'dark' => []];
@@ -121,6 +146,9 @@ class ThemeService
         ];
     }
 
+    /**
+     * @param array<string, string> $config
+     */
     private function parseThemeVars(array $config): string
     {
         $css = '';

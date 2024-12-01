@@ -10,6 +10,9 @@ use Forumify\Forum\Entity\MessageThread;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, MessageThread|null>
+ */
 class MessageThreadVoter extends Voter
 {
     private const SUPPORTED_ATTRIBUTES = [
@@ -22,9 +25,6 @@ class MessageThreadVoter extends Voter
         return in_array($attribute, self::SUPPORTED_ATTRIBUTES, true);
     }
 
-    /**
-     * @param MessageThread $subject
-     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();

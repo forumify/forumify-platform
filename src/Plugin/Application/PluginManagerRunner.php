@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Plugin\Application;
 
+use Doctrine\DBAL\Exception as DoctrineException;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -24,6 +25,10 @@ class PluginManagerRunner implements RunnerInterface
     private readonly Request $request;
     private readonly PluginService $pluginService;
 
+    /**
+     * @param array{DATABASE_URL: string, DOCUMENT_ROOT: string} $context
+     * @throws DoctrineException
+     */
     public function __construct(array $context)
     {
         $this->request = Request::createFromGlobals();

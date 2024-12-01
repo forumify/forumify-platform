@@ -43,7 +43,7 @@ class AuthorizationCode extends AbstractController implements GrantTypeInterface
         }
 
         $redirectUri = $request->request->get('redirect_uri');
-        if ($authCode->getRedirectUri() !== null && $authCode->getRedirectUri() !== $redirectUri) {
+        if ($authCode->getRedirectUri() !== $redirectUri) {
             return $this->json([
                 'error' => 'access_denied',
                 'error_description' => 'The authorization code was created for a different redirect uri.',
@@ -53,10 +53,13 @@ class AuthorizationCode extends AbstractController implements GrantTypeInterface
 
         $this->authorizationCodeRepository->remove($authCode);
 
-        $scope = trim($authCode->getScope()) ?: [];
+        $scope = trim($authCode->getScope());
         if (!empty($scope)) {
+            /** @var string $scope */
             $scope = preg_replace('/\s+/', ' ', $scope);
             $scope = explode(' ', $scope);
+        } else {
+            $scope = [];
         }
 
         $now = new DateTime();

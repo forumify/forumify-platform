@@ -9,6 +9,9 @@ use Forumify\Core\Entity\Notification;
 use Forumify\Core\Notification\NotificationContextSerializer;
 use RuntimeException;
 
+/**
+ * @extends AbstractRepository<Notification>
+ */
 class NotificationRepository extends AbstractRepository
 {
     public function __construct(

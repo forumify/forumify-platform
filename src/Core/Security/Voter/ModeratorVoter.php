@@ -17,6 +17,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, object|null>
+ */
 class ModeratorVoter extends Voter
 {
     public function __construct(private readonly Security $security)
@@ -36,7 +39,7 @@ class ModeratorVoter extends Voter
             return false;
         }
 
-        if ($subject === null) {
+        if (!is_object($subject)) {
             return true;
         }
 

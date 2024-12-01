@@ -26,7 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 128, unique: true)]
     private string $email;
 
-    /** @var Collection<Role> */
+    /** @var Collection<int, Role> */
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     #[ORM\JoinTable(
         'user_role',
@@ -65,15 +65,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'date', nullable: true)]
     private ?DateTime $lastLogin = null;
 
-    /** @var Collection<Subscription> */
+    /** @var Collection<int, Subscription> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Subscription::class, fetch: 'EXTRA_LAZY')]
     private Collection $subscriptions;
 
+    /** @var Collection<int, UserNotificationSettings> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserNotificationSettings::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $notificationSettings;
 
     /**
-     * @var Collection<Badge>
+     * @var Collection<int, Badge>
      */
     #[ORM\ManyToMany(targetEntity: Badge::class, inversedBy: 'users', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     #[ORM\JoinTable(
@@ -127,7 +128,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoleEntities(): Collection
     {
@@ -135,7 +136,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @param Collection<Role>|array<Role> $roles
+     * @param Collection<int, Role>|array<Role> $roles
      */
     public function setRoleEntities(Collection|array $roles): void
     {
@@ -243,6 +244,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lastLogin = $lastLogin;
     }
 
+    /**
+     * @return Collection<int, Subscription>
+     */
     public function getSubscriptions(): Collection
     {
         return $this->subscriptions;
@@ -262,13 +266,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Badge>
+     * @return Collection<int, Badge>
      */
     public function getBadges(): Collection
     {
         return $this->badges;
     }
 
+    /**
+     * @param array<Badge>|Collection<int, Badge> $badges
+     */
     public function setBadges(array|Collection $badges): void
     {
         $this->badges = $badges instanceof Collection

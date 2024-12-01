@@ -11,6 +11,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Comment>
+ */
 class CommentVoter extends Voter
 {
     public function __construct(private readonly Security $security)
@@ -25,9 +28,7 @@ class CommentVoter extends Voter
             ], true);
     }
 
-    /**
-     * @param Comment $subject
-     */
+
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         /** @var User|null $user */

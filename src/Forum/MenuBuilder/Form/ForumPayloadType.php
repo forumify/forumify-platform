@@ -9,6 +9,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * @extends AbstractType<array<mixed>>
+ */
 class ForumPayloadType extends AbstractType
 {
     public function __construct(private readonly ForumRepository $forumRepository)

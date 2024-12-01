@@ -18,7 +18,7 @@ class PluginService
     /**
      * Memoized "composer outdated" information
      *
-     * @var array<string, array>|null
+     * @var array<string, array<string, mixed>>|null
      */
     private ?array $latestVersions = null;
 
@@ -97,6 +97,9 @@ class PluginService
         $this->pluginRepository->saveAll($plugins);
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     public function getLatestVersions(): array
     {
         if ($this->latestVersions !== null) {
@@ -108,7 +111,7 @@ class PluginService
     }
 
     /**
-     * @return array<string, array> list of composer.json's for installed forumify plugins
+     * @return array<string, array<string, mixed>> list of composer.json's for installed forumify plugins
      */
     private function getInstalledPlugins(): array
     {
@@ -141,6 +144,9 @@ class PluginService
         return $foundPlugins;
     }
 
+    /**
+     * @return array<string>
+     */
     private function getMarketplaceSubscriptionVersions(): array
     {
         try {

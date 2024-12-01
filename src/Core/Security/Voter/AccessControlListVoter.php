@@ -12,8 +12,12 @@ use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, array{entity: AccessControlledEntityInterface, permission: string}>
+ */
 class AccessControlListVoter extends Voter
 {
+    /** @var array<int, array<mixed>> */
     private array $aclMemo = [];
 
     public function __construct(private readonly ACLRepository $aclRepository)
@@ -22,18 +26,14 @@ class AccessControlListVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === VoterAttribute::ACL->value && is_array($subject);
+        return $attribute === VoterAttribute::ACL->value
+            && is_array($subject)
+            && isset($subject['permission'], $subject['entity'])
+            && $subject['entity'] instanceof AccessControlledEntityInterface;
     }
 
-    /**
-     * @param array{
-     *     'entity': AccessControlledEntityInterface,
-     *     'permission': string
-     * } $subject
-     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        $this->validateSubject($subject);
         ['permission' => $permission, 'entity' => $entity] = $subject;
 
         /** @var User|null $user */
@@ -47,17 +47,9 @@ class AccessControlListVoter extends Voter
         return $this->aclMemo[$userId][$acl->entity][$acl->entityId][$permission] ?? false;
     }
 
-    private function validateSubject(array $subject): void
-    {
-        if (!isset($subject['permission'], $subject['entity'])) {
-            throw new RuntimeException('You must supply an entity and permission to use ACL voter');
-        }
-
-        if (!$subject['entity'] instanceof AccessControlledEntityInterface) {
-            throw new RuntimeException('To use ACL voter the entity must implement ' . AccessControlledEntityInterface::class);
-        }
-    }
-
+    /**
+     * @return array<mixed>
+     */
     private function createACLLookup(?User $user): array
     {
         $lookup = [];

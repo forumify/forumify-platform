@@ -16,6 +16,9 @@ class PluginVersionChecker
     ) {
     }
 
+    /**
+     * @param string|array<string> $versions
+     */
     public function isVersionInstalled(string $pluginPackage, string|array $versions = []): bool
     {
         if (is_string($versions)) {

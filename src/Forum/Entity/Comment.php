@@ -26,6 +26,9 @@ class Comment implements SubscribableInterface
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Topic $topic;
 
+    /**
+     * @var Collection<int, Reaction>
+     */
     #[ORM\OneToMany(mappedBy: 'comment', targetEntity: CommentReaction::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $reactions;
 
@@ -49,11 +52,17 @@ class Comment implements SubscribableInterface
         $this->topic = $topic;
     }
 
+    /**
+     * @return Collection<int, Reaction>
+     */
     public function getReactions(): Collection
     {
         return $this->reactions;
     }
 
+    /**
+     * @param Collection<int, Reaction> $reactions
+     */
     public function setReactions(Collection $reactions): void
     {
         $this->reactions = $reactions;

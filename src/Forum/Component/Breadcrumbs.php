@@ -12,6 +12,9 @@ class Breadcrumbs
 {
     public ?HierarchicalInterface $entity = null;
 
+    /**
+     * @return array<HierarchicalInterface>
+     */
     public function getEntries(): array
     {
         $entries = [];

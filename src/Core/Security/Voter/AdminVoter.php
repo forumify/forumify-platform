@@ -9,6 +9,9 @@ use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, mixed>
+ */
 class AdminVoter extends Voter
 {
     protected function supports(string $attribute, mixed $subject): bool

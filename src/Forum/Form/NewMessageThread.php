@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Forum\Form;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Forumify\Core\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class NewMessageThread
@@ -12,6 +13,9 @@ class NewMessageThread
     #[Assert\NotBlank]
     private string $title;
 
+    /**
+     * @var ArrayCollection<int, User>
+     */
     #[Assert\Count(min: 1)]
     private ArrayCollection $participants;
 
@@ -38,11 +42,17 @@ class NewMessageThread
         $this->message = $message;
     }
 
+    /**
+     * @return ArrayCollection<int, User>
+     */
     public function getParticipants(): ArrayCollection
     {
         return $this->participants;
     }
 
+    /**
+     * @param ArrayCollection<int, User> $participants
+     */
     public function setParticipants(ArrayCollection $participants): void
     {
         $this->participants = $participants;

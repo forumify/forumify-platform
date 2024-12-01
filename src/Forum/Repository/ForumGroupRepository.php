@@ -9,6 +9,9 @@ use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;
 
+/**
+ * @extends AbstractRepository<ForumGroup>
+ */
 class ForumGroupRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

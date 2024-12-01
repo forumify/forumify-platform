@@ -25,12 +25,14 @@ class ThemeExtension extends AbstractExtension
         ];
     }
 
+    /**
+     * @param array{app: AppVariable} $context
+     */
     public function getThemeTags(array $context, bool $allowCustom = true): string
     {
         $metaData = $this->themeService->getThemeMetaData();
         $lastModified = $metaData['lastModified'] ?? '0';
 
-        /** @var AppVariable $app */
         $app = $context['app'];
         $preference = $app->getRequest()?->cookies->get(ThemeService::CURRENT_THEME_COOKIE) ?? 'system';
 

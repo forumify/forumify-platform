@@ -7,6 +7,9 @@ namespace Forumify\Forum\Repository;
 use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Forum\Entity\Badge;
 
+/**
+ * @extends AbstractRepository<Badge>
+ */
 class BadgeRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

@@ -10,13 +10,16 @@ use Attribute;
 class PluginVersion
 {
     /**
-     * @var array
+     * @var array<string>
      */
     public readonly array $versions;
 
+    /**
+     * @param array<string>|string $versions
+     */
     public function __construct(
         public readonly string $plugin,
-        array|string $versions
+        array|string $versions = [],
     ) {
         $this->versions = is_string($versions) ? [$versions] : $versions;
     }

@@ -9,7 +9,10 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CommentType extends AbstractType
+/**
+ * @extends AbstractType<NewComment>
+ */
+class NewCommentType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void
     {

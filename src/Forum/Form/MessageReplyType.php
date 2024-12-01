@@ -9,6 +9,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<MessageReply>
+ */
 class MessageReplyType extends AbstractType
 {
     public function configureOptions(OptionsResolver $resolver): void

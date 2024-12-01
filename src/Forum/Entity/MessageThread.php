@@ -11,8 +11,9 @@ use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Core\Entity\User;
+use Forumify\Forum\Repository\MessageThreadRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: MessageThreadRepository::class)]
 class MessageThread
 {
     use IdentifiableEntityTrait;
@@ -22,9 +23,15 @@ class MessageThread
     #[ORM\Column]
     private string $title;
 
+    /**
+     * @var Collection<int, User>
+     */
     #[ORM\ManyToMany(targetEntity: User::class)]
     private Collection $participants;
 
+    /**
+     * @var Collection<int, Message>
+     */
     #[ORM\OneToMany(mappedBy: 'thread', targetEntity: Message::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $messages;
@@ -45,21 +52,33 @@ class MessageThread
         $this->title = $title;
     }
 
+    /**
+     * @return Collection<int, User>
+     */
     public function getParticipants(): Collection
     {
         return $this->participants;
     }
 
+    /**
+     * @param Collection<int, User> $participants
+     */
     public function setParticipants(Collection $participants): void
     {
         $this->participants = $participants;
     }
 
+    /**
+     * @return Collection<int, Message>
+     */
     public function getMessages(): Collection
     {
         return $this->messages;
     }
 
+    /**
+     * @param Collection<int, Message> $messages
+     */
     public function setMessages(Collection $messages): void
     {
         $this->messages = $messages;

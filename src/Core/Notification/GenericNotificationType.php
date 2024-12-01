@@ -52,6 +52,16 @@ class GenericNotificationType implements NotificationTypeInterface
         // no-op
     }
 
+    /**
+     * @return array{
+     *     title: string,
+     *     titleParams: array<string, string>,
+     *     description: string,
+     *     descriptionParams: array<string, string>,
+     *     image: string,
+     *     url: string,
+     * }
+     */
     private function getContext(Notification $notification): array
     {
         $context = $notification->getDeserializedContext();

@@ -23,6 +23,9 @@ class ForumGroup implements AccessControlledEntityInterface, SortableEntityInter
     #[ORM\Column]
     private string $title;
 
+    /**
+     * @var Collection<int, Forum>
+     */
     #[ORM\OneToMany(mappedBy: 'group', targetEntity: Forum::class)]
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $forums;
@@ -46,13 +49,16 @@ class ForumGroup implements AccessControlledEntityInterface, SortableEntityInter
     }
 
     /**
-     * @return Collection<Forum>
+     * @return Collection<int, Forum>
      */
     public function getForums(): Collection
     {
         return $this->forums;
     }
 
+    /**
+     * @param Collection<int, Forum> $forums
+     */
     public function setForums(Collection $forums): void
     {
         $this->forums = $forums;

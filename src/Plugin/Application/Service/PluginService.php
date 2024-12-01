@@ -19,6 +19,10 @@ class PluginService
     private readonly FrameworkCacheClearer $frameworkCacheClearer;
     private readonly string $rootDir;
 
+    /**
+     * @param array{DATABASE_URL: string, DOCUMENT_ROOT: string} $context
+     * @throws Exception
+     */
     public function __construct(array $context)
     {
         $this->connection = DriverManager::getConnection([
@@ -62,7 +66,13 @@ class PluginService
             return;
         }
 
-        $allowedPlugins = json_decode(file_get_contents('https://forumify.net/allowed-plugins'), true, 512, JSON_THROW_ON_ERROR);
+        $allowedPluginsJson = file_get_contents('https://forumify.net/allowed-plugins');
+        if ($allowedPluginsJson === false) {
+            throw new PluginException("Unable to check if $package can be installed on cloud/demo instances.");
+        }
+
+        /** @var array<string, string[]> $allowedPlugins */
+        $allowedPlugins = json_decode($allowedPluginsJson, true, 512, JSON_THROW_ON_ERROR);
         $pluginAvailability = $allowedPlugins[$package] ?? null;
         if ($pluginAvailability === null) {
             throw new PluginException("$package is only installable on self-hosted versions of forumify.");
@@ -109,13 +119,16 @@ class PluginService
         //       this is temporary for instances going from 0.3 to 0.4
         $output = $this->migrations();
         return $output . PHP_EOL . $this->run([
-            'composer',
-            'run-script',
-            'auto-scripts',
-            '--no-interaction',
-        ]);
+                'composer',
+                'run-script',
+                'auto-scripts',
+                '--no-interaction',
+            ]);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public static function getLatestVersions(string $rootDir): array
     {
         $process = new Process([
@@ -190,15 +203,20 @@ class PluginService
     }
 
     /**
-     * @throws JsonException
+     * @throws JsonException|PluginException
      */
     public function npmUpdate(): string
     {
         $output = '';
 
         // first we need to delete linked files because npm is ass at updating local files
+        $packageJson = file_get_contents($this->rootDir . DIRECTORY_SEPARATOR . 'package.json');
+        if ($packageJson === false) {
+            throw new PluginException('Unable to find package.json. Nothing to update...');
+        }
+
         $fs = new Filesystem();
-        $packageJson = json_decode(file_get_contents($this->rootDir . DIRECTORY_SEPARATOR . 'package.json'), true, 512, JSON_THROW_ON_ERROR);
+        $packageJson = json_decode($packageJson, true, 512, JSON_THROW_ON_ERROR);
         $packages = array_merge($packageJson['dependencies'] ?? [], $packageJson['devDependencies'] ?? []);
 
         foreach ($packages as $package => $version) {
@@ -227,6 +245,9 @@ class PluginService
         ]);
     }
 
+    /**
+     * @param non-empty-array<string> $cmd
+     */
     private function run(array $cmd): string
     {
         $process = new Process($cmd, $this->rootDir);

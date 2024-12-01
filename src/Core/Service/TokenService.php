@@ -18,6 +18,9 @@ class TokenService
     ) {
     }
 
+    /**
+     * @param array<string> $resourceAccess
+     */
     public function createJwt(UserInterface $user, DateTime $expiresAt, array $resourceAccess = []): string
     {
         return JWT::encode([
@@ -27,6 +30,9 @@ class TokenService
         ], $this->appSecret, 'HS256');
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function decodeToken(#[SensitiveParameter] string $token): array
     {
         return (array)JWT::decode($token, new Key($this->appSecret, 'HS256'));

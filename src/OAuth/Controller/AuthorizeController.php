@@ -22,13 +22,7 @@ class AuthorizeController extends AbstractController
         OAuthClientRepository $clientRepository,
         OAuthAuthorizationCodeRepository $authorizationCodeRepository
     ): Response {
-        $params = $this->getParams([
-            'response_type',
-            'client_id',
-            'redirect_uri',
-            'scope',
-            'state',
-        ], $request->query);
+        $params = $this->getParams($request);
 
         $session = $request->getSession();
         if ($session->has('oauth.authorization_code_params')) {
@@ -98,11 +92,22 @@ class AuthorizeController extends AbstractController
         return $this->redirect($redirectUri . '?' . http_build_query($responseQueryParams));
     }
 
-    private function getParams(array $fields, InputBag $bag): array
+    /**
+     * @return array<string, string>
+     */
+    private function getParams(Request $request): array
     {
+        $fields = [
+            'response_type',
+            'client_id',
+            'redirect_uri',
+            'scope',
+            'state',
+        ];
+
         $params = [];
         foreach ($fields as $field) {
-            $params[$field] = $bag->get($field);
+            $params[$field] = (string)$request->query->get($field) ?: null;
         }
         return $params;
     }

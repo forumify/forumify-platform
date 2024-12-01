@@ -8,6 +8,9 @@ use Forumify\Plugin\AbstractForumifyBundle;
 
 class ForumifyBundle extends AbstractForumifyBundle
 {
+    /**
+     * @return array<string, array<string|mixed>>
+     */
     public static function getPermissions(): array
     {
         return [

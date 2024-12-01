@@ -31,25 +31,21 @@ class TokenController extends AbstractController
         #[AutowireIterator('forumify.oauth.grant_type')]
         iterable $grantTypes,
     ): JsonResponse {
-        $params = $this->getParams([
-            'grant_type',
-            'client_id',
-            'client_secret',
-        ], $request->request);
+        $clientId = $request->request->get('client_id');
+        $clientSecret = $request->request->get('client_secret');
 
         $authHeader = $request->headers->get('Authorization');
         if ($authHeader !== null && str_starts_with($authHeader, 'Basic')) {
             $basicToken = substr($authHeader, strpos($authHeader, ' '));
             $basicAuth = explode(':', base64_decode($basicToken));
             if (count($basicAuth) === 2) {
-                $params['client_id'] = $basicAuth[0];
-                $params['client_secret'] = $basicAuth[1];
+                [$clientId, $clientSecret] = $basicAuth;
             }
         }
 
         $client = $clientRepository->findOneBy([
-            'clientId' => $params['client_id'],
-            'clientSecret' => $params['client_secret'],
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret,
         ]);
 
         if ($client === null) {
@@ -60,10 +56,10 @@ class TokenController extends AbstractController
             ]);
         }
 
-        /** @var GrantTypeInterface|null $grantType */
         $grantType = null;
+        $requestedGrantType = $request->request->get('grant_type');
         foreach ($grantTypes as $type) {
-            if ($type->getGrantType() === $params['grant_type']) {
+            if ($type->getGrantType() === $requestedGrantType) {
                 $grantType = $type;
                 break;
             }
@@ -72,20 +68,11 @@ class TokenController extends AbstractController
         if ($grantType === null) {
             return $this->json([
                 'error' => 'unsupported_grant_type',
-                'error_description' => "\"{$params['grant_type']}\" is not a supported grant_type.",
+                'error_description' => "\"{$requestedGrantType}\" is not a supported grant_type.",
                 'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
             ]);
         }
 
         return $grantType->respondToRequest($request, $client);
-    }
-
-    private function getParams(array $fields, InputBag $bag): array
-    {
-        $params = [];
-        foreach ($fields as $field) {
-            $params[$field] = $bag->get($field);
-        }
-        return $params;
     }
 }

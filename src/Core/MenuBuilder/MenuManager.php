@@ -12,6 +12,9 @@ abstract class MenuManager implements RuntimeExtensionInterface
     /** @var array<MenuBuilderInterface> */
     protected array $menuBuilders;
 
+    /**
+     * @param iterable<MenuBuilderInterface|mixed> $menuBuilders
+     */
     public function __construct(iterable $menuBuilders, private readonly Security $security)
     {
         foreach ($menuBuilders as $menuBuilder) {

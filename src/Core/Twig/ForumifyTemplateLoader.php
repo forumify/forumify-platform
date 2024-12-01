@@ -21,6 +21,7 @@ use Twig\Source;
 class ForumifyTemplateLoader implements LoaderInterface
 {
     private readonly string $cacheDir;
+    /** @var array<string,string> */
     private array $cache = [];
 
     public function __construct(
@@ -141,6 +142,9 @@ class ForumifyTemplateLoader implements LoaderInterface
         return $entryPoint;
     }
 
+    /**
+     * @return array<string>
+     */
     private function getTemplateLocations(): array
     {
         $locations = [];

@@ -9,6 +9,9 @@ use Doctrine\ORM\NoResultException;
 use Forumify\Core\Entity\ReadMarker;
 use Forumify\Core\Entity\User;
 
+/**
+ * @extends AbstractRepository<ReadMarker>
+ */
 class ReadMarkerRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

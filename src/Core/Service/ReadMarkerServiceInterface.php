@@ -13,5 +13,5 @@ interface ReadMarkerServiceInterface
 
     public function read(User $user, mixed $subject): bool;
 
-    public function markAsRead(User $user, mixed $subject);
+    public function markAsRead(User $user, mixed $subject): void;
 }

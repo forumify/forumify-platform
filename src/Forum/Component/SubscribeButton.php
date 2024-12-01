@@ -9,6 +9,7 @@ use Forumify\Forum\Entity\Subscription;
 use Forumify\Forum\Repository\SubscriptionRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -48,7 +49,8 @@ class SubscribeButton
 
     public function getSubscription(): ?Subscription
     {
-        $user = $this->getUser();
+        /** @var User|null $user */
+        $user = $this->security->getUser();
         if ($user === null) {
             return null;
         }
@@ -61,31 +63,23 @@ class SubscribeButton
     }
 
     #[LiveAction]
+    #[IsGranted('ROLE_USER')]
     public function toggleSubscription(): void
     {
-        $user = $this->getUser();
-        if ($user === null) {
-            throw new AccessDeniedException('You must be logged in to subscribe.');
-        }
-
         $subscription = $this->getSubscription();
         if ($subscription !== null) {
             $this->subscriptionRepository->remove($subscription);
             return;
         }
 
+        /** @var User $user */
+        $user = $this->security->getUser();
+
         $subscription = new Subscription();
-        $subscription->setUser($this->getUser());
+        $subscription->setUser($user);
         $subscription->setType($this->subscriptionType);
         $subscription->setSubjectId($this->entityId);
 
         $this->subscriptionRepository->save($subscription);
-    }
-
-    public function getUser(): ?User
-    {
-        /** @var User $user */
-        $user = $this->security->getUser();
-        return $user;
     }
 }

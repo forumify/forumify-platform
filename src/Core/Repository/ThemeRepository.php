@@ -6,6 +6,9 @@ namespace Forumify\Core\Repository;
 
 use Forumify\Core\Entity\Theme;
 
+/**
+ * @extends AbstractRepository<Theme>
+ */
 class ThemeRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

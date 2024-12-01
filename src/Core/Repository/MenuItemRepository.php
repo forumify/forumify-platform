@@ -6,6 +6,9 @@ namespace Forumify\Core\Repository;
 
 use Forumify\Core\Entity\MenuItem;
 
+/**
+ * @extends AbstractRepository<MenuItem>
+ */
 class MenuItemRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

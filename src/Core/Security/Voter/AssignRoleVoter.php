@@ -10,8 +10,12 @@ use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, Role>
+ */
 class AssignRoleVoter extends Voter
 {
+    /** @var array<int, int> */
     private array $lowestPosMemo = [];
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -19,9 +23,6 @@ class AssignRoleVoter extends Voter
         return $attribute === VoterAttribute::AssignRole->value && $subject instanceof Role;
     }
 
-    /**
-     * @param Role $subject
-     */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();

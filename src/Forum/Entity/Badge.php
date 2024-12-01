@@ -32,7 +32,10 @@ class Badge implements SortableEntityInterface
     #[ORM\Column]
     private string $image;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'badges')]
+    /**
+     * @var Collection<int, User>
+     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'badges', fetch: 'EXTRA_LAZY')]
     private Collection $users;
 
     public function __construct()
@@ -70,11 +73,17 @@ class Badge implements SortableEntityInterface
         $this->image = $image;
     }
 
+    /**
+     * @return Collection<int, User>
+     */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
+    /**
+     * @param Collection<int, User> $users
+     */
     public function setUsers(Collection $users): void
     {
         $this->users = $users;

@@ -15,6 +15,10 @@ class NotificationContextSerializer
     ) {
     }
 
+    /**
+     * @param array<mixed> $context
+     * @return array<mixed>
+     */
     public function serialize(array $context): array
     {
         $newContext = [];
@@ -47,6 +51,10 @@ class NotificationContextSerializer
         return $newContext;
     }
 
+    /**
+     * @param array<mixed> $context
+     * @return array<mixed>
+     */
     public function deserialize(array $context): array
     {
         $newContext = [];

@@ -9,6 +9,7 @@ use Doctrine\ORM\NoResultException;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\CommentReaction;
+use Forumify\Forum\Entity\Reaction;
 use Forumify\Forum\Repository\CommentReactionRepository;
 use Forumify\Forum\Repository\ReactionRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -63,6 +64,9 @@ class CommentReactions
         $this->commentReactionRepository->save($commentReaction);
     }
 
+    /**
+     * @return array<Reaction>
+     */
     public function getReactions(): array
     {
         return $this->reactionRepository
@@ -73,6 +77,9 @@ class CommentReactions
             ->getResult();
     }
 
+    /**
+     * @return array<array{id: int, name: string, image: string, count: int}>
+     */
     public function getGroupedReactions(): array
     {
         return $this->commentReactionRepository

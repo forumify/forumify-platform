@@ -36,6 +36,9 @@ class ListPluginsCommand extends Command
         return Command::SUCCESS;
     }
 
+    /**
+     * @return array<scalar>
+     */
     private function transformPlugin(Plugin $plugin): array
     {
         $metadata = $plugin->getPlugin()->getPluginMetadata();

@@ -7,6 +7,9 @@ namespace Forumify\OAuth\Repository;
 use Forumify\Core\Repository\AbstractRepository;
 use Forumify\OAuth\Entity\OAuthClient;
 
+/**
+ * @extends AbstractRepository<OAuthClient>
+ */
 class OAuthClientRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

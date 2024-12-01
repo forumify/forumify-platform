@@ -39,7 +39,8 @@ abstract class AbstractForumifyBundle extends AbstractBundle
     /** @inheritDoc */
     public function build(ContainerBuilder $container): void
     {
-        $environment = (string)$container->getParameter('kernel.environment');
+        /** @var string $environment */
+        $environment = $container->getParameter('kernel.environment');
 
         $configDir = $this->getConfigDir();
         $locator = new FileLocator($configDir);
@@ -61,7 +62,10 @@ abstract class AbstractForumifyBundle extends AbstractBundle
         $configLoader->load($configDir . '/{packages}/' . $environment . '/*' . $extensions, 'glob');
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @param array<mixed> $config
+     */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $environment = $container->env();

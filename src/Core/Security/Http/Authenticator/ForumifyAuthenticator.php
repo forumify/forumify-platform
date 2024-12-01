@@ -14,10 +14,10 @@ class ForumifyAuthenticator extends AbstractAuthenticator
 {
     private AbstractAuthenticator $selectedAuthenticator;
 
+    /**
+     * @param iterable<AbstractAuthenticator> $authenticators
+     */
     public function __construct(
-        /**
-         * iterable<AbstractAuthenticator>
-         */
         #[AutowireIterator('forumify.authenticator')]
         private readonly iterable $authenticators
     ) {

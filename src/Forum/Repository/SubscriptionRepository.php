@@ -7,6 +7,9 @@ namespace Forumify\Forum\Repository;
 use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Forum\Entity\Subscription;
 
+/**
+ * @extends AbstractRepository<Subscription>
+ */
 class SubscriptionRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

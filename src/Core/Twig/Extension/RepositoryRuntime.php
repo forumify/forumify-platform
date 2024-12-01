@@ -16,6 +16,9 @@ class RepositoryRuntime implements RuntimeExtensionInterface
     {
     }
 
+    /**
+     * @return AbstractRepository<object>
+     */
     public function getRepository(string $entity): AbstractRepository
     {
         $repository = $this->getDoctrineRepository($entity);
@@ -26,6 +29,9 @@ class RepositoryRuntime implements RuntimeExtensionInterface
         return $repository;
     }
 
+    /**
+     * @return EntityRepository<object>
+     */
     private function getDoctrineRepository(string $entity): EntityRepository
     {
         $knownEntities = $this->entityManager->getMetadataFactory()->getAllMetadata();

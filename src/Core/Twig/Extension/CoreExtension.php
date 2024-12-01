@@ -51,7 +51,7 @@ class CoreExtension extends AbstractExtension
         return $number . $suffix;
     }
 
-    public function instanceof($object, string $classname): bool
+    public function instanceof(mixed $object, string $classname): bool
     {
         if (!is_object($object)) {
             return false;

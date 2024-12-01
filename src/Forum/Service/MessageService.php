@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Service;
 
+use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
@@ -28,10 +29,13 @@ class MessageService
 
     public function createThread(NewMessageThread $newThread): MessageThread
     {
+        /** @var User $user */
+        $user = $this->security->getUser();
+
         $thread = new MessageThread();
         $thread->setTitle($newThread->getTitle());
         $thread->setParticipants($newThread->getParticipants());
-        $thread->getParticipants()->add($this->security->getUser());
+        $thread->getParticipants()->add($user);
         $this->messageThreadRepository->save($thread);
 
         $reply = new MessageReply();

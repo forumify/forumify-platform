@@ -11,6 +11,9 @@ abstract class AbstractForumifyTheme implements PluginInterface
         return new ThemeConfig();
     }
 
+    /**
+     * @return array<string>
+     */
     public function getStylesheets(): array
     {
         return [];

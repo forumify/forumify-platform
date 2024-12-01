@@ -10,7 +10,7 @@ use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
-use Forumify\Forum\Form\CommentType;
+use Forumify\Forum\Form\NewCommentType;
 use Forumify\Forum\Form\TopicData;
 use Forumify\Forum\Form\TopicType;
 use Forumify\Forum\Repository\TopicRepository;
@@ -49,7 +49,7 @@ class TopicController extends AbstractController
 
         $commentForm = null;
         if ($this->canComment($topic)) {
-            $commentForm = $this->createForm(CommentType::class, options: [
+            $commentForm = $this->createForm(NewCommentType::class, options: [
                 'label' => false,
             ]);
 

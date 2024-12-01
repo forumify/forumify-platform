@@ -82,7 +82,10 @@ class LastCommentService
         });
     }
 
-    private function refreshLastCommentCache(Forum $forum, string $userId)
+    /**
+     * @return array{id: int, createdAt: DateTime}|null
+     */
+    private function refreshLastCommentCache(Forum $forum, string $userId): ?array
     {
         $lastComments = $forum->getChildren()
             ->filter(fn (Forum $child) => $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $child, 'permission' => 'view']))

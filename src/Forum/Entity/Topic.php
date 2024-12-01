@@ -31,6 +31,9 @@ class Topic implements SubscribableInterface
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Forum $forum;
 
+    /**
+     * @var Collection<int, Comment>
+     */
     #[ORM\OneToMany(mappedBy: 'topic', targetEntity: Comment::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $comments;
@@ -100,11 +103,17 @@ class Topic implements SubscribableInterface
         return $this->getForum();
     }
 
+    /**
+     * @return Collection<int, Comment>
+     */
     public function getComments(): Collection
     {
         return $this->comments;
     }
 
+    /**
+     * @param Collection<int, Comment>|array<Comment> $comments
+     */
     public function setComments(Collection|array $comments): void
     {
         $this->comments = $comments instanceof Collection

@@ -9,10 +9,14 @@ use Forumify\Core\Entity\Setting;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 
+/**
+ * @extends AbstractRepository<Setting>
+ */
 class SettingRepository extends AbstractRepository
 {
     public const CACHE_KEY = 'settings.cache';
 
+    /** @var array<string, mixed>|null */
     private ?array $settings = null;
 
     public function __construct(
@@ -61,6 +65,9 @@ class SettingRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @param array<string, mixed> $settings
+     */
     public function setBulk(array $settings): void
     {
         foreach ($settings as $key => $value) {
@@ -79,6 +86,9 @@ class SettingRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toFormData(?string $prefix = null): array
     {
         $formData = [];
@@ -91,6 +101,9 @@ class SettingRepository extends AbstractRepository
         return $formData;
     }
 
+    /**
+     * @param array<string, mixed> $formData
+     */
     public function handleFormData(array $formData): void
     {
         $settings = [];
@@ -135,6 +148,9 @@ class SettingRepository extends AbstractRepository
         return [];
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function refreshSettingsCache(): array
     {
         $configuration = $this->findAll();

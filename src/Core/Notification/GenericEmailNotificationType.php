@@ -50,6 +50,12 @@ class GenericEmailNotificationType extends AbstractEmailNotificationType
         return $this->getContext($notification)['emailActionLabel'];
     }
 
+    /**
+     * @return array{
+     *     emailTemplate: string,
+     *     emailActionLabel: string,
+     * }
+     */
     private function getContext(Notification $notification): array
     {
         $context = $notification->getDeserializedContext();

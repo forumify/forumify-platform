@@ -15,6 +15,11 @@ class HttpClientFactory
     ) {
     }
 
+    /**
+     * @see Client::__construct
+     *
+     * @param array<string, mixed> $config
+     */
     public function getClient(array $config = []): Client
     {
         return new Client(array_merge([
