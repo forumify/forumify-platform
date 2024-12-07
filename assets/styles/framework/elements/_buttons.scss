@@ -70,7 +70,7 @@
     color: var(--c-primary);
     border: 2px solid var(--border-color);
 
-    &:hover {
+    &:hover:not(&[disabled]):not(&:disabled) {
         color: var(--c-primary-accent);
         border-color: var(--c-primary-accent);
         background-color: transparent;

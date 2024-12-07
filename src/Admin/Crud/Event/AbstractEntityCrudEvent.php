@@ -7,8 +7,14 @@ namespace Forumify\Admin\Crud\Event;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * @template TEntity
+ */
 abstract class AbstractEntityCrudEvent extends Event
 {
+    /**
+     * @param TEntity $entity
+     */
     public function __construct(
         private readonly bool $new,
         private readonly FormInterface $form,
@@ -26,6 +32,9 @@ abstract class AbstractEntityCrudEvent extends Event
         return $this->form;
     }
 
+    /**
+     * @return TEntity
+     */
     public function getEntity(): mixed
     {
         return $this->entity;

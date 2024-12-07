@@ -7,6 +7,7 @@ namespace Forumify\Admin\Crud;
 use Doctrine\ORM\EntityManagerInterface;
 use Forumify\Admin\Crud\Event\PostSaveCrudEvent;
 use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
+use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -122,6 +123,7 @@ abstract class AbstractCrudController extends AbstractController
 
     private function handleForm(Request $request, ?object $data = null): Response
     {
+        $isNew = $data === null;
         $form = $this->getForm($data);
 
         $form->handleRequest($request);
@@ -129,18 +131,22 @@ abstract class AbstractCrudController extends AbstractController
             $entity = $form->getData();
 
             $this->eventDispatcher->dispatch(
-                new PreSaveCrudEvent($data === null, $form, $entity),
+                new PreSaveCrudEvent($isNew, $form, $entity),
                 PreSaveCrudEvent::getName($this->getEntityClass()),
             );
 
             $this->repository->save($entity);
 
             $this->eventDispatcher->dispatch(
-                new PostSaveCrudEvent($data === null, $form, $entity),
+                new PostSaveCrudEvent($isNew, $form, $entity),
                 PostSaveCrudEvent::getName($this->getEntityClass()),
             );
 
             $this->addCrudFlash('success', 'admin.crud.saved');
+
+            if ($isNew && $entity instanceof AccessControlledEntityInterface) {
+                return $this->redirectToRoute('forumify_admin_acl', (array)$entity->getACLParameters());
+            }
             return $this->redirectToRoute($this->getRoute('list'));
         }
 
