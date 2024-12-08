@@ -60,7 +60,12 @@ class ACLType extends AbstractType implements DataMapperInterface
 
         foreach ($viewData as $acl) {
             foreach ($acl->getRoles() as $role) {
-                $fields["{$acl->getPermission()}__{$role->getId()}"]->setData(true);
+                $key = "{$acl->getPermission()}__{$role->getId()}";
+                if (!isset($fields[$key])) {
+                    continue;
+                }
+
+                $fields[$key]->setData(true);
             }
         }
     }
