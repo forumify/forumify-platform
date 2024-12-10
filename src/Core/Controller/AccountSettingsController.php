@@ -18,15 +18,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class AccountSettingsController extends AbstractController
 {
+    public function __construct(
+        private readonly UserRepository $userRepository,
+        private readonly MediaService $mediaService,
+        private readonly FilesystemOperator $avatarStorage,
+        private readonly UserPasswordHasherInterface $passwordHasher,
+    ) {
+    }
+
     #[IsGranted('ROLE_USER')]
     #[Route('/settings', name: 'settings')]
-    public function __invoke(
-        Request $request,
-        UserRepository $userRepository,
-        MediaService $mediaService,
-        FilesystemOperator $avatarStorage,
-        UserPasswordHasherInterface $passwordHasher,
-    ): Response {
+    public function __invoke(Request $request): Response
+    {
         $form = $this->createForm(AccountSettingsType::class, $this->getUser());
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -35,16 +38,16 @@ class AccountSettingsController extends AbstractController
 
             $newAvatar = $form->get('newAvatar')->getData();
             if ($newAvatar !== null) {
-                $avatar = $mediaService->saveToFilesystem($avatarStorage, $newAvatar);
+                $avatar = $this->mediaService->saveToFilesystem($this->avatarStorage, $newAvatar);
                 $user->setAvatar($avatar);
             }
 
             $newPassword = $form->get('newPassword')->getData();
             if ($newPassword) {
-                $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
+                $user->setPassword($this->passwordHasher->hashPassword($user, $newPassword));
             }
 
-            $userRepository->save($user);
+            $this->userRepository->save($user);
             $this->addFlash('success', 'flashes.account_settings_saved');
             return $this->redirectToRoute('forumify_core_settings');
         }

@@ -76,7 +76,7 @@
                 {{ component('CommentReactions', { comment: item }) }}
             </div>
             <div class="hide-phone">
-                {% if item.createdBy.signature|default('')|striptags %}
+                {% if item.createdBy.signature|default('')|striptags(['img']) %}
                     <hr class="mt-2 mb-2">
                     {{ item.createdBy.signature|rich }}
                 {% endif %}
