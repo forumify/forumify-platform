@@ -288,6 +288,8 @@ admin:
         recaptcha_site_secret: 'reCAPTCHA site secret'
         mailer_from: 'Email from'
         mailer_from_help: 'Email address that the platform will use to send emails from.'
+    dashboard:
+        greeting: 'Welcome, {user}!'
     directory_empty: 'This directory is empty or you do not have permissions to see any items.'
     forum:
         acl: 'Permissions'

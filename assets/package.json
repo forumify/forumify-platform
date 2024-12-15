@@ -4,6 +4,12 @@
     "version": "0.1.0",
     "symfony": {
         "controllers": {
+            "chart": {
+                "main": "dist/chart_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
+            },
             "code_editor": {
                 "main": "dist/code_editor_controller.js",
                 "fetch": "lazy",
@@ -80,6 +86,7 @@
         "@phosphor-icons/web": "^2.0.3",
         "@popperjs/core": "^2.11.8",
         "ace-builds": "^1.32.8",
+        "chart.js": "^4.4.7",
         "quill": "^2.0.2",
         "quill-mention": "^6.0.1"
     },

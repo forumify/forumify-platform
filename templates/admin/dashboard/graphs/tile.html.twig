@@ -1,0 +1,12 @@
+<div class="box rounded relative flex flex-col">
+    <div class="mb-4 flex justify-between w-100">
+        <div class="flex flex-col">
+            <p class="text-huge">{{ this.total }}</p>
+            <p class="text-bold mb-2">{{ title }}</p>
+        </div>
+        <div class="p-4 rounded">
+            <i class="ph {{ icon}} text-huge"></i>
+        </div>
+    </div>
+    {% include '@Forumify/components/graph.html.twig' %}
+</div>

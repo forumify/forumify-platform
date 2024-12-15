@@ -130,6 +130,22 @@
     display: inline-block;
 }
 
+.relative {
+    position: relative;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
 .border {
     border: var(--border);
 }
@@ -178,4 +194,18 @@
 
 .clear-shadow {
     box-shadow: none !important;
+}
+
+.grid {
+    display: grid;
+}
+
+.inline-grid {
+    display: inline-grid;
+}
+
+@for $i from 1 to 13 {
+    .grid-col-#{$i} {
+        grid-template-columns: repeat($i, 1fr);
+    }
 }

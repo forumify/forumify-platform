@@ -1,9 +1,21 @@
 {% extends '@Forumify/admin/base.html.twig' %}
+{% set logo %}
+    {%- if setting('forumify.logo') -%}
+        {{ asset(setting('forumify.logo'), 'forumify.asset') }}
+    {%- else -%}
+        {{ asset('bundles/forumify/images/forumify.svg') }}
+    {% endif %}
+{% endset %}
 {% block body %}
-    <div class="box">
-        <h2>Hello {{ app.user.username }},</h2>
-        <p class="mt-4">
-            This is your administrator dashboard. For now it is empty, but soon this page will be filled with analytics, statistics, pending actions, forumify news and more!
-        </p>
+    <div class="flex gap-4 items-end mb-8">
+        <img src="{{ logo }}" alt="logo" width="75" height="75">
+        <div class="flex flex-col">
+            <h1 class="mb-2">{{ setting('forumify.title') }}</h1>
+            <p class="text-light">{{ 'admin.dashboard.greeting'|trans({ user: app.user.displayName }) }}</p>
+        </div>
+    </div>
+    <div class="grid grid-col-2 gap-4">
+        {{ component('Forumify\\UserGraph') }}
+        {{ component('Forumify\\TopicGraph') }}
     </div>
 {% endblock %}
