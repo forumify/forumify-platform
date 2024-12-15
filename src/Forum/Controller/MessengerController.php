@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Notification\NotificationService;
+use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\HTMLSanitizer;
 use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReplyType;
+use Forumify\Forum\Form\NewMessageThread;
 use Forumify\Forum\Form\NewMessageThreadType;
 use Forumify\Forum\Notification\MessageUserAddedNotificationType;
 use Forumify\Forum\Repository\MessageRepository;
@@ -30,6 +33,7 @@ class MessengerController extends AbstractController
     public function __construct(
         private readonly MessageThreadRepository $messageThreadRepository,
         private readonly MessageService $messageService,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -44,7 +48,15 @@ class MessengerController extends AbstractController
     {
         $this->denyAccessUnlessGranted(VoterAttribute::MessageThreadCreate->value);
 
-        $form = $this->createForm(NewMessageThreadType::class);
+        $data = new NewMessageThread();
+        if ($request->get('recipient')) {
+            $recipient = $this->userRepository->find($request->get('recipient'));
+            if ($recipient !== null) {
+                $data->setParticipants(new ArrayCollection([$recipient]));
+            }
+        }
+
+        $form = $this->createForm(NewMessageThreadType::class, $data);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $thread = $this->messageService->createThread($form->getData());

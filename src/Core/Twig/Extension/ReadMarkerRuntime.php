@@ -21,9 +21,14 @@ class ReadMarkerRuntime implements RuntimeExtensionInterface
     ) {
     }
 
-    public function read(mixed $subject): bool
+    public function read(mixed $subject, ?User $user = null): bool
     {
-        $user = $this->security->getUser();
+        if ($user === null) {
+            /** @var User|null $loggedInUser */
+            $loggedInUser = $this->security->getUser();
+            $user = $loggedInUser;
+        }
+
         if (!$user instanceof User) {
             return true;
         }
