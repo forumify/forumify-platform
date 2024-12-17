@@ -29,10 +29,12 @@ class TopicList extends AbstractDoctrineList
     {
         $qb = $this->topicRepository
             ->createQueryBuilder('t')
+            ->addSelect('MAX(tc.createdAt) AS HIDDEN lastCommentDate')
+            ->leftJoin('t.comments', 'tc')
             ->where('t.forum = :forum')
-            ->join('t.comments', 'tc')
             ->orderBy('t.pinned', 'DESC')
-            ->addOrderBy('tc.createdAt', 'DESC')
+            ->addOrderBy('lastCommentDate', 'DESC')
+            ->groupBy('t.id')
             ->setParameter('forum', $this->forum);
 
         $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
