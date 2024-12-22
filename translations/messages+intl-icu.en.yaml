@@ -238,6 +238,10 @@ admin:
         crud:
             single: 'badge'
             plural: 'badges'
+    calendar:
+        crud:
+            single: 'calendar'
+            plural: 'calendars'
     crud:
         edit: 'Editing {single}'
         create: 'New {single}'
@@ -408,3 +412,12 @@ admin:
         manage_subscriptions: 'Manage your subscriptions'
         discover_plugins: 'Discover new plugins'
         customer_linked: 'Your forumify.net account is linked.'
+calendar:
+    title: 'Calendar'
+    all_calendars: 'All Calendars'
+    event:
+        create: 'Create Event'
+        created: 'Event created.'
+        created_by: 'Event by'
+        delete: 'You are about to delete event "{event}".'
+        deleted: 'Event deleted.'

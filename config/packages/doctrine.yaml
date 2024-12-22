@@ -31,3 +31,9 @@ doctrine:
                 dir: '%forumify.project_dir%/src/Plugin/Entity'
                 prefix: Forumify\Plugin\Entity
                 alias: ForumifyPlugin
+            forumify_calendar:
+                is_bundle: false
+                type: attribute
+                dir: '%forumify.project_dir%/src/Calendar/Entity'
+                prefix: Forumify\Calendar\Entity
+                alias: ForumifyCalendar

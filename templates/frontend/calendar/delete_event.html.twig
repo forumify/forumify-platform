@@ -1,0 +1,8 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/confirm.html.twig' with {
+        warningText: 'calendar.event.delete'|trans({ event: event.title }),
+        confirmPath: path('forumify_calendar_event_delete', { slug: event.slug, confirmed: 1 }),
+        cancelPath: path('forumify_calendar_all')
+    } only %}
+{% endblock %}

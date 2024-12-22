@@ -61,6 +61,6 @@ class CoreRuntime implements RuntimeExtensionInterface
         $timezone = $user instanceof User ? $user->getTimezone() : 'UTC';
         $date->setTimezone(new DateTimeZone($timezone));
 
-        return $date->format('j M Y \a\t h:i A');
+        return $date->format('j M Y \a\t g:i A');
     }
 }

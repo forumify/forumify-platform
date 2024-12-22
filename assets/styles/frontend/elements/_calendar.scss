@@ -1,0 +1,54 @@
+.calendar {
+    min-width: 1000px;
+    overflow-x: auto;
+}
+
+.calendar-select {
+    max-width: 200px;
+}
+
+.calendar-day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacing-1);
+    width: calc(100% / 7);
+    min-height: 150px;
+
+    &.off-month {
+        background-color: var(--c-hover);
+    }
+
+    > span {
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &.today {
+            background-color: var(--c-primary);
+            color: var(--c-primary-text);
+            font-weight: bold;
+        }
+    }
+
+    button {
+        opacity: 0;
+        transition: opacity 150ms ease-in-out;
+    }
+
+    &:hover {
+        button {
+            opacity: 1;
+            transition: opacity 150ms ease-in-out;
+        }
+    }
+
+    .event {
+        overflow-x: hidden;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+    }
+}
