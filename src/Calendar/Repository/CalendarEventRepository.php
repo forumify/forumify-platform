@@ -33,27 +33,26 @@ class CalendarEventRepository extends AbstractRepository
         $this->addACLToQuery($qb, 'view', Calendar::class, 'c');
 
         $qb
-            ->where($qb->expr()->orX(
+            ->andWhere($qb->expr()->orX(
                 'ce.start BETWEEN :start AND :end',
                 $qb->expr()->andX(
                     'ce.repeat IS NOT NULL',
                     $qb->expr()->orX(
                         'ce.repeatEnd IS NULL',
-                        'ce.repeatEnd > :start'
-                    )
-                )
+                        'ce.repeatEnd > :start',
+                    ),
+                ),
             ))
             ->orderBy('ce.start', 'ASC')
-            ->setParameters([
-                'start' => $start,
-                'end' => $end,
-            ])
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
         ;
 
         if ($calendar !== null) {
             $qb
                 ->andWhere('ce.calendar = :calendar')
-                ->setParameter('calendar', $calendar);
+                ->setParameter('calendar', $calendar)
+            ;
         }
 
         return $qb->getQuery()->getResult();

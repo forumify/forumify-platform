@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Forumify\Admin\Form;
 
 use Forumify\Calendar\Entity\Calendar;
-use Forumify\Core\Form\ColorPickerType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,6 +24,6 @@ class CalendarType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('color', ColorPickerType::class);
+            ->add('color', ColorType::class);
     }
 }

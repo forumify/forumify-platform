@@ -9,11 +9,11 @@
     <span class="text-small mb-1{% if isToday %} today{% endif %}">
         {{ cursor|date('j') }}
     </span>
-    <div class="w-100 flex flex-col gap-1 p-1">
+    <div class="w-100 flex flex-col p-1">
         {% for event in this.events(cursor) %}
             {% embed '@Forumify/components/modal.html.twig' %}
                 {% block modalOpenButton %}
-                    <a class="gap-1 event text-small">
+                    <a class="text-small">
                         <i class="dot mr-1" style="background-color: {{ event.calendar.color }}"></i>
                         <span class="text-bold">{{ event.start|date('H:i', event.start.timezone) }}</span>
                         <span class="text-light">{{ event.title }}</span>

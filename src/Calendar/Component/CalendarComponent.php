@@ -8,7 +8,6 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use Forumify\Calendar\Entity\Calendar;
-use Forumify\Calendar\Repository\CalendarEventRepository;
 use Forumify\Calendar\Repository\CalendarRepository;
 use Forumify\Calendar\Service\CalendarService;
 use Forumify\Core\Entity\User;
@@ -35,7 +34,6 @@ class CalendarComponent
     public function __construct(
         private readonly Security $security,
         public readonly CalendarRepository $calendarRepository,
-        private readonly CalendarEventRepository $calendarEventRepository,
         private readonly CalendarService $calendarService,
     ) {
     }

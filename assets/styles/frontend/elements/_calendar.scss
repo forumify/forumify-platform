@@ -14,6 +14,9 @@
     padding: var(--spacing-1);
     width: calc(100% / 7);
     min-height: 150px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
 
     &.off-month {
         background-color: var(--c-hover);
@@ -44,11 +47,5 @@
             opacity: 1;
             transition: opacity 150ms ease-in-out;
         }
-    }
-
-    .event {
-        overflow-x: hidden;
-        text-overflow: ellipsis;
-        text-wrap: nowrap;
     }
 }

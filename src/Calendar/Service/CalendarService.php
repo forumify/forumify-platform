@@ -15,7 +15,8 @@ class CalendarService
 
     public function __construct(
         private readonly CalendarEventRepository $calendarEventRepository,
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<string, CalendarEvent[]>
@@ -45,7 +46,7 @@ class CalendarService
 
     private function setTimezone(DateTimeZone $timezone): callable
     {
-        return fn(CalendarEvent $event) => $event->getStart()->setTimezone($timezone);
+        return fn (CalendarEvent $event) => $event->getStart()->setTimezone($timezone);
     }
 
     private function processEvent(CalendarEvent $event, DateTime $start, DateTime $end): void

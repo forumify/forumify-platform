@@ -20,7 +20,7 @@ class PageController extends AbstractController
     {
     }
 
-    #[Route('/{urlKey?}', 'page', requirements: ['urlKey' => '.*'], priority: -999)]
+    #[Route('/{urlKey?}', 'page', requirements: ['urlKey' => '.*'], priority: -250)]
     public function __invoke(
         ?string $urlKey,
         Request $request,

@@ -24,7 +24,8 @@ class EventType extends AbstractType
     public function __construct(
         private readonly CalendarRepository $calendarRepository,
         private readonly Security $security,
-    ) {}
+    ) {
+    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
