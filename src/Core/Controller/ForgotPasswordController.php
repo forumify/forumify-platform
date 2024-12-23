@@ -36,6 +36,7 @@ class ForgotPasswordController extends AbstractController
             ->add('email', EmailType::class, [
                 'label' => 'email',
                 'help' => 'forgot_password.email_help',
+                'attr' => ['autocomplete' => 'email', 'autofocus' => 'true'],
             ])
             ->getForm();
 
@@ -64,8 +65,8 @@ class ForgotPasswordController extends AbstractController
         $form = $this->createFormBuilder()
             ->add('newPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'first_options' => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeat password'],
+                'first_options' => ['label' => 'Password', 'attr' => ['autocomplete' => 'new-password', 'autofocus' => 'autofocus']],
+                'second_options' => ['label' => 'Repeat password', 'attr' => ['autocomplete' => 'new-password']],
                 'constraints' => [
                     new Assert\NotBlank(),
                     new Assert\Length(min: 8)
