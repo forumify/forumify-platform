@@ -48,4 +48,8 @@
             transition: opacity 150ms ease-in-out;
         }
     }
+
+    .modal-body {
+        text-wrap: wrap;
+    }
 }
