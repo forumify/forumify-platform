@@ -3,40 +3,55 @@
 
 $columns: 12;
 
-.row {
-    display: flex;
-    flex-wrap: wrap;
+.grid {
+    display: grid;
+    grid-template-columns: repeat($columns, 1fr);
+}
 
-    > * {
-        flex-shrink: 0;
-        width: 100%;
-        max-width: 100%;
-        padding-left: var(--spacing-2);
-        padding-right: var(--spacing-2);
+.inline-grid {
+    display: inline-grid;
+    grid-template-columns: repeat($columns, 1fr);
+}
+
+@for $i from 1 to 13 {
+    .grid-#{$i} {
+        display: grid;
+        grid-template-columns: repeat($i, 1fr);
     }
 
-    + .row {
-        margin-top: var(--spacing-4);
+    .inline-grid-#{$i} {
+        display: grid;
+        grid-template-columns: repeat($i, 1fr);
     }
+}
 
-    .col {
-        flex: 1 0 0%;
-    }
+@each $bp, $size in $breakpoints {
+    @media (min-width: $size) {
+        @for $i from 1 through $columns {
+            .grid-#{$bp}-#{$i} {
+                display: grid;
+                grid-template-columns: repeat($i, 1fr);
+            }
 
-    @for $i from 1 through $columns {
-        .col-#{$i} {
-            flex: 0 0 auto;
-            width: math.percentage(math.div($i, $columns));
+            .inline-grid-#{$bp}-#{$i} {
+                display: grid;
+                grid-template-columns: repeat($i, 1fr);
+            }
         }
     }
+}
 
-    @each $bp, $size in $breakpoints {
-        @media (min-width: $size) {
-            @for $i from 1 through $columns {
-                .col-#{$bp}-#{$i} {
-                    flex: 0 0 auto;
-                    width: math.percentage(math.div($i, $columns));
-                }
+@for $i from 1 to 13 {
+    .col-#{$i} {
+        grid-column: span $i;
+    }
+}
+
+@each $bp, $size in $breakpoints {
+    @media (min-width: $size) {
+        @for $i from 1 through $columns {
+            .col-#{$bp}-#{$i} {
+                grid-column: span $i;
             }
         }
     }
