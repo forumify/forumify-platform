@@ -44,6 +44,9 @@ class RegisterType extends AbstractType
                 'autocomplete' => true,
                 'placeholder' => 'Select a timezone',
                 'choices' => $this->getTimezones(),
+                'attr' => [
+                    'data-controller' => 'forumify--forumify-platform--client-timezone'
+                ]
             ]);
     }
 

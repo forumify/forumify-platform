@@ -14,6 +14,7 @@ class NewUser
     #[Assert\Regex('/[A-Za-z]/', 'registration.validation_error.username_one_letter')]
     private string $username;
 
+    #[Assert\NotBlank]
     #[Assert\Email]
     private string $email;
 
@@ -21,6 +22,7 @@ class NewUser
     #[Assert\Length(min: 8)]
     private string $password;
 
+    #[Assert\NotBlank]
     #[Assert\Timezone]
     private ?string $timezone = null;
 
@@ -59,7 +61,7 @@ class NewUser
         return $this->timezone ?? 'UTC';
     }
 
-    public function setTimezone(string $timezone): void
+    public function setTimezone(?string $timezone): void
     {
         $this->timezone = $timezone;
     }

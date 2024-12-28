@@ -10,6 +10,12 @@
                 "enabled": true,
                 "autoimport": {}
             },
+            "client_timezone": {
+                "main": "dist/client_timezone_controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {}
+            },
             "code_editor": {
                 "main": "dist/code_editor_controller.js",
                 "fetch": "lazy",
