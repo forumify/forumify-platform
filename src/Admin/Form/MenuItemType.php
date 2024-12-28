@@ -21,7 +21,7 @@ class MenuItemType extends AbstractType
     /**
      * @var array<MenuTypeInterface>
      */
-    private array $menuTypes;
+    private array $menuTypes = [];
 
     public function __construct(
         #[TaggedIterator('forumify.menu_builder.type')]
@@ -31,6 +31,7 @@ class MenuItemType extends AbstractType
         foreach ($menuTypes as $menuType) {
             $this->menuTypes[$menuType->getType()] = $menuType;
         }
+        ksort($this->menuTypes);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

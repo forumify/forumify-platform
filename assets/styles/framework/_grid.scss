@@ -1,0 +1,43 @@
+@use 'sass:math';
+@use 'sass:list';
+
+$columns: 12;
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+
+    > * {
+        flex-shrink: 0;
+        width: 100%;
+        max-width: 100%;
+        padding-left: var(--spacing-2);
+        padding-right: var(--spacing-2);
+    }
+
+    + .row {
+        margin-top: var(--spacing-4);
+    }
+
+    .col {
+        flex: 1 0 0%;
+    }
+
+    @for $i from 1 through $columns {
+        .col-#{$i} {
+            flex: 0 0 auto;
+            width: math.percentage(math.div($i, $columns));
+        }
+    }
+
+    @each $bp, $size in $breakpoints {
+        @media (min-width: $size) {
+            @for $i from 1 through $columns {
+                .col-#{$bp}-#{$i} {
+                    flex: 0 0 auto;
+                    width: math.percentage(math.div($i, $columns));
+                }
+            }
+        }
+    }
+}
