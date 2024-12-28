@@ -22,7 +22,6 @@ class NewUser
     #[Assert\Length(min: 8)]
     private string $password;
 
-    #[Assert\NotBlank]
     #[Assert\Timezone]
     private ?string $timezone = null;
 
