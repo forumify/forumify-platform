@@ -6,6 +6,9 @@ namespace Application\Cms\Frontend;
 
 use Forumify\Cms\Entity\Page;
 use Forumify\Cms\Repository\PageRepository;
+use Forumify\Core\Entity\ACL;
+use Forumify\Core\Repository\ACLRepository;
+use Forumify\Core\Repository\RoleRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class PageControllerTest extends WebTestCase
@@ -14,7 +17,8 @@ class PageControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $this->createPage();
+        $page = $this->createPage();
+        $this->setupACL($page);
 
         $client->request('GET', '/test-page');
         self::assertSelectorTextContains('h1', 'Test page!');
@@ -24,7 +28,8 @@ class PageControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $this->createPage();
+        $page = $this->createPage();
+        $this->setupACL($page);
 
         $client->request('GET', '/page/test-page/css');
 
@@ -37,7 +42,8 @@ class PageControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $this->createPage();
+        $page = $this->createPage();
+        $this->setupACL($page);
 
         $client->request('GET', '/page/test-page/javascript');
 
@@ -46,7 +52,18 @@ class PageControllerTest extends WebTestCase
         self::assertSame('console.log("Hello from test page!")', $response->getContent());
     }
 
-    private function createPage(): void
+    public function testNoAccess(): void
+    {
+        $client = static::createClient();
+
+        $this->createPage();
+
+        $client->request('GET', '/test-page');
+        self::assertResponseStatusCodeSame(302);
+        self::assertResponseHeaderSame('Location', 'http://localhost/login');
+    }
+
+    private function createPage(): Page
     {
         $page = new Page();
         $page->setTitle('Test Page');
@@ -56,5 +73,23 @@ class PageControllerTest extends WebTestCase
         $page->setJavascript('console.log("Hello from test page!")');
 
         self::getContainer()->get(PageRepository::class)->save($page);
+        return $page;
+    }
+
+    private function setupACL(Page $page): void
+    {
+        $acl = new ACL();
+        $acl->setEntity(Page::class);
+        $acl->setEntityId((string)$page->getId());
+        $acl->setPermission('view');
+
+        /** @var RoleRepository $roleRepository */
+        $roleRepository = self::getContainer()->get(RoleRepository::class);
+        $acl->setRoles([
+            $roleRepository->findOneBy(['slug' => 'guest']),
+            $roleRepository->findOneBy(['slug' => 'user']),
+        ]);
+
+        self::getContainer()->get(ACLRepository::class)->save($acl);
     }
 }

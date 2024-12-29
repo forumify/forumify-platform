@@ -6,6 +6,9 @@ namespace Tests\Tests\Application\Core;
 
 use Forumify\Cms\Entity\Page;
 use Forumify\Cms\Repository\PageRepository;
+use Forumify\Core\Entity\ACL;
+use Forumify\Core\Repository\ACLRepository;
+use Forumify\Core\Repository\RoleRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class IndexControllerTest extends WebTestCase
@@ -23,12 +26,25 @@ class IndexControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $pageRepository = self::getContainer()->get(PageRepository::class);
         $page = new Page();
         $page->setUrlKey('');
         $page->setTitle('Index');
         $page->setTwig('<h1>Welcome from pages!</h1>');
-        $pageRepository->save($page);
+        self::getContainer()->get(PageRepository::class)->save($page);
+
+        $acl = new ACL();
+        $acl->setEntity(Page::class);
+        $acl->setEntityId((string)$page->getId());
+        $acl->setPermission('view');
+
+        /** @var RoleRepository $roleRepository */
+        $roleRepository = self::getContainer()->get(RoleRepository::class);
+        $acl->setRoles([
+            $roleRepository->findOneBy(['slug' => 'guest']),
+            $roleRepository->findOneBy(['slug' => 'user']),
+        ]);
+
+        self::getContainer()->get(ACLRepository::class)->save($acl);
 
         $client->request('GET', '/');
 
