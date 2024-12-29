@@ -254,6 +254,8 @@ admin:
     cms:
         title: 'Content Management System'
         pages:
+            single: 'page'
+            plural: 'pages'
             title: 'Pages'
             create: 'Create Page'
             edit: 'Editing Page "{name}"'

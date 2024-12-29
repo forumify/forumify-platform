@@ -21,6 +21,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function Symfony\Component\String\u;
 
+/**
+ * @template TEntity of object
+ */
 abstract class AbstractCrudController extends AbstractController
 {
     protected AbstractRepository $repository;
@@ -121,7 +124,10 @@ abstract class AbstractCrudController extends AbstractController
         return $this->redirectToRoute($this->getRoute('list'));
     }
 
-    private function handleForm(Request $request, ?object $data = null): Response
+    /**
+     * @param TEntity|null $data
+     */
+    protected function handleForm(Request $request, ?object $data = null): Response
     {
         $isNew = $data === null;
         $form = $this->getForm($data);
@@ -147,7 +153,7 @@ abstract class AbstractCrudController extends AbstractController
             if ($isNew && $entity instanceof AccessControlledEntityInterface) {
                 return $this->redirectToRoute('forumify_admin_acl', (array)$entity->getACLParameters());
             }
-            return $this->redirectToRoute($this->getRoute('list'));
+            return $this->redirectAfterSave($entity);
         }
 
         return $this->render($this->formTemplate, $this->templateParams([
@@ -156,7 +162,15 @@ abstract class AbstractCrudController extends AbstractController
         ]));
     }
 
-    private function templateParams(array $params = []): array
+    /**
+     * @param TEntity $entity
+     */
+    protected function redirectAfterSave(mixed $entity): Response
+    {
+        return $this->redirectToRoute($this->getRoute('list'));
+    }
+
+    protected function templateParams(array $params = []): array
     {
         return [
             'translationPrefix' => $this->getTranslationPrefix(),

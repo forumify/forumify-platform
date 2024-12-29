@@ -8,6 +8,7 @@ use DateTime;
 use Forumify\Cms\Entity\Page;
 use Forumify\Core\Controller\IndexController;
 use Forumify\Cms\Repository\PageRepository;
+use Forumify\Core\Security\VoterAttribute;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +34,11 @@ class PageController extends AbstractController
             }
             throw $this->createNotFoundException("Page with url '$urlKey' not found.");
         }
+
+        $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
+            'entity' => $page,
+            'permission' => 'view',
+        ]);
 
         return $this->render($page->getUrlKey(), [
             'page' => $page,

@@ -1,17 +1,10 @@
-{% extends '@Forumify/admin/base.html.twig' %}
-{% block title_page %}
-    {% if page is null %}
-        {{ 'admin.cms.pages.create'|trans }}
-    {% else %}
-        {{ page.title }}
-    {% endif %}
-{% endblock %}
+{% extends '@Forumify/admin/crud/form.html.twig' %}
 {% block body %}
     <h1 class="mb-4">
-        {% if page is null %}
+        {% if data is null %}
             {{ 'admin.cms.pages.create'|trans }}
         {% else %}
-            {{ 'admin.cms.pages.edit'|trans({ name: page.title }) }}
+            {{ 'admin.cms.pages.edit'|trans({ name: data.title }) }}
         {% endif %}
     </h1>
     <div class="box">

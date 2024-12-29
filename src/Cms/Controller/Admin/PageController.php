@@ -4,93 +4,48 @@ declare(strict_types=1);
 
 namespace Forumify\Cms\Controller\Admin;
 
+use Forumify\Admin\Crud\AbstractCrudController;
 use Forumify\Cms\Entity\Page;
 use Forumify\Cms\Form\PageType;
-use Forumify\Cms\Repository\PageRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Twig\Environment;
 
-#[Route('pages', 'page_')]
-#[IsGranted('forumify.admin.cms.pages.view')]
-class PageController extends AbstractController
+/**
+ * @extends AbstractCrudController<Page>
+ */
+#[Route('pages', 'page')]
+class PageController extends AbstractCrudController
 {
-    public function __construct(
-        private readonly PageRepository $pageRepository,
-        private readonly Environment $twig,
-    ) {
+    protected string $formTemplate = '@Forumify/admin/cms/page/page.html.twig';
+
+    protected ?string $permissionView = 'forumify.admin.cms.pages.view';
+    protected ?string $permissionCreate = 'forumify.admin.cms.pages.manage';
+    protected ?string $permissionEdit = 'forumify.admin.cms.pages.manage';
+    protected ?string $permissionDelete = 'forumify.admin.cms.pages.manage';
+
+    protected function getTranslationPrefix(): string
+    {
+        return 'admin.cms.pages.';
     }
 
-    #[Route('', 'list')]
-    public function list(): Response
+    protected function getEntityClass(): string
     {
-        return $this->render('@Forumify/admin/cms/page/list.html.twig');
+        return Page::class;
     }
 
-    #[Route('/create', 'create')]
-    #[IsGranted('forumify.admin.cms.pages.manage')]
-    public function create(Request $request): Response
+    protected function getTableName(): string
     {
-        return $this->handleForm($request, null);
+        return 'Forumify\\PageTable';
     }
 
-    #[Route('/{slug}', 'edit')]
-    #[IsGranted('forumify.admin.cms.pages.manage')]
-    public function edit(Request $request, Page $page): Response
+    protected function getForm(?object $data): FormInterface
     {
-        return $this->handleForm($request, $page);
+        return $this->createForm(PageType::class, $data);
     }
 
-    #[Route('/{slug}/delete', 'delete')]
-    #[IsGranted('forumify.admin.cms.pages.manage')]
-    public function delete(Page $page, Request $request): Response
+    protected function redirectAfterSave(mixed $entity): Response
     {
-        if (!$request->get('confirmed')) {
-            return $this->render('@Forumify/admin/cms/page/delete.html.twig', [
-                'page' => $page,
-            ]);
-        }
-
-        $this->pageRepository->remove($page);
-
-        $this->addFlash('success', 'flashes.page_removed');
-        return $this->redirectToRoute('forumify_admin_cms_page_list');
-    }
-
-    private function handleForm(Request $request, ?Page $page): Response
-    {
-        $form = $this->createForm(PageType::class, $page);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $page = $form->getData();
-            $this->pageRepository->save($page);
-            $this->clearCache($page);
-
-            $this->addFlash('success', 'flashes.page_saved');
-            return $this->redirectToRoute('forumify_admin_cms_page_edit', [
-                'slug' => $page->getSlug(),
-            ]);
-        }
-
-        return $this->render('@Forumify/admin/cms/page/page.html.twig', [
-            'form' => $form->createView(),
-            'page' => $page,
-        ]);
-    }
-
-    private function clearCache(Page $page): void
-    {
-        $name = $page->getUrlKey();
-        $cls = $this->twig->getTemplateClass($name);
-        $key = $this->twig->getCache(false)->generateKey($name, $cls);
-
-        $fs = new Filesystem();
-        if ($fs->exists($key)) {
-            $fs->remove($key);
-        }
+        return $this->redirectToRoute('forumify_admin_cms_page_edit', ['identifier' => $entity->getId()]);
     }
 }

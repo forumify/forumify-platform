@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Forumify\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Core\Entity\AccessControlledEntityInterface;
+use Forumify\Core\Entity\ACLParameters;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
@@ -12,7 +14,7 @@ use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Cms\Repository\PageRepository;
 
 #[ORM\Entity(repositoryClass: PageRepository::class)]
-class Page
+class Page implements AccessControlledEntityInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
@@ -108,5 +110,20 @@ class Page
     public function setJavascript(string $javascript): void
     {
         $this->javascript = $javascript;
+    }
+
+    public function getACLPermissions(): array
+    {
+        return ['view'];
+    }
+
+    public function getACLParameters(): ACLParameters
+    {
+        return new ACLParameters(
+            Page::class,
+            (string)$this->getId(),
+            'forumify_admin_cms_page_edit',
+            ['identifier' => $this->getId()]
+        );
     }
 }

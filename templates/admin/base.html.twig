@@ -47,7 +47,7 @@
                     {% for type, messages in flashes %}
                         <div class="alert-{{ type }}">
                             {% for message in messages %}
-                                <p>{{ message|trans }}</p>
+                                <p>{{ message|trans|capitalize }}</p>
                             {% endfor %}
                         </div>
                     {% endfor %}
