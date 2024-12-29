@@ -31,12 +31,14 @@
                                 <p>{{ event.start|format_date(true) }}</p>
                             </div>
                             <div class="flex justify-end gap-1">
-                                <a class="btn-link btn-icon" href="{{ path('forumify_calendar_event_edit', { slug: event.slug }) }}">
-                                    <i class="ph ph-pencil-simple"></i>
-                                </a>
-                                <a class="btn-link btn-icon" href="{{ path('forumify_calendar_event_delete', { slug: event.slug }) }}">
-                                    <i class="ph ph-trash"></i>
-                                </a>
+                                {% if can('manage_events', event.calendar) %}
+                                    <a class="btn-link btn-icon" href="{{ path('forumify_calendar_event_edit', { slug: event.slug }) }}">
+                                        <i class="ph ph-pencil-simple"></i>
+                                    </a>
+                                    <a class="btn-link btn-icon" href="{{ path('forumify_calendar_event_delete', { slug: event.slug }) }}">
+                                        <i class="ph ph-trash"></i>
+                                    </a>
+                                {% endif %}
                                 <a class="btn-link btn-icon" {{ stimulus_action('forumify/forumify-platform/modal', 'close') }}>
                                     <i class="ph ph-x"></i>
                                 </a>
