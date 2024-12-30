@@ -24,12 +24,18 @@ class HttpRequestActionType extends AbstractType
                     'PUT' => 'put',
                     'PATCH' => 'patch',
                     'DELETE' => 'delete',
-                ]
+                ],
+            ])
+            ->add('contentType', TextType::class, [
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'application/json',
+                ],
             ])
             ->add('body', CodeEditorType::class, [
                 'required' => false,
                 'language' => CodeEditorLanguage::Twig->value,
-                'help' => 'admin.automations.action.http_request.body_help'
+                'help' => 'admin.automations.action.http_request.body_help',
             ])
         ;
     }

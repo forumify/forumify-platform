@@ -38,12 +38,13 @@ class HttpRequestAction implements ActionInterface
         $endpoint = $args['endpoint'];
         $method = $args['method'] ?? 'get';
         $body = $args['body'] ?? null;
+        $contentType = $args['contentType'] ?? 'application/json';
         if ($body !== null) {
             $body = $this->parseBody($body, $payload ?? []);
         }
 
         $request = new Request($method, $endpoint, [
-            'Content-Type' => 'application/json',
+            'Content-Type' => $contentType,
         ], $body);
 
         $client = $this->httpClientFactory->getClient();
