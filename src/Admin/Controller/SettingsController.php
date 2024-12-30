@@ -48,6 +48,10 @@ class SettingsController extends AbstractController
                 'icon' => 'ph ph-calendar',
                 'permission' => 'forumify.admin.settings.calendars.view',
             ]),
+            new MenuItem($t->trans('admin.automations.title'), $u->generate('forumify_admin_automation_list'), [
+                'icon' => 'ph ph-git-branch',
+                'permission' => 'forumify.admin.settings.automations.view'
+            ])
         ]);
 
         $menu->sortByLabel();

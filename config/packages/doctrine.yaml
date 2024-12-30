@@ -1,39 +1,9 @@
 doctrine:
     orm:
         mappings:
-            forumify_core:
+            forumify:
                 is_bundle: false
                 type: attribute
-                dir: '%forumify.project_dir%/src/Core/Entity'
-                prefix: Forumify\Core\Entity
-                alias: ForumifyCore
-            forumify_forum:
-                is_bundle: false
-                type: attribute
-                dir: '%forumify.project_dir%/src/Forum/Entity'
-                prefix: Forumify\Forum\Entity
-                alias: ForumifyForum
-            forumify_oauth:
-                is_bundle: false
-                type: attribute
-                dir: '%forumify.project_dir%/src/OAuth/Entity'
-                prefix: Forumify\OAuth\Entity
-                alias: ForumifyOAuth
-            forumify_cms:
-                is_bundle: false
-                type: attribute
-                dir: '%forumify.project_dir%/src/Cms/Entity'
-                prefix: Forumify\Cms\Entity
-                alias: ForumifyCms
-            forumify_plugin:
-                is_bundle: false
-                type: attribute
-                dir: '%forumify.project_dir%/src/Plugin/Entity'
-                prefix: Forumify\Plugin\Entity
-                alias: ForumifyPlugin
-            forumify_calendar:
-                is_bundle: false
-                type: attribute
-                dir: '%forumify.project_dir%/src/Calendar/Entity'
-                prefix: Forumify\Calendar\Entity
-                alias: ForumifyCalendar
+                dir: '%forumify.project_dir%/src'
+                prefix: Forumify
+                alias: Forumify

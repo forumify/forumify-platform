@@ -54,7 +54,9 @@
         "twig/twig": "^3.11.2",
         "symfony/scheduler": "6.4.*",
         "dragonmantank/cron-expression": "^3.3",
-        "twig/cache-extra": "^3.10"
+        "twig/cache-extra": "^3.10",
+        "twig/markdown-extra": "^3.18",
+        "league/html-to-markdown": "^5.1"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

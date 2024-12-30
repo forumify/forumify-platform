@@ -1,0 +1,31 @@
+<div {{ attributes }} class="box">
+    {{ form_start(form, {
+        attr: {
+            'data-action': 'live#action:prevent',
+            'data-live-action-param': 'save',
+        }
+    }) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.enabled) }}
+    {{ form_row(form.trigger) }}
+    {% if form.triggerArguments is defined %}
+        {{ form_row(form.triggerArguments) }}
+    {% endif %}
+    {{ form_row(form.condition) }}
+    {% if form.conditionArguments is defined %}
+        {{ form_row(form.conditionArguments) }}
+    {% endif %}
+    {{ form_row(form.action) }}
+    {% if form.actionArguments is defined %}
+        {{ form_row(form.actionArguments) }}
+    {% endif %}
+    <div class="flex justify-center gap-2">
+        <button class="btn-primary">
+            {{ 'save'|trans }}
+        </button>
+        <a class="btn-outlined" href="{{ path('forumify_admin_automation_list') }}">
+            {{ 'cancel'|trans }}
+        </a>
+    </div>
+    {{ form_end(form) }}
+</div>

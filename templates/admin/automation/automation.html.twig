@@ -1,0 +1,9 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% set title = automation is null ? 'admin.automations.new'|trans : automation.name %}
+{% block title_page %}
+    {{ title }}
+{% endblock %}
+{% block body %}
+    <h1>{{ title }}</h1>
+    {{ component('Forumify\\AutomationForm', { initialFormData: automation }) }}
+{% endblock %}

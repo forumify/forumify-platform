@@ -42,6 +42,10 @@ class ForumifyBundle extends AbstractForumifyBundle
                 ],
                 'settings' => [
                     'view',
+                    'automations' => [
+                        'view',
+                        'manage',
+                    ],
                     'calendars' => [
                         'view',
                         'manage'

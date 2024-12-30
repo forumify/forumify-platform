@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Components\Table;
 
-use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
-use Forumify\Core\Entity\Role;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Forum\Repository\BadgeRepository;
 use Symfony\Bundle\SecurityBundle\Security;
