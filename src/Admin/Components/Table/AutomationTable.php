@@ -14,7 +14,9 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 #[IsGranted('forumify.admin.settings.automations.view')]
 class AutomationTable extends AbstractDoctrineTable
 {
-    public function __construct(private readonly Security $security) { }
+    public function __construct(private readonly Security $security)
+    {
+    }
 
     protected function getEntityClass(): string
     {
@@ -25,12 +27,18 @@ class AutomationTable extends AbstractDoctrineTable
     {
         $this
             ->addColumn('name', [
-                'field' => 'name'
+                'field' => 'name',
+            ])
+            ->addColumn('trigger', [
+                'field' => 'trigger',
+            ])
+            ->addColumn('action', [
+                'field' => 'action',
             ])
             ->addColumn('enabled', [
                 'field' => 'enabled',
                 'searchable' => false,
-                'renderer' => fn (bool $enabled) => '<input type="checkbox" disabled="disabled" ' . ($enabled ? 'checked' : '') . ' />'
+                'renderer' => fn (bool $enabled) => '<input type="checkbox" disabled="disabled" ' . ($enabled ? 'checked' : '') . ' />',
             ])
             ->addColumn('actions', [
                 'field' => 'id',
@@ -38,7 +46,8 @@ class AutomationTable extends AbstractDoctrineTable
                 'searchable' => false,
                 'sortable' => false,
                 'renderer' => $this->renderActions(...),
-            ]);
+            ])
+        ;
     }
 
     private function renderActions(int $id): string

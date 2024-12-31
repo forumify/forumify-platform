@@ -8,6 +8,7 @@ use Forumify\Core\Form\CodeEditorLanguage;
 use Forumify\Core\Form\CodeEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -26,16 +27,19 @@ class HttpRequestActionType extends AbstractType
                     'DELETE' => 'delete',
                 ],
             ])
-            ->add('contentType', TextType::class, [
+            ->add('headers', TextareaType::class, [
                 'required' => false,
+                'help' => 'admin.automations.action.http_request.headers_help',
+                'help_html' => true,
                 'attr' => [
-                    'placeholder' => 'application/json',
+                    'placeholder' => 'Content-Type: application/json',
                 ],
             ])
             ->add('body', CodeEditorType::class, [
                 'required' => false,
                 'language' => CodeEditorLanguage::Twig->value,
                 'help' => 'admin.automations.action.http_request.body_help',
+                'help_html' => true,
             ])
         ;
     }

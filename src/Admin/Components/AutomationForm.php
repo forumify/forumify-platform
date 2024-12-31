@@ -84,7 +84,7 @@ class AutomationForm extends AbstractController
     {
         $thisIterable = "{$component}s";
 
-        /** @var array<string, AutomationComponentInterface> $choices */
+        /** @var array<string, AutomationComponentInterface> $components */
         $components = iterator_to_array($this->$thisIterable);
         $choices = array_combine(array_keys($components), array_keys($components));
         ksort($choices);
@@ -100,7 +100,10 @@ class AutomationForm extends AbstractController
             ? $this->initialFormData?->$getter()
             : $this->formValues[$component];
 
-        $formType = $selectedComponent !== null ? $components[$selectedComponent]?->getPayloadFormType() : null;
+        $formType = $selectedComponent !== null && isset($components[$selectedComponent])
+            ? $components[$selectedComponent]->getPayloadFormType()
+            : null;
+
         if ($formType) {
             $builder->add("{$component}Arguments", $formType, [
                 'label' => false,

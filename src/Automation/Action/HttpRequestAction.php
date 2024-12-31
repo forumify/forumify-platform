@@ -37,25 +37,36 @@ class HttpRequestAction implements ActionInterface
 
         $endpoint = $args['endpoint'];
         $method = $args['method'] ?? 'get';
-        $body = $args['body'] ?? null;
-        $contentType = $args['contentType'] ?? 'application/json';
-        if ($body !== null) {
-            $body = $this->parseBody($body, $payload ?? []);
+        $headers = $args['headers'] ?? null;
+        if (empty($headers)) {
+            $headers = [];
+        } elseif (is_string($headers)) {
+            $headers = $this->parseHeaders($headers);
         }
 
-        $request = new Request($method, $endpoint, [
-            'Content-Type' => $contentType,
-        ], $body);
+        $body = $args['body'] ?? null;
+        if ($body !== null) {
+            $body = $this->twig->createTemplate($body)->render($payload ?? []);
+        }
 
-        $client = $this->httpClientFactory->getClient();
-        $client->send($request);
+        $this->httpClientFactory
+            ->getClient()
+            ->send(new Request($method, $endpoint, $headers, $body))
+        ;
     }
 
-    private function parseBody(string $body, array $payload): string
+    private function parseHeaders(string $headerData): array
     {
-        return $this->twig
-            ->createTemplate($body)
-            ->render($payload)
-        ;
+        $headerLines = explode("\n", $headerData);
+
+        $headers = [];
+        foreach ($headerLines as $headerLine) {
+            $header = explode(':', $headerLine);
+            if (count($header) !== 2) {
+                continue;
+            }
+            $headers[trim($header[0])] = trim($header[1]);
+        }
+        return $headers;
     }
 }

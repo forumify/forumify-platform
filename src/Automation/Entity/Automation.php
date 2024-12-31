@@ -22,19 +22,19 @@ class Automation
     #[ORM\Column('`trigger`')]
     private string $trigger;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: 'json', nullable: true)]
     private mixed $triggerArguments = [];
 
-    #[ORM\Column('`condition`')]
+    #[ORM\Column('`condition`', nullable: true)]
     private ?string $condition;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: 'json', nullable: true)]
     private mixed $conditionArguments = [];
 
     #[ORM\Column]
     private string $action;
 
-    #[ORM\Column(type: 'json')]
+    #[ORM\Column(type: 'json', nullable: true)]
     private mixed $actionArguments = [];
 
     public function getName(): string

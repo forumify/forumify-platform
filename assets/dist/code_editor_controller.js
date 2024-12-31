@@ -39,6 +39,8 @@ export default class extends Controller {
     const inputElement = document.getElementById(this.inputIdValue);
     editor.on('change', () => {
       inputElement.value = editor.getSession().getValue();
+    });
+    editor.on('blur', () => {
       inputElement.dispatchEvent(new Event('change', { bubbles: true }));
     });
   }

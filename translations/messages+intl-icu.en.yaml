@@ -432,7 +432,10 @@ admin:
         action:
             placeholder: 'Select an action'
             http_request:
-                body_help: 'You can use Twig to construct the body. The trigger payload is available as Twig context.'
+                headers_help: 'Each header should be on a new line. Header key and value are separated by a ":". Example: <br/>header1: value<br/>header2: value'
+                body_help: 'You can use <a href="https://twig.symfony.com/" target="_blank">Twig</a> to construct the body. The trigger payload is available as Twig context.'
+            webhook:
+                data_help: 'You can use <a href="https://twig.symfony.com/" target="_blank">Twig</a> to construct the data. The trigger payload is available as Twig context. The data should result in a JSON object that is accepted by the webhook you are calling. If you need more flexibility, use the "HTTP Request" action instead.'
 calendar:
     title: 'Calendar'
     all_calendars: 'All Calendars'
