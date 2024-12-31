@@ -22,6 +22,6 @@ class AutomationRepository extends AbstractRepository
      */
     public function findByTriggerType(string $triggerType): array
     {
-        return $this->findBy(['trigger' => $triggerType]);
+        return $this->findBy(['trigger' => $triggerType, 'enabled' => true]);
     }
 }
