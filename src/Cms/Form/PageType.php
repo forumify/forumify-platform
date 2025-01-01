@@ -66,11 +66,12 @@ class PageType extends AbstractType
 
     private function defaultTwigTemplate(): string
     {
-        // TODO: add link to documentation
         return <<<DOC
 {% extends '@Forumify/frontend/page.html.twig' %}
 {% block body %}
-    <p>Learn more about customizing pages at DOCS TBA</p>
+<p>
+    Learn more about customizing pages in the <a href="https://docs.forumify.net/user-manual/cms" target="_blank">CMS documentation.</a>
+</p>
 {% endblock %}
 DOC;
     }

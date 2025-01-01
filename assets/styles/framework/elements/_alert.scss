@@ -1,6 +1,7 @@
 @mixin alert {
     padding: var(--spacing-4);
     font-weight: 500;
+    border-radius: var(--border-radius);
 }
 
 .alert-success {

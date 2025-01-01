@@ -27,7 +27,10 @@ class IndexController extends AbstractController
         }
 
         if ($indexOverride === '/') {
-            return $this->render('@Forumify/frontend/index.html.twig');
+            $isCloudInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
+            return $this->render('@Forumify/frontend/index.html.twig', [
+                'cloud' => $isCloudInstance,
+            ]);
         }
 
         $res = $this->router->match($indexOverride);

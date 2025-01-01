@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsEventListener('kernel.request')]
 class PlatformInstallSubscriber extends AbstractController

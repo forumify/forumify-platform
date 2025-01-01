@@ -1,9 +1,71 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
 {% block body %}
-    <div class="flex flex-col gap-4">
-        <h1>No homepage defined</h1>
-        <p>You are seeing this message because you do not have a homepage configured.</p>
-        <p>The homepage can be created in the admin panel by adding a page with an empty url key. (Admin > CMS > Pages > '+')</p>
-        <p>If you do not wish to use a homepage, you can configure the index override on the general configuration page. (Admin > Configuration > General)</p>
-    </div>
+    {% if app.user %}
+        <h1 class="mb-0">Welcome to forumify!</h1>
+        <p class="text-small mb-4">You are seeing this message because you do not have a homepage configured.</p>
+
+        {% set welcomeMsg = cloud ? 'Congratulations on your forumify cloud purchase.' : 'Congratulations on setting up your own forumify instance.' %}
+        <p>
+            {{ welcomeMsg }} This quickstart guide will assist you in further configuring your instance.
+        </p>
+        <div class="rich-text">
+            <h2>Quickstart</h2>
+            <div class="alert-warning mb-4">
+                During this quick-start guide we will be configuring your homepage. Making it impossible to see this page again.
+                You can either keep it open in a separate tab or just do not refresh this one.
+            </div>
+            <p>Let's get started by opening the <a href="https://docs.forumify.net/user-manual/admin-panel" target="_blank">Admin Panel</a>.</p>
+            <h3>Configuration</h3>
+            <p>On the configuration page, modify the default settings to your community's needs.</p>
+            <p class="text-large text-bold">Checklist:</p>
+            <strong>General</strong>
+            <ul>
+                <li>Upload you community's logo</li>
+                {% if cloud %}
+                    <li>Enable automatic updates</li>
+                {% endif %}
+            </ul>
+            <strong>Users</strong>
+            <ul>
+                <li>Upload a default avatar for users</li>
+                <li>Select how users can log in, using their email, username, or both</li>
+            </ul>
+            <strong>Spam Protection</strong>
+            <ul>
+                <li>Set up and configure reCAPTCHA to protect your website against spammers</li>
+            </ul>
+            {% if not cloud %}
+                <strong>Emails</strong>
+                <ul>
+                    <li>Set the email your platform will use to send emails</li>
+                </ul>
+            {% endif %}
+            <h3>Homepage</h3>
+            <p>There are 2 options to configure your homepage:</p>
+            <p>
+                <strong>Index Override:</strong>
+                Override the index of your website to point to a different url.
+                To enable index override, go to <i class="ph ph-gear"></i> Configuration -> General and set the "Index override" field.
+                This override should be a URL to any page on your website, without the origin (https://example.com) part.
+                For example, to set the forum as default, use <strong>/forum</strong>.
+            </p>
+            <p>
+                <strong>CMS Page:</strong>
+                If you want to have a dedicated homepage you can use a <a href="https://docs.forumify.net/user-manual/cms" target="_blank">CMS Page</a>.
+                To use a CMS Page for your homepage, navigate to <i class="ph ph-files"></i> CMS -> <i class="ph ph-file-html"></i> Pages.
+                Create a new page using the <i class="ph ph-plus"></i> button.
+                Set the title to anything, for example "Homepage", leave everything else default/blank, and press Save.
+                In the ACL matrix, make sure you grant "View" access to both the <strong>user</strong> and <strong>guest</strong> roles so everyone has access.
+            </p>
+            <h2>What's next?</h2>
+            <ul>
+                <li>Enable registrations in <i class="ph ph-gear"></i> Configuration -> Users</li>
+                <li><a href="https://docs.forumify.net/user-manual/forum" target="_blank">Create your first forum and start engaging with your community.</a></li>
+                <li><a href="https://docs.forumify.net/user-manual/cms" target="_blank">Create About us, FAQ, policies, ... pages using the CMS.</a></li>
+                <li><a href="https://docs.forumify.net/user-manual/menu-builder" target="_blank">Use the menu builder to add your newly created pages to the site navigation.</a></li>
+                <li><a href="https://docs.forumify.net/user-manual/security" target="_blank">Learn about how to keep your website secure with roles, permissions and ACLs.</a></li>
+                <li><a href="https://forumify.net/marketplace" target="_blank">Browse the marketplace for plugins and themes.</a></li>
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}
