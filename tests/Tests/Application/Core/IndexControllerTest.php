@@ -10,16 +10,38 @@ use Forumify\Core\Entity\ACL;
 use Forumify\Core\Repository\ACLRepository;
 use Forumify\Core\Repository\RoleRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Tests\Tests\Traits\UserTrait;
 
 class IndexControllerTest extends WebTestCase
 {
-    public function testIndex(): void
+    use UserTrait;
+
+    public function testIndexNotLoggedIn(): void
     {
         $client = static::createClient();
         $client->request('GET', '/');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('h1', 'No homepage defined');
+        self::assertSelectorTextSame('main', '');
+    }
+
+    public function testIndexUsers(): void
+    {
+        $client = static::createClient();
+        $client->request('GET', '/');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextSame('main', '');
+    }
+
+    public function testIndexAdmins(): void
+    {
+        $client = static::createClient();
+        $client->loginUser($this->createAdmin());
+        $client->request('GET', '/');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('h1', 'Welcome to forumify!');
     }
 
     public function testIndexPage(): void
