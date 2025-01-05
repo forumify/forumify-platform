@@ -56,10 +56,14 @@
         font-size: 16px;
     }
 
+    .ql-code-block-container,
     pre {
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Source Code Pro", "source-code-pro", monospace;
         line-height: 1.2rem;
-        background-color: var(--c-elevation-2);
-        padding: var(--spacing-4);
+        background-color: var(--c-elevation-0);
+        padding: var(--spacing-2);
+        border: var(--border);
+        border-radius: var(--border-radius);
 
         code {
             display: block;
@@ -72,8 +76,8 @@
     blockquote {
         border-left: var(--border);
         border-left-width: 5px;
-        margin-left: var(--spacing-4);
-        padding-left: var(--spacing-2);
+        margin: 0;
+        padding-left: var(--spacing-4);
     }
 
     .ql-size-huge {
@@ -109,5 +113,14 @@
             color: var(--c-primary-accent);
             transition: color ease-in-out 100ms;
         }
+    }
+
+
+    > * {
+        margin-bottom: var(--spacing-2);
+    }
+
+    > *:first-child {
+        margin-top: 0;
     }
 }

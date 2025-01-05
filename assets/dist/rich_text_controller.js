@@ -7,5 +7,17 @@ export default class extends Controller {
         location.href = `/profile/${mention.dataset.id}`
       });
     });
+
+    const children = [...this.element.children];
+    children.forEach((child, i) => {
+      if (child.tagName !== 'BLOCKQUOTE') {
+        return;
+      }
+
+      const nextSibling = children[i + 1];
+      if (nextSibling === undefined || nextSibling.tagName !== 'BLOCKQUOTE') {
+        child.style.marginBottom = 'var(--spacing-2)';
+      }
+    });
   }
 }
