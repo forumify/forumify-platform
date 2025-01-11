@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Application\Forum;
 
-use Forumify\Core\Entity\Role;
-use Forumify\Core\Repository\RoleRepository;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

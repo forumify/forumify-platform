@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Controller;
 
+use Forumify\Admin\Service\ForumGroupDeleteService;
 use Forumify\Forum\Entity\ForumGroup;
-use Forumify\Forum\Repository\ForumGroupRepository;
-use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,8 +16,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ForumGroupDeleteController extends AbstractController
 {
     public function __construct(
-        private readonly ForumGroupRepository $forumGroupRepository,
-        private readonly ForumRepository $forumRepository,
+        private readonly ForumGroupDeleteService $forumGroupDeleteService,
     ) {
     }
 
@@ -36,22 +34,9 @@ class ForumGroupDeleteController extends AbstractController
             ]);
         }
 
-        $this->ungroupForums($group);
-        $this->forumGroupRepository->remove($group);
+        $this->forumGroupDeleteService->deleteForumGroup($group);
 
         $this->addFlash('success', 'flashes.forum_group_removed');
         return $this->redirectToRoute('forumify_admin_forum', ['slug' => $parentSlug]);
-    }
-
-    public function ungroupForums(ForumGroup $group): void
-    {
-        $position = $this->forumRepository->getHighestPosition($group->getParentForum(), null);
-        foreach ($group->getForums() as $forum) {
-            $forum->setPosition(++$position);
-            $forum->setGroup(null);
-            $this->forumRepository->save($forum, false);
-        }
-
-        $this->forumRepository->flush();
     }
 }
