@@ -7,7 +7,6 @@ namespace Forumify\Admin\Form;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Forum\Entity\Forum;
-use Forumify\Forum\Entity\ForumDisplaySettings;
 use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\Repository\ForumGroupRepository;
 use Forumify\Forum\Repository\ForumRepository;
@@ -62,8 +61,11 @@ class ForumType extends AbstractType
                 'autocomplete' => true,
                 'query_builder' => $this->getGroupQueryBuilder($parentId),
             ])
-            ->add('parent', HiddenType::class, [
-                'data' => $parentId,
+            ->add('parent', EntityType::class, [
+                'class' => Forum::class,
+                'choice_label' => 'title',
+                'required' => false,
+                'autocomplete' => true,
             ])
             ->add('topicTemplate', RichTextEditorType::class, [
                 'required' => false,
