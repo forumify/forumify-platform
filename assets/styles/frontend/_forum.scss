@@ -4,23 +4,6 @@
     gap: var(--spacing-6);
 }
 
-.forum {
-    display: flex;
-    flex-direction: row;
-    gap: var(--spacing-4);
-    padding: var(--spacing-4);
-}
-
-.forum-image {
-    width: 64px;
-    height: 64px;
-    display: none;
-
-    @include min-width-sm {
-        display: block;
-    }
-}
-
 .forum-last-comment {
     width: calc(1 / 4) * 100%;
     flex-direction: row;

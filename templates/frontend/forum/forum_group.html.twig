@@ -9,8 +9,8 @@
         <ul>
             {% for forum in visibleForums %}
                 {% set link = path('forumify_forum_forum', { slug: forum.slug }) %}
-                <li class="forum">
-                    <div class="flex-grow">
+                <li class="p-4 grid-4">
+                    <div class="col-xs-4 col-md-3">
                         <div class="flex items-center gap-1">
                             <h3 class="mb-0">
                                 <a href="{{ link }}">
@@ -20,24 +20,28 @@
                             {{ component('ReadMarker', { item: forum }) }}
                         </div>
                         <div>
-                            {{ forum.content|rich }}
-                            <div class="forum-subforums">
-                                {% for subforum in forum.children|filter(subforum => can('view', subforum)) %}
-                                    <div class="inline-flex items-baseline gap-1">
-                                        <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">
-                                            <i class="ph ph-arrow-bend-down-right"></i>
-                                            {{ subforum.title }}
-                                        </a>
-                                        {{ component('ReadMarker', { item: subforum }) }}
-                                    </div>
-                                {% endfor %}
-                            </div>
+                            {% block forum_content %}
+                                {{ forum.content|rich }}
+                            {% endblock %}
+                            {% block forum_subforums %}
+                                <div class="forum-subforums">
+                                    {% for subforum in forum.children|filter(subforum => can('view', subforum)) %}
+                                        <div class="inline-flex items-baseline gap-1">
+                                            <a href="{{ path('forumify_forum_forum', { slug: subforum.slug }) }}">
+                                                <i class="ph ph-arrow-bend-down-right"></i>
+                                                {{ subforum.title }}
+                                            </a>
+                                            {{ component('ReadMarker', { item: subforum }) }}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endblock %}
                         </div>
                     </div>
                     {% set lastComment = forum|last_comment %}
                     {% if lastComment is not null %}
                         {% set topic = lastComment.topic %}
-                        <div class="forum-last-comment">
+                        <div class="flex gap-1 hide-phone col-1">
                             {% include '@Forumify/components/avatar.html.twig' with {
                                 user: lastComment.createdBy
                             } only %}
