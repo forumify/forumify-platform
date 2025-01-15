@@ -51,6 +51,9 @@
                                     {% endset %}
                                     {{ 'created_by'|trans({ author: author })|raw }}
                                 </span>
+                                <span class="text-small">
+                                    {{ lastComment.createdAt|format_date }}
+                                </span>
                             </div>
                         </div>
                     {% endif %}
