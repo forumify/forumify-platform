@@ -25,4 +25,3 @@ class OnlineExtensionRuntime implements RuntimeExtensionInterface
         return $diff < 300;
     }
 }
-

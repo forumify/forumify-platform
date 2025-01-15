@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Core\Twig\Extension;
 
 use Forumify\Core\Entity\User;
+use Forumify\Core\Service\ReadMarkerServiceInterface;
 use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;

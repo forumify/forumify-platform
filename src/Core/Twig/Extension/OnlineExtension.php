@@ -16,4 +16,3 @@ class OnlineExtension extends AbstractExtension
         ];
     }
 }
-
