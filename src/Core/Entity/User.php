@@ -63,7 +63,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $banned = false;
 
     #[ORM\Column(type: 'date', nullable: true)]
-    private ?DateTime $lastLogin = null;
+    private ?DateTime $lastActivity = null;
 
     /** @var Collection<int, Subscription> */
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Subscription::class, fetch: 'EXTRA_LAZY')]
@@ -234,14 +234,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->banned = $banned;
     }
 
-    public function getLastLogin(): ?DateTime
+    public function getLastActivity(): ?DateTime
     {
-        return $this->lastLogin;
+        return $this->lastActivity;
     }
 
-    public function setLastLogin(DateTime $lastLogin): void
+    public function setLastActivity(DateTime $lastActivity): void
     {
-        $this->lastLogin = $lastLogin;
+        $this->lastActivity = $lastActivity;
     }
 
     /**

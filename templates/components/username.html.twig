@@ -1,5 +1,10 @@
 {%- if user is not null -%}
-    <a class="{{ className|default('') }}" href="{{ path('forumify_forum_profile', { username: user.username }) }}">{{ user.displayName|default(user.username) }}</a>
+    <a class="inline-flex items-center gap-1 {{ className|default('') }}" href="{{ path('forumify_forum_profile', { username: user.username }) }}">
+        {{ user.displayName|default(user.username) }}
+        {% if user|online %}
+            <span class="dot" style="background-color: #57B357"></span>
+        {% endif %}
+    </a>
 {%- else -%}
     <span>{{ 'deleted'|trans }}</span>
 {%- endif -%}

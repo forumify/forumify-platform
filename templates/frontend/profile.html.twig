@@ -42,7 +42,7 @@
                 <span class="text-bold ml-4">{{ followingCount }}</span> following
             </p>
             <p class="text-small">Registered: {{ user.createdAt|date('d M Y') }}</p>
-            <p class="text-small">Last login: {{ user.lastLogin is not null ? user.lastLogin|date('d M Y') : 'never' }}</p>
+            <p class="text-small">Last seen: {{ user.lastActivity is not null ? user.lastActivity|format_date : 'never' }}</p>
         </div>
     </div>
     <div class="flex items-start gap-4">
