@@ -49,6 +49,7 @@ class CalendarComponent
     public function getStartDay(): DateTime
     {
         $firstDay = clone $this->view;
+        $firstDay->setTimezone(new DateTimeZone('UTC'));
         $firstDay->modify('first day of this month');
 
         $offset = (int)$firstDay->format('N') - 1;
