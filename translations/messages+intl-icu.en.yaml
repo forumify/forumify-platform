@@ -181,6 +181,8 @@ create_role: 'Create role'
 role_type:
     administrator: 'Administrators are granted access to the admin panel. Administrators are not automatically moderators, and access to resources still needs to be configured separately.'
     moderator: 'Moderators gain certain perks on the frontend, such as being able to edit and delete resources that they have access to. They do not have access to the admin panel.'
+    show_on_forum: 'Display this role below the user''s name on comments and on their profile.'
+    color: 'When show on forum is enabled, the role will be displayed in this color. Set to black (RGB 0, 0, 0) to use the standard text color.'
 reactions: 'Reactions'
 create_reaction: 'Create reaction'
 settings: 'Settings'

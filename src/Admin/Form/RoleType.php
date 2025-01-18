@@ -11,6 +11,7 @@ use Forumify\Plugin\AbstractForumifyPlugin;
 use Forumify\Plugin\Entity\Plugin;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -49,7 +50,16 @@ class RoleType extends AbstractType
             ->add('permissions', PermissionType::class, [
                 'permissions' => $this->getAvailablePermissions(),
                 'label' => 'Permissions',
-            ]);
+            ])
+            ->add('showOnForum', CheckboxType::class, [
+                'required' => false,
+                'help' => 'role_type.show_on_forum',
+            ])
+            ->add('color', ColorType::class, [
+                'required' =>false,
+                'help' => 'role_type.color',
+            ])
+        ;
     }
 
     private function getAvailablePermissions(): array

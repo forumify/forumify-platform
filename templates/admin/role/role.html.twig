@@ -16,6 +16,8 @@
                     {{ form_row(form.description) }}
                     {{ form_row(form.administrator) }}
                     {{ form_row(form.moderator) }}
+                    {{ form_row(form.showOnForum) }}
+                    {{ form_row(form.color) }}
                     <div class="flex justify-center items-center gap-2">
                         <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
                         {% if cancelPath is defined %}

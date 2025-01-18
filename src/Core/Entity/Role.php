@@ -35,6 +35,12 @@ class Role implements SortableEntityInterface
     #[ORM\Column(type: 'simple_array', nullable: true)]
     private ?array $permissions = [];
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $showOnForum = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?string $color = null;
+
     /**
      * @var Collection<User>
      */
@@ -116,5 +122,25 @@ class Role implements SortableEntityInterface
     public function setPermissions(array $permissions): void
     {
         $this->permissions = $permissions;
+    }
+
+    public function isShowOnForum(): bool
+    {
+        return $this->showOnForum;
+    }
+
+    public function setShowOnForum(bool $showOnForum): void
+    {
+        $this->showOnForum = $showOnForum;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): void
+    {
+        $this->color = $color;
     }
 }

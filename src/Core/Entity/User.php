@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Forum\Entity\Badge;
-use Forumify\Forum\Entity\CommentReaction;
 use Forumify\Forum\Entity\Subscription;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -33,6 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         joinColumns: [new ORM\JoinColumn('user', onDelete: 'CASCADE')],
         inverseJoinColumns: [new ORM\JoinColumn('role', onDelete: 'CASCADE')],
     )]
+    #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $roles;
 
     #[ORM\Column]
