@@ -307,13 +307,7 @@ admin:
             mixed: 'Mixed Board'
             support: 'Support Board'
         type_placeholder: 'Please select a forum type'
-        type_help: >
-            <ul>
-                <li>- <strong>Text Boards</strong> are for a classical forum experience.
-                <li>- <strong>Image Boards</strong> enforce users to upload an image along with their topic.
-                <li>- <strong>Mixed Boards</strong> are image boards, but the option to upload an image is optional.
-                <li>- <strong>Support Boards</strong> are for users to ask questions, and they can mark an answer.
-            </ul>
+        type_help: 'Learn more about forum types <a href="http://docs.forumify.net/user-manual/forum#forum-types" target="_blank">here</a>.'
         general: 'General'
         display_settings: 'Display Settings'
         display_settings_help:

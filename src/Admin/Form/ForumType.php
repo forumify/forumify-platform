@@ -8,21 +8,28 @@ use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;
+use Forumify\Forum\ForumType\ForumTypeInterface;
 use Forumify\Forum\Repository\ForumGroupRepository;
 use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ForumType extends AbstractType
 {
-    public function __construct(private readonly ForumRepository $forumRepository)
-    {
+    /**
+     * @param iterable<ForumTypeInterface> $forumTypes
+     */
+    public function __construct(
+        private readonly ForumRepository $forumRepository,
+        #[AutowireIterator('forumify.forum.type')]
+        private readonly iterable $forumTypes,
+    ) {
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -40,12 +47,7 @@ class ForumType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'admin.forum.type.text' => Forum::TYPE_TEXT,
-                    'admin.forum.type.image' => Forum::TYPE_IMAGE,
-                    'admin.forum.type.mixed' => Forum::TYPE_MIXED,
-                    'admin.forum.type.support' => Forum::TYPE_SUPPORT,
-                ],
+                'choices' => $this->getForumTypeChoices(),
                 'placeholder' => 'admin.forum.type_placeholder',
                 'help' => 'admin.forum.type_help',
                 'help_html' => true,
@@ -101,5 +103,19 @@ class ForumType extends AbstractType
 
             return $qb;
         };
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getForumTypeChoices(): array
+    {
+        $forumTypeChoices = [];
+        foreach ($this->forumTypes as $forumType) {
+            $type = $forumType::getType();
+            $forumTypeChoices["admin.forum.type.$type"] = $type;
+        }
+
+        return $forumTypeChoices;
     }
 }
