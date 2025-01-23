@@ -115,15 +115,24 @@ class PluginService
 
     public function composerPostInstall(): string
     {
-        // TODO: move this to the plugin_manager_controller.js
-        //       this is temporary for instances going from 0.3 to 0.4
-        $output = $this->migrations();
-        return $output . PHP_EOL . $this->run([
+        $output = [];
+        if ($_SERVER['APP_ENV'] === 'prod') {
+            $output[] = $this->run([
                 'composer',
-                'run-script',
-                'auto-scripts',
-                '--no-interaction',
+                'dump-autoload',
+                '--optimize',
+                '--classmap-authoritative',
             ]);
+        }
+
+        $output[] = $this->run([
+            'composer',
+            'run-script',
+            'auto-scripts',
+            '--no-interaction',
+        ]);
+
+        return implode(PHP_EOL, $output);
     }
 
     /**
