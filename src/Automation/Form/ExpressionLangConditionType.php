@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Automation\Form;
 
+use Forumify\Core\Form\CodeEditorType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ExpressionLangConditionType extends AbstractType
@@ -13,9 +13,10 @@ class ExpressionLangConditionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('expression', TextType::class, [
+            ->add('expression', CodeEditorType::class, [
                 'help_html' => true,
-                'help' => 'admin.automations.condition.expression_lang.expression_help'
+                'help' => 'admin.automations.condition.expression_lang.expression_help',
+                'compact' => true,
             ])
         ;
     }

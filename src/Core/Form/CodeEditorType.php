@@ -19,13 +19,18 @@ class CodeEditorType extends AbstractType
     {
         $supportedLanguages = array_column(CodeEditorLanguage::cases(), 'value');
 
-        $resolver->setDefault('language', null);
+        $resolver->setDefaults([
+            'language' => null,
+            'compact' => false,
+        ]);
         $resolver->setAllowedValues('language', [null, ...$supportedLanguages]);
+        $resolver->setAllowedValues('compact', [null, true, false]);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['language'] = $options['language'] ?? null;
+        $view->vars['compact'] = $options['compact'] ?? false;
     }
 
     public function getParent(): string

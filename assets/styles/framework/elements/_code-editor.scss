@@ -5,4 +5,10 @@
         margin: 2px;
         border-radius: 8px;
     }
+
+    &.code-editor-compact {
+        .ace_editor {
+            min-height: 50px;
+        }
+    }
 }

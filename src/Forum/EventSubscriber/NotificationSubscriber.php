@@ -86,11 +86,11 @@ class NotificationSubscriber implements EventSubscriberInterface
     public function sendNotificationsForMessage(MessageCreatedEvent $event): void
     {
         $message = $event->getMessage();
-        $sender = $message->getCreatedBy();
+        $sender = $this->security->getUser();
         $participants = $message->getThread()->getParticipants();
 
         foreach ($participants as $participant) {
-            if ($sender === null || $sender->getUserIdentifier() === $participant->getUserIdentifier()) {
+            if ($sender?->getUserIdentifier() === $participant->getUserIdentifier()) {
                 continue;
             }
 

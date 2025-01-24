@@ -29,13 +29,18 @@ class MessageService
 
     public function createThread(NewMessageThread $newThread): MessageThread
     {
-        /** @var User $user */
-        $user = $this->security->getUser();
-
         $thread = new MessageThread();
         $thread->setTitle($newThread->getTitle());
         $thread->setParticipants($newThread->getParticipants());
-        $thread->getParticipants()->add($user);
+
+        /** @var User|null $user */
+        $user = $this->security->getUser();
+        if ($user !== null) {
+            $thread->getParticipants()->add($user);
+        } else {
+            $thread->setCreatedBy($thread->getParticipants()->first());
+        }
+
         $this->messageThreadRepository->save($thread);
 
         $reply = new MessageReply();
@@ -51,6 +56,11 @@ class MessageService
         $message = new Message();
         $message->setContent(nl2br($reply->getContent()));
         $message->setThread($thread);
+
+        if ($this->security->getUser() === null) {
+            $message->setCreatedBy($thread->getParticipants()->first());
+        }
+
         $this->messageRepository->save($message);
         $this->readMarkerRepository->unread(MessageThread::class, $thread->getId());
 
