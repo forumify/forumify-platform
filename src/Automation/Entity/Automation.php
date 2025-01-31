@@ -9,6 +9,7 @@ use Forumify\Automation\Repository\AutomationRepository;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 
 #[ORM\Entity(repositoryClass: AutomationRepository::class)]
+#[ORM\Index(name: 'trigger_idx', fields: ['trigger'])]
 class Automation
 {
     use IdentifiableEntityTrait;

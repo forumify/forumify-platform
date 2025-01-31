@@ -26,6 +26,7 @@ class CreateCommentService
         $comment = new Comment();
         $comment->setContent($newComment->getContent());
         $comment->setTopic($topic);
+        $comment->setCreatedBy($newComment->getAuthor());
         $this->commentRepository->save($comment);
         $this->readMarkerRepository->unread(Topic::class, $topic->getId());
 

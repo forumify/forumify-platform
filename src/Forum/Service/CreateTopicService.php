@@ -29,6 +29,7 @@ class CreateTopicService
     {
         $topic = new Topic();
         $topic->setTitle($newTopic->getTitle());
+        $topic->setCreatedBy($newTopic->getAuthor());
         $topic->setForum($forum);
         if ($newTopic->getImage() !== null) {
             $image = $this->mediaService->saveToFilesystem($this->mediaStorage, $newTopic->getImage());
@@ -39,6 +40,7 @@ class CreateTopicService
 
         $newComment = new NewComment();
         $newComment->setContent($newTopic->getContent());
+        $newComment->setAuthor($newTopic->getAuthor());
         $comment = $this->commentService->createComment($topic, $newComment);
         $topic->setFirstComment($comment);
         $topic->setComments([$comment]);

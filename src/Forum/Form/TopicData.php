@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Form;
 
+use Forumify\Core\Entity\User;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,6 +20,8 @@ class TopicData
     private ?UploadedFile $image = null;
 
     private ?string $existingImage = null;
+
+    private ?User $author = null;
 
     public function getTitle(): string
     {
@@ -58,5 +61,15 @@ class TopicData
     public function setExistingImage(?string $existingImage): void
     {
         $this->existingImage = $existingImage;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(User $author): void
+    {
+        $this->author = $author;
     }
 }

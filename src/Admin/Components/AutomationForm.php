@@ -90,6 +90,7 @@ class AutomationForm extends AbstractController
         ksort($choices);
 
         $builder->add($component, ChoiceType::class, [
+            'autocomplete' => true,
             'placeholder' => "admin.automations.{$component}.placeholder",
             'required' => $required,
             'choices' => $choices,
