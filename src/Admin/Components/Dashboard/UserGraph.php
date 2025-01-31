@@ -7,12 +7,27 @@ namespace Forumify\Admin\Components\Dashboard;
 use Forumify\Core\Repository\UserRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('Forumify\\UserGraph', '@Forumify/admin/dashboard/graphs/registrations.html.twig')]
+#[AsTwigComponent('Forumify\\Admin\\UserGraph', '@Forumify/admin/dashboard/components/tile.html.twig')]
 class UserGraph extends TotalGraph
 {
     public function __construct(
         UserRepository $userRepository,
     ) {
         parent::__construct($userRepository);
+    }
+
+    public function getTitle(): string
+    {
+        return 'admin.dashboard.users';
+    }
+
+    public function getIcon(): string
+    {
+        return 'ph-users-three';
+    }
+
+    public function getGraphHeight(): int
+    {
+        return 200;
     }
 }

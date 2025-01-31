@@ -14,8 +14,24 @@
             <p class="text-light">{{ 'admin.dashboard.greeting'|trans({ user: app.user.displayName }) }}</p>
         </div>
     </div>
-    <div class="grid-2 gap-4">
-        {{ component('Forumify\\UserGraph') }}
-        {{ component('Forumify\\TopicGraph') }}
+    <div class="grid gap-6">
+        <div class="col-xs-12 col-md-6 col-lg-8">
+            {{ component('Forumify\\Admin\\UserGraph') }}
+        </div>
+        <div class="col-xs-12 col-md-6 col-lg-4">
+            {{ component('Forumify\\Admin\\NewUsers') }}
+        </div>
+        <div class="col-xs-12 col-md-6">
+            {{ component('Forumify\\Admin\\TopicGraph') }}
+        </div>
+        <div class="col-xs-12 col-md-6">
+            {{ component('Forumify\\Admin\\CommentGraph') }}
+        </div>
+        <div class="col-xs-12 col-md-6">
+            {{ component('Forumify\\Admin\\LatestTopics') }}
+        </div>
+        <div class="col-xs-12 col-md-6">
+            {{ component('Forumify\\Admin\\PopularTopics') }}
+        </div>
     </div>
 {% endblock %}

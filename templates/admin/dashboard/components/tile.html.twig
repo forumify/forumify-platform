@@ -2,11 +2,11 @@
     <div class="mb-4 flex justify-between w-100">
         <div class="flex flex-col">
             <p class="text-huge">{{ this.total }}</p>
-            <p class="text-bold mb-2">{{ title }}</p>
+            <p class="text-bold mb-2">{{ this.title|trans }}</p>
         </div>
         <div class="p-4 rounded">
-            <i class="ph {{ icon}} text-huge"></i>
+            <i class="ph {{ this.icon }} text-huge"></i>
         </div>
     </div>
-    {% include '@Forumify/components/graph.html.twig' %}
+    {% include '@Forumify/components/graph.html.twig' with { height: this.graphHeight } %}
 </div>

@@ -298,6 +298,28 @@ admin:
         mailer_from_help: 'Email address that the platform will use to send emails from.'
     dashboard:
         greeting: 'Welcome, {user}!'
+        users: 'Users'
+        topics: 'Topics'
+        new_users: >
+            {count, plural,
+                =0    {No New Users}
+                =1    {1 New User}
+                other {# New Users}
+            }
+        online_users: >
+            {count, plural,
+                =0    {No Online Users}
+                =1    {1 Online User}
+                other {# Online Users}
+            }
+        comments: 'Comments'
+        latest_topics: >
+            {count, plural,
+                =0    {No New Topics}
+                =1    {1 Latest Topic}
+                other {# Latest Topics}
+            }
+        popular_topics: 'Most Popular Topics'
     directory_empty: 'This directory is empty or you do not have permissions to see any items.'
     forum:
         acl: 'Permissions'

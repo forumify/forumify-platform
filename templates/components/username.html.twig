@@ -1,7 +1,7 @@
 {%- if user is not null -%}
     <a class="inline-flex items-center gap-1 {{ className|default('') }}" href="{{ path('forumify_forum_profile', { username: user.username }) }}">
         {{ user.displayName|default(user.username) }}
-        {% if user|online %}
+        {% if not hideOnline|default(false) and user|online %}
             <span class="dot" style="background-color: #57B357"></span>
         {% endif %}
     </a>

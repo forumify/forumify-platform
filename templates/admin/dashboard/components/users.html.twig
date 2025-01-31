@@ -1,0 +1,16 @@
+<div {{ attributes }}>
+    <div class="card">
+        <div class="card-title">
+            {{ this.title|trans({ count: this.result.count }) }}
+        </div>
+        <ul class="card-body">
+            {% for item in this.result.data %}
+                <li class="flex items-center gap-2">
+                    {% include '@Forumify/components/avatar.html.twig' with { user: item, className: 'avatar-xs' } only %}
+                    {% include '@Forumify/components/username.html.twig' with { user: item, hideOnline: true } only %}
+                </li>
+            {% endfor %}
+        </ul>
+        {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-footer' } %}
+    </div>
+</div>

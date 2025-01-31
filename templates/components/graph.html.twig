@@ -1,6 +1,6 @@
 <div
     class="w-100"
-    style="height: 120px"
+    style="height: {{ height|default(120) }}px"
     {{ stimulus_controller('forumify/forumify-platform/chart', {
         type: this.type,
         data: this.data

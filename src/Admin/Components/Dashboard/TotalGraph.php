@@ -53,4 +53,12 @@ abstract class TotalGraph extends AbstractGraph
     {
         return $this->repository->count([]);
     }
+
+    abstract public function getTitle(): string;
+    abstract public function getIcon(): string;
+
+    public function getGraphHeight(): int
+    {
+        return 120;
+    }
 }

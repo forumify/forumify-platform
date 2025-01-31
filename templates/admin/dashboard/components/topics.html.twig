@@ -1,0 +1,34 @@
+
+<div {{ attributes }}>
+    <div class="card">
+        <div class="card-title">
+            {{ this.title|trans({ count: this.result.count }) }}
+        </div>
+        <ul class="card-body">
+            {% for item in this.result.data %}
+                <li class="flex flex-col{% if not loop.last %} mb-3{% endif %}">
+                    <div class="flex justify-between">
+                        <a href="{{ path('forumify_forum_topic', { slug: item.slug }) }}" target="_blank">
+                            {{ item.title }}
+                        </a>
+                        <div class="inline-flex gap-2 hide-tablet">
+                            <span>{{ max(0, item.comments.count - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></span>
+                            <span>{{ item.views|short_number }} <i class="ph ph-eye"></i></span>
+                            {% if item.firstComment %}
+                                <span>{{ item.firstComment.reactions.count|short_number }} <i class="ph ph-sparkle"></i></span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 text-small">
+                        {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy, className: 'avatar-xs' } only %}
+                        <span class="flex items-baseline gap-2">
+                            {% include '@Forumify/components/username.html.twig' with { user: item.createdBy, className: 'topic-author' } only %}
+                            {{ item.createdAt|format_date }}
+                        </span>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-footer' } %}
+    </div>
+</div>
