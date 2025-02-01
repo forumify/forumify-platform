@@ -20,8 +20,6 @@ class UserExpressionResolver
      */
     public function resolve(string $expr, ?array $payload): array
     {
-        $payload ??= [];
-
         $expressionLanguage = new ExpressionLanguage();
         $evaluated = $expressionLanguage->evaluate($expr, $payload ?? []);
         $evaluated = is_array($evaluated) ? $evaluated : [$evaluated];

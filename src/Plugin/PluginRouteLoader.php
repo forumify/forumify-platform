@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Plugin;
 
 use Forumify\Core\Repository\PluginRepository;
-use Forumify\Plugin\Entity\Plugin;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -21,12 +20,12 @@ class PluginRouteLoader extends Loader
         parent::__construct();
     }
 
-    public function supports(mixed $resource, string $type = null): bool
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         return $type === 'forumify_plugin';
     }
 
-    public function load(mixed $resource, string $type = null): RouteCollection
+    public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         $routeCollection = new RouteCollection();
 

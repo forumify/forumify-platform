@@ -50,47 +50,33 @@ class PageType extends AbstractType
         switch ($page->getType()) {
             case 'twig':
                 $builder
-                ->add('twig', CodeEditorType::class, [
-                    'label' => false,
-                    'language' => CodeEditorLanguage::Twig->value,
-                    'required' => false,
-                    'data' => $page === null
-                        ? $this->defaultTwigTemplate()
-                        : $page->getTwig(),
-                    'empty_data' => '',
-                    'density' => 'fullscreen',
-                ])
-                ->add('css', CodeEditorType::class, [
-                    'label' => false,
-                    'language' => CodeEditorLanguage::Css->value,
-                    'required' => false,
-                    'empty_data' => '',
-                    'density' => 'fullscreen',
-                ])
-                ->add('javascript', CodeEditorType::class, [
-                    'label' => false,
-                    'language' => CodeEditorLanguage::JavaScript->value,
-                    'required' => false,
-                    'empty_data' => '',
-                    'density' => 'fullscreen',
-                ]);
+                    ->add('twig', CodeEditorType::class, [
+                        'label' => false,
+                        'language' => CodeEditorLanguage::Twig->value,
+                        'required' => false,
+                        'empty_data' => '',
+                        'density' => 'fullscreen',
+                    ])
+                    ->add('css', CodeEditorType::class, [
+                        'label' => false,
+                        'language' => CodeEditorLanguage::Css->value,
+                        'required' => false,
+                        'empty_data' => '',
+                        'density' => 'fullscreen',
+                    ])
+                    ->add('javascript', CodeEditorType::class, [
+                        'label' => false,
+                        'language' => CodeEditorLanguage::JavaScript->value,
+                        'required' => false,
+                        'empty_data' => '',
+                        'density' => 'fullscreen',
+                    ])
+                ;
                 break;
             case 'builder':
                 break;
             default:
                 break;
         }
-    }
-
-    private function defaultTwigTemplate(): string
-    {
-        return <<<DOC
-{% extends '@Forumify/frontend/page.html.twig' %}
-{% block body %}
-<p>
-    Learn more about customizing pages in the <a href="https://docs.forumify.net/user-manual/cms" target="_blank">CMS documentation.</a>
-</p>
-{% endblock %}
-DOC;
     }
 }

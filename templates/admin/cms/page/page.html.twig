@@ -1,9 +1,11 @@
 {% extends '@Forumify/admin/crud/form.html.twig' %}
 {% block body_wrapper %}
     {% if data is null %}
-        {% include '@Forumify/admin/components/simple_form.html.twig' with {
-            cancelPath: path(route ~ '_list')
-        } %}
+        <div class="responsive mt-4">
+            {% include '@Forumify/admin/components/simple_form.html.twig' with {
+                cancelPath: path(route ~ '_list')
+            } %}
+        </div>
     {% else %}
         {{ form_start(form) }}
             <div class="grid-4" style="height: 100vh; margin-bottom: calc(-1 * var(--spacing-6));">

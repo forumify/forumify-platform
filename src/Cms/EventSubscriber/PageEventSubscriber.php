@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Cms\EventSubscriber;
 
 use Forumify\Admin\Crud\Event\PostSaveCrudEvent;
+use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
 use Forumify\Cms\Entity\Page;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -20,8 +21,21 @@ class PageEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            PreSaveCrudEvent::getName(Page::class) => 'preSavePage',
             PostSaveCrudEvent::getName(Page::class) => 'postSavePage',
         ];
+    }
+
+    /**
+     * @param PreSaveCrudEvent<Page> $event
+     */
+    public function preSavePage(PreSaveCrudEvent $event): void
+    {
+        $page = $event->getEntity();
+
+        if ($event->isNew() && empty($page->getTwig())) {
+            $page->setTwig($this->defaultTwigTemplate());
+        }
     }
 
     /**
@@ -39,5 +53,15 @@ class PageEventSubscriber implements EventSubscriberInterface
         if ($fs->exists($key)) {
             $fs->remove($key);
         }
+    }
+
+    private function defaultTwigTemplate(): string
+    {
+        return <<<DOC
+{% extends '@Forumify/frontend/page.html.twig' %}
+{% block body %}
+    <p>Learn more about customizing pages in the <a href="https://docs.forumify.net/user-manual/cms" target="_blank">CMS documentation.</a></p>
+{% endblock %}
+DOC;
     }
 }
