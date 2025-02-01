@@ -16,7 +16,7 @@ class ExpressionLangConditionType extends AbstractType
             ->add('expression', CodeEditorType::class, [
                 'help_html' => true,
                 'help' => 'admin.automations.condition.expression_lang.expression_help',
-                'compact' => true,
+                'density' => 'compact',
             ])
         ;
     }

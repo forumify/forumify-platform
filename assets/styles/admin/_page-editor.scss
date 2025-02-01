@@ -1,0 +1,16 @@
+.page-editor {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .form-row {
+        margin-bottom: 0;
+    }
+
+    .tablist {
+        gap: 0;
+        button {
+            border-radius: 0;
+        }
+    }
+}

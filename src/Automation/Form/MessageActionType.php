@@ -17,13 +17,13 @@ class MessageActionType extends AbstractType
             ->add('recipients', CodeEditorType::class, [
                 'help' => 'admin.automations.action.message.recipients_help',
                 'help_html' => true,
-                'compact' => true,
+                'density' => 'compact',
             ])
             ->add('title', CodeEditorType::class, [
                 'language' => CodeEditorLanguage::Twig->value,
                 'help' => 'admin.automations.action.message.title_help',
                 'help_html' => true,
-                'compact' => true,
+                'density' => 'compact',
             ])
             ->add('message', CodeEditorType::class, [
                 'language' => CodeEditorLanguage::Twig->value,

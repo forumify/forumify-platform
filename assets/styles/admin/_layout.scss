@@ -1,7 +1,6 @@
 $navigationWidth: 250px;
 
 .navigation {
-    @include box-shadow;
     height: 100vh;
     width: $navigationWidth;
     background-color: var(--c-elevation-1);

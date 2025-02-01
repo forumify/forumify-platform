@@ -37,13 +37,13 @@ class TopicActionType extends AbstractType
             ->add('author', CodeEditorType::class, [
                 'help' => 'admin.automations.action.topic.author_help',
                 'help_html' => true,
-                'compact' => true,
+                'density' => 'compact',
             ])
             ->add('title', CodeEditorType::class, [
                 'language' => CodeEditorLanguage::Twig->value,
                 'help' => 'admin.automations.action.topic.title_help',
                 'help_html' => true,
-                'compact' => true,
+                'density' => 'compact',
             ])
             ->add('content', CodeEditorType::class, [
                 'language' => CodeEditorLanguage::Twig->value,

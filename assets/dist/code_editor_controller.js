@@ -28,8 +28,9 @@ export default class extends Controller {
     const editor = ace.edit(this.editorIdValue, {
       theme: this.themeValue || defaultTheme,
       value: this.valueValue || '',
-      autoScrollEditorIntoView: true,
-      maxLines: 40,
+      wrap: true,
+      scrollPastEnd: 1,
+      printMargin: false,
     });
 
     if (this.languageValue) {

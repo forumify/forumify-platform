@@ -21,16 +21,16 @@ class CodeEditorType extends AbstractType
 
         $resolver->setDefaults([
             'language' => null,
-            'compact' => false,
+            'density' => null,
         ]);
         $resolver->setAllowedValues('language', [null, ...$supportedLanguages]);
-        $resolver->setAllowedValues('compact', [null, true, false]);
+        $resolver->setAllowedValues('density', [null, 'default', 'compact', 'fullscreen']);
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['language'] = $options['language'] ?? null;
-        $view->vars['compact'] = $options['compact'] ?? false;
+        $view->vars['density'] = $options['density'] ?? null;
     }
 
     public function getParent(): string

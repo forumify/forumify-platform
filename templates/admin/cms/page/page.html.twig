@@ -1,37 +1,49 @@
 {% extends '@Forumify/admin/crud/form.html.twig' %}
-{% block body %}
-    <h1 class="mb-4">
-        {% if data is null %}
-            {{ 'admin.cms.pages.create'|trans }}
-        {% else %}
-            {{ 'admin.cms.pages.edit'|trans({ name: data.title }) }}
-        {% endif %}
-    </h1>
-    <div class="box">
+{% block body_wrapper %}
+    {% if data is null %}
+        {% include '@Forumify/admin/components/simple_form.html.twig' with {
+            cancelPath: path(route ~ '_list')
+        } %}
+    {% else %}
         {{ form_start(form) }}
-
-        {{ form_row(form.title) }}
-        {{ form_row(form.urlKey) }}
-        {{ form_row(form.seoDescription) }}
-        {{ form_row(form.seoKeywords, { attr: { rows: 10 } }) }}
-
-        {% embed '@Forumify/components/tabs.html.twig' %}
-            {% block tabs %}
-                <button type="button" class="btn-link" data-tab-id="twig">Twig</button>
-                <button type="button" class="btn-link" data-tab-id="css">CSS</button>
-                <button type="button" class="btn-link" data-tab-id="javascript">JavaScript</button>
-            {% endblock %}
-            {% block tabpanels %}
-                <div id="twig">{{ form_row(form.twig) }}</div>
-                <div id="css">{{ form_row(form.css) }}</div>
-                <div id="javascript">{{ form_row(form.javascript) }}</div>
-            {% endblock %}
-        {% endembed %}
-
-        <div class="flex justify-center items-center gap-2">
-            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
-            <a href="{{ path('forumify_admin_cms_page_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
-        </div>
+            <div class="grid-4" style="height: 100vh; margin-bottom: calc(-1 * var(--spacing-6));">
+                <div class="col-3 h-100">
+                    <div class="page-editor" {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
+                        <div
+                            class="tablist mb-0 border-b"
+                            style="background-color: var(--c-elevation-1);"
+                            role="tablist"
+                            {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}
+                        >
+                            <button type="button" class="btn-link" data-tab-id="twig">Twig</button>
+                            <button type="button" class="btn-link" data-tab-id="css">CSS</button>
+                            <button type="button" class="btn-link" data-tab-id="javascript">JavaScript</button>
+                        </div>
+                        <div class="d-none flex-grow" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
+                            <div id="twig" class="h-100">{{ form_row(form.twig) }}</div>
+                            <div id="css" class="h-100">{{ form_row(form.css) }}</div>
+                            <div id="javascript" class="h-100">{{ form_row(form.javascript) }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-2 border-l" style="background-color: var(--c-elevation-1);">
+                    <div class="flex flex-col justify-between h-100">
+                        <div>
+                            <h1 class="mb-4">
+                                {{ data.title }}
+                            </h1>
+                            {{ form_row(form.title) }}
+                            {{ form_row(form.urlKey) }}
+                            {{ form_row(form.seoDescription) }}
+                            {{ form_row(form.seoKeywords, { attr: { rows: 10 } }) }}
+                        </div>
+                        <div class="flex justify-center items-center gap-2 pb-2">
+                            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+                            <a href="{{ path('forumify_admin_cms_page_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         {{ form_end(form) }}
-    </div>
+    {% endif %}
 {% endblock %}

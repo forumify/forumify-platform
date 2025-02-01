@@ -33,6 +33,9 @@ class Page implements AccessControlledEntityInterface
     #[ORM\Column]
     private string $seoKeywords = '';
 
+    #[ORM\Column(options: ['default' => 'twig'])]
+    private string $type = 'twig';
+
     #[ORM\Column(type: 'text')]
     private string $twig = '';
 
@@ -80,6 +83,16 @@ class Page implements AccessControlledEntityInterface
     public function setSeoKeywords(string $seoKeywords): void
     {
         $this->seoKeywords = $seoKeywords;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): void
+    {
+        $this->type = $type;
     }
 
     public function getTwig(): string

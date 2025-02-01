@@ -1,6 +1,6 @@
 {% set editorId = 'code-editor-' ~ form.vars.id %}
 <div
-    class="form-row code-editor{% if form.vars.compact %} code-editor-compact{% endif %}"
+    class="form-row code-editor code-editor-{{ form.vars.density|default('default') }}"
     {{ stimulus_controller('forumify/forumify-platform/code_editor', {
         editorId: editorId,
         inputId: form.vars.id,

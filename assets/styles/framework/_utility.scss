@@ -66,9 +66,13 @@
     flex-wrap: wrap;
 }
 
-@for $i from 0 to 26 {
+@for $i from 0 to 21 {
     .w-#{$i * 5} {
         width: #{$i * 5%};
+    }
+
+    .h-#{$i * 5} {
+        height: #{$i * 5%};
     }
 }
 

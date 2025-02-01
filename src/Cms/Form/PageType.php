@@ -41,27 +41,45 @@ class PageType extends AbstractType
                 'required' => false,
                 'empty_data' => '',
             ])
-            ->add('twig', CodeEditorType::class, [
-                'label' => false,
-                'language' => CodeEditorLanguage::Twig->value,
-                'required' => false,
-                'data' => $page === null
-                    ? $this->defaultTwigTemplate()
-                    : $page->getTwig(),
-                'empty_data' => '',
-            ])
-            ->add('css', CodeEditorType::class, [
-                'label' => false,
-                'language' => CodeEditorLanguage::Css->value,
-                'required' => false,
-                'empty_data' => '',
-            ])
-            ->add('javascript', CodeEditorType::class, [
-                'label' => false,
-                'language' => CodeEditorLanguage::JavaScript->value,
-                'required' => false,
-                'empty_data' => '',
-            ]);
+        ;
+
+        if ($page === null) {
+            return;
+        }
+
+        switch ($page->getType()) {
+            case 'twig':
+                $builder
+                ->add('twig', CodeEditorType::class, [
+                    'label' => false,
+                    'language' => CodeEditorLanguage::Twig->value,
+                    'required' => false,
+                    'data' => $page === null
+                        ? $this->defaultTwigTemplate()
+                        : $page->getTwig(),
+                    'empty_data' => '',
+                    'density' => 'fullscreen',
+                ])
+                ->add('css', CodeEditorType::class, [
+                    'label' => false,
+                    'language' => CodeEditorLanguage::Css->value,
+                    'required' => false,
+                    'empty_data' => '',
+                    'density' => 'fullscreen',
+                ])
+                ->add('javascript', CodeEditorType::class, [
+                    'label' => false,
+                    'language' => CodeEditorLanguage::JavaScript->value,
+                    'required' => false,
+                    'empty_data' => '',
+                    'density' => 'fullscreen',
+                ]);
+                break;
+            case 'builder':
+                break;
+            default:
+                break;
+        }
     }
 
     private function defaultTwigTemplate(): string
