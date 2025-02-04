@@ -37,8 +37,8 @@ class PopularTopics extends AbstractDoctrineList
         $qb = $this->topicRepository
             ->getVisibleTopicsQuery()
             ->leftJoin('t.comments', 'c')
-            ->leftJoin('c.reactions', 'r')
-            ->addSelect('(t.views + COUNT(r) * 5 + COUNT(c) * 25) AS HIDDEN points')
+            ->leftJoin('c.reactions', 're')
+            ->addSelect('(t.views + COUNT(re) * 5 + COUNT(c) * 25) AS HIDDEN points')
             ->having('points > 10')
             ->addGroupBy('t')
             ->addOrderBy('points', 'DESC')
