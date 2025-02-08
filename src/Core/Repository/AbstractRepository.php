@@ -63,7 +63,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
         );
 
         if ($flush) {
-            $em->flush();
+            $this->flush();
         }
     }
 
@@ -94,7 +94,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
         );
 
         if ($flush) {
-            $em->flush();
+            $this->flush();
         }
     }
 

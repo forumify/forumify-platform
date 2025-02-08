@@ -31,6 +31,12 @@ class SettingRepository extends AbstractRepository
         return Setting::class;
     }
 
+    public function flush(): void
+    {
+        parent::flush();
+        $this->invalidateSettingsCache();
+    }
+
     public function get(string $key): mixed
     {
         $settings = $this->getSettingsFromCache();
@@ -49,7 +55,6 @@ class SettingRepository extends AbstractRepository
         string $key,
         mixed $value,
         bool $flush = true,
-        bool $refreshCache = true
     ): void {
         $setting = $this->find($key);
         if ($setting === null) {
@@ -57,32 +62,44 @@ class SettingRepository extends AbstractRepository
         }
 
         $setting->setValue($value);
-
         $this->save($setting, $flush);
-
-        if ($refreshCache) {
-            $this->invalidateSettingsCache();
-        }
     }
 
     /**
      * @param array<string, mixed> $settings
      */
-    public function setBulk(array $settings): void
+    public function setBulk(array $settings, bool $flush = true): void
     {
         foreach ($settings as $key => $value) {
-            $this->set($key, $value, false, false);
+            $this->set($key, $value, false);
         }
-        $this->_em->flush();
-        $this->invalidateSettingsCache();
+
+        if ($flush) {
+            $this->flush();
+        }
     }
 
-    public function unset(string $key): void
+    public function unset(string $key, bool $flush = true): void
     {
         $setting = $this->find($key);
-        if ($setting !== null) {
-            $this->remove($setting);
-            $this->invalidateSettingsCache();
+        if ($setting === null) {
+            return;
+        }
+
+        $this->remove($setting, $flush);
+    }
+
+    /**
+     * @param array<string> $settingKeys
+     */
+    public function unsetBulk(array $settingKeys, bool $flush = true): void
+    {
+        foreach ($settingKeys as $key) {
+            $this->unset($key, false);
+        }
+
+        if ($flush) {
+            $this->flush();
         }
     }
 
@@ -106,15 +123,22 @@ class SettingRepository extends AbstractRepository
      */
     public function handleFormData(array $formData): void
     {
-        $settings = [];
+        $toSet = [];
+        $toUnset = [];
         foreach ($formData as $key => $value) {
-            if ($value === null) {
-                continue;
-            }
+            $settingKey = str_replace('__', '.', $key);
+            $oldValue = $this->get($settingKey);
 
-            $settings[str_replace('__', '.', $key)] = $value;
+            if ($value === null && $oldValue !== null) {
+                $toUnset[] = $settingKey;
+            } elseif ($value !== $oldValue) {
+                $toSet[$settingKey] = $value;
+            }
         }
-        $this->setBulk($settings);
+
+        $this->setBulk($toSet, false);
+        $this->unsetBulk($toUnset, false);
+        $this->flush();
     }
 
     private function invalidateSettingsCache(): void
