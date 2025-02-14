@@ -33,7 +33,7 @@ class AdminMenuBuilder implements AdminMenuBuilderInterface
             ]))
             ->addItem(new MenuItem('Forums', $url('forumify_admin_forum'), [
                 'icon' => 'ph ph-chats',
-                'permission' => 'forumify.admin.forums.view',
+                'permission' => 'forumify.admin.forums.manage',
             ]))
             ->addItem(new MenuItem('CMS', $url('forumify_admin_cms_menu'), [
                 'icon' => 'ph ph-files',
