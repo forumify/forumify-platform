@@ -31,6 +31,7 @@ class ForumGroup implements AccessControlledEntityInterface, SortableEntityInter
     private Collection $forums;
 
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'groups')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Forum $parentForum = null;
 
     public function __construct()
