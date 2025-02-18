@@ -39,7 +39,9 @@ class AutomationController extends AbstractController
         Request $request,
     ): Response {
         if (!$request->get('confirmed')) {
-            return $this->render('a');
+            return $this->render('@Forumify/admin/automation/delete.html.twig', [
+                'automation' => $automation,
+            ]);
         }
 
         $automationRepository->remove($automation);

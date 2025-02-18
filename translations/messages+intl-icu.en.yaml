@@ -436,6 +436,7 @@ admin:
         title: 'Automations'
         new: 'New Automation'
         saved: 'Automation saved.'
+        delete_warning: 'You are about to delete "{automation}".'
         deleted: 'Automation deleted.'
         trigger:
             placeholder: 'Select a trigger'

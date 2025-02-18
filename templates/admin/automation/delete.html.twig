@@ -1,0 +1,8 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/confirm.html.twig' with {
+        warningText: 'admin.automations.delete_warning'|trans({ automation: automation.name }),
+        confirmPath: path('forumify_admin_automation_delete', { id: automation.id, confirmed: 1 }),
+        cancelPath: path('forumify_admin_automation_list')
+    } only %}
+{% endblock %}
