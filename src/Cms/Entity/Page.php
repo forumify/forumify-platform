@@ -16,6 +16,9 @@ use Forumify\Cms\Repository\PageRepository;
 #[ORM\Entity(repositoryClass: PageRepository::class)]
 class Page implements AccessControlledEntityInterface
 {
+    public const TYPE_TWIG = 'twig';
+    public const TYPE_BUILDER = 'builder';
+
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
@@ -33,7 +36,7 @@ class Page implements AccessControlledEntityInterface
     #[ORM\Column]
     private string $seoKeywords = '';
 
-    #[ORM\Column(options: ['default' => 'twig'])]
+    #[ORM\Column(options: ['default' => self::TYPE_TWIG])]
     private string $type = 'twig';
 
     #[ORM\Column(type: 'text')]

@@ -8,44 +8,7 @@
         </div>
     {% else %}
         {{ form_start(form) }}
-            <div class="grid-4" style="height: 100vh; margin-bottom: calc(-1 * var(--spacing-6));">
-                <div class="col-3 h-100">
-                    <div class="page-editor" {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
-                        <div
-                            class="tablist mb-0 border-b"
-                            style="background-color: var(--c-elevation-1);"
-                            role="tablist"
-                            {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}
-                        >
-                            <button type="button" class="btn-link" data-tab-id="twig">Twig</button>
-                            <button type="button" class="btn-link" data-tab-id="css">CSS</button>
-                            <button type="button" class="btn-link" data-tab-id="javascript">JavaScript</button>
-                        </div>
-                        <div class="d-none flex-grow" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
-                            <div id="twig" class="h-100">{{ form_row(form.twig) }}</div>
-                            <div id="css" class="h-100">{{ form_row(form.css) }}</div>
-                            <div id="javascript" class="h-100">{{ form_row(form.javascript) }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-2 border-l" style="background-color: var(--c-elevation-1);">
-                    <div class="flex flex-col justify-between h-100">
-                        <div>
-                            <h1 class="mb-4">
-                                {{ data.title }}
-                            </h1>
-                            {{ form_row(form.title) }}
-                            {{ form_row(form.urlKey) }}
-                            {{ form_row(form.seoDescription) }}
-                            {{ form_row(form.seoKeywords, { attr: { rows: 10 } }) }}
-                        </div>
-                        <div class="flex justify-center items-center gap-2 pb-2">
-                            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
-                            <a href="{{ path('forumify_admin_cms_page_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% include '@Forumify/admin/cms/page/page_builder.html.twig' %}
         {{ form_end(form) }}
     {% endif %}
 {% endblock %}

@@ -1,0 +1,93 @@
+<div
+    class="grid-4"
+    style="height: 100vh;
+    margin-bottom: calc(-1 * var(--spacing-6));"
+    {{ stimulus_controller('forumify/forumify-platform/page_builder', { pageId: data.id }) }}
+>
+    <div class="col-3 h-100">
+        <div class="page-editor" {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
+            <div
+                class="tablist page-editor-tablist"
+                style="background-color: var(--c-elevation-1);"
+                role="tablist"
+                {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}
+            >
+                <button type="button" class="btn-link" data-tab-id="twig">
+                    {{ 'admin.cms.pages.tabs.twig'|trans }}
+                </button>
+                <button type="button" class="btn-link" data-tab-id="css">
+                    {{ 'admin.cms.pages.tabs.css'|trans }}
+                </button>
+                <button type="button" class="btn-link" data-tab-id="javascript">
+                    {{ 'admin.cms.pages.tabs.js'|trans }}
+                </button>
+            </div>
+            <div class="d-none flex-grow" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
+                <div id="twig" class="{% if data.type == 'twig' %}h-100{% endif %}">
+                    {{ form_row(form.twig) }}
+                    {% if data.type == 'builder' %}
+                        <div {{ stimulus_target('forumify/forumify-platform/page_builder', 'builderRoot') }}>
+                            <div class="widget-slot m-8"></div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div id="css" class="h-100">{{ form_row(form.css) }}</div>
+                <div id="javascript" class="h-100">{{ form_row(form.javascript) }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="border-l" style="background-color: var(--c-elevation-1);">
+        <div class="flex flex-col justify-between h-100">
+            <div {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
+                <div
+                    class="tablist page-editor-tablist"
+                    role="tablist"
+                    {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}
+                >
+                    <button type="button" class="btn-link" data-tab-id="general">
+                        {{ 'admin.cms.pages.tabs.general'|trans }}
+                    </button>
+                    {% if data.type == 'builder' %}
+                        <button type="button" class="btn-link" data-tab-id="widgets">
+                            {{ 'admin.cms.pages.tabs.widgets'|trans }}
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="d-none flex-grow p-2" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
+                    <div id="general">
+                        <h1 class="mb-4">
+                            {{ data.title }}
+                        </h1>
+                        {{ form_row(form.title) }}
+                        {{ form_row(form.urlKey) }}
+                        {{ form_row(form.seoDescription) }}
+                        {{ form_row(form.seoKeywords, { attr: { rows: 10 } }) }}
+                    </div>
+                    {% if data.type == 'builder' %}
+                        <div id="widgets">
+                            <select {{ stimulus_target('forumify/forumify-platform/page_builder', 'widgetCategorySelect') }}>
+                                {% for category in widgets|keys %}
+                                    <option value="{{ category }}">{{ category|title }}</option>
+                                {% endfor %}
+                            </select>
+                            <hr class="mt-2 mb-2">
+                            {% for category, cWidgets in widgets %}
+                                <div id="widgets-{{ category }}" class="widget-category flex flex-col gap-2 d-none">
+                                    {% for widget in cWidgets %}
+                                        <div>
+                                            {% include '@Forumify/admin/cms/page/widget.html.twig' %}
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex justify-center items-center gap-2 pb-2">
+                <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+                <a href="{{ path('forumify_admin_cms_page_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+            </div>
+        </div>
+    </div>
+</div>

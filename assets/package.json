@@ -46,6 +46,12 @@
                 "enabled": true,
                 "autoimport": {}
             },
+            "page_builder": {
+                "main": "dist/page_builder_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
+            },
             "plugin_manager": {
                 "main": "dist/plugin_manager_controller.js",
                 "fetch": "lazy",

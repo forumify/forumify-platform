@@ -262,6 +262,14 @@ admin:
             create: 'Create Page'
             edit: 'Editing Page "{name}"'
             delete_warning: 'You are about to delete the page "{title}". If it is still being linked anywhere, it will no longer be found. If the page is referenced in your menu, the menu entry will be deleted.'
+            type_select: 'Select a type'
+            type_help: 'You can not change this option later!'
+            tabs:
+                twig: 'Twig'
+                css: 'CSS'
+                js: 'JavaScript'
+                general: 'General'
+                widgets: 'Widgets'
         resources:
             title: 'Resources'
             create: 'Create CMS Resource'
@@ -272,6 +280,12 @@ admin:
             create: 'Create CMS Snippet'
             edit: 'Editing Snippet "{name}"'
             delete_warning: 'You are about to delete the snippet "{name}". If it is still being used anywhere, it will no longer be found.'
+        widget:
+            layout:
+                one_column: '1 Column'
+                two_column: '2 Column'
+            content:
+                rich_text: 'Rich Text'
     configuration:
         title: 'Configuration'
         general: 'General'
