@@ -13,6 +13,10 @@
     }
 
     .widget-slot {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-2);
+
         &>*:not(.dropzone) {
             border: var(--border);
             transition: 100ms ease-in-out;
@@ -35,23 +39,8 @@
         }
     }
 
-    .widget-options {
-        background-color: var(--c-elevation-1);
-        border-right: var(--border);
-        border-bottom: var(--border);
-        border-bottom-left-radius: var(--border-radius);
-        position: absolute;
-        top: 0;
-        right: 0;
-        display: none;
-
-        .btn-link {
-            border-radius: 0;
-        }
-    }
-
-    .widget:hover > .widget-options {
-        display: block;
+    .settings-form {
+        cursor: default;
     }
 }
 
@@ -70,6 +59,7 @@
     border: var(--border);
     border-width: 2px;
     transition: 100ms ease-in-out;
+    cursor: grab;
 
     &:hover {
         @include box-shadow;
@@ -80,9 +70,7 @@
 
 #widgets {
     .widget {
-        cursor: pointer;
-
-        & > * {
+        & > .card-body {
             height: 100px;
             overflow-y: hidden;
         }

@@ -6,19 +6,31 @@ namespace Forumify\Cms\Twig\Extension;
 
 use Forumify\Cms\Repository\ResourceRepository;
 use Forumify\Cms\Repository\SnippetRepository;
+use Forumify\Cms\Widget\WidgetInterface;
 use Forumify\Core\Service\HTMLSanitizer;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
 
 class CMSExtensionRuntime implements RuntimeExtensionInterface
 {
+    /**
+     * @var array<string, WidgetInterface>|null
+     */
+    private ?array $widgetMemo = null;
+
+    /**
+     * @param iterable<WidgetInterface> $widgets
+     */
     public function __construct(
         private readonly ResourceRepository $resourceRepository,
         private readonly SnippetRepository $snippetRepository,
         private readonly Environment $twig,
         private readonly Packages $packages,
         private readonly HTMLSanitizer $sanitizer,
+        #[AutowireIterator('forumify.cms.widget')]
+        private readonly iterable $widgets,
     ) {
     }
 
@@ -47,5 +59,24 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
 
         $sanitized = $this->sanitizer->sanitize($snippet->getContent());
         return "<div class='rich-text'>$sanitized</div>";
+    }
+
+    public function widgetTemplate(array $widget): string
+    {
+        $widget = $this->findWidget($widget['widget']);
+        return $widget->getTemplate();
+    }
+
+    private function findWidget(string $name): ?WidgetInterface
+    {
+        if ($this->widgetMemo !== null) {
+            return $this->widgetMemo[$name];
+        }
+
+        $this->widgetMemo = [];
+        foreach ($this->widgets as $widget) {
+            $this->widgetMemo[$widget->getName()] = $widget;
+        }
+        return $this->findWidget($name);
     }
 }

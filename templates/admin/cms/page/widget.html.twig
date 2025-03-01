@@ -1,21 +1,25 @@
-<h4 class="mb-0">{{ ('admin.cms.widget.' ~ widget.name)|trans }}</h4>
+{% set title = ('admin.cms.widget.' ~ widget.name)|trans %}
 <div
-    class="widget"
+    class="widget card"
     draggable="true"
     data-widget="{{ widget.name }}"
     {{ stimulus_target('forumify/forumify-platform/page_builder', 'widget') }}
 >
-    {{ widget.preview|raw }}
-    <div class="widget-options">
-        {% set btnClass = 'btn-link btn-icon btn-small' %}
-        <button type="button" class="move {{ btnClass }}">
-            <i class="ph ph-arrows-out-cardinal"></i>
-        </button>
-        <button type="button" class="settings {{ btnClass }}">
-            <i class="ph ph-wrench"></i>
-        </button>
-        <button type="button" class="remove {{ btnClass }}">
-            <i class="ph ph-trash"></i>
-        </button>
+    <div class="card-title flex justify-between items-center">
+        <span>{{ title }}</span>
+        <div class="widget-options">
+            {% set btnClass = 'btn-link btn-icon btn-small' %}
+            {% if widget.settingsForm %}
+                <button type="button" class="settings {{ btnClass }}">
+                    <i class="ph ph-wrench"></i>
+                </button>
+            {% endif %}
+            <button type="button" class="remove {{ btnClass }}">
+                <i class="ph ph-trash"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body p-2">
+        {{ widget.preview|raw }}
     </div>
 </div>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Cms\Widget;
 
-class TwoColumnLayout implements WidgetInterface
+class TwoColumnLayout extends AbstractWidget
 {
     public function getName(): string
     {
@@ -18,14 +18,14 @@ class TwoColumnLayout implements WidgetInterface
 
     public function getPreview(): string
     {
-        return '<div class="grid-2">
-            <div class="col-1 widget-slot border-r"></div>
-            <div class="col-1 widget-slot"></div>
+        return '<div class="grid-2 h-100">
+            <div class="col-1 pr-2 widget-slot border-r"></div>
+            <div class="col-1 pl-2 widget-slot"></div>
         </div>';
     }
 
     public function getTemplate(): string
     {
-        return '';
+        return '@Forumify/frontend/cms/widgets/two_column.html.twig';
     }
 }

@@ -1,5 +1,19 @@
 import { Controller } from '@hotwired/stimulus';
 
+const mutatePath = (o, pth, value) => {
+  const [x, ...xs] = pth;
+  if (xs.length === 0) {
+    o[x] = value;
+    return;
+  }
+
+  if (o[x] === undefined) {
+    o[x] = {};
+  }
+
+  return mutatePath(o[x], xs, value);
+};
+
 export default class extends Controller {
   static targets = ['widgetCategorySelect', 'builderRoot', 'widget'];
   static values = {
@@ -7,6 +21,7 @@ export default class extends Controller {
   }
 
   initialize() {
+    this.settingsFormIncrement = 0;
     this.twigInput = document.getElementById('page_twig');
   }
 
@@ -30,7 +45,7 @@ export default class extends Controller {
 
   _persistWidgets() {
     const traverseWidget = (element) => {
-      const widget = element.getAttribute('data-widget');
+      const widget = element.dataset.widget;
       if (!widget) {
         return null;
       }
@@ -39,8 +54,23 @@ export default class extends Controller {
         .filter((slot) => slot.closest('[data-widget]') === element)
         .map(traverse);
 
+      const settings = {};
+      if (element.dataset.settingsForm) {
+        const form = document.getElementById(element.dataset.settingsForm);
+        [...(new FormData(form)).entries()].forEach(([key, value]) => {
+          const path = key
+            .replace(/^form/, '')
+            .replace(/\[|\]/g, '.')
+            .split('.')
+            .filter(Boolean);
+
+          mutatePath(settings, path, value);
+        });
+      }
+
       return {
         widget,
+        settings,
         ...(slots.length && { slots }),
       };
     };
@@ -63,13 +93,13 @@ export default class extends Controller {
       tree = [];
     }
 
-    const build = (slot) => (widget) => {
+    const build = (slot) => async (widget) => {
       const prototype = document.querySelector(`#widgets [data-widget="${widget.widget}"]`);
       if (!prototype) {
         return;
       }
 
-      const widgetElement = this._createWidget(slot, prototype.outerHTML);
+      const widgetElement = await this._createWidget(slot, prototype.outerHTML, widget.settings || {});
       widgetElement.querySelectorAll('.widget-slot').forEach((slot, i) => {
         const builder = build(slot);
         (widget.slots[i] || []).forEach((slotWidget) => {
@@ -130,18 +160,19 @@ export default class extends Controller {
     }
   }
 
-  _createWidget(slot, widgetHtml) {
-    const prototype = this._createElementFromHtml(widgetHtml);
-    const widget = prototype.firstElementChild;
-    widget.classList.add('widget');
-    widget.dataset.widget = prototype.dataset.widget;
-
-    const options = prototype.querySelector('.widget-options');
-    widget.append(options);
-
-    options.querySelector('.remove').addEventListener('click', () => {
+  async _createWidget(slot, widgetHtml, settings = {}) {
+    const widget = this._createElementFromHtml(widgetHtml);
+    widget.querySelector('.remove')?.addEventListener('click', () => {
       this._remove(widget);
     });
+
+    const settingsBtn = widget.querySelector('.settings');
+    const hasForm = !!widget.querySelector('form');
+    if (settingsBtn && !hasForm) {
+      const widgetName = widget.dataset.widget;
+      const formId = await this._createSettingsForm(widgetName, settings, settingsBtn);
+      widget.dataset.settingsForm = formId;
+    }
 
     this._registerSlots(widget);
 
@@ -159,5 +190,34 @@ export default class extends Controller {
 
   _remove(widget) {
     widget.parentElement.removeChild(widget);
+  }
+
+  async _createSettingsForm(widgetName, settings, settingsBtn) {
+    const settingsFormHtml = await fetch(`/admin/cms/pagebuilder/settings?widget=${widgetName}`, {
+      method: 'post',
+      body: JSON.stringify(settings),
+    }).then((res) => res.text());
+    const settingsModal = this._createElementFromHtml(settingsFormHtml);
+
+    const settingsForm = settingsModal.querySelector('form');
+    const formId = 'settings-form-' + this._getNextSettingFormId();
+    settingsForm.id = formId;
+    settingsForm.submit = () => {};
+
+    const submit = settingsModal.querySelector('.close-settings');
+    submit.addEventListener('click', async () => {
+      settingsForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      settingsModal.classList.remove('open');
+    });
+
+    document.body.append(settingsModal);
+
+    settingsBtn.addEventListener('click', () => settingsModal.classList.add('open'));
+    return formId;
+  }
+
+  _getNextSettingFormId() {
+    this.settingsFormIncrement++;
+    return this.settingsFormIncrement;
   }
 }

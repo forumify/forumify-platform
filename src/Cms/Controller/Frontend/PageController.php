@@ -17,17 +17,16 @@ use Twig\Environment;
 
 class PageController extends AbstractController
 {
-    public function __construct(private readonly Environment $twig)
-    {
+    public function __construct(
+        private readonly Environment $twig,
+        private readonly PageRepository $pageRepository,
+    ) {
     }
 
     #[Route('/{urlKey?}', 'page', requirements: ['urlKey' => '.*'], priority: -250)]
-    public function __invoke(
-        ?string $urlKey,
-        Request $request,
-        PageRepository $pageRepository,
-    ): Response {
-        $page = $pageRepository->findOneByUrlKey($urlKey);
+    public function __invoke(?string $urlKey): Response
+    {
+        $page = $this->pageRepository->findOneByUrlKey($urlKey);
         if ($page === null) {
             if (empty($urlKey)) {
                 return $this->forward(IndexController::class);
@@ -40,8 +39,15 @@ class PageController extends AbstractController
             'permission' => 'view',
         ]);
 
-        return $this->render($page->getUrlKey(), [
+        if ($page->getType() === Page::TYPE_TWIG) {
+            return $this->render($page->getUrlKey(), [
+                'page' => $page,
+            ]);
+        }
+
+        return $this->render('@Forumify/frontend/cms/page.html.twig', [
             'page' => $page,
+            'tree' => json_decode($page->getTwig(), true, 512, JSON_THROW_ON_ERROR),
         ]);
     }
 
@@ -49,7 +55,7 @@ class PageController extends AbstractController
     public function css(Page $page, Request $request): Response
     {
         $lastModified = $page->getUpdatedAt() ?? $page->getCreatedAt();
-        return $this->ifModifiedSince($request, $lastModified, $page->getCss(), [
+        return $this->ifModifiedSince($request, $lastModified, $page->getCss(...), [
             'Content-Type' => 'text/css',
         ]);
     }
@@ -58,12 +64,12 @@ class PageController extends AbstractController
     public function javascript(Page $page, Request $request): Response
     {
         $lastModified = $page->getUpdatedAt() ?? $page->getCreatedAt();
-        return $this->ifModifiedSince($request, $lastModified, $page->getJavascript(), [
+        return $this->ifModifiedSince($request, $lastModified, $page->getJavascript(...), [
             'Content-Type' => 'text/javascript',
         ]);
     }
 
-    private function ifModifiedSince(Request $request, DateTime $lastModified, ?string $content, array $headers = []): Response
+    private function ifModifiedSince(Request $request, DateTime $lastModified, callable $getContent, array $headers = []): Response
     {
         $response = new Response();
         $response->setLastModified($lastModified);
@@ -72,6 +78,7 @@ class PageController extends AbstractController
             return $response;
         }
 
+        $content = $getContent();
         if (!empty($content)) {
             $content = $this->twig->createTemplate($content)->render();
         }

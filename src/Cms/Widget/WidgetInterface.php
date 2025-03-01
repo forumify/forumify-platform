@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Cms\Widget;
 
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use Symfony\Component\Form\FormInterface;
 
 #[AutoconfigureTag('forumify.cms.widget')]
 interface WidgetInterface
@@ -13,4 +14,5 @@ interface WidgetInterface
     public function getCategory(): string;
     public function getPreview(): string;
     public function getTemplate(): string;
+    public function getSettingsForm(): ?FormInterface;
 }

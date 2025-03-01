@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Cms\Widget;
 
-class OneColumnLayout implements WidgetInterface
+class OneColumnLayout extends AbstractWidget
 {
     public function getName(): string
     {
@@ -25,6 +25,6 @@ class OneColumnLayout implements WidgetInterface
 
     public function getTemplate(): string
     {
-        return '';
+        return '@Forumify/frontend/cms/widgets/one_column.html.twig';
     }
 }
