@@ -71,7 +71,7 @@
 #widgets {
     .widget {
         & > .card-body {
-            height: 100px;
+            min-height: 100px;
             overflow-y: hidden;
         }
     }

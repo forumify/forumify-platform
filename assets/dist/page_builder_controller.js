@@ -14,6 +14,20 @@ const mutatePath = (o, pth, value) => {
   return mutatePath(o[x], xs, value);
 };
 
+const formToData = (form) => {
+  const data = {};
+  [...(new FormData(form)).entries()].forEach(([key, value]) => {
+    const path = key
+      .replace(/^form/, '')
+      .replace(/\[|\]/g, '.')
+      .split('.')
+      .filter(Boolean);
+
+    mutatePath(data, path, value);
+  });
+  return data;
+}
+
 export default class extends Controller {
   static targets = ['widgetCategorySelect', 'builderRoot', 'widget'];
   static values = {
@@ -54,18 +68,10 @@ export default class extends Controller {
         .filter((slot) => slot.closest('[data-widget]') === element)
         .map(traverse);
 
-      const settings = {};
+      let settings = {};
       if (element.dataset.settingsForm) {
         const form = document.getElementById(element.dataset.settingsForm);
-        [...(new FormData(form)).entries()].forEach(([key, value]) => {
-          const path = key
-            .replace(/^form/, '')
-            .replace(/\[|\]/g, '.')
-            .split('.')
-            .filter(Boolean);
-
-          mutatePath(settings, path, value);
-        });
+        settings = formToData(form);
       }
 
       return {
@@ -162,6 +168,7 @@ export default class extends Controller {
 
   async _createWidget(slot, widgetHtml, settings = {}) {
     const widget = this._createElementFromHtml(widgetHtml);
+    widget.addEventListener('dragstart', this._dragStart.bind(this));
     widget.querySelector('.remove')?.addEventListener('click', () => {
       this._remove(widget);
     });
@@ -169,8 +176,7 @@ export default class extends Controller {
     const settingsBtn = widget.querySelector('.settings');
     const hasForm = !!widget.querySelector('form');
     if (settingsBtn && !hasForm) {
-      const widgetName = widget.dataset.widget;
-      const formId = await this._createSettingsForm(widgetName, settings, settingsBtn);
+      const formId = await this._createSettingsForm(widget, settings, settingsBtn);
       widget.dataset.settingsForm = formId;
     }
 
@@ -192,25 +198,33 @@ export default class extends Controller {
     widget.parentElement.removeChild(widget);
   }
 
-  async _createSettingsForm(widgetName, settings, settingsBtn) {
+  async _createSettingsForm(widget, settings, settingsBtn) {
+    const widgetName = widget.dataset.widget;
     const settingsFormHtml = await fetch(`/admin/cms/pagebuilder/settings?widget=${widgetName}`, {
       method: 'post',
       body: JSON.stringify(settings),
     }).then((res) => res.text());
     const settingsModal = this._createElementFromHtml(settingsFormHtml);
+    document.body.append(settingsModal);
 
     const settingsForm = settingsModal.querySelector('form');
     const formId = 'settings-form-' + this._getNextSettingFormId();
     settingsForm.id = formId;
-    settingsForm.submit = () => {};
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+    });
+    settingsForm.submit = () => {
+      const settings = formToData(settingsForm);
+      this._hydrateWidget(widget, settings);
+
+      settingsModal.classList.remove('open');
+    };
+    settingsForm.submit();
 
     const submit = settingsModal.querySelector('.close-settings');
-    submit.addEventListener('click', async () => {
+    submit.addEventListener('click', () => {
       settingsForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-      settingsModal.classList.remove('open');
     });
-
-    document.body.append(settingsModal);
 
     settingsBtn.addEventListener('click', () => settingsModal.classList.add('open'));
     return formId;
@@ -219,5 +233,21 @@ export default class extends Controller {
   _getNextSettingFormId() {
     this.settingsFormIncrement++;
     return this.settingsFormIncrement;
+  }
+
+  _hydrateWidget(widget, settings) {
+    Object.entries(settings).forEach(([setting, value]) => {
+      if (!value) {
+        return;
+      }
+
+      const settingDataAttr = `data-setting-${setting}`;
+      [...widget.querySelectorAll(`[${settingDataAttr}]`)]
+        .filter((e) => e.closest('[data-widget]') === widget)
+        .forEach((e) => {
+          const attr = e.getAttribute(settingDataAttr);
+          e[attr] = value;
+        });
+    });
   }
 }

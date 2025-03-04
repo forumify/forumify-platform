@@ -21,8 +21,8 @@ class RichTextWidget extends AbstractWidget
 
     public function getPreview(): string
     {
-        return '<article class="text-small p-2">
-            Rich Text
+        return '<article class="text-small p-2 rich-text" data-setting-content="innerHTML">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et quod fugit non ut, modi hic vero blanditiis commodi dignissimos ad suscipit aperiam enim dolorem ratione recusandae incidunt eos laboriosam minima.
         </article>';
     }
 
