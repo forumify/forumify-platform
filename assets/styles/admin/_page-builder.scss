@@ -8,30 +8,27 @@
         margin-bottom: 0;
     }
 
-    .widget {
-        position: relative;
-    }
-
     .widget-slot {
         display: flex;
         flex-direction: column;
         gap: var(--spacing-2);
 
         &>*:not(.dropzone) {
-            border: var(--border);
             transition: 100ms ease-in-out;
+            border: 1px solid rgba(0, 0, 0, 0);
 
             &:hover {
+                @include box-shadow;
                 border-color: var(--c-primary-accent);
             }
         }
 
         .dropzone {
-            border: dashed 6px var(--border-color);
-            border-radius: 16px;
-            height: 80px;
+            border: 3px dashed var(--border-color);
+            border-radius: 8px;
+            height: 40px;
             transition: 100ms ease-in-out;
-            margin: var(--spacing-2);
+            margin-top: var(--spacing-2);
 
             &.dragover {
                 border-color: var(--c-primary-accent);
@@ -41,6 +38,48 @@
 
     .settings-form {
         cursor: default;
+    }
+
+    .header {
+        display: none;
+        border-radius: 0;
+        margin-bottom: var(--spacing-6);
+        padding: var(--spacing-3) var(--spacing-8);
+    }
+
+    .preview {
+        .card {
+            cursor: default;
+            background-color: rgba(0, 0, 0, 0);
+            box-shadow: none;
+            border: none;
+
+            &:hover {
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+        .card-body {
+            padding: 0;
+            min-height: 0;
+        }
+
+        .card-title {
+            display: none;
+        }
+
+        .dropzone {
+            display: none;
+        }
+
+        .widget-slot {
+            gap: 0;
+        }
+
+        .header {
+            display: flex;
+        }
     }
 }
 
@@ -55,7 +94,6 @@
 }
 
 .widget {
-    min-height: 100px;
     border: var(--border);
     border-width: 2px;
     transition: 100ms ease-in-out;
@@ -70,9 +108,14 @@
 
 #widgets {
     .widget {
+        min-height: 100px;
         & > .card-body {
-            min-height: 100px;
+            height: 100px;
             overflow-y: hidden;
+        }
+
+        .card-body {
+            padding: var(--spacing-2);
         }
     }
 

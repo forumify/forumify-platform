@@ -28,8 +28,9 @@ const formToData = (form) => {
   return data;
 }
 
+// TODO: this is actually just vile...
 export default class extends Controller {
-  static targets = ['widgetCategorySelect', 'builderRoot', 'widget'];
+  static targets = ['widgetCategorySelect', 'previewToggle', 'builderRoot', 'widget'];
   static values = {
     pageId: Number,
   }
@@ -37,6 +38,7 @@ export default class extends Controller {
   initialize() {
     this.settingsFormIncrement = 0;
     this.twigInput = document.getElementById('page_twig');
+    this.lastDragElement = null;
   }
 
   connect() {
@@ -49,6 +51,9 @@ export default class extends Controller {
 
     this.widgetCategorySelectTarget.addEventListener('change', this._selectCategory.bind(this));
     this._selectCategory();
+
+    this.previewToggleTarget.addEventListener('change', this._togglePreview.bind(this));
+    this._togglePreview();
 
     this.widgetTargets.forEach((widget) => {
       widget.addEventListener('dragstart', this._dragStart.bind(this));
@@ -105,7 +110,10 @@ export default class extends Controller {
         return;
       }
 
-      const widgetElement = await this._createWidget(slot, prototype.outerHTML, widget.settings || {});
+      const widgetElement = await this._createWidget(prototype.outerHTML, widget.settings || {});
+      const dropzone = slot.querySelector(':scope > .dropzone');
+      dropzone.before(widgetElement);
+
       widgetElement.querySelectorAll('.widget-slot').forEach((slot, i) => {
         const builder = build(slot);
         (widget.slots[i] || []).forEach((slotWidget) => {
@@ -122,6 +130,15 @@ export default class extends Controller {
     const select = this.widgetCategorySelectTarget;
     this.element.querySelectorAll('.widget-category').forEach((el) => el.classList.add('d-none'));
     document.getElementById(`widgets-${select.value}`).classList.remove('d-none');
+  }
+
+  _togglePreview() {
+    const checked = this.previewToggleTarget.checked;
+    if (checked) {
+      this.builderRootTarget.classList.add('preview');
+    } else {
+      this.builderRootTarget.classList.remove('preview');
+    }
   }
 
   _registerSlots(element) {
@@ -141,7 +158,7 @@ export default class extends Controller {
   }
 
   _dragStart(e) {
-    e.dataTransfer.setData('text/html', e.target.outerHTML);
+    this.lastDragElement = e.target;
     e.dataTransfer.effectAllowed = 'copy';
   }
 
@@ -157,18 +174,30 @@ export default class extends Controller {
   }
 
   _drop (slot) {
-    return (e) => {
+    return async (e) => {
+      const isRelocate = !!e.dataTransfer?.getData('application/x-relocate');
       this._dragEnd(e);
       e.stopPropagation(e);
 
-      const widgetHtml = e.dataTransfer.getData('text/html');
-      this._createWidget(slot, widgetHtml);
+      if (!this.lastDragElement) {
+        return;
+      }
+
+      const widget = isRelocate
+        ? this.lastDragElement
+        : await this._createWidget(this.lastDragElement.outerHTML);
+
+      const dropzone = slot.querySelector(':scope > .dropzone');
+      dropzone.before(widget);
     }
   }
 
-  async _createWidget(slot, widgetHtml, settings = {}) {
+  async _createWidget(widgetHtml, settings = {}) {
     const widget = this._createElementFromHtml(widgetHtml);
-    widget.addEventListener('dragstart', this._dragStart.bind(this));
+    widget.addEventListener('dragstart', (e) => {
+      this._dragStart(e);
+      e.dataTransfer.setData('application/x-relocate', 'true');
+    });
     widget.querySelector('.remove')?.addEventListener('click', () => {
       this._remove(widget);
     });
@@ -181,10 +210,6 @@ export default class extends Controller {
     }
 
     this._registerSlots(widget);
-
-    const dropzone = slot.querySelector(':scope > .dropzone');
-    dropzone.before(widget);
-
     return widget;
   }
 

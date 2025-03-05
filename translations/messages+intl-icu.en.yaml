@@ -264,6 +264,7 @@ admin:
             delete_warning: 'You are about to delete the page "{title}". If it is still being linked anywhere, it will no longer be found. If the page is referenced in your menu, the menu entry will be deleted.'
             type_select: 'Select a type'
             type_help: 'You can not change this option later!'
+            preview: 'Enable Preview'
             tabs:
                 twig: 'Twig'
                 css: 'CSS'

@@ -26,7 +26,24 @@
                 <div id="twig" class="{% if data.type == 'twig' %}h-100{% endif %}">
                     {{ form_row(form.twig) }}
                     {% if data.type == 'builder' %}
+                        <div class="flex justify-center m-4">
+                            <div class="box" style="width: auto">
+                                <input id="toggle-preview" type="checkbox" {{ stimulus_target('forumify/forumify-platform/page_builder', 'previewToggle') }} />
+                                <label for="toggle-preview">{{ 'admin.cms.pages.preview'|trans }}</label>
+                            </div>
+                        </div>
                         <div {{ stimulus_target('forumify/forumify-platform/page_builder', 'builderRoot') }}>
+                            <div class="box header justify-start items-center">
+                                {% set logo %}
+                                    {%- if setting('forumify.logo') -%}
+                                        {{ asset(setting('forumify.logo'), 'forumify.asset') }}
+                                    {%- else -%}
+                                        {{ asset('bundles/forumify/images/forumify.svg') }}
+                                    {% endif %}
+                                {% endset %}
+                                <img src="{{ logo }}" width="32px" height="32px" alt="logo">
+                                <span class="ml-2">{{ setting('forumify.title') }}</span>
+                            </div>
                             <div class="widget-slot m-8"></div>
                         </div>
                     {% endif %}
