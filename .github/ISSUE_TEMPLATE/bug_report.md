@@ -2,7 +2,7 @@
 name: Bug report
 about: Report an issue or bug you ran into while using forumify.
 title: ''
-labels: bug
+type: bug
 assignees: ''
 
 ---
