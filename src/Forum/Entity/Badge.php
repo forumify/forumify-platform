@@ -38,6 +38,9 @@ class Badge implements SortableEntityInterface
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'badges', fetch: 'EXTRA_LAZY')]
     private Collection $users;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $showOnForum = false;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -87,5 +90,15 @@ class Badge implements SortableEntityInterface
     public function setUsers(Collection $users): void
     {
         $this->users = $users;
+    }
+
+    public function isShowOnForum(): bool
+    {
+        return $this->showOnForum;
+    }
+
+    public function setShowOnForum(bool $showOnForum): void
+    {
+        $this->showOnForum = $showOnForum;
     }
 }

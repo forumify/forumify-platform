@@ -7,6 +7,7 @@ namespace Forumify\Admin\Form;
 use Forumify\Forum\Entity\Badge;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -53,6 +54,10 @@ class BadgeType extends AbstractType
                         maxSize: '10M',
                     ),
                 ],
-            ]);
+            ])
+            ->add('showOnForum', CheckboxType::class, [
+                'required' => false,
+            ])
+        ;
     }
 }
