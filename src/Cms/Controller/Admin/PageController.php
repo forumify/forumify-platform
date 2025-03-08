@@ -7,6 +7,8 @@ namespace Forumify\Cms\Controller\Admin;
 use Forumify\Admin\Crud\AbstractCrudController;
 use Forumify\Cms\Entity\Page;
 use Forumify\Cms\Form\PageType;
+use Forumify\Cms\Widget\WidgetInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -23,6 +25,15 @@ class PageController extends AbstractCrudController
     protected ?string $permissionCreate = 'forumify.admin.cms.pages.manage';
     protected ?string $permissionEdit = 'forumify.admin.cms.pages.manage';
     protected ?string $permissionDelete = 'forumify.admin.cms.pages.manage';
+
+    /**
+     * @param iterable<WidgetInterface> $widgets
+     */
+    public function __construct(
+        #[AutowireIterator('forumify.cms.widget')]
+        private readonly iterable $widgets,
+    ) {
+    }
 
     protected function getTranslationPrefix(): string
     {
@@ -47,5 +58,27 @@ class PageController extends AbstractCrudController
     protected function redirectAfterSave(mixed $entity): Response
     {
         return $this->redirectToRoute('forumify_admin_cms_page_edit', ['identifier' => $entity->getId()]);
+    }
+
+    protected function templateParams(array $params = []): array
+    {
+        $params = parent::templateParams($params);
+
+        $page = $params['data'] ?? null;
+        if ($page instanceof Page && $page->getType() === Page::TYPE_BUILDER) {
+            $params['widgets'] = $this->getWidgets();
+        }
+
+        return $params;
+    }
+
+    private function getWidgets(): array
+    {
+        $widgets = [];
+        foreach ($this->widgets as $widget) {
+            $widgets[$widget->getCategory()][] = $widget;
+        }
+
+        return $widgets;
     }
 }

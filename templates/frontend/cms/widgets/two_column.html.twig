@@ -1,0 +1,9 @@
+{% import '@Forumify/frontend/cms/macros.html.twig' as cms %}
+<div class="grid-2">
+    <div class="col-1">
+        {{ cms.slot(widget.slots[0]) }}
+    </div>
+    <div class="col-1">
+        {{ cms.slot(widget.slots[1]) }}
+    </div>
+</div>

@@ -1,0 +1,8 @@
+{% macro slot(widgets) %}
+    {% for widget in widgets %}
+        {% set template = widget|widget_template %}
+        {% if template is not null %}
+            {% include widget|widget_template with { widget: widget } %}
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

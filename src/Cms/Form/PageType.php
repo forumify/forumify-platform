@@ -8,6 +8,8 @@ use Forumify\Cms\Entity\Page;
 use Forumify\Core\Form\CodeEditorLanguage;
 use Forumify\Core\Form\CodeEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -33,6 +35,21 @@ class PageType extends AbstractType
                 'required' => false,
                 'empty_data' => '',
             ])
+        ;
+
+        if ($page === null) {
+            $builder->add('type', ChoiceType::class, [
+                'help' => 'admin.cms.pages.type_help',
+                'placeholder' => 'admin.cms.pages.type_select',
+                'choices' => [
+                    'Twig' => Page::TYPE_TWIG,
+                    'Page Builder' => Page::TYPE_BUILDER,
+                ]
+            ]);
+            return;
+        }
+
+        $builder
             ->add('seoDescription', TextareaType::class, [
                 'required' => false,
                 'empty_data' => '',
@@ -41,39 +58,34 @@ class PageType extends AbstractType
                 'required' => false,
                 'empty_data' => '',
             ])
+            ->add('javascript', CodeEditorType::class, [
+                'label' => false,
+                'language' => CodeEditorLanguage::JavaScript->value,
+                'required' => false,
+                'empty_data' => '',
+                'density' => 'fullscreen',
+            ])
+            ->add('css', CodeEditorType::class, [
+                'label' => false,
+                'language' => CodeEditorLanguage::Css->value,
+                'required' => false,
+                'empty_data' => '',
+                'density' => 'fullscreen',
+            ])
         ;
 
-        if ($page === null) {
-            return;
-        }
-
         switch ($page->getType()) {
-            case 'twig':
-                $builder
-                    ->add('twig', CodeEditorType::class, [
-                        'label' => false,
-                        'language' => CodeEditorLanguage::Twig->value,
-                        'required' => false,
-                        'empty_data' => '',
-                        'density' => 'fullscreen',
-                    ])
-                    ->add('css', CodeEditorType::class, [
-                        'label' => false,
-                        'language' => CodeEditorLanguage::Css->value,
-                        'required' => false,
-                        'empty_data' => '',
-                        'density' => 'fullscreen',
-                    ])
-                    ->add('javascript', CodeEditorType::class, [
-                        'label' => false,
-                        'language' => CodeEditorLanguage::JavaScript->value,
-                        'required' => false,
-                        'empty_data' => '',
-                        'density' => 'fullscreen',
-                    ])
-                ;
+            case Page::TYPE_TWIG:
+                $builder->add('twig', CodeEditorType::class, [
+                    'label' => false,
+                    'language' => CodeEditorLanguage::Twig->value,
+                    'required' => false,
+                    'empty_data' => '',
+                    'density' => 'fullscreen',
+                ]);
                 break;
-            case 'builder':
+            case Page::TYPE_BUILDER:
+                $builder->add('twig', HiddenType::class);
                 break;
             default:
                 break;

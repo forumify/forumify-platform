@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Cms\Twig\Extension;
 
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class CMSExtension extends AbstractExtension
@@ -14,6 +15,13 @@ class CMSExtension extends AbstractExtension
         return [
             new TwigFunction('resource', [CMSExtensionRuntime::class, 'resource']),
             new TwigFunction('snippet', [CMSExtensionRuntime::class, 'snippet'], ['is_safe' => ['html']]),
+        ];
+    }
+
+    public function getFilters(): array
+    {
+        return [
+            new TwigFilter('widget_template', [CMSExtensionRuntime::class, 'widgetTemplate']),
         ];
     }
 }

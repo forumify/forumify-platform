@@ -13,6 +13,7 @@ export default class extends Controller {
     placement: String,
     hideAdornment: Boolean,
   };
+
   static targets = ['openButton', 'menu'];
 
   initialize() {

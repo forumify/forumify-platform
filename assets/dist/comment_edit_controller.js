@@ -5,7 +5,7 @@ export default class extends Controller {
   static targets = ['editButton', 'editorContainer'];
   static values = {
     updateUrl: String,
-  }
+  };
 
   initialize() {
     this.isEditing = false;
@@ -45,7 +45,7 @@ export default class extends Controller {
   }
 
   async save() {
-    const res = await fetch(this.updateUrlValue, { method: 'POST', body: this.editor.root.innerHTML })
+    const res = await fetch(this.updateUrlValue, { method: 'POST', body: this.editor.root.innerHTML });
     const newContent = await res.text();
 
     const richText = this.element.querySelector('.rich-text');

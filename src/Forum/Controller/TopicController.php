@@ -39,13 +39,25 @@ class TopicController extends AbstractController
     #[Route('/{slug}', name: '')]
     public function __invoke(Topic $topic, Request $request): Response
     {
+
         if ($topic->isHidden()) {
             $this->denyAccessUnlessGranted(VoterAttribute::Moderator->value);
         }
+
+        $forum = $topic->getForum();
         $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
             'permission' => 'view',
-            'entity' => $topic->getForum(),
+            'entity' => $forum,
         ]);
+
+        /** @var User|null $user */
+        $user = $this->getUser();
+        if ($forum->getDisplaySettings()->isOnlyShowOwnTopics() && $topic->getCreatedBy()?->getId() !== $user?->getId()) {
+            $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
+                'permission' => 'show_all_topics',
+                'entity' => $forum,
+            ]);
+        }
 
         $commentForm = null;
         if ($this->canComment($topic)) {
@@ -60,8 +72,6 @@ class TopicController extends AbstractController
             }
         }
 
-        /** @var User|null $user */
-        $user = $this->getUser();
         if ($user !== null) {
             $this->readMarkerRepository->read($user, Topic::class, $topic->getId());
         }

@@ -9,6 +9,8 @@ use Forumify\Cms\Entity\Page;
 
 class PageRepository extends AbstractRepository
 {
+    private array $pageMemo = [];
+
     public static function getEntityClass(): string
     {
         return Page::class;
@@ -16,7 +18,11 @@ class PageRepository extends AbstractRepository
 
     public function findOneByUrlKey(string $urlKey): ?Page
     {
-        return $this->findOneBy(['urlKey' => $urlKey]);
+        if (isset($this->pageMemo[$urlKey])) {
+            return $this->pageMemo[$urlKey];
+        }
+        $this->pageMemo[$urlKey] = $this->findOneBy(['urlKey' => $urlKey]);
+        return $this->pageMemo[$urlKey];
     }
 
     public function findOneBySlug(string $slug): ?Page

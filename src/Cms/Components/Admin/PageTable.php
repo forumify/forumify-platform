@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Cms\Components\Admin;
 
 use Forumify\Cms\Entity\Page;
-use Forumify\Cms\Repository\PageRepository;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Component\Table\AbstractTable;
 use Symfony\Bundle\SecurityBundle\Security;

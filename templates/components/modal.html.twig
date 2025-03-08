@@ -6,7 +6,7 @@
             {% block modalBody %}
                 <div class="modal-body" {{ stimulus_target('forumify/forumify-platform/modal', 'modalBody') }}>
                     {% block modalCloseButton %}
-                        <button class="btn-link btn-small btn-icon" {{ stimulus_action('forumify/forumify-platform/modal', 'close') }}>
+                        <button type="button" class="btn-link btn-small btn-icon" {{ stimulus_action('forumify/forumify-platform/modal', 'close') }}>
                             <i class="ph ph-x"></i>
                         </button>
                     {% endblock %}

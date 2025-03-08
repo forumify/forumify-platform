@@ -1,0 +1,12 @@
+<div class="settings-form modal">
+    <div class="box w-90" style="max-width: 900px">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="flex justify-center">
+            <button type="button" class="btn-primary close-settings">
+                {{ 'save'|trans }}
+            </button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>

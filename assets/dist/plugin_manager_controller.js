@@ -1,13 +1,13 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-  static values = { token: String }
+  static values = { token: String };
   static targets = [
     'log',
     'pluginList',
     'progress',
     'installMethod',
-    'manualInstall'
+    'manualInstall',
   ];
 
   commandNames = {
@@ -19,8 +19,9 @@ export default class extends Controller {
     clearFrameworkCache: 'Clearing framework cache',
     migrations: 'Running database migrations',
     npmUpdate: 'Updating frontend dependencies',
-    npmBuild: 'Building frontend assets'
+    npmBuild: 'Building frontend assets',
   };
+
   inProgress = false;
   progress = 0;
   maxProgress = 0;
@@ -85,7 +86,7 @@ export default class extends Controller {
       ['clearFrameworkCache'],
       ['composerPostInstall'],
       ['migrations'],
-    ])
+    ]);
   }
 
   deactivate({ params }) {

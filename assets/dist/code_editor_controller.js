@@ -1,3 +1,4 @@
+/* global theme:readonly */
 import { Controller } from '@hotwired/stimulus';
 import * as ace from 'ace-builds';
 import 'ace-builds/src-noconflict/mode-css';
@@ -14,7 +15,7 @@ export default class extends Controller {
     inputId: String,
     language: String,
     value: String,
-  }
+  };
 
   connect() {
     const preferredTheme = theme === 'system'
