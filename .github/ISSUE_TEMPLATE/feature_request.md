@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea or new feature for forumify
 title: ''
-labels: enhancement
+type: feature
 assignees: ''
 
 ---
