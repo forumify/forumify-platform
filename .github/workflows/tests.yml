@@ -3,7 +3,7 @@ on: [ push, pull_request ]
 
 jobs:
   tests:
-    name: Symfony (PHP ${{ matrix.php-versions }})
+    name: Run Tests (PHP ${{ matrix.php-versions }})
     runs-on: ubuntu-latest
     services:
       mysql:

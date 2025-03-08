@@ -92,6 +92,7 @@ abstract class AbstractTable
     {
         foreach (array_keys($this->sort) as $existingSort) {
             if ($existingSort !== $column) {
+                /** @phpstan-ignore unset.possiblyHookedProperty */
                 unset($this->sort[$existingSort]);
             }
         }

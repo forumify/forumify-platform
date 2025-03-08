@@ -5,7 +5,7 @@ export default class extends Controller {
   static values = {
     type: String,
     data: Array,
-  }
+  };
 
   connect() {
     const style = getComputedStyle(document.body);
@@ -35,7 +35,7 @@ export default class extends Controller {
       },
     });
 
-    window.addEventListener('resize', (e) => {
+    window.addEventListener('resize', () => {
       chart.resize();
     });
   }

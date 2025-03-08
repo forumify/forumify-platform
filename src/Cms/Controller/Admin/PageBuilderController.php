@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Twig\Environment;
 
 #[Route('pagebuilder', 'page_builder_')]
 #[IsGranted('forumify.admin.cms.pages.manage')]
@@ -21,7 +20,6 @@ class PageBuilderController extends AbstractController
      * @param iterable<WidgetInterface> $widgets
      */
     public function __construct(
-        private readonly Environment $twig,
         #[AutowireIterator('forumify.cms.widget')]
         private readonly iterable $widgets,
     ) {

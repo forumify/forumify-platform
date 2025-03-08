@@ -13,7 +13,7 @@ export default class extends Controller {
     this.element.removeEventListener('autocomplete:pre-connect', this._autodetectTimezone);
   }
 
-  _autodetectTimezone(event) {
+  _autodetectTimezone() {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const option = this.element.querySelector(`[value="${timezone}"]`);
     if (option === null) {

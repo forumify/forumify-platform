@@ -13,7 +13,7 @@ abstract class AbstractWidget implements WidgetInterface
 {
     private FormFactoryInterface $formFactory;
 
-    public function getSettingsForm(): ?FormInterface
+    public function getSettingsForm(array $data = []): ?FormInterface
     {
         return null;
     }

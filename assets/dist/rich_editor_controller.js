@@ -54,10 +54,10 @@ export default class extends Controller {
 
     this.preSubmitTransformValue(value)
       .then((transformedValue) => {
-        this.input.value = transformedValue
+        this.input.value = transformedValue;
       })
       .finally(() => {
-        e.target.submit()
+        e.target.submit();
       });
   }
 

@@ -1,54 +1,26 @@
 import { Controller } from '@hotwired/stimulus';
+import {
+  formToData,
+  widgetHtmlToObject,
+  hydrateWidget,
+  createAutoIncrement,
+  createElementFromHtml,
+} from './src/page_builder';
 
-const mutatePath = (o, pth, value) => {
-  const [x, ...xs] = pth;
-  if (xs.length === 0) {
-    o[x] = value;
-    return;
-  }
-
-  if (o[x] === undefined) {
-    o[x] = {};
-  }
-
-  return mutatePath(o[x], xs, value);
-};
-
-const formToData = (form) => {
-  const data = {};
-  [...(new FormData(form)).entries()].forEach(([key, value]) => {
-    const path = key
-      .replace(/^form/, '')
-      .replace(/\[|\]/g, '.')
-      .split('.')
-      .filter(Boolean);
-
-    mutatePath(data, path, value);
-  });
-  return data;
-}
-
-// TODO: this is actually just vile...
 export default class extends Controller {
   static targets = ['widgetCategorySelect', 'previewToggle', 'builderRoot', 'widget'];
   static values = {
-    pageId: Number,
-  }
+    settingsEndpoint: String,
+  };
 
   initialize() {
-    this.settingsFormIncrement = 0;
+    this.settingsFormIncrement = createAutoIncrement();
     this.twigInput = document.getElementById('page_twig');
+    this.pageForm = document.querySelector('form[name="page"]');
     this.lastDragElement = null;
   }
 
   connect() {
-    const form = document.querySelector('form[name="page"]');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this._persistWidgets();
-      form.submit();
-    });
-
     this.widgetCategorySelectTarget.addEventListener('change', this._selectCategory.bind(this));
     this._selectCategory();
 
@@ -59,50 +31,23 @@ export default class extends Controller {
       widget.addEventListener('dragstart', this._dragStart.bind(this));
     });
 
+    this.pageForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this._persistWidgets();
+      e.target.submit();
+    });
+
     this._buildWidgets();
   }
 
   _persistWidgets() {
-    const traverseWidget = (element) => {
-      const widget = element.dataset.widget;
-      if (!widget) {
-        return null;
-      }
-
-      const slots = [...element.querySelectorAll('.widget-slot')]
-        .filter((slot) => slot.closest('[data-widget]') === element)
-        .map(traverse);
-
-      let settings = {};
-      if (element.dataset.settingsForm) {
-        const form = document.getElementById(element.dataset.settingsForm);
-        settings = formToData(form);
-      }
-
-      return {
-        widget,
-        settings,
-        ...(slots.length && { slots }),
-      };
-    };
-
-    const traverse = (el) => [...el.children]
-      .map(traverseWidget)
-      .filter((el) => el !== null);
-
-    const rootSlot = this.builderRootTarget.querySelector('.widget-slot');
-    const tree = traverse(rootSlot);
+    const tree = widgetHtmlToObject(this.builderRootTarget);
     this.twigInput.value = JSON.stringify(tree);
   }
 
   _buildWidgets() {
     this._registerSlots(this.builderRootTarget);
-    let tree;
-    try {
-      tree = JSON.parse(this.twigInput.value);
-    } catch (e) {
-      tree = [];
-    }
+    const tree = JSON.parse(this.twigInput.value);
 
     const build = (slot) => async (widget) => {
       const prototype = document.querySelector(`#widgets [data-widget="${widget.widget}"]`);
@@ -120,7 +65,7 @@ export default class extends Controller {
           builder(slotWidget);
         });
       });
-    }
+    };
 
     const rootSlot = this.builderRootTarget.querySelector('.widget-slot');
     tree.forEach(build(rootSlot));
@@ -154,7 +99,7 @@ export default class extends Controller {
     dropzone.addEventListener('dragleave', this._dragEnd.bind(this));
     dropzone.addEventListener('drop', this._drop(slot).bind(this));
 
-    slot.append(dropzone)
+    slot.append(dropzone);
   }
 
   _dragStart(e) {
@@ -173,7 +118,7 @@ export default class extends Controller {
     e.target.classList.remove('dragover');
   }
 
-  _drop (slot) {
+  _drop(slot) {
     return async (e) => {
       const isRelocate = !!e.dataTransfer?.getData('application/x-relocate');
       this._dragEnd(e);
@@ -189,58 +134,55 @@ export default class extends Controller {
 
       const dropzone = slot.querySelector(':scope > .dropzone');
       dropzone.before(widget);
-    }
+    };
   }
 
   async _createWidget(widgetHtml, settings = {}) {
-    const widget = this._createElementFromHtml(widgetHtml);
+    const widget = createElementFromHtml(widgetHtml);
     widget.addEventListener('dragstart', (e) => {
       this._dragStart(e);
       e.dataTransfer.setData('application/x-relocate', 'true');
     });
     widget.querySelector('.remove')?.addEventListener('click', () => {
-      this._remove(widget);
+      widget.remove();
     });
 
     const settingsBtn = widget.querySelector('.settings');
     const hasForm = !!widget.querySelector('form');
     if (settingsBtn && !hasForm) {
       const formId = await this._createSettingsForm(widget, settings, settingsBtn);
-      widget.dataset.settingsForm = formId;
+      if (formId) {
+        widget.dataset.settingsForm = formId;
+      }
     }
 
     this._registerSlots(widget);
     return widget;
   }
 
-  _createElementFromHtml(html) {
-    const wrapper = document.createElement('div');
-    wrapper.innerHTML = html;
-    return wrapper.firstElementChild;
-  }
-
-  _remove(widget) {
-    widget.parentElement.removeChild(widget);
-  }
-
   async _createSettingsForm(widget, settings, settingsBtn) {
     const widgetName = widget.dataset.widget;
-    const settingsFormHtml = await fetch(`/admin/cms/pagebuilder/settings?widget=${widgetName}`, {
+    const settingsFormHtml = await fetch(`${this.settingsEndpointValue}?widget=${widgetName}`, {
       method: 'post',
       body: JSON.stringify(settings),
     }).then((res) => res.text());
-    const settingsModal = this._createElementFromHtml(settingsFormHtml);
+
+    if (!settingsFormHtml) {
+      return null;
+    }
+
+    const settingsModal = createElementFromHtml(settingsFormHtml);
     document.body.append(settingsModal);
 
     const settingsForm = settingsModal.querySelector('form');
-    const formId = 'settings-form-' + this._getNextSettingFormId();
+    const formId = 'settings-form-' + this.settingsFormIncrement();
     settingsForm.id = formId;
     settingsForm.addEventListener('submit', (e) => {
       e.preventDefault();
     });
     settingsForm.submit = () => {
       const settings = formToData(settingsForm);
-      this._hydrateWidget(widget, settings);
+      hydrateWidget(widget, settings);
 
       settingsModal.classList.remove('open');
     };
@@ -253,26 +195,5 @@ export default class extends Controller {
 
     settingsBtn.addEventListener('click', () => settingsModal.classList.add('open'));
     return formId;
-  }
-
-  _getNextSettingFormId() {
-    this.settingsFormIncrement++;
-    return this.settingsFormIncrement;
-  }
-
-  _hydrateWidget(widget, settings) {
-    Object.entries(settings).forEach(([setting, value]) => {
-      if (!value) {
-        return;
-      }
-
-      const settingDataAttr = `data-setting-${setting}`;
-      [...widget.querySelectorAll(`[${settingDataAttr}]`)]
-        .filter((e) => e.closest('[data-widget]') === widget)
-        .forEach((e) => {
-          const attr = e.getAttribute(settingDataAttr);
-          e[attr] = value;
-        });
-    });
   }
 }

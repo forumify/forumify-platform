@@ -46,7 +46,7 @@ export default class extends Controller {
 
     const missing = this.element.querySelector('.preview-missing');
     if (missing !== null) {
-      missing.classList.add('d-none')
+      missing.classList.add('d-none');
     }
   }
 }
