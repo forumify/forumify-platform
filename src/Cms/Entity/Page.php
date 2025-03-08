@@ -12,8 +12,10 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Cms\Repository\PageRepository;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PageRepository::class)]
+#[UniqueEntity('urlKey')]
 class Page implements AccessControlledEntityInterface
 {
     public const TYPE_TWIG = 'twig';
