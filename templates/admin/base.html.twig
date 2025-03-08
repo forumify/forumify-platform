@@ -21,21 +21,37 @@
         {{ encore_entry_script_tags('admin') }}
     {% endblock %}
 </head>
-<body>
+<body {{ stimulus_controller('forumify/forumify-platform/admin') }}>
 <div class="flex">
     <nav class="navigation">
         {% block navigation %}
-            <div class="navigation-section">
-                <div class="navigation-row">
+            <div class="flex items-center justify-between p-1 pl-2 pr-2 border-b">
+                <div class="flex items-center navigation-brand">
                     <img class="logo" src="{{ asset('bundles/forumify/images/forumify.svg') }}" alt="logo">
                     <span>forumify</span>
                 </div>
+                <div class="nav-controls">
+                    <a
+                        class="btn-link btn-icon btn-small theme-selector"
+                        href="{{ path('forumify_core_theme_toggle', { '_target_path': app.request.requestUri }) }}"
+                        {{ stimulus_controller('forumify/forumify-platform/theme') }}
+                    >
+                        <i class="ph ph-circle-half-tilt"></i>
+                    </a>
+                    <button
+                        type="button"
+                        class="btn-link btn-icon btn-small menu-toggle"
+                        {{ stimulus_action('forumify/forumify-platform/admin', 'toggleNavigation') }}
+                    >
+                        <i class="ph ph-caret-line-left"></i>
+                    </button>
+                </div>
             </div>
-            <div class="navigation-section">
+            <div class="navigation-section flex-grow">
                 {% include '@Forumify/admin/components/navigation.html.twig' %}
             </div>
             <div class="navigation-section">
-                <a class="btn-link btn-icon navigation-row" href="{{ path('forumify_core_logout') }}"><i class="ph ph-sign-out"></i> {{ 'logout'|trans }}</a>
+                <a class="btn-link navigation-row" href="{{ path('forumify_core_logout') }}"><i class="ph ph-sign-out"></i> {{ 'logout'|trans }}</a>
             </div>
         {% endblock %}
     </nav>

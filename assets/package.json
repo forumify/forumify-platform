@@ -4,6 +4,12 @@
     "version": "0.1.0",
     "symfony": {
         "controllers": {
+            "admin": {
+                "main": "dist/admin_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
+            },
             "chart": {
                 "main": "dist/chart_controller.js",
                 "fetch": "lazy",

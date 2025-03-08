@@ -35,18 +35,24 @@
 
 @mixin btn-contained {
     @include btn;
-    padding: 0 var(--spacing-4);
-    border-radius: var(--button-border-radius);
-    justify-content: center;
-    align-items: center;
-    font-size: 0.875rem;
-    box-sizing: border-box;
+
+    & {
+        padding: 0 var(--spacing-4);
+        border-radius: var(--button-border-radius);
+        justify-content: center;
+        align-items: center;
+        font-size: 0.875rem;
+        box-sizing: border-box;
+    }
 }
 
 .btn-primary {
     @include btn-contained;
-    color: var(--c-primary-text);
-    background-color: var(--c-primary);
+
+    & {
+        color: var(--c-primary-text);
+        background-color: var(--c-primary);
+    }
 
     &:hover {
         color: var(--c-primary-text);
@@ -56,8 +62,11 @@
 
 .btn-cta {
     @include btn-contained;
-    color: var(--c-call-to-action-text);
-    background-color: var(--c-call-to-action);
+
+    & {
+        color: var(--c-call-to-action-text);
+        background-color: var(--c-call-to-action);
+    }
 
     &:hover {
         color: var(--c-call-to-action-text);
@@ -67,8 +76,11 @@
 
 .btn-outlined {
     @include btn-contained;
-    color: var(--c-primary);
-    border: 2px solid var(--border-color);
+
+    & {
+        color: var(--c-primary);
+        border: 2px solid var(--border-color);
+    }
 
     &:hover:not(&[disabled]):not(&:disabled) {
         color: var(--c-primary-accent);
@@ -79,8 +91,11 @@
 
 .btn-outlined-highlighted {
     @include btn-contained;
-    color: var(--c-primary);
-    border: 2px solid var(--c-primary-accent);
+
+    & {
+        color: var(--c-primary);
+        border: 2px solid var(--c-primary-accent);
+    }
 
     &:hover {
         color: var(--c-primary-accent);
@@ -90,11 +105,14 @@
 
 .btn-link {
     @include btn;
-    color: var(--c-text-primary);
-    align-items: center;
-    justify-content: start;
-    padding: var(--spacing-2) var(--spacing-4);
-    border-radius: var(--button-border-radius);
+
+    & {
+        color: var(--c-text-primary);
+        align-items: center;
+        justify-content: start;
+        padding: var(--spacing-2) var(--spacing-4);
+        border-radius: var(--button-border-radius);
+    }
 }
 
 .menu .btn-link {

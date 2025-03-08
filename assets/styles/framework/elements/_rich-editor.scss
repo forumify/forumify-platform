@@ -62,6 +62,8 @@
     .ql-snow .ql-toolbar .ql-picker-item:hover,
     .ql-snow.ql-toolbar .ql-picker-item.ql-selected,
     .ql-snow .ql-toolbar .ql-picker-item.ql-selected {
+        color: var(--c-primary-accent);
+
         .ql-fill {
             fill: var(--c-primary-accent);
         }
@@ -69,8 +71,6 @@
         .ql-stroke {
             stroke: var(--c-primary-accent);
         }
-
-        color: var(--c-primary-accent);
     }
 
     .ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-options {

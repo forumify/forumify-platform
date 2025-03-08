@@ -1,4 +1,6 @@
+
 $navigationWidth: 250px;
+$navigationClosedWidth: 70px;
 
 .navigation {
     height: 100vh;
@@ -7,6 +9,21 @@ $navigationWidth: 250px;
     position: fixed;
     z-index: 999;
     border-right: var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 200ms ease-in-out;
+
+    .logo {
+        width: 32px;
+        height: 32px;
+        margin-right: var(--spacing-2);
+    }
+
+    .menu-toggle {
+        transition: transform 200ms ease-in-out;
+    }
 }
 
 .navigation-section {
@@ -22,17 +39,31 @@ $navigationWidth: 250px;
     align-items: center;
     padding-left: var(--spacing-4);
     height: 40px;
-    .logo {
-        width: 32px;
-        height: 32px;
-        margin-right: var(--spacing-2);
-    }
 
     i {
-        width: var(--spacing-6);
+        margin-right: var(--spacing-6);
     }
 }
 
 main {
     margin-left: $navigationWidth;
+    transition: margin-left 200ms ease-in-out;
+}
+
+.navigation-closed {
+    .navigation {
+        width: $navigationClosedWidth;
+    }
+
+    main {
+        margin-left: $navigationClosedWidth;
+    }
+
+    .navigation-brand {
+        display: none;
+    }
+
+    .menu-toggle {
+        transform: rotate(180deg);
+    }
 }

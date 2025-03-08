@@ -64,13 +64,12 @@
         padding: var(--spacing-2);
         border: var(--border);
         border-radius: var(--border-radius);
+        overflow-x: auto;
 
         code {
             display: block;
             width: 100%;
         }
-
-        overflow-x: auto;
     }
 
     blockquote {
