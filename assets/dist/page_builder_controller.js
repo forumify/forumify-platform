@@ -8,7 +8,7 @@ import {
 } from './src/page_builder';
 
 export default class extends Controller {
-  static targets = ['widgetCategorySelect', 'previewToggle', 'builderRoot', 'widget'];
+  static targets = ['widgetCategorySelect', 'previewToggle', 'builderRoot', 'loader', 'widget'];
   static values = {
     settingsEndpoint: String,
   };
@@ -45,30 +45,38 @@ export default class extends Controller {
     this.twigInput.value = JSON.stringify(tree);
   }
 
-  _buildWidgets() {
+  async _buildWidgets() {
+    this.builderRootTarget.classList.add('d-none');
+    this.loaderTarget.classList.remove('d-none');
+
     this._registerSlots(this.builderRootTarget);
     const tree = JSON.parse(this.twigInput.value);
 
-    const build = (slot) => async (widget) => {
+    const rootSlot = this.builderRootTarget.querySelector('.widget-slot');
+    await this._buildSlot(rootSlot, tree)
+
+    this.loaderTarget.classList.add('d-none');
+    this.builderRootTarget.classList.remove('d-none');
+  }
+
+  async _buildSlot(slot, widgets) {
+    const widgetElements = await Promise.all(widgets.map(async (widget) => {
       const prototype = document.querySelector(`#widgets [data-widget="${widget.widget}"]`);
       if (!prototype) {
-        return;
+        return null;
       }
 
       const widgetElement = await this._createWidget(prototype.outerHTML, widget.settings || {});
-      const dropzone = slot.querySelector(':scope > .dropzone');
-      dropzone.before(widgetElement);
+      const slotBuilders = [...widgetElement.querySelectorAll('.widget-slot')].map((slot, i) => this._buildSlot(slot, widget.slots[i] || []));
+      await Promise.all(slotBuilders);
 
-      widgetElement.querySelectorAll('.widget-slot').forEach((slot, i) => {
-        const builder = build(slot);
-        (widget.slots[i] || []).forEach((slotWidget) => {
-          builder(slotWidget);
-        });
-      });
-    };
+      return widgetElement;
+    }));
 
-    const rootSlot = this.builderRootTarget.querySelector('.widget-slot');
-    tree.forEach(build(rootSlot));
+    const dropzone = slot.querySelector(':scope > .dropzone');
+    widgetElements
+      .filter((el) => el !== null)
+      .forEach((el) => dropzone.before(el));
   }
 
   _selectCategory() {
@@ -179,6 +187,7 @@ export default class extends Controller {
     settingsForm.id = formId;
     settingsForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      settingsForm.submit();
     });
     settingsForm.submit = () => {
       const settings = formToData(settingsForm);

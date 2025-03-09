@@ -48,6 +48,9 @@
                             </div>
                             <div class="widget-slot m-8"></div>
                         </div>
+                        <div class="flex justify-center items-center d-none mt-10 pt-10" {{ stimulus_target('forumify/forumify-platform/page_builder', 'loader') }}>
+                            {% include '@Forumify/components/loader.html.twig' %}
+                        </div>
                     {% endif %}
                 </div>
                 <div id="css" class="h-100">{{ form_row(form.css) }}</div>

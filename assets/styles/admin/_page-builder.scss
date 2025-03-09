@@ -116,6 +116,10 @@
         .card-body {
             padding: var(--spacing-2);
         }
+
+        [class^="col-"]:not(:last-child) {
+            border-right: var(--border);
+        }
     }
 
     .widget-options {
