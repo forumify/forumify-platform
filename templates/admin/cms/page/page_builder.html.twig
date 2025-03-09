@@ -2,9 +2,11 @@
     class="grid-4"
     style="height: 100vh;
     margin-bottom: calc(-1 * var(--spacing-6));"
-    {{ stimulus_controller('forumify/forumify-platform/page_builder', {
-        settingsEndpoint: path('forumify_admin_cms_page_builder_settings')
-    }) }}
+    {% if data.type == 'builder' %}
+        {{ stimulus_controller('forumify/forumify-platform/page_builder', {
+            settingsEndpoint: path('forumify_admin_cms_page_builder_settings')
+        }) }}
+    {% endif %}
 >
     <div class="col-3 h-100">
         <div class="page-editor" {{ stimulus_controller('forumify/forumify-platform/tabs') }}>

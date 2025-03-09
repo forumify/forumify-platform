@@ -6,8 +6,6 @@ $navigationClosedWidth: 70px;
     height: 100vh;
     width: $navigationWidth;
     background-color: var(--c-elevation-1);
-    position: fixed;
-    z-index: 999;
     border-right: var(--border);
     display: flex;
     flex-direction: column;
@@ -46,17 +44,19 @@ $navigationClosedWidth: 70px;
 }
 
 main {
-    margin-left: $navigationWidth;
-    transition: margin-left 200ms ease-in-out;
+    transition: width 200ms ease-in-out;
+    width: calc(100% - $navigationWidth);
+    max-height: 100vh;
+    margin-bottom: 0;
+    overflow-y: auto;
 }
 
 .navigation-closed {
     .navigation {
         width: $navigationClosedWidth;
     }
-
     main {
-        margin-left: $navigationClosedWidth;
+        width: calc(100% - $navigationClosedWidth);
     }
 
     .navigation-brand {

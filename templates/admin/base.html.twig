@@ -55,7 +55,7 @@
             </div>
         {% endblock %}
     </nav>
-    <main class="flex flex-col flex-grow">
+    <main class="flex flex-col">
         {% block flashbag %}
             {% set flashes = app.flashes %}
             {% if flashes is not empty %}
@@ -71,7 +71,7 @@
             {% endif %}
         {% endblock %}
         {% block body_wrapper %}
-            <div class="responsive mt-4">
+            <div class="responsive mt-4 mb-8">
                 {% block body %}{% endblock %}
             </div>
         {% endblock %}
