@@ -48,7 +48,7 @@
                                 <img src="{{ logo }}" width="32px" height="32px" alt="logo">
                                 <span class="ml-2">{{ setting('forumify.title') }}</span>
                             </div>
-                            <div class="widget-slot m-8"></div>
+                            <div class="widget-slot responsive"></div>
                         </div>
                         <div class="flex justify-center items-center d-none mt-10 pt-10" {{ stimulus_target('forumify/forumify-platform/page_builder', 'loader') }}>
                             {% include '@Forumify/components/loader.html.twig' %}
@@ -90,14 +90,14 @@
                     {% if data.type == 'builder' %}
                         <div id="widgets">
                             <select {{ stimulus_target('forumify/forumify-platform/page_builder', 'widgetCategorySelect') }}>
-                                {% for category in widgets|keys %}
+                                {% for category in widgets|keys|sort %}
                                     <option value="{{ category }}">{{ category|title }}</option>
                                 {% endfor %}
                             </select>
                             <hr class="mt-2 mb-2">
                             {% for category, cWidgets in widgets %}
                                 <div id="widgets-{{ category }}" class="widget-category flex flex-col gap-2 d-none">
-                                    {% for widget in cWidgets %}
+                                    {% for name, widget in cWidgets %}
                                         <div>
                                             {% include '@Forumify/admin/cms/page/widget.html.twig' %}
                                         </div>

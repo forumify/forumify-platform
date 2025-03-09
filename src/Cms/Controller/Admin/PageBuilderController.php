@@ -39,6 +39,7 @@ class PageBuilderController extends AbstractController
 
         return $this->render('@Forumify/admin/cms/page/settings_form.html.twig', [
             'form' => $form,
+            'widget' => $widget,
         ]);
     }
 

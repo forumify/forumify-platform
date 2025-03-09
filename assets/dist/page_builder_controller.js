@@ -180,15 +180,19 @@ export default class extends Controller {
     }
 
     const settingsModal = createElementFromHtml(settingsFormHtml);
-    document.body.append(settingsModal);
-
     const settingsForm = settingsModal.querySelector('form');
-    const formId = 'settings-form-' + this.settingsFormIncrement();
+    const id = this.settingsFormIncrement();
+    const formId = `settings-form-${id}`;
     settingsForm.id = formId;
-    settingsForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      settingsForm.submit();
+
+    settingsForm.querySelectorAll('[id^=form_]').forEach((el) => {
+      el.id += `-${id}`;
     });
+
+    settingsForm.querySelectorAll('label').forEach((el) => {
+      el.htmlFor += `-${id}`;
+    });
+
     settingsForm.submit = () => {
       const settings = formToData(settingsForm);
       hydrateWidget(widget, settings);
@@ -197,12 +201,19 @@ export default class extends Controller {
     };
     settingsForm.submit();
 
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      settingsForm.submit();
+    });
+
     const submit = settingsModal.querySelector('.close-settings');
     submit.addEventListener('click', () => {
       settingsForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
     });
 
     settingsBtn.addEventListener('click', () => settingsModal.classList.add('open'));
+
+    document.body.append(settingsModal);
     return formId;
   }
 }

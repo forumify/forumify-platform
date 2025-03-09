@@ -76,8 +76,14 @@ class PageController extends AbstractCrudController
     {
         $widgets = [];
         foreach ($this->widgets as $widget) {
-            $widgets[$widget->getCategory()][] = $widget;
+            $name = $this->translator->trans("admin.cms.widget.{$widget->getName()}");
+            $widgets[$widget->getCategory()][$name] = $widget;
         }
+
+        foreach ($widgets as &$category) {
+            ksort($category);
+        }
+        unset($category);
 
         return $widgets;
     }

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Forumify\Cms\Widget;
 
-class TwoColumnLayout extends AbstractColumnLayout
+class FourColumnLayout extends AbstractColumnLayout
 {
     protected function getColumnCount(): int
     {
-        return 2;
+        return 4;
     }
 
     public function getName(): string
     {
-        return 'layout.two_column';
+        return 'layout.four_column';
     }
 }

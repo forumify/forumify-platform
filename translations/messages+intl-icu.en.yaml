@@ -283,10 +283,14 @@ admin:
             delete_warning: 'You are about to delete the snippet "{name}". If it is still being used anywhere, it will no longer be found.'
         widget:
             layout:
-                one_column: '1 Column'
-                two_column: '2 Column'
+                two_column: '2 Columns'
+                three_column: '3 Columns'
+                four_column: '4 Columns'
+                six_column: '6 Columns'
             content:
                 rich_text: 'Rich Text'
+            responsive:
+                column_help: 'The sum of all columns must be equal to 12'
     configuration:
         title: 'Configuration'
         general: 'General'
