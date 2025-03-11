@@ -1,0 +1,5 @@
+{% set resource = widget.settings.resource ?? null %}
+{% if resource %}
+    {% set slug = resource|split('/')|last %}
+    <img src="{{ resource(slug) }}" width="100%" height="auto" style="max-width: 100%">
+{% endif %}

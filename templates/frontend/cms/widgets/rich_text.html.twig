@@ -1,4 +1,4 @@
 <article>
-    {% set content = widget.settings.content ?? '' %}
+    {% set content = widget.settings.content|default('') %}
     {{ content|rich }}
 </article>

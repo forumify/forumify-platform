@@ -24,6 +24,47 @@ class PageControllerTest extends WebTestCase
         self::assertSelectorTextContains('h1', 'Test page!');
     }
 
+    public function testPageBuilder(): void
+    {
+        $client = static::createClient();
+
+        $page = $this->createPage(Page::TYPE_BUILDER, '[
+          {
+            "widget": "layout.two_column",
+            "settings": {
+              "columnCount": "2",
+              "columns": {
+                "column1": "",
+                "column2": ""
+              }
+            },
+            "slots": [
+              [
+                {
+                  "widget": "content.rich_text",
+                  "settings": {
+                    "content": "<p id=\"col-1\">This is column one</p>"
+                  }
+                }
+              ],
+              [
+                {
+                  "widget": "content.rich_text",
+                  "settings": {
+                    "content": "<p id=\"col-2\">This is column two</p>"
+                  }
+                }
+              ]
+            ]
+          }
+        ]');
+        $this->setupACL($page);
+
+        $client->request('GET', '/test-page');
+        self::assertSelectorTextContains('#col-1', 'This is column one');
+        self::assertSelectorTextContains('#col-2', 'This is column two');
+    }
+
     public function testCss(): void
     {
         $client = static::createClient();
@@ -63,12 +104,13 @@ class PageControllerTest extends WebTestCase
         self::assertResponseHeaderSame('Location', 'http://localhost/login');
     }
 
-    private function createPage(): Page
+    private function createPage(string $type = Page::TYPE_TWIG, ?string $content = null): Page
     {
         $page = new Page();
         $page->setTitle('Test Page');
         $page->setUrlKey('test-page');
-        $page->setTwig('<h1>Test page!</h1>');
+        $page->setType($type);
+        $page->setTwig($content ?? '<h1>Test page!</h1>');
         $page->setCss('h1 { color: red; }');
         $page->setJavascript('console.log("Hello from test page!")');
 
