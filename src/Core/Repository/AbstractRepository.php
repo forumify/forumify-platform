@@ -180,4 +180,15 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
         return $qb;
     }
+
+    public function getMaxPosition(): int
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->select('MAX(e.position)')
+            ->getQuery();
+
+        $maxPosition = $qb->getSingleScalarResult();
+
+        return $maxPosition === null ? 0 : (int)$maxPosition;
+    }
 }

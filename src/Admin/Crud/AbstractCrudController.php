@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Forumify\Admin\Crud\Event\PostSaveCrudEvent;
 use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
 use Forumify\Core\Entity\AccessControlledEntityInterface;
+use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -135,6 +136,12 @@ abstract class AbstractCrudController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entity = $form->getData();
+
+            if($entity instanceof SortableEntityInterface){
+                $maxPosition = $this->repository->getMaxPosition();
+
+                $entity->setPosition($maxPosition + 1);
+            }
 
             $this->eventDispatcher->dispatch(
                 new PreSaveCrudEvent($isNew, $form, $entity),
