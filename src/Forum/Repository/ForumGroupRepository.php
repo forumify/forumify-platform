@@ -27,15 +27,17 @@ class ForumGroupRepository extends AbstractRepository
         return $this->findBy(['parentForum' => $parent], ['position' => 'ASC']);
     }
 
-    public function getHighestPosition(?Forum $parent): int
+    public function getHighestPosition(object $entity): int
     {
         $qb = $this->createQueryBuilder('fg')
-            ->select('MAX(fg.position)')
-            ->where('fg.parentForum IS NULL');
+            ->select('MAX(fg.position)');
 
+        $parent = $entity->getParentForum();
         if ($parent !== null) {
             $qb->where('fg.parentForum = :parent')
                 ->setParameter('parent', $parent);
+        } else {
+            $qb->where('fg.parentForum IS NULL');
         }
 
         try {

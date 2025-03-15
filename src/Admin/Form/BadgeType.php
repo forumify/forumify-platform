@@ -42,7 +42,6 @@ class BadgeType extends AbstractType
             ->add('newImage', FileType::class, [
                 'mapped' => false,
                 'label' => 'Image',
-                'required' => $options['image_required'],
                 'help' => 'Recommended size is 64x64.',
                 'attr' => [
                     'preview' => $imagePreview
@@ -50,6 +49,9 @@ class BadgeType extends AbstractType
                         : null,
                 ],
                 'constraints' => [
+                    ...($options['image_required'] ? [
+                        new Assert\NotBlank(allowNull: false),
+                    ]: []),
                     new Assert\Image(
                         maxSize: '10M',
                     ),

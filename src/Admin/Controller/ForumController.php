@@ -48,7 +48,7 @@ class ForumController extends AbstractController
             }
 
             if ($parentChanged || $updated->getGroup()?->getId() !== $oldGroupId) {
-                $position = $forumRepository->getHighestPosition($updated->getParent(), $updated->getGroup());
+                $position = $forumRepository->getHighestPosition($updated);
                 $updated->setPosition($position + 1);
             }
 

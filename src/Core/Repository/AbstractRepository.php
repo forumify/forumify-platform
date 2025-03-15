@@ -9,6 +9,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 use Forumify\Core\Entity\ACL;
 use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Entity\User;
@@ -145,6 +146,23 @@ abstract class AbstractRepository extends ServiceEntityRepository
         $entity->setPosition($newPosition);
 
         $this->saveAll([$entity, $toSwap]);
+    }
+
+    /**
+     * @param T $entity
+     */
+    public function getHighestPosition(object $entity): int
+    {
+        try {
+            return $this
+                ->createQueryBuilder('e')
+                ->select('MAX(e.position)')
+                ->getQuery()
+                ->getSingleScalarResult() ?? 0
+            ;
+        } catch (Exception) {
+            return 0;
+        }
     }
 
     protected function addACLToQuery(

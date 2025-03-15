@@ -7,7 +7,6 @@ namespace Forumify\Forum\Repository;
 use Exception;
 use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Forum\Entity\Forum;
-use Forumify\Forum\Entity\ForumGroup;
 
 /**
  * @extends AbstractRepository<Forum>
@@ -35,17 +34,19 @@ class ForumRepository extends AbstractRepository
         return $this->findBy(['parent' => $parent, 'group' => null], ['position' => 'ASC']);
     }
 
-    public function getHighestPosition(?Forum $parent, ?ForumGroup $group): int
+    public function getHighestPosition(object $entity): int
     {
         $qb = $this->createQueryBuilder('f')
             ->select('MAX(f.position)');
 
+        $parent = $entity->getParent();
         if ($parent !== null) {
             $qb->andWhere('f.parent = :parent')->setParameter('parent', $parent);
         } else {
             $qb->andWhere('f.parent IS NULL');
         }
 
+        $group = $entity->getGroup();
         if ($group !== null) {
             $qb->andWhere('f.group = :group')->setParameter('group', $group);
         } else {
