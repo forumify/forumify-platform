@@ -27,7 +27,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 abstract class AbstractRepository extends ServiceEntityRepository
 {
     private EventDispatcherInterface $eventDispatcher;
-    private Security $security;
+    protected Security $security;
 
     public function __construct(ManagerRegistry $registry)
     {

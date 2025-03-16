@@ -290,6 +290,7 @@ admin:
             content:
                 rich_text: 'Rich Text'
                 resource: 'Resource'
+                twig: 'Twig'
             responsive:
                 column_help: 'The sum of all columns must be equal to 12'
     configuration:

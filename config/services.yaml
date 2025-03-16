@@ -17,3 +17,5 @@ services:
     cache.adapter.forumify:
         class: Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter
         parent: cache.adapter.filesystem
+
+    Twig\Extension\StringLoaderExtension: ~

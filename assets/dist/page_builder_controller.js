@@ -53,7 +53,7 @@ export default class extends Controller {
     const tree = JSON.parse(this.twigInput.value);
 
     const rootSlot = this.builderRootTarget.querySelector('.widget-slot');
-    await this._buildSlot(rootSlot, tree)
+    await this._buildSlot(rootSlot, tree);
 
     this.loaderTarget.classList.add('d-none');
     this.builderRootTarget.classList.remove('d-none');

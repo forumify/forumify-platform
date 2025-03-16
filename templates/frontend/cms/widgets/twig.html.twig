@@ -1,0 +1,4 @@
+{% set twig = widget.settings.twig ?? null %}
+{% if twig %}
+    {{ include(template_from_string(twig)) }}
+{% endif %}

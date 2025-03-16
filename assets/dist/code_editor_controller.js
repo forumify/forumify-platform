@@ -12,7 +12,6 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 export default class extends Controller {
   static values = {
     editorId: String,
-    inputId: String,
     language: String,
     value: String,
   };
@@ -38,7 +37,7 @@ export default class extends Controller {
       editor.setOption('mode', `ace/mode/${this.languageValue}`);
     }
 
-    const inputElement = document.getElementById(this.inputIdValue);
+    const inputElement = this.element.querySelector('textarea.d-none');
     editor.on('change', () => {
       inputElement.value = editor.getSession().getValue();
     });

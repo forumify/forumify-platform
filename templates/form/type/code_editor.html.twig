@@ -3,7 +3,6 @@
     class="form-row code-editor code-editor-{{ form.vars.density|default('default') }}"
     {{ stimulus_controller('forumify/forumify-platform/code_editor', {
         editorId: editorId,
-        inputId: form.vars.id,
         language: form.vars.language,
         value: form.vars.value,
     }) }}

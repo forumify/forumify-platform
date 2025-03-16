@@ -17,8 +17,10 @@ use Symfony\Contracts\Cache\TagAwareCacheInterface;
 
 class ClearMenuCacheSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @param CacheInterface&TagAwareCacheInterface $cache
+     */
     public function __construct(
-        /** @var CacheInterface&TagAwareCacheInterface */
         private readonly CacheInterface $cache
     ) {
     }
