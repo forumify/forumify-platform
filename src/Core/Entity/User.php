@@ -244,6 +244,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lastActivity = $lastActivity;
     }
 
+    public function isOnline(int $withinLastSeconds = 300): bool
+    {
+        $lastActivity = $this->getLastActivity();
+        if ($lastActivity === null) {
+            return false;
+        }
+
+        $diff = time() - $lastActivity->getTimestamp();
+        return $diff < $withinLastSeconds;
+    }
+
     /**
      * @return Collection<int, Subscription>
      */

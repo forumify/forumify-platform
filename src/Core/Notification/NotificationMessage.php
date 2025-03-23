@@ -8,12 +8,9 @@ use Forumify\Core\Messenger\AsyncMessageInterface;
 
 class NotificationMessage implements AsyncMessageInterface
 {
-    public function __construct(private readonly int $notificationId)
-    {
-    }
-
-    public function getNotificationId(): int
-    {
-        return $this->notificationId;
+    public function __construct(
+        public readonly int $notificationId,
+        public readonly bool $ignoreIsOnline = false,
+    ) {
     }
 }
