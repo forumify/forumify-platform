@@ -34,10 +34,9 @@ class PageEventSubscriber implements EventSubscriberInterface
         $page = $event->getEntity();
 
         if ($event->isNew() && empty($page->getTwig())) {
-            $page->setTwig($page->getType() === 'twig' 
+            $page->setTwig($page->getType() === 'twig'
                 ? $this->defaultTwigTemplate()
-                : '[]'
-            );
+                : '[]');
         }
     }
 

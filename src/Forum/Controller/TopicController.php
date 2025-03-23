@@ -39,7 +39,6 @@ class TopicController extends AbstractController
     #[Route('/{slug}', name: '')]
     public function __invoke(Topic $topic, Request $request): Response
     {
-
         if ($topic->isHidden()) {
             $this->denyAccessUnlessGranted(VoterAttribute::Moderator->value);
         }
