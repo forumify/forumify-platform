@@ -40,6 +40,12 @@
                 "enabled": true,
                 "autoimport": {}
             },
+            "list": {
+                "main": "dist/list_controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {}
+            },
             "menu": {
                 "main": "dist/menu_controller.js",
                 "fetch": "eager",

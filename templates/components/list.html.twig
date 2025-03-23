@@ -1,4 +1,4 @@
-<div {{ attributes }}>
+<div {{ attributes.defaults(stimulus_controller('@forumify/forumify-platform/list', { lastPageFirst: this.lastPageFirst })) }}>
     {% block container %}
         <div class="{{ class ?? 'card' }}">
             {% block pagination_top %}

@@ -36,7 +36,7 @@
                     {% endif %}
                 </p>
             </div>
-            {% set canEdit = item.createdBy.userIdentifier == app.user.userIdentifier %}
+            {% set canEdit = item.createdBy is not null and item.createdBy.userIdentifier == app.user.userIdentifier %}
             <div class="message-toolbar">
                 {% if canEdit %}
                     <button class="btn-link btn-small btn-icon" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'toggleEdit') }}>

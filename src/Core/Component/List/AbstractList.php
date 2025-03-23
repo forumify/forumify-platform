@@ -16,11 +16,11 @@ abstract class AbstractList
     #[LiveProp(writable: true)]
     public int $page = 1;
 
-    #[LiveProp(writable: true)]
-    public int $size = 10;
-
     #[LiveProp]
     public bool $lastPageFirst = false;
+
+    #[LiveProp(writable: true)]
+    public int $size = 10;
 
     #[LiveProp]
     public bool $pageSwitched = false;

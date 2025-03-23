@@ -8,7 +8,7 @@
                 {% if 1 not in visiblePages %}
                     <a
                         class="btn-link btn-small"
-                        data-action="live#action"
+                        data-action="live#action forumify--forumify-platform--list#switchPage"
                         data-live-action-param="setPage"
                         data-live-page-param="1"
                     >1</a>
@@ -21,12 +21,11 @@
             {% block pagination_pages %}
                 {% for page in visiblePages %}
                     {% if page == this.result.page %}
-                        <span class="pagination-selected-page"
-                        >{{ page }}</span>
+                        <span class="pagination-selected-page">{{ page }}</span>
                     {% else %}
                         <a
                             class="btn-link btn-small"
-                            data-action="live#action"
+                            data-action="live#action forumify--forumify-platform--list#switchPage"
                             data-live-action-param="setPage"
                             data-live-page-param="{{ page }}"
                         >{{ page }}</a>
@@ -41,7 +40,7 @@
                     {% endif %}
                     <a
                         class="btn-link btn-small"
-                        data-action="live#action"
+                        data-action="live#action forumify--forumify-platform--list#switchPage"
                         data-live-action-param="setPage"
                         data-live-page-param="{{ lastPage }}"
                     >{{ lastPage }}</a>
