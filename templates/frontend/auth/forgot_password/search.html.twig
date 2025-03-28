@@ -2,12 +2,34 @@
 {% block title %}{{ parent() }} - {{ 'forgot_password.forgot_password'|trans }}{% endblock %}
 {% block form_title %}{{ 'forgot_password.find_account'|trans }}{% endblock %}
 {% block form %}
-    {{ form_start(form) }}
+    {{ form_start(form, { attr: { id: 'forgot-password-form' } }) }}
     {{ form_widget(form) }}
     <div class="flex justify-center gap-2">
-        <button class="btn-primary" type="submit">
-            <i class="ph ph-sign-in"></i>{{ 'forgot_password.search'|trans }}
-        </button>
+        {% if setting('forumify.recaptcha.enabled') %}
+            <button
+                class="btn-primary g-recaptcha"
+                data-sitekey="{{ setting('forumify.recaptcha.site_key') }}"
+                data-callback="onSendPasswordForget"
+                data-action="sendPasswordForget"
+            >
+                <i class="ph ph-magnifying-glass"></i>{{ 'forgot_password.search'|trans }}
+            </button>
+        {% else %}
+            <button class="btn-primary" type="submit">
+                <i class="ph ph-magnifying-glass"></i>{{ 'forgot_password.search'|trans }}
+            </button>
+        {% endif %}
     </div>
     {{ form_end(form) }}
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% if setting('forumify.recaptcha.enabled') %}
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script type="text/javascript">
+            function onSendPasswordForget() {
+                document.getElementById('forgot-password-form').submit();
+            }
+        </script>
+    {% endif %}
 {% endblock %}

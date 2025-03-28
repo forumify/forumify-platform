@@ -25,8 +25,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-versions }}
-          tools: phpunit-bridge
-          extensions: mbstring, xml, ctype, iconv, intl, pdo_sqlite, mysql
+          extensions: mbstring, xml, ctype, iconv, intl, mysql
 
       - name: Get composer cache directory
         id: composer-cache
@@ -50,8 +49,5 @@ jobs:
           php bin/console forumify:platform:setting -k forumify.platform_installed --value true
           php bin/console forumify:plugins:refresh --env=test
 
-      - name: Install PHPUnit
-        run: simple-phpunit install
-
       - name: Run tests
-        run: simple-phpunit
+        run: vendor/bin/phpunit

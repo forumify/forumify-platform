@@ -7,6 +7,10 @@
         <div class="alert-error mb-6">{{ error|trans }}</div>
     {% endif %}
     {{ form_widget(form) }}
+    <div class="form-row d-none">
+        <input id="terms-of-service" type="checkbox" name="terms-of-service">
+        <label for="terms-of-service">I agree with the Terms Of Service</label>
+    </div>
     <div class="flex justify-center">
         {% block actions %}
             {% if setting('forumify.recaptcha.enabled') %}

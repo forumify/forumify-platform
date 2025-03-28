@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Controller;
 
+use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\AccountService;
+use Forumify\Core\Service\RecaptchaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -22,6 +24,8 @@ class ForgotPasswordController extends AbstractController
         private readonly UserRepository $userRepository,
         private readonly AccountService $accountService,
         private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly SettingRepository $settingRepository,
+        private readonly RecaptchaService $recaptchaService,
     ) {
     }
 
@@ -45,6 +49,15 @@ class ForgotPasswordController extends AbstractController
             return $this->render('@Forumify/frontend/auth/forgot_password/search.html.twig', [
                 'form' => $form->createView(),
             ]);
+        }
+
+        if ($this->settingRepository->get('forumify.recaptcha.enabled')) {
+            $score = $this->recaptchaService->verifyRequest($request);
+            if ($score < 0.8) {
+                // most likely a bot
+                $this->addFlash('error', 'flashes.bot_detected');
+                return $this->redirectToRoute('forumify_core_index');
+            }
         }
 
         $email = $form->getData()['email'];

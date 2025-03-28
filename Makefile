@@ -3,6 +3,10 @@ quality:
 	@./vendor/bin/phpcs
 	@./vendor/bin/phpstan
 
+.PHONY: quality-fix
+quality-fix:
+	@./vendor/bin/phpcbf
+
 .PHONY: tests
 tests:
 	make setup-tests

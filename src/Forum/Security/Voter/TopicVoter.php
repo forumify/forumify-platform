@@ -37,12 +37,14 @@ class TopicVoter extends Voter
             return true;
         }
 
+        /** @var User|null $user */
         $user = $token->getUser();
         return match ($attribute) {
             VoterAttribute::TopicView->value => $this->voteOnView($user, $subject),
             VoterAttribute::TopicCreate->value => $this->voteOnCreate($user, $subject),
             VoterAttribute::TopicEdit->value,
             VoterAttribute::TopicDelete->value => $this->voteOnEditOrDelete($user, $subject),
+            default => false,
         };
     }
 
@@ -92,7 +94,7 @@ class TopicVoter extends Voter
             return false;
         }
 
-        if ($topic->getCreatedBy()?->getId() === $user->getId())  {
+        if ($topic->getCreatedBy()?->getId() === $user->getId()) {
             return true;
         }
 

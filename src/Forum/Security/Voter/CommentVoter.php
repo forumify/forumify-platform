@@ -45,6 +45,7 @@ class CommentVoter extends Voter
             VoterAttribute::CommentCreate->value => $this->voteOnCreate($user, $subject),
             VoterAttribute::CommentEdit->value,
             VoterAttribute::CommentDelete->value => $this->voteOnEditOrDelete($user, $subject),
+            default => false,
         };
     }
 
