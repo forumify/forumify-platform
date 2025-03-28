@@ -47,7 +47,7 @@
     }
 
     .preview {
-        .card {
+        .widget.card {
             cursor: default;
             background-color: rgba(0, 0, 0, 0);
             box-shadow: none;
@@ -57,16 +57,18 @@
                 box-shadow: none;
                 border: none;
             }
+
+            > .card-body {
+                padding: 0;
+                min-height: 0;
+            }
+
+            > .card-title {
+                display: none;
+            }
         }
 
-        .card-body {
-            padding: 0;
-            min-height: 0;
-        }
 
-        .card-title {
-            display: none;
-        }
 
         .dropzone {
             display: none;

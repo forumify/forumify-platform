@@ -8,12 +8,13 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\Metadata\UrlMapping;
 
 abstract class AbstractList
 {
     use DefaultActionTrait;
 
-    #[LiveProp(writable: true)]
+    #[LiveProp(writable: true, modifier: 'prefixQuery')]
     public int $page = 1;
 
     #[LiveProp]
@@ -38,5 +39,10 @@ abstract class AbstractList
     public function setSize(#[LiveArg] int $size): void
     {
         $this->size = $size;
+    }
+
+    public function prefixQuery(LiveProp $prop, string $propName): LiveProp
+    {
+        return $prop->withUrl(new UrlMapping('prefix-' . $propName));
     }
 }

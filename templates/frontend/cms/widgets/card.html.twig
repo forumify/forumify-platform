@@ -1,0 +1,8 @@
+{% import '@Forumify/frontend/cms/macros.html.twig' as cms %}
+<div class="card">
+    <div class="card-title">{{ cms.slot(widget.slots[0]) }}</div>
+    <div class="card-body">{{ cms.slot(widget.slots[1]) }}</div>
+    {% if widget.slots[2]|default([]) is not empty %}
+        <div class="card-footer">{{ cms.slot(widget.slots[2]) }}</div>
+    {% endif %}
+</div>

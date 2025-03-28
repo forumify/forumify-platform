@@ -8,10 +8,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Contracts\Service\Attribute\Required;
+use Twig\Environment;
 
 abstract class AbstractWidget implements WidgetInterface
 {
     private FormFactoryInterface $formFactory;
+    private Environment $twig;
 
     public function getSettingsForm(array $data = []): ?FormInterface
     {
@@ -29,5 +31,16 @@ abstract class AbstractWidget implements WidgetInterface
     public function setFormFactory(FormFactoryInterface $formFactory): void
     {
         $this->formFactory = $formFactory;
+    }
+
+    protected function render(string $template, array $context = []): string
+    {
+        return $this->twig->render($template, $context);
+    }
+
+    #[Required]
+    public function setTwig(Environment $twig): void
+    {
+        $this->twig = $twig;
     }
 }

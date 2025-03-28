@@ -1,7 +1,8 @@
 {% import '@Forumify/frontend/cms/macros.html.twig' as cms %}
 {% set isResponsive = widget.settings.responsive ?? false %}
 {% set colCount = widget.settings.columnCount|default(1) %}
-<div class="grid-12">
+{% set gap = widget.settings.gap|default(2) %}
+<div class="grid-12{% if gap > 0 %} gap-{{ gap }}{% endif %}">
     {% for i in 1..colCount %}
         {% set colSize = widget.settings.columns['column' ~ i]|default(12 / colCount) %}
         {% set colClass = isResponsive ? ('col-xs-12 col-md-' ~ colSize) : ('col-' ~ colSize) %}

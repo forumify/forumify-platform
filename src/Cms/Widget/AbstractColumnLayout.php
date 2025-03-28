@@ -6,6 +6,7 @@ namespace Forumify\Cms\Widget;
 
 use Forumify\Cms\Form\ResponsiveColumnSizeType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 
@@ -38,6 +39,8 @@ abstract class AbstractColumnLayout extends AbstractWidget
     {
         $colCount = $this->getColumnCount();
 
+        $gaps = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+
         return $this->createForm($data)
             ->add('columnCount', HiddenType::class, [
                 'data' => $colCount
@@ -49,6 +52,9 @@ abstract class AbstractColumnLayout extends AbstractWidget
             ->add('columns', ResponsiveColumnSizeType::class, [
                 'columns' => $colCount,
                 'help' => 'admin.cms.widget.responsive.column_help'
+            ])
+            ->add('gap', ChoiceType::class, [
+                'choices' => array_combine($gaps, $gaps)
             ])
             ->getForm()
         ;

@@ -37,16 +37,19 @@
                             </div>
                         </div>
                         <div {{ stimulus_target('forumify/forumify-platform/page_builder', 'builderRoot') }}>
-                            <div class="box header justify-start items-center">
-                                {% set logo %}
-                                    {%- if setting('forumify.logo') -%}
-                                        {{ asset(setting('forumify.logo'), 'forumify.asset') }}
-                                    {%- else -%}
-                                        {{ asset('bundles/forumify/images/forumify.svg') }}
-                                    {% endif %}
-                                {% endset %}
-                                <img src="{{ logo }}" width="32px" height="32px" alt="logo">
-                                <span class="ml-2">{{ setting('forumify.title') }}</span>
+                            <div class="box header justify-between items-center">
+                                <div class="flex justify-start items-center">
+                                    {% set logo %}
+                                        {%- if setting('forumify.logo') -%}
+                                            {{ asset(setting('forumify.logo'), 'forumify.asset') }}
+                                        {%- else -%}
+                                            {{ asset('bundles/forumify/images/forumify.svg') }}
+                                        {% endif %}
+                                    {% endset %}
+                                    <img src="{{ logo }}" width="32px" height="32px" alt="logo">
+                                    <span class="ml-2">{{ setting('forumify.title') }}</span>
+                                </div>
+                                <span class="text-extra-small">{{ 'admin.cms.pages.preview_warning'|trans }}</span>
                             </div>
                             <div class="widget-slot responsive"></div>
                         </div>

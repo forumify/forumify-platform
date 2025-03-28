@@ -1,0 +1,9 @@
+<a
+    class="{{ widget.settings.type|default('btn-primary') }}"
+    href="{{ widget.settings.href|default('#') }}"
+    {% if widget.settings.openInNewTab|default(false) %}
+        target="_blank"
+    {% endif %}
+>
+    {{ widget.settings.title|default('') }}
+</a>

@@ -70,7 +70,10 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
         }
 
         $thread = $message->getThread();
-        return $this->urlGenerator->generate('forumify_forum_messenger_thread', ['id' => $thread->getId()]);
+        return $this->urlGenerator->generate('forumify_forum_messenger_thread', [
+            'id' => $thread->getId(),
+            'lastPageFirst' => true,
+        ]);
     }
 
     private function getMessage(Notification $notification): ?Message

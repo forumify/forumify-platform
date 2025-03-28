@@ -67,7 +67,10 @@ class TopicController extends AbstractController
             $commentForm->handleRequest($request);
             if ($commentForm->isSubmitted() && $commentForm->isValid()) {
                 $this->createCommentService->createComment($topic, $commentForm->getData());
-                return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
+                return $this->redirectToRoute('forumify_forum_topic', [
+                    'slug' => $topic->getSlug(),
+                    'lastPageFirst' => true,
+                ]);
             }
         }
 

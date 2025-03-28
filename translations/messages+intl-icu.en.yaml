@@ -265,6 +265,7 @@ admin:
             type_select: 'Select a type'
             type_help: 'You can not change this option later!'
             preview: 'Enable Preview'
+            preview_warning: 'The preview is built using the Widget''s default content. The actual page might look different depending on how close the widget''s preview is to reality.'
             tabs:
                 twig: 'Twig'
                 css: 'CSS'
@@ -287,12 +288,19 @@ admin:
                 three_column: '3 Columns'
                 four_column: '4 Columns'
                 six_column: '6 Columns'
+                card: 'Card'
+                box: 'Box'
             content:
                 rich_text: 'Rich Text'
                 resource: 'Resource'
                 twig: 'Twig'
+                button: 'Button'
+            forum:
+                online_users: 'Online Users'
             responsive:
                 column_help: 'The sum of all columns must be equal to 12'
+            button:
+                href_help: 'Where the button has to go, for example "/forum", or a full URL like "https://google.com".'
     configuration:
         title: 'Configuration'
         general: 'General'
