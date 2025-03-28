@@ -18,4 +18,4 @@ setup-tests:
 
 .PHONY: run-tests
 run-tests:
-	@./vendor/bin/simple-phpunit
+	@./vendor/bin/phpunit

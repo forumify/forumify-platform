@@ -23,10 +23,7 @@ class TopicCreateController extends AbstractController
         Request $request,
         CreateTopicService $createTopicService,
     ): Response {
-        $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
-            'permission' => 'create_topic',
-            'entity' => $forum,
-        ]);
+        $this->denyAccessUnlessGranted(VoterAttribute::TopicCreate->value, $forum);
 
         $form = $this->createForm(TopicType::class, null, ['forum' => $forum]);
         $form->handleRequest($request);

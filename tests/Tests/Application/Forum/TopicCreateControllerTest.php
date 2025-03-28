@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Application\Forum;
 
-use Forumify\Core\Entity\Role;
-use Forumify\Core\Repository\RoleRepository;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -32,15 +30,50 @@ class TopicCreateControllerTest extends WebTestCase
         $user = $this->createUser();
 
         $client->loginUser($user);
-        $client->request('GET', "/forum/{$forum->getSlug()}");
-        self::assertResponseIsSuccessful();
-
-        $client->clickLink('Post new topic');
+        $client->request('GET', "/forum/{$forum->getId()}/topic/create");
         $client->submitForm('Post', [
             'topic[title]' => 'Test Topic',
             'topic[content]' => '<h1 id="test-topic">test</h1>'
         ]);
+
         self::assertResponseIsSuccessful();
         self::assertSelectorExists('#test-topic', 'test');
+    }
+
+    public function testCannotCreateTopicWhenNotVerified(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects();
+
+        $forum = new Forum();
+        $forum->setTitle('Test Forum');
+        self::getContainer()->get(ForumRepository::class)->save($forum);
+
+        $this->createACL(Forum::class, $forum->getId(), 'create_topic');
+
+        $user = $this->createUser();
+        $user->setEmailVerified(false);
+
+        $client->loginUser($user);
+        $client->request('GET', "/forum/{$forum->getId()}/topic/create");
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testCannotCreateTopicWhenNoACL(): void
+    {
+        $client = static::createClient();
+        $client->followRedirects();
+
+        $forum = new Forum();
+        $forum->setTitle('Test Forum');
+        self::getContainer()->get(ForumRepository::class)->save($forum);
+
+        $user = $this->createUser();
+
+        $client->loginUser($user);
+        $client->request('GET', "/forum/{$forum->getId()}/topic/create");
+
+        self::assertResponseStatusCodeSame(403);
     }
 }

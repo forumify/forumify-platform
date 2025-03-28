@@ -19,6 +19,11 @@ enum VoterAttribute: string
     case CommentDelete = 'COMMENT_DELETE';
     case CommentMarkAsAnswer = 'COMMENT_MARK_AS_ANSWER';
 
+    case TopicView = 'TOPIC_VIEW';
+    case TopicCreate = 'TOPIC_CREATE';
+    case TopicEdit = 'TOPIC_EDIT';
+    case TopicDelete = 'TOPIC_DELETE';
+
     case MessageThreadCreate = 'MESSAGE_THREAD_CREATE';
     case MessageThreadView = 'MESSAGE_THREAD_VIEW';
 }

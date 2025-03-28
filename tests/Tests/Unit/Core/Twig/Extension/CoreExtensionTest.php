@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Unit\Core\Twig\Extension;
 
 use Forumify\Core\Twig\Extension\CoreExtension;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CoreExtensionTest extends TestCase
 {
-    /** @dataProvider shortNumberProvider */
+    #[DataProvider('shortNumberProvider')]
     public function testShortNumber(mixed $input, string $expected): void
     {
         $extension = new CoreExtension();
@@ -17,7 +18,7 @@ class CoreExtensionTest extends TestCase
         self::assertSame($expected, $actual);
     }
 
-    public function shortNumberProvider(): iterable
+    public static function shortNumberProvider(): iterable
     {
         yield 'hundred' => [100, '100'];
         yield 'thousands' => [100_000, '100K'];

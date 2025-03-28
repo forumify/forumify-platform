@@ -39,27 +39,10 @@ class TopicController extends AbstractController
     #[Route('/{slug}', name: '')]
     public function __invoke(Topic $topic, Request $request): Response
     {
-        if ($topic->isHidden()) {
-            $this->denyAccessUnlessGranted(VoterAttribute::Moderator->value);
-        }
-
-        $forum = $topic->getForum();
-        $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
-            'permission' => 'view',
-            'entity' => $forum,
-        ]);
-
-        /** @var User|null $user */
-        $user = $this->getUser();
-        if ($forum->getDisplaySettings()->isOnlyShowOwnTopics() && $topic->getCreatedBy()?->getId() !== $user?->getId()) {
-            $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
-                'permission' => 'show_all_topics',
-                'entity' => $forum,
-            ]);
-        }
+        $this->denyAccessUnlessGranted(VoterAttribute::TopicView->value, $topic);
 
         $commentForm = null;
-        if ($this->canComment($topic)) {
+        if ($this->isGranted(VoterAttribute::CommentCreate->value, $topic)) {
             $commentForm = $this->createForm(NewCommentType::class, options: [
                 'label' => false,
             ]);
@@ -74,7 +57,8 @@ class TopicController extends AbstractController
             }
         }
 
-        if ($user !== null) {
+        $user = $this->getUser();
+        if ($user instanceof User) {
             $this->readMarkerRepository->read($user, Topic::class, $topic->getId());
         }
 
@@ -85,30 +69,15 @@ class TopicController extends AbstractController
         ]);
     }
 
-    private function canComment(Topic $topic): bool
-    {
-        if ($this->isGranted(VoterAttribute::Moderator->value, $topic)) {
-            return true;
-        }
-
-        if ($topic->isLocked()) {
-            return false;
-        }
-
-        return $this->isGranted(VoterAttribute::ACL->value, [
-            'permission' => 'create_comment',
-            'entity' => $topic->getForum(),
-        ]);
-    }
-
     #[Route('/{slug}/edit', '_edit')]
-    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
     public function edit(
         Request $request,
         Topic $topic,
         FilesystemOperator $mediaStorage,
         MediaService $mediaService,
     ): Response {
+        $this->denyAccessUnlessGranted(VoterAttribute::TopicEdit->value, $topic);
+
         $topicData = new TopicData();
         $topicData->setTitle($topic->getTitle());
         $topicData->setExistingImage($topic->getImage());
@@ -202,9 +171,10 @@ class TopicController extends AbstractController
     }
 
     #[Route('/{slug}/delete', '_delete')]
-    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
     public function delete(Topic $topic): Response
     {
+        $this->denyAccessUnlessGranted(VoterAttribute::TopicDelete->value, $topic);
+
         $forum = $topic->getForum();
         $this->topicRepository->remove($topic);
         $this->lastCommentService->clearCache();

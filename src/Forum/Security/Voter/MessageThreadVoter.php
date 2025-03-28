@@ -15,14 +15,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class MessageThreadVoter extends Voter
 {
-    private const SUPPORTED_ATTRIBUTES = [
-        VoterAttribute::MessageThreadCreate->value,
-        VoterAttribute::MessageThreadView->value,
-    ];
-
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, self::SUPPORTED_ATTRIBUTES, true);
+        return in_array($attribute, [
+            VoterAttribute::MessageThreadCreate->value,
+            VoterAttribute::MessageThreadView->value,
+        ], true);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -33,7 +31,7 @@ class MessageThreadVoter extends Voter
         }
 
         return match ($attribute) {
-            VoterAttribute::MessageThreadCreate->value => !$user->isBanned(),
+            VoterAttribute::MessageThreadCreate->value => $user->isEmailVerified() && !$user->isBanned(),
             VoterAttribute::MessageThreadView->value => $this->voteOnView($subject, $user),
             default => false,
         };
@@ -44,6 +42,10 @@ class MessageThreadVoter extends Voter
      */
     private function voteOnView(MessageThread $subject, User $user): bool
     {
+        if (!$user->isEmailVerified() || $user->isBanned()) {
+            return false;
+        }
+
         /** @var User $participant */
         foreach ($subject->getParticipants() as $participant) {
             if ($participant->getId() === $user->getId()) {
