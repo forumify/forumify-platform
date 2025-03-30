@@ -61,6 +61,21 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
         return "<div class='rich-text'>$sanitized</div>";
     }
 
+    public function widget(string $widget, array $settings = [], array $slots = []): string
+    {
+        $widget = $this->findWidget($widget);
+        if ($widget === null) {
+            return '';
+        }
+
+        return $this->twig->render($widget->getTemplate(), [
+            'widget' => [
+                'slots' => $slots,
+                'settings' => $settings,
+            ],
+        ]);
+    }
+
     public function widgetTemplate(array $widget): string
     {
         $widget = $this->findWidget($widget['widget']);

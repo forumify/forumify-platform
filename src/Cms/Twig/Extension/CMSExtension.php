@@ -15,6 +15,7 @@ class CMSExtension extends AbstractExtension
         return [
             new TwigFunction('resource', [CMSExtensionRuntime::class, 'resource']),
             new TwigFunction('snippet', [CMSExtensionRuntime::class, 'snippet'], ['is_safe' => ['html']]),
+            new TwigFunction('widget', [CMSExtensionRuntime::class, 'widget'], ['is_safe' => ['html']]),
         ];
     }
 
