@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace Forumify\OAuth\Controller;
 
-use DateInterval;
-use DateTime;
-use Forumify\Core\Service\TokenService;
 use Forumify\OAuth\GrantType\GrantTypeInterface;
-use Forumify\OAuth\Repository\OAuthAuthorizationCodeRepository;
 use Forumify\OAuth\Repository\OAuthClientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
-use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/token', 'token')]
@@ -26,8 +22,6 @@ class TokenController extends AbstractController
     public function __invoke(
         Request $request,
         OAuthClientRepository $clientRepository,
-        OAuthAuthorizationCodeRepository $authorizationCodeRepository,
-        TokenService $tokenService,
         #[AutowireIterator('forumify.oauth.grant_type')]
         iterable $grantTypes,
     ): JsonResponse {
@@ -53,7 +47,7 @@ class TokenController extends AbstractController
                 'error' => 'invalid_client',
                 'error_description' => "Unable to find a client matching the provided client credentials.",
                 'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
-            ]);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         $grantType = null;
@@ -70,7 +64,7 @@ class TokenController extends AbstractController
                 'error' => 'unsupported_grant_type',
                 'error_description' => "\"{$requestedGrantType}\" is not a supported grant_type.",
                 'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
-            ]);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         return $grantType->respondToRequest($request, $client);

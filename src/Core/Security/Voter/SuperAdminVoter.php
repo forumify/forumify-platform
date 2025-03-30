@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Security\Voter;
 
-use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 

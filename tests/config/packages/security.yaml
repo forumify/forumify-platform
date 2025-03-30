@@ -1,17 +1,13 @@
 security:
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    providers:
-        forumify_user_provider:
-            entity:
-                class: Forumify\Core\Entity\User
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: forumify_user_provider
+            provider: forumify_chain_provider
             form_login:
                 login_path: forumify_core_login
                 check_path: forumify_core_login
@@ -23,6 +19,8 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
+            custom_authenticators:
+                - Forumify\Core\Security\Http\Authenticator\ForumifyAuthenticator
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
 
