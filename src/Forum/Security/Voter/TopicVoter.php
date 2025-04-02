@@ -65,7 +65,8 @@ class TopicVoter extends Voter
         }
 
         $onlyShowOwnTopics = $forum->getDisplaySettings()->isOnlyShowOwnTopics();
-        $isOwnTopic = $topic->getCreatedBy()?->getId() === $user->getId();
+        $author = $topic->getCreatedBy();
+        $isOwnTopic = $author !== null && $author->getId() === $user?->getId();
         if (!$onlyShowOwnTopics || $isOwnTopic) {
             return true;
         }
