@@ -1,0 +1,98 @@
+{% set isAnswer = topic.answer is not null and topic.answer.id == item.id %}
+<li class="comment box{% if isAnswer %} answer{% endif %}" {{ stimulus_controller('forumify/forumify-platform/comment_edit', {
+    updateUrl: path('forumify_forum_comment_edit', { id: item.id })
+}) }}>
+    <div class="comment-author">
+        {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
+        {% include '@Forumify/components/username.html.twig' with { user: item.createdBy, className: 'text-center' } only %}
+        {% if item.createdBy %}
+            {% if not setting('forumify.hide_usernames') %}
+                <span class="text-small">@{{ item.createdBy.username }}</span>
+            {% endif %}
+            {% set roles = item.createdBy.roleEntities|filter(r => r.showOnForum) %}
+            {% if roles is not empty %}
+                <ul class="flex flex-col mt-4 text-small text-center hide-phone">
+                    {% for role in roles %}
+                        <li {% if role.color is not null and role.color != '#000000' %}style="color: {{ role.color }};"{% endif %}>
+                            {{ role.title }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
+                {% for badge in item.createdBy.badges|filter(b => b.showOnForum) %}
+                    <div class="avatar-sm flex justify-center items-center">
+                        <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" title="{{ badge.name }}">
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="comment-content">
+        <div class="pl-4 pr-4 flex-grow">
+            <div class="text-small text-secondary flex justify-between items-end">
+                <span class="mb-2 flex flex-col">
+                    {{ item.createdAt|format_date }}
+                    {% if item.updatedAt != item.createdAt and item.updatedBy is not null %}
+                        {% set editor = item.updatedBy %}
+                        <span class="text-light text-extra-small hide-phone">
+                            {{ 'comment.edited'|trans({
+                                user: editor.displayName|default(editor.username),
+                                date: item.updatedAt|format_date
+                            }) }}
+                        </span>
+                    {% endif %}
+                </span>
+                <div class="comment-toolbar">
+                    {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
+                        <a class="btn-link btn-small btn-icon text-secondary" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'toggleEdit') }}>
+                            <i class="ph ph-pencil"></i>
+                        </a>
+                    {% endif %}
+                    {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentDelete').value, item) %}
+                        <a class="btn-link btn-small btn-icon text-secondary" href="{{ path('forumify_forum_comment_delete', { id: item.id }) }}">
+                            <i class="ph ph-trash"></i>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {{ item.content|rich }}
+            {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
+                <div class="d-none rich-editor" {{ stimulus_target('forumify/forumify-platform/comment_edit', 'editorContainer') }}>
+                    <div class="flex justify-center items-center gap-2 mt-2">
+                        <button type="button" class="btn-outlined" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'discardEdit') }}>
+                            {{ 'cancel'|trans }}
+                        </button>
+                        <button type="button" class="btn-primary" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'save') }}>
+                            {{ 'save'|trans }}
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="hide-phone">
+            {% if item.createdBy.signature|default('')|striptags(['img']) %}
+                <hr class="mb-4">
+                <div class="ml-4 mr-4">
+                    {{ item.createdBy.signature|rich }}
+                </div>
+            {% endif %}
+        </div>
+        {% set showAnswerButton = item|can_mark_as_answer %}
+        <hr class="mt-4">
+        <div class="flex gap-2 p-2 items-end{% if showAnswerButton or isAnswer %} justify-between{% else %} justify-end{% endif %}">
+            {% if showAnswerButton %}
+                <a href="{{ path('forumify_forum_comment_answer', { id: item.id }) }}" class="btn-primary">
+                    <i class="ph ph-check-circle"></i>
+                    {{ 'forum.comment.mark_answer'|trans }}
+                </a>
+            {% elseif isAnswer %}
+                <div class="alert-success p-2 mt-4 text-small">
+                    <i class="ph ph-check-circle"></i>
+                    {{ 'forum.comment.is_answer'|trans }}
+                </div>
+            {% endif %}
+            {{ component('CommentReactions', { comment: item }) }}
+        </div>
+    </div>
+</li>

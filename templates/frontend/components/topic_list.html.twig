@@ -2,9 +2,9 @@
 {% block list %}
     <ul>
         {% for topic in this.result.data %}
-            <li class="flex flex-col topic-row justify-between {% if topic.hidden %}topic-hidden{% endif %}">
+            <li class="flex flex-col topic-row justify-between{% if topic.hidden %} topic-hidden{% endif %}{% if not loop.last %} border-b{% endif %}">
                 <a class="topic-link" href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}"></a>
-                <div class="flex gap-4 mb-2 mt-2">
+                <div class="flex gap-4">
                     {% if topic.forum.type == 'support' %}
                         <div class="flex justify-center items-center">
                             {% if topic.answer is null %}
@@ -32,15 +32,6 @@
                             </div>
                         {% endif %}
                     </div>
-                    {% if forum.displaySettings.showTopicStatistics %}
-                        <div class="flex flex-col items-end gap-1 hide-phone text-small">
-                            <p>{{ max(0, topic.comments.count - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></p>
-                            <p>{{ topic.views|short_number }} <i class="ph ph-eye"></i></p>
-                            {% if topic.firstComment %}
-                                <p>{{ topic.firstComment.reactions.count|short_number }} <i class="ph ph-sparkle"></i></p>
-                            {% endif %}
-                        </div>
-                    {% endif %}
                     {% set lastComment = topic|last_comment %}
                     {% if lastComment is not null %}
                         <div class="flex flex-col w-25 hide-phone hide-tablet">
@@ -68,6 +59,15 @@
                             {{ topic.firstComment.content|striptags('<br><p>')|u.truncate(600, '...', false)|raw }}
                         </div>
                     {% endif %}
+                {% endif %}
+                {% if forum.displaySettings.showTopicStatistics %}
+                    <div class="flex gap-4 pl-1 text-small">
+                        <span>{{ max(0, topic.comments.count - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></span>
+                        <span>{{ topic.views|short_number }} <i class="ph ph-eye"></i></span>
+                        {% if topic.firstComment %}
+                            <span>{{ topic.firstComment.reactions.count|short_number }} <i class="ph ph-sparkle"></i></span>
+                        {% endif %}
+                    </div>
                 {% endif %}
             </li>
         {% endfor %}
