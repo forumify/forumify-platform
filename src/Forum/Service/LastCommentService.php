@@ -22,10 +22,10 @@ class LastCommentService
 {
     public const LAST_COMMENT_CACHE_TAG = 'forumify.forum.last_comment';
 
+    /**
+     * @param TagAwareCacheInterface $cache
+     */
     public function __construct(
-        /**
-         * @var TagAwareCacheInterface
-         */
         private readonly CacheInterface $cache,
         private readonly Security $security,
         private readonly CommentRepository $commentRepository,

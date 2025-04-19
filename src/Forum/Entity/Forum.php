@@ -198,6 +198,11 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
         return $this->displaySettings;
     }
 
+    public function setDisplaySettings(ForumDisplaySettings $displaySettings): void
+    {
+        $this->displaySettings = $displaySettings;
+    }
+
     public function getTopicTemplate(): ?string
     {
         return $this->topicTemplate;

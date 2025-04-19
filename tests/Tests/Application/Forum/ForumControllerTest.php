@@ -5,39 +5,29 @@ declare(strict_types=1);
 namespace Application\Forum;
 
 use Forumify\Forum\Entity\Forum;
-use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Tests\Traits\ACLTrait;
+use Tests\Tests\Traits\ForumTrait;
 use Tests\Tests\Traits\UserTrait;
 
 class ForumControllerTest extends WebTestCase
 {
     use UserTrait;
+    use ForumTrait;
     use ACLTrait;
 
     public function testForum(): void
     {
         $client = static::createClient();
 
-        /** @var ForumRepository $forumRepository */
-        $forumRepository = self::getContainer()->get(ForumRepository::class);
-        $forum1 = new Forum();
-        $forum1->setTitle('Parent 1');
+        $forum1 = $this->createForum('Parent 1');
+        $this->createForum('Parent 2');
 
-        $forum2 = new Forum();
-        $forum2->setTitle('Parent 2');
-        $forumRepository->saveAll([$forum1, $forum2]);
-
-        $forum3 = new Forum();
-        $forum3->setTitle('Child 1');
-        $forum3->setParent($forum1);
+        $forum3 = $this->createForum('Child 1', $forum1);
         $forum1->getChildren()->add($forum3);
 
-        $forum4 = new Forum();
-        $forum4->setTitle('Child 2');
-        $forum4->setParent($forum1);
+        $forum4 = $this->createForum('Child 2', $forum1);
         $forum1->getChildren()->add($forum4);
-        $forumRepository->saveAll([$forum3, $forum4]);
 
         $this->createACL(Forum::class, $forum1->getId(), 'view');
         $this->createACL(Forum::class, $forum3->getId(), 'view');

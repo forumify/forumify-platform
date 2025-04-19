@@ -7,9 +7,9 @@ namespace Forumify\Forum\Repository;
 use Doctrine\ORM\NonUniqueResultException;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\AbstractRepository;
+use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Forum;
-use Forumify\Forum\Entity\Topic;
 
 /**
  * @extends AbstractRepository<Comment>
@@ -19,23 +19,6 @@ class CommentRepository extends AbstractRepository
     public static function getEntityClass(): string
     {
         return Comment::class;
-    }
-
-    public function findLastCommentInTopic(Topic $topic): ?Comment
-    {
-        $query = $this
-            ->createQueryBuilder('c')
-            ->where('c.topic = :topic')
-            ->orderBy('c.createdAt', 'DESC')
-            ->setMaxResults(1)
-            ->setParameters(['topic' => $topic])
-            ->getQuery();
-
-        try {
-            return $query->getOneOrNullResult();
-        } catch (NonUniqueResultException) {
-            return null;
-        }
     }
 
     /**
@@ -50,7 +33,23 @@ class CommentRepository extends AbstractRepository
             ->where('c.createdBy = :user')
             ->setParameter('user', $user)
             ->setMaxResults(10)
-            ->orderBy('c.createdAt', 'DESC');
+            ->orderBy('c.createdAt', 'DESC')
+        ;
+
+        $loggedInUser = $this->security->getUser();
+        if ($loggedInUser === null) {
+            $qb->andWhere('f.displaySettings.onlyShowOwnTopics = 0');
+        } elseif (!$this->security->isGranted(VoterAttribute::SuperAdmin->value)) {
+            // TODO: This doesn't account for people who have ACL permissions
+            // to bypass "show only own topics".
+            $qb
+                ->andWhere($qb->expr()->orX(
+                    'f.displaySettings.onlyShowOwnTopics = 0',
+                    't.createdBy = :loggedInUser'
+                ))
+                ->setParameter('loggedInUser', $loggedInUser)
+            ;
+        }
 
         $this->addACLToQuery($qb, 'view', Forum::class, 'f');
 
