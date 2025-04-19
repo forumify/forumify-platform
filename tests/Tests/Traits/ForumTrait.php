@@ -7,6 +7,7 @@ namespace Tests\Tests\Traits;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumDisplaySettings;
+use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\TopicData;
 use Forumify\Forum\Repository\ForumRepository;
 use Forumify\Forum\Service\CreateTopicService;
@@ -36,7 +37,7 @@ trait ForumTrait
         string $title = 'Test Topic',
         ?User $author = null,
         ?string $content = 'Test Comment',
-    ): void {
+    ): Topic {
         $forum ??= $this->createForum();
 
         $topicData = new TopicData();
@@ -44,6 +45,8 @@ trait ForumTrait
         $topicData->setAuthor($author);
         $topicData->setContent($content);
 
-        self::getContainer()->get(CreateTopicService::class)->createTopic($forum, $topicData);
+        return self::getContainer()
+            ->get(CreateTopicService::class)
+            ->createTopic($forum, $topicData);
     }
 }

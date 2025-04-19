@@ -7,6 +7,7 @@ namespace Tests\Tests\Unit\Forum\Repository;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumDisplaySettings;
 use Forumify\Forum\Repository\CommentRepository;
+use Forumify\Forum\Repository\TopicRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tests\Tests\Traits\ACLTrait;
 use Tests\Tests\Traits\ForumTrait;
@@ -25,6 +26,9 @@ class CommentRepositoryTest extends KernelTestCase
         $forum1 = $this->createForum();
         $this->createACL(Forum::class, $forum1->getId(), 'view', [$this->getGuestRole()]);
         $this->createTopic($forum1, author: $user, content: 'Visible Comment');
+        $hiddenTopic = $this->createTopic($forum1, author: $user, content: 'Hidden Comment');
+        $hiddenTopic->setHidden(true);
+        self::getContainer()->get(TopicRepository::class)->save($hiddenTopic);
 
         $displaySettings = new ForumDisplaySettings();
         $displaySettings->setOnlyShowOwnTopics(true);

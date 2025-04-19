@@ -36,6 +36,10 @@ class CommentRepository extends AbstractRepository
             ->orderBy('c.createdAt', 'DESC')
         ;
 
+        if (!$this->security->isGranted(VoterAttribute::Moderator->value)) {
+            $qb->andWhere('t.hidden = 0');
+        }
+
         $loggedInUser = $this->security->getUser();
         if ($loggedInUser === null) {
             $qb->andWhere('f.displaySettings.onlyShowOwnTopics = 0');
