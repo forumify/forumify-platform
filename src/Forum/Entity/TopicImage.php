@@ -15,7 +15,7 @@ class TopicImage
     use IdentifiableEntityTrait;
     use TimestampableEntityTrait;
 
-    #[ORM\ManyToOne(Topic::class)]
+    #[ORM\ManyToOne(Topic::class, inversedBy: 'images')]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Topic $topic;
 
