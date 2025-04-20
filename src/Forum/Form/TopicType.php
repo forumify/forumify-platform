@@ -6,6 +6,7 @@ namespace Forumify\Forum\Form;
 
 use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Forum\Entity\Forum;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,6 +18,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TopicType extends AbstractType
 {
+    public function __construct(private readonly Packages $packages)
+    {
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -27,6 +32,10 @@ class TopicType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var TopicData|null $topicData  */
+        $topicData = $options['data'] ?? null;
+        $imagePreview = $topicData?->getExistingImage();
+
         /** @var Forum|null $forum */
         $forum = $options['forum'];
         $forumType = $forum?->getType();
@@ -35,10 +44,15 @@ class TopicType extends AbstractType
         if (in_array($forumType, [Forum::TYPE_IMAGE, Forum::TYPE_MIXED], true)) {
             $builder->add('image', FileType::class, [
                 'required' => $forumType === Forum::TYPE_IMAGE,
+                'attr' => [
+                    'preview' => $imagePreview
+                        ? $this->packages->getUrl($imagePreview, 'forumify.media')
+                        : null,
+                ]
             ]);
         }
 
-        if (empty($options['data'])) {
+        if ($topicData === null) {
             $template = $forum?->getTopicTemplate() ?? '';
             $builder->add('content', RichTextEditorType::class, [
                 'data' => $template,

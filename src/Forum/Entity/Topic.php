@@ -24,12 +24,16 @@ class Topic implements SubscribableInterface
     #[ORM\Column]
     private string $title;
 
-    #[ORM\Column(nullable: true)]
-    private ?string $image = null;
-
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'topics')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private Forum $forum;
+
+    /**
+     * @var Collection<int, TopicImage>
+     */
+    #[ORM\OneToMany('topic', TopicImage::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdAt' => 'ASC'])]
+    private Collection $images;
 
     /**
      * @var Collection<int, Comment>
@@ -60,6 +64,7 @@ class Topic implements SubscribableInterface
 
     public function __construct()
     {
+        $this->images = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
 
@@ -78,16 +83,6 @@ class Topic implements SubscribableInterface
         $this->title = $title;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(?string $image): void
-    {
-        $this->image = $image;
-    }
-
     public function getForum(): Forum
     {
         return $this->forum;
@@ -96,6 +91,39 @@ class Topic implements SubscribableInterface
     public function setForum(Forum $forum): void
     {
         $this->forum = $forum;
+    }
+
+    /**
+     * @return Collection<int, TopicImage>
+     */
+    public function getImages(): Collection
+    {
+        return $this->images;
+    }
+
+    /**
+     * @param Collection<int, TopicImage> $images
+     */
+    public function setImages(Collection $images): void
+    {
+        $this->images = $images;
+    }
+
+    public function getImage(): ?string
+    {
+        $first = $this->images->first();
+        return $first ? $first->getImage() : null;
+    }
+
+    public function setImage(?string $image): void
+    {
+        $first = $this->images->first();
+        if (!$first) {
+            $first = new TopicImage();
+            $first->setTopic($this);
+            $this->getImages()->add($first);
+        }
+        $first->setImage($image);
     }
 
     public function getParent(): Forum
