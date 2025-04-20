@@ -295,12 +295,15 @@ admin:
                 resource: 'Resource'
                 twig: 'Twig'
                 button: 'Button'
+                youtube: 'Youtube'
             forum:
                 online_users: 'Online Users'
             responsive:
                 column_help: 'The sum of all columns must be equal to 12'
             button:
                 href_help: 'Where the button has to go, for example "/forum", or a full URL like "https://google.com".'
+            youtube:
+                video_id_help: 'The ID of the video. Can be found by going to the video, and grabbing it from the link. For example the highlighted part in this url: https://www.youtube.com/watch?v=<strong>kfopfdhdW2lk</strong>.'
     configuration:
         title: 'Configuration'
         general: 'General'

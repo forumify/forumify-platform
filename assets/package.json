@@ -93,6 +93,12 @@
                 "fetch": "eager",
                 "enabled": true,
                 "autoimport": {}
+            },
+            "youtube": {
+                "main": "dist/youtube_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
             }
         },
         "importmap": {

@@ -1,0 +1,10 @@
+{% set videoId = widget.settings.videoId ?? null %}
+{% if videoId is not null %}
+    <div
+        class="youtube-widget"
+        {{ stimulus_controller('forumify/forumify-platform/youtube', {
+            videoId: videoId,
+        }) }}>
+        <div class="play-button"></div>
+    </div>
+{% endif %}
