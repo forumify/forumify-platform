@@ -297,11 +297,18 @@ admin:
                 button: 'Button'
                 youtube: 'Youtube'
             forum:
+                gallery: 'Gallery'
                 online_users: 'Online Users'
             responsive:
                 column_help: 'The sum of all columns must be equal to 12'
             button:
                 href_help: 'Where the button has to go, for example "/forum", or a full URL like "https://google.com".'
+            gallery:
+                forum_placeholder: 'Select an image forum.'
+                forum_help: 'The gallery can only display images from forums of type "image" or "mixed". This widget does not take any permissions into account and all images will be visible to everyone that can access this page.'
+                autoscroll_help: 'Automatically move to the next image in the gallery.'
+                autoscroll_interval_help: 'If autoscroll is enabled, this interval dictates how many seconds each image should be visible.'
+                hide_controls_help: 'Hides the controls for the user to manually move to the next or previous image in the gallery.'
             youtube:
                 video_id_help: 'The ID of the video. Can be found by going to the video, and grabbing it from the link. For example the highlighted part in this url: https://www.youtube.com/watch?v=<strong>kfopfdhdW2lk</strong>.'
     configuration:

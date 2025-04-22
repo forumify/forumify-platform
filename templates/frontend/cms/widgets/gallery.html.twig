@@ -1,0 +1,24 @@
+{% set forumId = widget.settings.forum ?? null %}
+{% set autoscroll = widget.settings.autoscroll ?? false %}
+{% set autoscrollInterval = widget.settings.autoscrollInterval ?? 10 %}
+{% set hideControls = widget.settings.hideControls ?? false %}
+{% if forumId %}
+    {% set images = repository('TopicImage').findByForum(forumId)|map(ti => asset(ti.image, 'forumify.media')) %}
+    <div class="gallery" {{ stimulus_controller('forumify/forumify-platform/gallery', {
+        images: images,
+        autoscroll: autoscroll,
+        autoscrollInterval, autoscrollInterval
+    }) }}>
+        <img class="image" {{ stimulus_target('forumify/forumify-platform/gallery', 'image') }}>
+        {% if not hideControls %}
+            <div class="gallery-controls">
+                <a class="control" {{ stimulus_action('forumify/forumify-platform/gallery', 'previous') }}>
+                    <i class="ph ph-arrow-left"></i>
+                </a>
+                <a class="control" {{ stimulus_action('forumify/forumify-platform/gallery', 'next') }}>
+                    <i class="ph ph-arrow-right"></i>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}

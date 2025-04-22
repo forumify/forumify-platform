@@ -40,6 +40,12 @@
                 "enabled": true,
                 "autoimport": {}
             },
+            "gallery": {
+                "main": "dist/gallery_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
+            },
             "list": {
                 "main": "dist/list_controller.js",
                 "fetch": "eager",

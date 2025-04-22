@@ -33,7 +33,7 @@ class ResourceWidget extends AbstractWidget
         return '<img
             width="100%"
             height="auto"
-            style="max-width: 100%; max-height:  100%"
+            style="max-width: 100%; max-height: 100%"
             draggable="false"
             src="/bundles/forumify/images/forumify.svg"
             data-setting-resource="src"
