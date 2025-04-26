@@ -27,7 +27,7 @@ class ProfileController extends AbstractController
         $followerCount = $this->subscriptionRepository->count(['type' => 'user_follow', 'subjectId' => $user->getId()]);
         $followingCount = $this->subscriptionRepository->count(['user' => $user, 'type' => 'user_follow']);
 
-        return $this->render('@Forumify/frontend/profile.html.twig', [
+        return $this->render('@Forumify/frontend/profile/profile.html.twig', [
             'user' => $user,
             'topicCount' => $this->topicRepository->count(['createdBy' => $user]),
             'commentCount' => $this->commentRepository->count(['createdBy' => $user]),
