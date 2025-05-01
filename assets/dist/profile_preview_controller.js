@@ -4,7 +4,7 @@ import { createPopper } from '@popperjs/core';
 export default class extends Controller {
   static values = {
     userId: Number,
-  }
+  };
 
   connect() {
     this._initialized = false;
@@ -15,7 +15,6 @@ export default class extends Controller {
     this.element.addEventListener('mouseenter', this._dragstart.bind(this));
     this.element.addEventListener('mouseleave', this._dragend.bind(this));
   }
-
 
   _dragstart() {
     this._hover = true;
