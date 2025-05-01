@@ -1,73 +1,8 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
 {% block title_page %}{{ user.displayName }}{% endblock %}
 {% block body %}
-    <div class="grid-2 mb-8">
-        {% block profile_avatar %}
-            <div class="text-right border-r pr-3 mr-3">
-                {% include '@Forumify/components/avatar.html.twig' with {
-                    user: user,
-                    className: 'avatar-lg',
-                } only %}
-            </div>
-        {% endblock %}
-        {% block profile_user %}
-            <div>
-                <div class="flex gap-2 mb-2">
-                    {% block profile_user_username %}
-                        <div>
-                            <h2 class="mb-0">{{ user.displayName }}</h2>
-                            {% if not setting('forumify.hide_usernames') %}
-                                <p class="text-small">@{{ user.username }}</p>
-                            {% endif %}
-                        </div>
-                    {% endblock %}
-                    {% block profile_user_actions %}
-                        {% if app.user is not null %}
-                            {% if app.user.id != user.id %}
-                                <a href="{{ path('forumify_forum_messenger_thread_create', { recipient: user.id }) }}" class="btn-outlined btn-icon">
-                                    <i class="ph ph-paper-plane-tilt"></i>
-                                </a>
-                                {{ component('SubscribeButton', {
-                                    entityId: user.id,
-                                    subscriptionType: 'user_follow',
-                                    subscribeIcon: '',
-                                    subscribeLabel: 'follow',
-                                    unsubscribeIcon: '',
-                                    unsubscribeLabel: 'unfollow',
-                                    buttonClass: 'btn-outlined'
-                                }) }}
-                            {% endif %}
-                        {% endif %}
-                    {% endblock %}
-                </div>
-                {% block profile_user_roles %}
-                    {% set roles = user.roleEntities|filter(r => r.showOnForum) %}
-                    {% if roles is not empty %}
-                        <ul class="flex flex-col mb-2 text-small">
-                            {% for role in roles %}
-                                <li {% if role.color is not null and role.color != '#000000' %}style="color: {{ role.color }};"{% endif %}>
-                                    {{ role.title }}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                {% endblock %}
-                {% block profile_user_stats %}
-                    <p class="mb-2">
-                        <span class="text-bold">{{ topicCount }}</span> topics
-                        <span class="text-bold ml-4">{{ commentCount }}</span> comments
-                    </p>
-                    <p class="mb-4">
-                        <span class="text-bold">{{ followerCount }}</span> followers
-                        <span class="text-bold ml-4">{{ followingCount }}</span> following
-                    </p>
-                {% endblock %}
-                {% block profile_user_timestamps %}
-                    <p class="text-small">Registered: {{ user.createdAt|date('d M Y') }}</p>
-                    <p class="text-small">Last seen: {{ user.lastActivity is not null ? user.lastActivity|format_date : 'never' }}</p>
-                {% endblock %}
-            </div>
-        {% endblock %}
+    <div class="mb-8">
+        {{ component('Forumify\\ProfileHeader', { user: user }) }}
     </div>
     <div class="grid gap-4">
         {% block profile_badges %}

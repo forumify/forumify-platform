@@ -6,6 +6,9 @@ export default class extends Controller {
       mention.addEventListener('click', () => {
         location.href = `/profile/${mention.dataset.id}`;
       });
+
+      mention.setAttribute('data-forumify--forumify-platform--profile-preview-user-id-value', mention.dataset.id);
+      mention.dataset.controller = 'forumify--forumify-platform--profile-preview';
     });
 
     const children = [...this.element.children];

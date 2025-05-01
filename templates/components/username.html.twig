@@ -1,5 +1,9 @@
 {%- if user is not null -%}
-    <a class="inline-flex items-center gap-1 {{ className|default('') }}" href="{{ path('forumify_forum_profile', { username: user.username }) }}">
+    <a
+        class="inline-flex items-center gap-1 {{ className|default('') }}"
+        href="{{ path('forumify_forum_profile', { username: user.username }) }}"
+        {{ stimulus_controller('forumify/forumify-platform/profile_preview', { userId: user.id }) }}
+    >
         {{ user.displayName|default(user.username) }}
         {% if not hideOnline|default(false) and user.online %}
             <span class="dot" style="background-color: #57B357"></span>

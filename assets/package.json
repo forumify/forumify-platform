@@ -76,6 +76,12 @@
                 "enabled": true,
                 "autoimport": {}
             },
+            "profile_preview": {
+                "main": "dist/profile_preview_controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {}
+            },
             "rich_editor": {
                 "main": "dist/rich_editor_controller.js",
                 "fetch": "eager",
