@@ -4,50 +4,77 @@
             <div class="card-title">
                 {{ 'profile.activity.activity'|trans }}
             </div>
-            {% for comment in comments %}
-                <div class="card-body">
-                    <div class="flex">
-                        <div class="mr-2">
-                            {% if comment == comment.topic.firstcomment %}
-                                <i class="ph ph-chat text-large"></i>
-                                {% else %}
-                                <i class="ph ph-arrow-bend-up-left text-large"></i>
+            <ul class="card-body">
+                {% for comment in comments %}
+                    {% set firstComment = comment == comment.topic.firstComment %}
+                    <li class="mt-2 border-b">
+                        <div class="flex">
+                            {% set icon = firstComment ? 'ph-chat' : 'ph-arrow-bend-up-left' %}
+                            <i class="ph {{ icon }} text-large mr-2"></i>
+                            <a href="{{ path('forumify_forum_topic', {
+                                slug: comment.topic.slug
+                            }) }}">
+                                {{ comment.topic.title }}
+                            </a>
+                        </div>
+                        <div>
+                            {% if firstComment %}
+                                {{ 'profile.activity.created'|trans }}
+                                <a href="{{ path('forumify_forum_forum', {
+                                    slug: comment.topic.forum.slug
+                                }) }}">
+                                    {{ comment.topic.forum }}
+                                </a>
+                            {% else %}
+                                {{ 'profile.activity.replied'|trans }}
+                                <a href="{{ path('forumify_forum_profile', {
+                                    username: user.username
+                                }) }}">
+                                    {{ comment.topic.createdBy.username }}
+                                </a>
+                                {{ 'profile.activity.topic'|trans }}
+                                <a href="{{ path('forumify_forum_forum', {
+                                    slug: comment.topic.forum.slug
+                                }) }}">
+                                    {{ comment.topic.forum }}
+                                </a>
                             {% endif %}
                         </div>
-                        <div><a href="{{ path('forumify_forum_topic', { slug: comment.topic.slug }) }}">{{ comment.topic.title }}</a></div>
-                    </div>
-                    {% if comment == comment.topic.firstComment %}
-                        <div class="text-small">
-                            {{ 'profile.activity.created'|trans }} <a href="{{ path('forumify_forum_forum', { slug: comment.topic.forum.slug }) }}">{{ comment.topic.forum }}</a>
+                        <div class="mt-2 mb-5">
+                            <p>
+                                {{ comment.content|striptags|u.truncate(500, '...', false) }}
+                            </p>
                         </div>
-                        {% else %}
-                            <div class="text-small">
-                                {{ 'profile.activity.replied'|trans }}
-                                <a href="{{ path('forumify_forum_profile', { username: user.username }) }}">{{ comment.topic.createdBy.username }}</a>
-                                {{ 'profile.activity.topic'|trans }}
-                                <a href="{{ path('forumify_forum_forum', { slug: comment.topic.forum.slug }) }}">{{ comment.topic.forum }}</a>
-                            </div>
-                    {% endif %}
-                    <div class="mt-2 mb-5">
-                        <div class="flex flex-col items-start">
-                            <span>{{ comment.content|striptags|u.truncate(500, '...', false) }}</span>
+                        <div>
+                            {% if firstComment %}
+                                <p class="text-small">
+                                    {{ comment.createdAt|format_date }}
+                                </p>
+                            {% else %}
+                                <div class="flex gap-5 text-small">
+                                    <p>
+                                        {{ comment.createdAt|format_date }}
+                                    </p>
+                                    <div class="flex gap-2">
+                                        <p>
+                                            {{ max(0, comment.topic.comments.count - 1)|short_number  }}
+                                            <i class="ph ph-arrow-bend-up-left"></i>
+                                        </p>
+                                        <p>
+                                            {{ comment.topic.views|short_number }}
+                                            <i class="ph ph-eye"></i>
+                                        </p>
+                                        <p>
+                                            {{ comment.topic.firstComment.reactions.count|short_number }}
+                                            <i class="ph ph-sparkle"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endif %}
                         </div>
-                    </div>
-                    {% if comment == comment.topic.firstComment %}
-                        <div class="text-small">{{ comment.createdAt|format_date }}</div>
-                        {% else %}
-                        <div class="flex gap-5">
-                            <div class="text-small">{{ comment.createdAt|format_date }}</div>
-                            <div class="flex gap-2 pl-1 text-small">
-                                <span>{{ max(0, comment.topic.comments.count - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></span>
-                                <span>{{ comment.topic.views|short_number }} <i class="ph ph-eye"></i></span>
-                                <span>{{ comment.topic.firstComment.reactions.count|short_number }} <i class="ph ph-sparkle"></i></span>
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-                <hr>
-            {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 {% endblock %}
