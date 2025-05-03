@@ -5,20 +5,22 @@
         {{ component('Forumify\\ProfileHeader', { user: user }) }}
     </div>
     <div class="grid gap-4">
-        {% block profile_badges %}
             <div class="col-xs-12 col-md-4">
-                <div class="card">
-                    <div class="card-title">
-                        {{ 'profile.badges'|trans }}
-                    </div>
-                    <div class="card-body grid-xs-6 grid-md-4 gap-4">
-                        {% for badge in user.badges %}
-                            <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" title="{{ badge.name }}">
-                        {% endfor %}
-                    </div>
-                </div>
+                {% block profile_widgets %}
+                    {% block profile_badges %}
+                        <div class="card">
+                            <div class="card-title">
+                                {{ 'profile.badges'|trans }}
+                            </div>
+                            <div class="card-body grid-xs-6 grid-md-4 gap-4">
+                                {% for badge in user.badges %}
+                                    <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" title="{{ badge.name }}">
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endblock %}
+                {% endblock %}
             </div>
-        {% endblock %}
         {% block profile_activity %}
             {% include '@Forumify/frontend/components/profile_activity.html.twig' %}
         {% endblock %}
