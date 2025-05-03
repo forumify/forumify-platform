@@ -7,7 +7,7 @@
             <ul class="card-body p-0">
                 {% for comment in comments %}
                     {% set firstComment = comment == comment.topic.firstComment %}
-                    <li class="p-2 pr-4 pl-4{% if not loop.last %} border-b{% endif %}">
+                    <li class="p-2 pr-4 pl-4 flex flex-col gap-2{% if not loop.last %} border-b{% endif %}">
                         <div class="flex items-center gap-1">
                             {% set icon = firstComment ? 'ph-chat' : 'ph-arrow-bend-up-left' %}
                             <i class="ph {{ icon }} text-large"></i>
@@ -33,37 +33,11 @@
                                 </a>
                             {% endif %}
                         </div>
-                        <div class="mt-2 mb-5">
-                            <p>
-                                {{ comment.content|striptags|u.truncate(500, '...', false) }}
-                            </p>
-                        </div>
-                        <div>
-                            {% if firstComment %}
-                                <p class="text-small">
-                                    {{ comment.createdAt|format_date }}
-                                </p>
-                            {% else %}
-                                <div class="flex gap-5 text-small">
-                                    <p>
-                                        {{ comment.createdAt|format_date }}
-                                    </p>
-                                    <div class="flex gap-2">
-                                        <p>
-                                            {{ max(0, comment.topic.comments.count - 1)|short_number  }}
-                                            <i class="ph ph-arrow-bend-up-left"></i>
-                                        </p>
-                                        <p>
-                                            {{ comment.topic.views|short_number }}
-                                            <i class="ph ph-eye"></i>
-                                        </p>
-                                        <p>
-                                            {{ comment.topic.firstComment.reactions.count|short_number }}
-                                            <i class="ph ph-sparkle"></i>
-                                        </p>
-                                    </div>
-                                </div>
-                            {% endif %}
+                        <p>
+                            {{ comment.content|striptags|u.truncate(500, '...', false) }}
+                        </p>
+                        <div class="text-small">
+                            {{ comment.createdAt|format_date }}
                         </div>
                     </li>
                 {% endfor %}

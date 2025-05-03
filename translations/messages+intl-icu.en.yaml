@@ -60,7 +60,7 @@ profile:
     activity:
         activity: 'Activity'
         commented: 'Commented on'
-        created: 'Created topic'
+        created: 'Created a topic'
         in: 'in'
     no_activity: 'This user has not posted any content yet.'
     badges: 'Badges'
