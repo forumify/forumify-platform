@@ -59,9 +59,9 @@ last: 'Last'
 profile:
     activity:
         activity: 'Activity'
-        replied: "replied to"
-        topic: "'s topic in"
-        created: 'created a topic in'
+        commented: 'Commented on'
+        created: 'Created topic'
+        in: 'in'
     no_activity: 'This user has not posted any content yet.'
     badges: 'Badges'
     topics: 'topics'
