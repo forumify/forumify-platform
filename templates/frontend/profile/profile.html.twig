@@ -20,26 +20,7 @@
             </div>
         {% endblock %}
         {% block profile_activity %}
-            <div class="col-xs-12 col-md-8">
-                <div class="card">
-                    <div class="card-title">
-                        {{ 'profile.activity'|trans }}
-                    </div>
-                    <div class="card-body">
-                        <ul>
-                            {% for comment in comments %}
-                                <li class="flex flex-col items-start">
-                                    <a class="pb-1" href="{{ path('forumify_forum_topic', { slug: comment.topic.slug }) }}">
-                                        {{ comment.topic.title }}
-                                    </a>
-                                </li>
-                            {% else %}
-                                {{ 'profile.no_activity'|trans }}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            {% include '@Forumify/frontend/components/profile_activity.html.twig' %}
         {% endblock %}
     </div>
 {% endblock %}

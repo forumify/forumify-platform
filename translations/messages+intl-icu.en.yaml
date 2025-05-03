@@ -57,7 +57,11 @@ unsubscribe: 'Unsubscribe'
 first: 'First'
 last: 'Last'
 profile:
-    activity: 'Activity'
+    activity:
+        activity: 'Activity'
+        replied: "replied to"
+        topic: "'s topic in"
+        created: 'created a topic in'
     no_activity: 'This user has not posted any content yet.'
     badges: 'Badges'
     topics: 'topics'
