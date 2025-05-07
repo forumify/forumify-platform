@@ -27,12 +27,10 @@ class RoleExtension extends AbstractExtension
             ?->getRoleEntities()
             ?->filter(fn(Role $r) =>
                 $r->isShowOnUsername()
-                && strtolower($r->getColor() ?? '') !== '#000000'
+                && $r->getColor() !== '#000000'
             )
-            ->first()
-            ?: null
-        ;
+            ?->first();
 
-        return $role->getColor();
+        return $role ? $role->getColor() : null;
     }
 }
