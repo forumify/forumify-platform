@@ -41,6 +41,9 @@ class Role implements SortableEntityInterface
     #[ORM\Column(nullable: true)]
     private ?string $color = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $showOnUsername = false;
+
     /**
      * @var Collection<User>
      */
@@ -142,5 +145,15 @@ class Role implements SortableEntityInterface
     public function setColor(string $color): void
     {
         $this->color = $color;
+    }
+
+    public function isShowOnUsername(): bool
+    {
+        return $this->showOnUsername;
+    }
+
+    public function setShowOnUsername(bool $showOnUsername): void
+    {
+        $this->showOnUsername = $showOnUsername;
     }
 }

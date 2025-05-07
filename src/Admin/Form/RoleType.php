@@ -55,6 +55,10 @@ class RoleType extends AbstractType
                 'required' => false,
                 'help' => 'role_type.show_on_forum',
             ])
+            ->add('showOnUsername', CheckboxType::class, [
+                'required' => false,
+                'help' => 'role_type.show_on_username',
+            ])
             ->add('color', ColorType::class, [
                 'required' =>false,
                 'help' => 'role_type.color',
