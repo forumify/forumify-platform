@@ -23,13 +23,16 @@ class RoleExtension extends AbstractExtension
     }
     public function roleColor(?User $user): ?string
     {
-        return $user
+        $role = $user
             ?->getRoleEntities()
             ?->filter(fn(Role $r) =>
                 $r->isShowOnUsername()
                 && strtolower($r->getColor() ?? '') !== '#000000'
             )
-            ?->first()
-            ?->getColor();
+            ->first()
+            ?: null
+        ;
+
+        return $role->getColor();
     }
 }
