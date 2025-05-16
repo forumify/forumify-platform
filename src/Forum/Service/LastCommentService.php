@@ -75,7 +75,7 @@ class LastCommentService
      */
     private function getLastCommentForForumTree(Forum $forum, string $userId): ?array
     {
-        return $this->cache->get("forumify.forum.$forum.last_comment.$userId", function (ItemInterface $item) use ($forum, $userId) {
+        return $this->cache->get("forumify.forum.{$forum->getId()}.last_comment.$userId", function (ItemInterface $item) use ($forum, $userId) {
             $item->tag([self::LAST_COMMENT_CACHE_TAG]);
 
             return $this->refreshLastCommentCache($forum, $userId);
