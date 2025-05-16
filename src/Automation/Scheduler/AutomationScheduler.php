@@ -6,7 +6,7 @@ namespace Forumify\Automation\Scheduler;
 
 use Forumify\Automation\Condition\ConditionInterface;
 use Forumify\Automation\Entity\Automation;
-use Forumify\Core\Notification\NotificationContextSerializer;
+use Forumify\Core\Notification\ContextSerializer;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
@@ -20,7 +20,7 @@ class AutomationScheduler
         #[AutowireIterator('forumify.automation.condition', defaultIndexMethod: 'getType')]
         private readonly iterable $conditions,
         private readonly MessageBusInterface $messageBus,
-        private readonly NotificationContextSerializer $contextSerializer,
+        private readonly ContextSerializer $contextSerializer,
     ) {
     }
 

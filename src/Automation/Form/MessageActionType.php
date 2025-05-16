@@ -15,7 +15,7 @@ class MessageActionType extends AbstractType
     {
         $builder
             ->add('recipients', CodeEditorType::class, [
-                'help' => 'admin.automations.action.message.recipients_help',
+                'help' => 'admin.automations.action.recipients_help',
                 'help_html' => true,
                 'density' => 'compact',
             ])

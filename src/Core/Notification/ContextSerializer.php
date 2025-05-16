@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use JsonSerializable;
 use RuntimeException;
 
-class NotificationContextSerializer
+class ContextSerializer
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

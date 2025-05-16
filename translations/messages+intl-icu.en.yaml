@@ -514,6 +514,8 @@ admin:
                 author_help: 'A single user created using <a href="https://symfony.com/doc/current/reference/formats/expression_language.html" target="_blank">Symfony''s Expression Language</a>. Supports user objects from payloads, user IDs and usernames. For example, one of: <code>"admin", entity.getCreatedBy(), 5, "8"</code>'
                 title_help: 'The title of the topic in <a href="https://twig.symfony.com/" target="_blank">Twig</a>. The trigger payload is available as Twig context.'
                 content_help: 'The content of the topic in <a href="https://twig.symfony.com/" target="_blank">Twig</a>. The trigger payload is available as Twig context.'
+            badge:
+                recipient_help: 'A single user created using <a href="https://symfony.com/doc/current/reference/formats/expression_language.html" target="_blank">Symfony''s Expression Language</a>. Supports user objects from payloads, user IDs and usernames. For example, one of: <code>"admin", entity.getCreatedBy(), 5, "8"</code>'
 calendar:
     title: 'Calendar'
     all_calendars: 'All Calendars'

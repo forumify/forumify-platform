@@ -7,7 +7,7 @@ namespace Forumify\Automation\Scheduler;
 use Forumify\Automation\Action\ActionInterface;
 use Forumify\Automation\Entity\Automation;
 use Forumify\Automation\Repository\AutomationRepository;
-use Forumify\Core\Notification\NotificationContextSerializer;
+use Forumify\Core\Notification\ContextSerializer;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -21,7 +21,7 @@ class AutomationMessageHandler
         #[AutowireIterator('forumify.automation.action', defaultIndexMethod: 'getType')]
         private readonly iterable $actions,
         private readonly AutomationRepository $automationRepository,
-        private readonly NotificationContextSerializer $contextSerializer,
+        private readonly ContextSerializer $contextSerializer,
     ) {
     }
 
