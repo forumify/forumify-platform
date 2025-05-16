@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Forumify\Automation\Action;
 
 use Forumify\Automation\Entity\Automation;
-use Forumify\Automation\Form\GiveBadgeActionType;
+use Forumify\Automation\Form\GiveRoleActionType;
 use Forumify\Automation\Service\UserExpressionResolver;
 use Forumify\Core\Notification\ContextSerializer;
 use Forumify\Core\Repository\UserRepository;
 
-class GiveBadgeAction implements ActionInterface
+class GiveRoleAction implements ActionInterface
 {
     public function __construct(
         private readonly ContextSerializer $contextSerializer,
@@ -21,13 +21,13 @@ class GiveBadgeAction implements ActionInterface
 
     public static function getType(): string
     {
-        return 'Give Badge';
+        return 'Give Role';
     }
 
     public function run(Automation $automation, ?array $payload): void
     {
         [
-            'badge' => $badge,
+            'role' => $role,
             'recipient' => $recipientExpr,
         ] = $this->contextSerializer->deserialize($automation->getActionArguments());
 
@@ -37,14 +37,14 @@ class GiveBadgeAction implements ActionInterface
             return;
         }
 
-        if (!$recipient->getBadges()->contains($badge)) {
-            $recipient->getBadges()->add($badge);
+        if (!$recipient->getRoleEntities()->contains($role)) {
+            $recipient->getRoleEntities()->add($role);
             $this->userRepository->save($recipient);
         }
     }
 
     public function getPayloadFormType(): ?string
     {
-        return GiveBadgeActionType::class;
+        return GiveRoleActionType::class;
     }
 }
