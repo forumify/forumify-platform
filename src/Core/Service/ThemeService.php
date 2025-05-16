@@ -10,8 +10,6 @@ use Forumify\Plugin\AbstractForumifyTheme;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use Psr\Cache\InvalidArgumentException;
-use RuntimeException;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -46,6 +44,7 @@ class ThemeService
     {
         try {
             $this->cache->delete(self::THEME_LAST_MODIFIED_CACHE_KEY);
+            $this->cache->delete(ThemeTemplateService::CACHE_KEY);
         } catch (InvalidArgumentException) {
         }
         $this->themeMetadata = null;

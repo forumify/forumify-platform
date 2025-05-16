@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Twig;
 
-use Forumify\Core\Repository\PluginRepository;
-use Forumify\Core\Repository\ThemeRepository;
-use Forumify\Plugin\Entity\Plugin;
+use Forumify\Core\Service\ThemeTemplateService;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
 use Twig\Loader\LoaderInterface;
 use Twig\Source;
 
@@ -23,18 +22,15 @@ class ForumifyTemplateLoader implements LoaderInterface
     private readonly string $cacheDir;
     /** @var array<string,string> */
     private array $cache = [];
+    private Filesystem $fs;
 
     public function __construct(
-        private readonly ThemeRepository $themeRepository,
-        private readonly PluginRepository $pluginRepository,
-        #[Autowire('%twig.default_path%')]
-        private readonly string $twigPath,
-        #[Autowire('%kernel.project_dir%')]
-        private readonly string $rootDir,
+        private readonly ThemeTemplateService $themeTemplateService,
         #[Autowire('%kernel.cache_dir%')]
         string $cacheDir,
     ) {
-        $this->cacheDir = $cacheDir . '/templates';
+        $this->cacheDir = Path::join($cacheDir, 'templates');
+        $this->fs = new Filesystem();
     }
 
     public function getSourceContext(string $name): Source
@@ -94,7 +90,7 @@ class ForumifyTemplateLoader implements LoaderInterface
     private function loadFromTemplateCache(string $name): ?string
     {
         $name = substr($name, 1);
-        $template = "$this->cacheDir/$name";
+        $template = Path::join($this->cacheDir, $name);
         if (is_file($template)) {
             $this->cache[$name] = $template;
             return $template;
@@ -105,7 +101,10 @@ class ForumifyTemplateLoader implements LoaderInterface
 
     private function loadTemplateInheritance(string $name): ?string
     {
-        $locations = array_map(static fn ($location) => "$location/$name", $this->getTemplateLocations());
+        $locations = array_map(
+            static fn ($location) => Path::join($location, $name),
+            $this->themeTemplateService->getTemplateLocations(),
+        );
         $existingTemplates = array_filter($locations, 'is_file');
 
         $i = 0;
@@ -129,40 +128,12 @@ class ForumifyTemplateLoader implements LoaderInterface
                 $contents = "{% extends '@!$name' %}" . PHP_EOL . $contents;
             }
 
-            if (!is_dir("$this->cacheDir/$name")) {
-                (new Filesystem())->mkdir("$this->cacheDir/$name");
-            }
-
-            $entryPoint = "$this->cacheDir/$name/$i.html.twig";
-            file_put_contents($entryPoint, $contents);
+            $entryPoint = Path::join($this->cacheDir, $name, "$i.html.twig");
+            $this->fs->dumpFile($entryPoint, $contents);
             $i++;
         }
 
         $this->cache[$name] = $entryPoint;
         return $entryPoint;
-    }
-
-    /**
-     * @return array<string>
-     */
-    private function getTemplateLocations(): array
-    {
-        $locations = [];
-
-        $activePlugins = $this->pluginRepository->findBy(['type' => Plugin::TYPE_PLUGIN, 'active' => true]);
-        foreach ($activePlugins as $plugin) {
-            $pluginPackage = $plugin->getPackage();
-            $locations[] = "{$this->rootDir}/vendor/$pluginPackage/templates/bundles";
-        }
-
-        $activeTheme = $this->themeRepository->findOneBy(['active' => true]);
-        if ($activeTheme !== null) {
-            $themePackage = $activeTheme->getPlugin()->getPackage();
-
-            $locations[] = "{$this->rootDir}/vendor/$themePackage/templates";
-            $locations[] = "{$this->twigPath}/themes/$themePackage";
-        }
-
-        return $locations;
     }
 }

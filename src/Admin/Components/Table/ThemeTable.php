@@ -64,10 +64,10 @@ class ThemeTable extends AbstractDoctrineTable
             return '';
         }
 
-        $editUrl = $this->urlGenerator->generate('forumify_admin_themes_edit', ['identifier' => $id]);
+        $actions = '';
+        $actions .= $this->renderAction('forumify_admin_themes_edit', ['identifier' => $id], 'pencil-simple-line');
+        $actions .= $this->renderAction('forumify_admin_themes_templates', ['id' => $id], 'file-html');
 
-        return "
-            <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>
-        ";
+        return $actions;
     }
 }

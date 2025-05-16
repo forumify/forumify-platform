@@ -14,6 +14,7 @@ export default class extends Controller {
     editorId: String,
     language: String,
     value: String,
+    readonly: Boolean,
   };
 
   connect() {
@@ -31,6 +32,7 @@ export default class extends Controller {
       wrap: true,
       scrollPastEnd: 1,
       printMargin: false,
+      readOnly: this.readonlyValue || false,
     });
 
     if (this.languageValue) {
