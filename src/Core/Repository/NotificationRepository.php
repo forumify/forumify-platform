@@ -6,7 +6,7 @@ namespace Forumify\Core\Repository;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Forumify\Core\Entity\Notification;
-use Forumify\Core\Notification\NotificationContextSerializer;
+use Forumify\Core\Notification\ContextSerializer;
 use RuntimeException;
 
 /**
@@ -16,7 +16,7 @@ class NotificationRepository extends AbstractRepository
 {
     public function __construct(
         ManagerRegistry $registry,
-        private readonly NotificationContextSerializer $contextSerializer
+        private readonly ContextSerializer $contextSerializer
     ) {
         parent::__construct($registry);
     }

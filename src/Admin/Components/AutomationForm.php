@@ -10,6 +10,7 @@ use Forumify\Automation\Condition\ConditionInterface;
 use Forumify\Automation\Entity\Automation;
 use Forumify\Automation\Repository\AutomationRepository;
 use Forumify\Automation\Trigger\TriggerInterface;
+use Forumify\Core\Notification\ContextSerializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -45,6 +46,7 @@ class AutomationForm extends AbstractController
         #[AutowireIterator('forumify.automation.action', defaultIndexMethod: 'getType')]
         private readonly iterable $actions,
         private readonly AutomationRepository $automationRepository,
+        private readonly ContextSerializer $contextSerializer,
     ) {
     }
 
@@ -53,7 +55,15 @@ class AutomationForm extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        $builder = $this->createFormBuilder($this->initialFormData, ['data_class' => Automation::class]);
+        $automation = $this->initialFormData;
+        if ($automation !== null) {
+            $s = $this->contextSerializer->deserialize(...);
+            $automation->setTriggerArguments($s($automation->getTriggerArguments()));
+            $automation->setConditionArguments($s($automation->getConditionArguments()));
+            $automation->setActionArguments($s($automation->getActionArguments()));
+        }
+
+        $builder = $this->createFormBuilder($automation, ['data_class' => Automation::class]);
         $builder
             ->add('name', TextType::class)
             ->add('enabled', CheckboxType::class, [
@@ -74,6 +84,12 @@ class AutomationForm extends AbstractController
 
         /** @var Automation $automation */
         $automation = $this->getForm()->getData();
+
+        $s = $this->contextSerializer->serialize(...);
+        $automation->setTriggerArguments($s($automation->getTriggerArguments()));
+        $automation->setConditionArguments($s($automation->getConditionArguments()));
+        $automation->setActionArguments($s($automation->getActionArguments()));
+
         $this->automationRepository->save($automation);
 
         $this->addFlash('success', 'admin.automations.saved');
