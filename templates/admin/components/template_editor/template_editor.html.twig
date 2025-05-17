@@ -1,0 +1,61 @@
+<div
+    {{ attributes.defaults(stimulus_controller('forumify/forumify-platform/template_editor')) }}
+    class="flex"
+    style="height: 100vh;"
+>
+    {% include '@Forumify/admin/components/template_editor/file_browser.html.twig' %}
+    <div class="h-100 flex-grow">
+        {% if this.openFile %}
+            {% set fileContents = this.fileContents %}
+            {% set isOverridden = fileContents|filter(c => c.key starts with 'local')|length > 0 %}
+            <div class="page-editor" {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
+                <div
+                    class="tablist page-editor-tablist"
+                    style="background-color: var(--c-elevation-1);"
+                    role="tablist"
+                    {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}
+                >
+                    {% for location in fileContents %}
+                        <button type="button" class="btn-link" data-tab-id="{{ location.key }}">
+                            {{ location.namespace }}
+                        </button>
+                    {% endfor %}
+                    {% if not isOverridden %}
+                        <button
+                            type="button"
+                            class="btn-link"
+                            {{ live_action('overrideOpenFile') }}
+                        >
+                            <i class="ph ph-plus"></i>
+                            Create Local Override
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="d-none flex-grow" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
+                    {% for location in fileContents %}
+                        <div id="{{ location.key }}" class="h-100">
+                            {% set editorId = 'code-editor-' ~ location.key %}
+                            <div
+                                class="form-row code-editor code-editor-fullscreen"
+                                {{ stimulus_controller('forumify/forumify-platform/code_editor', {
+                                    editorId: editorId,
+                                    language: 'twig',
+                                    value: location.content,
+                                    readonly: location.readonly,
+                                }) }}
+                            >
+                                <div id="{{ editorId }}"></div>
+                                <textarea
+                                    class="d-none"
+                                    {% if not location.readonly %}
+                                        {{ stimulus_target('forumify/forumify-platform/template_editor', 'codeEditor') }}
+                                    {% endif %}
+                                ></textarea>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

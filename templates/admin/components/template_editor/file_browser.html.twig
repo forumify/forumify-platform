@@ -1,0 +1,25 @@
+<div class="h-100 border-r flex flex-col" class="h-100" style="width: 250px; overflow-x: auto;">
+    <p class="text-small border-b p-2" style="height: 41px; background-color: var(--c-elevation-1);">
+        /{{ this.cwd }}
+    </p>
+    <ul class="flex-grow menu flex" style="background-color: var(--c-elevation-1);">
+        {% for item in this.ls %}
+            <li>
+                <button
+                    class="btn-link btn-small menu-item"
+                    {% if item.directory %}
+                        {{ live_action('cd', { cd: item.file }) }}
+                    {% else %}
+                        {{ live_action('selectFile', { file: item.file }) }}
+                    {% endif %}
+                    {% if this.openFile and item.file == this.openFile|split('/')|last %}
+                        style="background-color: var(--c-elevation-2);"
+                    {% endif %}
+                >
+                    <i class="ph ph-{% if item.file == '..' %}arrow-left{% elseif item.directory %}folder{% else %}code{% endif %}"></i>
+                    {{ item.file }}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
