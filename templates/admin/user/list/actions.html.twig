@@ -1,0 +1,57 @@
+{% set canManage = is_granted('forumify.admin.users.manage') %}
+{% set canGiveBadge = canManage or is_granted('forumify.admin.users.manage_badges') %}
+{% set canGiveRole = canManage or is_granted('forumify.admin.users.manage_roles') %}
+<div class="flex justify-end">
+    {% block actions_edit %}
+        {% if canManage %}
+            <a class="btn-link btn-icon btn-small" href="{{ path('forumify_admin_users_edit', { identifier: user.id }) }}">
+                <i class="ph ph-pencil-simple-line"></i>
+            </a>
+        {% endif %}
+    {% endblock %}
+    {% if canManage or canGiveBadge or canGiveRole %}
+        <div {{ stimulus_controller('forumify/forumify-platform/menu', {
+            placement: 'bottom-end',
+            hideAdornment: true,
+        }) }}>
+            <a class="btn-link btn-icon btn-small" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+                <i class="ph ph-caret-down"></i>
+            </a>
+            <div class='menu' {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+                {% block actions_manage_badges %}
+                    {% if canGiveBadge %}
+                        <a class="btn-link" href="{{ path('forumify_admin_users_badges', { id: user.id }) }}">
+                            <i class="ph ph-medal-military"></i> {{ 'admin.user.actions.manage_badges'|trans }}
+                        </a>
+                    {% endif %}
+                {% endblock %}
+                {% block actions_manage_roles %}
+                    {% if canGiveRole %}
+                        <a class="btn-link" href="{{ path('forumify_admin_users_roles', { id: user.id }) }}">
+                            <i class="ph ph-lock-key"></i> {{ 'admin.user.actions.manage_roles'|trans }}
+                        </a>
+                    {% endif %}
+                {% endblock %}
+                {% block actions_ban %}
+                    {% if canManage %}
+                        <a class="btn-link" {{ live_action('toggleBanned', { id: user.id }) }}>
+                            {% if user.banned %}
+                                <i class="ph ph-check-circle"></i> {{ 'admin.user.actions.unban'|trans }}
+                            {% else %}
+                                <i class="ph ph-prohibit-inset"></i> {{ 'admin.user.actions.ban'|trans }}
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                {% endblock %}
+                {% block actions_delete %}
+                    {% if canManage %}
+                        <hr />
+                        <a class="btn-link" href="{{ path('forumify_admin_users_delete', { identifier: user.id }) }}">
+                            <i class="ph ph-x"></i> {{ 'admin.user.actions.delete'|trans }}
+                        </a>
+                    {% endif %}
+                {% endblock %}
+            </div>
+        </div>
+    {% endif %}
+</div>

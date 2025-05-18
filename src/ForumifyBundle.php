@@ -20,6 +20,8 @@ class ForumifyBundle extends AbstractForumifyBundle
                 ],
                 'users' => [
                     'view',
+                    'manage_badges',
+                    'manage_roles',
                     'manage'
                 ],
                 'forums' => [

@@ -1,7 +1,7 @@
-{% extends '@Forumify/frontend/base.html.twig' %}
+{% extends admin|default(false) ? '@Forumify/frontend/base.html.twig' : '@Forumify/admin/base.html.twig' %}
 {% block body %}
     {% if title is defined %}
-        {% set title = title|trans %}
+        {% set title = title|trans(titleArgs|default({})) %}
     {% endif %}
     {% include '@Forumify/admin/components/simple_form.html.twig' %}
 {% endblock %}
