@@ -20,6 +20,7 @@ class MessageThreadVoter extends Voter
         return in_array($attribute, [
             VoterAttribute::MessageThreadCreate->value,
             VoterAttribute::MessageThreadView->value,
+            VoterAttribute::MessageThreadReply->value,
         ], true);
     }
 
@@ -33,6 +34,7 @@ class MessageThreadVoter extends Voter
         return match ($attribute) {
             VoterAttribute::MessageThreadCreate->value => $user->isEmailVerified() && !$user->isBanned(),
             VoterAttribute::MessageThreadView->value => $this->voteOnView($subject, $user),
+            VoterAttribute::MessageThreadReply->value => $this->voteOnReply($subject, $user),
             default => false,
         };
     }
@@ -42,10 +44,6 @@ class MessageThreadVoter extends Voter
      */
     private function voteOnView(MessageThread $subject, User $user): bool
     {
-        if (!$user->isEmailVerified() || $user->isBanned()) {
-            return false;
-        }
-
         /** @var User $participant */
         foreach ($subject->getParticipants() as $participant) {
             if ($participant->getId() === $user->getId()) {
@@ -54,5 +52,10 @@ class MessageThreadVoter extends Voter
         }
 
         return false;
+    }
+
+    public function voteOnReply(MessageThread $subject, User $user): bool
+    {
+        return $user->isEmailVerified() && !$user->isBanned() && $this->voteOnView($subject, $user);
     }
 }
