@@ -9,12 +9,12 @@ use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Twig\Environment;
 
 #[IsGranted('forumify.admin.roles.view')]
 #[AsLiveComponent('Forumify\\UsersInRoleTable', '@Forumify/components/table/table.html.twig')]
@@ -24,11 +24,11 @@ class UsersInRoleTable extends UserTable
     public int $roleId;
 
     public function __construct(
-        UrlGeneratorInterface $urlGenerator,
+        Environment $twig,
         private readonly Security $security,
         private readonly UserRepository $userRepository,
     ) {
-        parent::__construct($urlGenerator, $security);
+        parent::__construct($twig, $userRepository);
     }
 
     #[LiveAction]
@@ -66,7 +66,7 @@ class UsersInRoleTable extends UserTable
             ->setParameter('roleId', $this->roleId);
     }
 
-    protected function renderActionColumn(int $id): string
+    protected function renderActionColumn(int $id, User $user): string
     {
         if (!$this->security->isGranted('forumify.admin.users.manage')) {
             return '';

@@ -134,20 +134,7 @@ abstract class AbstractCrudController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $entity = $form->getData();
-
-            $this->eventDispatcher->dispatch(
-                new PreSaveCrudEvent($isNew, $form, $entity),
-                PreSaveCrudEvent::getName($this->getEntityClass()),
-            );
-
-            $this->repository->save($entity);
-
-            $this->eventDispatcher->dispatch(
-                new PostSaveCrudEvent($isNew, $form, $entity),
-                PostSaveCrudEvent::getName($this->getEntityClass()),
-            );
-
+            $entity = $this->save($isNew, $form);
             $this->addCrudFlash('success', 'admin.crud.saved');
 
             if ($isNew && $entity instanceof AccessControlledEntityInterface) {
@@ -160,6 +147,28 @@ abstract class AbstractCrudController extends AbstractController
             'form' => $form,
             'data' => $data,
         ]));
+    }
+
+    /**
+     * @return TEntity
+     */
+    protected function save(bool $isNew, FormInterface $form): object
+    {
+        $entity = $form->getData();
+
+        $this->eventDispatcher->dispatch(
+            new PreSaveCrudEvent($isNew, $form, $entity),
+            PreSaveCrudEvent::getName($this->getEntityClass()),
+        );
+
+        $this->repository->save($entity);
+
+        $this->eventDispatcher->dispatch(
+            new PostSaveCrudEvent($isNew, $form, $entity),
+            PostSaveCrudEvent::getName($this->getEntityClass()),
+        );
+
+        return $entity;
     }
 
     /**

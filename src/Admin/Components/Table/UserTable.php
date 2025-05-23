@@ -6,18 +6,20 @@ namespace Forumify\Admin\Components\Table;
 
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\User;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Forumify\Core\Repository\UserRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
+use Twig\Environment;
 
 #[IsGranted('forumify.admin.users.view')]
 #[AsLiveComponent('UserTable', '@Forumify/components/table/table.html.twig')]
 class UserTable extends AbstractDoctrineTable
 {
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly Security $security,
+        private readonly Environment $twig,
+        private readonly UserRepository $userRepository,
     ) {
     }
 
@@ -48,18 +50,22 @@ class UserTable extends AbstractDoctrineTable
             ]);
     }
 
-    protected function renderActionColumn(int $id): string
+    #[LiveAction]
+    #[IsGranted('forumify.admin.users.manage')]
+    public function toggleBanned(#[LiveArg] int $id): void
     {
-        if (!$this->security->isGranted('forumify.admin.users.manage')) {
-            return '';
+        /** @var User|null $user */
+        $user = $this->userRepository->find($id);
+        if ($user !== null) {
+            $user->setBanned(!$user->isBanned());
+            $this->userRepository->save($user);
         }
+    }
 
-        $editUrl = $this->urlGenerator->generate('forumify_admin_users_edit', ['identifier' => $id]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_users_delete', ['identifier' => $id]);
-
-        return "
-            <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>
-            <a class='btn-link btn-icon btn-small' href='$deleteUrl'><i class='ph ph-x'></i></a>
-        ";
+    protected function renderActionColumn(int $id, User $user): string
+    {
+        return $this->twig->render('@Forumify/admin/user/list/actions.html.twig', [
+            'user' => $user,
+        ]);
     }
 }
