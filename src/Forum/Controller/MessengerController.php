@@ -79,7 +79,7 @@ class MessengerController extends AbstractController
     #[Route('/{id}/reply', '_reply')]
     public function reply(Request $request, MessageThread $thread): Response
     {
-        $this->denyAccessUnlessGranted(VoterAttribute::MessageThreadView->value, $thread);
+        $this->denyAccessUnlessGranted(VoterAttribute::MessageThreadReply->value, $thread);
 
         $form = $this->createForm(MessageReplyType::class);
         $form->handleRequest($request);
