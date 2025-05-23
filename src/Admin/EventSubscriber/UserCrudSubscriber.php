@@ -60,6 +60,10 @@ class UserCrudSubscriber implements EventSubscriberInterface
 
     private function saveNewAvatar(User $user, FormInterface $form): void
     {
+        if (!$form->has('newAvatar')) {
+            return;
+        }
+
         $newAvatar = $form->get('newAvatar')->getData();
         if ($newAvatar !== null) {
             $avatar = $this->mediaService->saveToFilesystem($this->avatarStorage, $newAvatar);
