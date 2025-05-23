@@ -5,10 +5,16 @@ declare(strict_types=1);
 namespace Forumify\Admin\Controller;
 
 use Forumify\Admin\Crud\AbstractCrudController;
+use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
+use Forumify\Admin\Form\UserManageBadgesType;
+use Forumify\Admin\Form\UserManageRolesType;
 use Forumify\Admin\Form\UserType;
 use Forumify\Core\Entity\User;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/users', 'users')]
 class UserController extends AbstractCrudController
@@ -36,5 +42,51 @@ class UserController extends AbstractCrudController
     protected function getForm(?object $data): FormInterface
     {
         return $this->createForm(UserType::class, $data);
+    }
+
+    #[Route('/{id}/badges', '_badges')]
+    #[IsGranted('forumify.admin.users.manage_badges')]
+    public function giveBadge(User $user, Request $request): Response
+    {
+        $form = $this->createForm(UserManageBadgesType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->save(false, $form);
+
+            $this->addFlash('success', 'admin.user.manage_badges.success');
+            return $this->redirectToRoute('forumify_admin_users_list');
+        }
+
+        return $this->render('@Forumify/form/simple_form_page.html.twig', [
+            'admin' => true,
+            'title' => 'admin.user.manage_badges.title',
+            'titleArgs' => ['username' => $user->getDisplayName()],
+            'form' => $form->createView(),
+            'cancelPath' => $this->generateUrl('forumify_admin_users_list'),
+        ]);
+    }
+
+    #[Route('/{id}/roles', '_roles')]
+    #[IsGranted('forumify.admin.users.manage_roles')]
+    public function manageRoles(User $user, Request $request): Response
+    {
+        $form = $this->createForm(UserManageRolesType::class, $user);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->save(false, $form);
+
+            $this->addFlash('success', 'admin.user.manage_roles.success');
+            return $this->redirectToRoute('forumify_admin_users_list');
+        }
+
+        return $this->render('@Forumify/form/simple_form_page.html.twig', [
+            'admin' => true,
+            'title' => 'admin.user.manage_roles.title',
+            'titleArgs' => ['username' => $user->getDisplayName()],
+            'form' => $form->createView(),
+            'cancelPath' => $this->generateUrl('forumify_admin_users_list'),
+        ]);
     }
 }

@@ -464,6 +464,18 @@ admin:
         crud:
             single: 'user'
             plural: 'users'
+        actions:
+            ban: 'Ban'
+            unban: 'Unban'
+            manage_roles: 'Manage Roles'
+            manage_badges: 'Manage Badges'
+            delete: 'Delete'
+        manage_badges:
+            title: 'Badges for {username}'
+            success: 'Badges saved.'
+        manage_roles:
+            title: 'Roles for {username}'
+            success: 'Roles saved.'
     marketplace:
         connect:
             title: 'Connect a forumify.net account'
