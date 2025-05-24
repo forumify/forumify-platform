@@ -9,7 +9,6 @@ use Forumify\Core\Component\Table\AbstractTable;
 use Forumify\Core\Entity\Theme;
 use Forumify\Plugin\Entity\Plugin;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -18,7 +17,6 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 class ThemeTable extends AbstractDoctrineTable
 {
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security,
     ) {
         $this->sort = [

@@ -1,6 +1,6 @@
 <div class="h-100 border-r flex flex-col" class="h-100" style="width: 250px; overflow-x: auto;">
     <p class="text-small border-b p-2" style="height: 41px; background-color: var(--c-elevation-1);">
-        /{{ this.cwd }}
+        {{ this.cwd }}
     </p>
     <ul class="flex-grow menu flex" style="background-color: var(--c-elevation-1);">
         {% for item in this.ls %}
@@ -22,7 +22,7 @@
                     </span>
                     <span>
                         {% if item.overridden%}
-                            <span style="color: orange;" title="Locally overwritten.">
+                            <span style="color: orange;" title="{{ 'admin.theme.template_editor.overridden_title'|trans }}">
                                 <i class="ph ph-pencil-simple-line" style="margin: 0"></i>
                             </span>
                         {% endif %}
