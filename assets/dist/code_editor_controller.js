@@ -14,6 +14,8 @@ export default class extends Controller {
     editorId: String,
     language: String,
     value: String,
+    readonly: Boolean,
+    dispatchOnChange: Boolean,
   };
 
   connect() {
@@ -31,15 +33,21 @@ export default class extends Controller {
       wrap: true,
       scrollPastEnd: 1,
       printMargin: false,
+      readOnly: this.readonlyValue || false,
     });
 
     if (this.languageValue) {
       editor.setOption('mode', `ace/mode/${this.languageValue}`);
     }
 
+    const dispatchOnChange = this.dispatchOnChangeValue || false;
+
     const inputElement = this.element.querySelector('textarea.d-none');
     editor.on('change', () => {
       inputElement.value = editor.getSession().getValue();
+      if (dispatchOnChange) {
+        inputElement.dispatchEvent(new Event('change', { bubbles: true }));
+      }
     });
     editor.on('blur', () => {
       inputElement.dispatchEvent(new Event('change', { bubbles: true }));

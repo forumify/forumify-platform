@@ -1,0 +1,46 @@
+<div
+    {{ attributes.defaults(stimulus_controller('forumify/forumify-platform/template_editor')) }}
+    class="template-editor"
+    style="height: 100vh;"
+>
+    {% include '@Forumify/admin/components/template_editor/file_browser.html.twig' %}
+    <div class="h-100 flex-grow" id="{{ this.openFile }}">
+        {% if this.openFile %}
+            {% set fileContents = this.fileContents %}
+            <div class="page-editor" {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
+                <div
+                    class="tablist page-editor-tablist"
+                    style="background-color: var(--c-elevation-1);"
+                    role="tablist"
+                    {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}
+                >
+                    {% for location in fileContents %}
+                        {% if (location.namespace != 'Local' and location.content is not null) or (location.namespace == 'Local' and location.content is not null) %}
+                            <button type="button" class="btn-link" data-tab-id="{{ location.key }}">
+                                {{ location.namespace }}
+                                {% if location.namespace == 'Local' %}
+                                    <i class="dot ml-2 d-none" style="margin: 0; margin-left: var(--spacing-1);"></i>
+                                {% endif %}
+                            </button>
+                        {% elseif location.namespace == 'Local' and location.content is null %}
+                            <button
+                                type="button"
+                                class="btn-link"
+                                {{ live_action('overrideOpenFile') }}
+                                data-tab-id="{{ location.key }}"
+                            >
+                                <i class="ph ph-plus"></i>
+                                {{ 'admin.theme.template_editor.create_override'|trans }}
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="d-none flex-grow" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
+                    {% for location in fileContents %}
+                        {% include '@Forumify/admin/components/template_editor/editor.html.twig' %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

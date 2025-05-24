@@ -54,9 +54,9 @@ class MenuBuilder extends AbstractController
     }
 
     #[LiveAction]
-    public function selectItem(#[LiveArg] int $itemId): void
+    public function selectItem(#[LiveArg] ?int $itemId): void
     {
-        $this->selectedItem = $this->menuItemRepository->find($itemId);
+        $this->selectedItem = $itemId === null ? null : $this->menuItemRepository->find($itemId);
         $this->isCreating = false;
         $this->parent = null;
 
@@ -89,28 +89,9 @@ class MenuBuilder extends AbstractController
 
         /** @var MenuItem $menuItem */
         $menuItem = $this->getForm()->getData();
-        if ($this->isCreating) {
-            $this->enrichNew($menuItem);
-        }
-
         $this->menuItemRepository->save($menuItem);
 
-        $this->selectItem($menuItem->getId());
-    }
-
-    private function enrichNew(MenuItem $menuItem): void
-    {
-        $siblings = $menuItem->getParent() === null
-            ? $this->getRoots()
-            : $menuItem->getParent()->getChildren();
-
-        $highestPosition = 0;
-        foreach ($siblings as $sibling) {
-            if ($sibling->getPosition() > $highestPosition) {
-                $highestPosition = $sibling->getPosition();
-            }
-        }
-        $menuItem->setPosition($highestPosition + 1);
+        $this->selectItem($this->isCreating ? $menuItem->getId() : null);
     }
 
     #[LiveAction]

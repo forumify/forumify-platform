@@ -15,4 +15,9 @@ class ThemeRepository extends AbstractRepository
     {
         return Theme::class;
     }
+
+    public function findActiveTheme(): ?Theme
+    {
+        return $this->findOneBy(['active' => true]);
+    }
 }
