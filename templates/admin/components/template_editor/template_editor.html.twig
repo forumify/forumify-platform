@@ -18,6 +18,9 @@
                         {% if (location.namespace != 'Local' and location.content is not null) or (location.namespace == 'Local' and location.content is not null) %}
                             <button type="button" class="btn-link" data-tab-id="{{ location.key }}">
                                 {{ location.namespace }}
+                                {% if location.namespace == 'Local' %}
+                                    <i class="dot ml-2 d-none" style="margin: 0; margin-left: var(--spacing-1);"></i>
+                                {% endif %}
                             </button>
                         {% elseif location.namespace == 'Local' and location.content is null %}
                             <button
@@ -27,44 +30,14 @@
                                 data-tab-id="{{ location.key }}"
                             >
                                 <i class="ph ph-plus"></i>
-                                Create Local Override
+                                {{ 'admin.theme.template_editor.create_override'|trans }}
                             </button>
                         {% endif %}
                     {% endfor %}
                 </div>
                 <div class="d-none flex-grow" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
                     {% for location in fileContents %}
-                        <div id="{{ location.key }}" class="h-100" style="position: relative">
-                            {% set editorId = 'code-editor-' ~ location.key %}
-                            <div
-                                class="form-row code-editor code-editor-fullscreen"
-                                {{ stimulus_controller('forumify/forumify-platform/code_editor', {
-                                    editorId: editorId,
-                                    language: 'twig',
-                                    value: location.content ?? location.defaultContent,
-                                    readonly: location.readonly,
-                                }) }}
-                            >
-                                <div id="{{ editorId }}"></div>
-                                <textarea
-                                    class="d-none"
-                                    data-model="norender|openFileContent"
-                                    {% if not location.readonly %}
-                                        {{ stimulus_target('forumify/forumify-platform/template_editor', 'codeEditor') }}
-                                    {% endif %}
-                                ></textarea>
-                            </div>
-                            {% if not location.readonly %}
-                                <div class="toolbar">
-                                    <button class="btn-link btn-small" {{ live_action('saveOpenFile') }}>
-                                        <i class="ph ph-floppy-disk"></i> (ctrl+S)
-                                    </button>
-                                    <button class="btn-link btn-icon btn-small" {{ live_action('deleteOpenFile') }}>
-                                        <i class="ph ph-trash"></i>
-                                    </button>
-                                </div>
-                            {% endif %}
-                        </div>
+                        {% include '@Forumify/admin/components/template_editor/editor.html.twig' %}
                     {% endfor %}
                 </div>
             </div>

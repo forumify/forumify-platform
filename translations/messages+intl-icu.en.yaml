@@ -450,6 +450,9 @@ admin:
         config:
             default: 'Default Configuration'
             dark: 'Dark Configuration'
+        template_editor:
+            overridden_title: 'This template is overridden by a plugin or the local theme.'
+            create_override: 'Override Template'
     reaction:
         crud:
             single: 'reaction'
