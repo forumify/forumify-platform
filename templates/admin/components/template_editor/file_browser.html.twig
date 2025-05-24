@@ -6,7 +6,7 @@
         {% for item in this.ls %}
             <li>
                 <button
-                    class="btn-link btn-small menu-item"
+                    class="btn-link btn-small menu-item justify-between items-center"
                     {% if item.directory %}
                         {{ live_action('cd', { cd: item.file }) }}
                     {% else %}
@@ -16,8 +16,17 @@
                         style="background-color: var(--c-elevation-2);"
                     {% endif %}
                 >
-                    <i class="ph ph-{% if item.file == '..' %}arrow-left{% elseif item.directory %}folder{% else %}code{% endif %}"></i>
-                    {{ item.file }}
+                    <span class="flex items-center">
+                        <i class="ph ph-{% if item.file == '..' %}arrow-left{% elseif item.directory %}folder{% else %}code{% endif %}"></i>
+                        {{ item.file }}
+                    </span>
+                    <span>
+                        {% if item.overridden%}
+                            <span style="color: orange;" title="Locally overwritten.">
+                                <i class="ph ph-pencil-simple-line" style="margin: 0"></i>
+                            </span>
+                        {% endif %}
+                    </span>
                 </button>
             </li>
         {% endfor %}

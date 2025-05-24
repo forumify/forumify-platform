@@ -11,13 +11,13 @@ use Forumify\Plugin\Entity\Plugin;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-
-use function Symfony\Component\String\u;
 
 #[AsLiveComponent(
     'Forumify\\Admin\\TemplateEditor',
@@ -40,7 +40,6 @@ class TemplateEditor
     public Theme $theme;
 
     private readonly string $localPath;
-    private readonly Filesystem $fs;
 
     public function __construct(
         private readonly PluginRepository $pluginRepository,
@@ -49,8 +48,9 @@ class TemplateEditor
         private readonly string $twigPath,
         #[Autowire('%kernel.project_dir%')]
         private readonly string $rootDir,
+        private readonly SluggerInterface $slugger = new AsciiSlugger(),
+        private readonly Filesystem $fs = new Filesystem(),
     ) {
-        $this->fs = new Filesystem();
     }
 
     #[LiveAction]
@@ -86,19 +86,7 @@ class TemplateEditor
             return;
         }
 
-        $this->fs->dumpFile($localPath, $this->getOverrideDefaultContent());
-    }
-
-    private function getOverrideDefaultContent(): string
-    {
-        $path = explode(DIRECTORY_SEPARATOR, $this->openFile);
-        $namespace = array_shift($path);
-        if (str_starts_with($namespace, '@')) {
-            $namespace = substr($namespace, 1);
-        }
-
-        $originalTemplate = "@!$namespace/" . implode('/', $path);
-        return "{% extends '$originalTemplate' %}";
+        $this->fs->dumpFile($localPath, $this->getOverrideDefaultContent($this->openFile));
     }
 
     #[LiveAction]
@@ -123,6 +111,7 @@ class TemplateEditor
     #[LiveAction]
     public function deleteOpenFile(): void
     {
+        // TODO: this doesn't work for plugins yet
         $path = substr($this->openFile, strpos($this->openFile, DIRECTORY_SEPARATOR));
         $realPath = Path::join("{$this->getThemeOverrideDir()}/Forumify", $path);
         if (file_exists($realPath)) {
@@ -134,24 +123,44 @@ class TemplateEditor
     {
         $namespaces = $this->getNamespaces();
         if (empty($this->cwd)) {
-            return array_filter($namespaces, fn ($namespace) => !empty($namespace['root']) && is_dir(($namespace['root'])));
+            $roots = array_filter($namespaces, fn ($namespace) => (
+                $namespace['namespace'] !== 'Local'
+                && !empty($namespace['root'])
+                && is_dir($namespace['root'])
+            ));
+            return array_map(fn ($root) => ([...$root, 'overridden' => false]), $roots);
         }
 
         $path = explode('/', $this->cwd);
         $namespace = array_shift($path);
 
         $rootDir = $namespaces[$namespace]['root'];
-        $dir = $rootDir . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $path);
+        $dir = Path::join($rootDir, ...$path);
 
         $files = [];
         if (is_dir($dir)) {
             foreach (@scandir($dir, SCANDIR_SORT_NONE) as $file) {
-                if ($file !== '.') {
-                    $files[] = [
-                        'file' => $file,
-                        'directory' => is_dir($dir . DIRECTORY_SEPARATOR . $file),
-                    ];
+                if ($file === '.') {
+                    continue;
                 }
+
+                $fileInfo = [
+                    'file' => $file,
+                    'directory' => is_dir(Path::join($dir, $file)),
+                    'overridden' => false,
+                ];
+
+                $realLocation = Path::join($dir, $file);
+                if (is_file($realLocation)) {
+                    $locations = $this->getFileContents(Path::join($this->cwd, $file));
+                    foreach ($locations as $location) {
+                        if ($location['location'] !== $realLocation && !empty($location['content'])) {
+                            $fileInfo['overridden'] = true;
+                        }
+                    }
+                }
+
+                $files[] = $fileInfo;
             }
         }
 
@@ -173,12 +182,13 @@ class TemplateEditor
         return $files;
     }
 
-    public function getFileContents(): array
+    public function getFileContents(?string $fileToCheck = null): array
     {
-        $path = explode('/', $this->openFile);
+        $fileToCheck ??= $this->openFile;
+        $path = explode(DIRECTORY_SEPARATOR, $fileToCheck);
         $currentNamespace = array_shift($path);
-        $path = implode(DIRECTORY_SEPARATOR, $path);
-        $fileKey = u(pathinfo($path, PATHINFO_FILENAME))->replace('.', '-')->toString();
+        $path = Path::join(...$path);
+        $fileKey = pathinfo($path, PATHINFO_FILENAME);
 
         $contents = [];
 
@@ -186,99 +196,78 @@ class TemplateEditor
         $namespace = $namespaces[$currentNamespace];
         $file = Path::join($namespace['root'], $path);
         $contents[] = [
-            'key' => strtolower($currentNamespace) . '-' . $fileKey,
+            'key' => $this->slugger->slug($currentNamespace . '-' . $fileKey)->toString(),
             'namespace' => $currentNamespace,
             'location' => $file,
             'content' => is_file($file) ? file_get_contents($file) : null,
-            'defaultContent' => $this->getOverrideDefaultContent(),
+            'defaultContent' => $this->getOverrideDefaultContent($fileToCheck),
             'readonly' => true,
         ];
 
         foreach ($namespaces as $currentNamespace => $overrideNamespace) {
-            $file = Path::join($overrideNamespace['overrideRoot'], $path);
-            if (!is_file($file)) {
+            $file = Path::join($overrideNamespace['overrideRoot'], $namespace['namespace'], $path);
+            $fileExists = is_file($file);
+            if ($currentNamespace !== 'Local' && !$fileExists) {
                 continue;
             }
 
             $contents[] = [
-                'key' => strtolower($currentNamespace) . '-' . $fileKey,
+                'key' => $this->slugger->slug($currentNamespace . '-' . $fileKey)->toString(),
                 'namespace' => $currentNamespace,
                 'location' => $file,
-                'content' => is_file($file) ? file_get_contents($file) : null,
-                'defaultContent' => $this->getOverrideDefaultContent(),
+                'content' => $fileExists ? file_get_contents($file) : null,
+                'defaultContent' => $this->getOverrideDefaultContent($fileToCheck),
                 'readonly' => $currentNamespace !== 'Local',
             ];
         }
         return $contents;
-
-        $locations = $this->getFileLocations();
-        $path = substr($this->openFile, strpos($this->openFile, DIRECTORY_SEPARATOR));
-        $fileKey = u(pathinfo($path, PATHINFO_FILENAME))->replace('.', '-')->toString();
-
-        $contents = [];
-        foreach ($locations as $location) {
-            $location['key'] .= '-' . $fileKey;
-            $file = $location['location'] . $path;
-            $location['content'] = is_file($file) ? file_get_contents($file) : null;
-            $location['defaultContent'] = $this->getOverrideDefaultContent();
-            $contents[] = $location;
-        }
-        return $contents;
     }
 
+    /**
+     * @return array<string, array<string, mixed>> List of namepaces sorted by priority
+     *      1. Forumify
+     *      2. Plugins
+     *      3. Selected Theme
+     *      4. Overrides on selected Theme
+     */
     private function getNamespaces(): array
     {
         $namespaces = ['@Forumify' => [
             'file' => '@Forumify',
+            'namespace' => 'Forumify',
             'directory' => true,
             'root' => "{$this->rootDir}/vendor/forumify/forumify-platform/templates",
             'overrideRoot' => "{$this->rootDir}/vendor/forumify/forumify-platform/templates/bundles",
         ]];
+
         foreach ($this->pluginRepository->findActivePlugins() as $plugin) {
-            $namespace = '@' . $this->pluginToNamespace($plugin);
-            $namespaces[$namespace] = [
-                'file' => $namespace,
-                'directory' => true,
-                'root' => "{$this->rootDir}/vendor/{$plugin->getPackage()}/templates",
-                'overrideRoot' => "{$this->rootDir}/vendor/{$plugin->getPackage()}/templates/bundles",
-            ];
+            $this->insertPluginInNamespaces($plugin, $namespaces);
         }
 
-        $namespace = '@' . $this->pluginToNamespace($this->theme->getPlugin());
-        $namespaces[$namespace] = [
-            'file' => $namespace,
-            'directory' => true,
-            'root' => "{$this->rootDir}/vendor/{$this->theme->getPlugin()->getPackage()}/templates",
-            'overrideRoot' => "{$this->rootDir}/vendor/{$this->theme->getPlugin()->getPackage()}/templates"
-        ];
+        $this->insertPluginInNamespaces($this->theme->getPlugin(), $namespaces);
 
+        $themeOverrideDir = $this->getThemeOverrideDir();
         $namespaces['Local'] = [
             'file' => 'Local',
+            'namespace' => 'Local',
             'directory' => true,
-            'overrideRoot' => $this->getThemeOverrideDir(),
+            'root' => $themeOverrideDir,
+            'overrideRoot' => $themeOverrideDir,
         ];
 
         return $namespaces;
     }
 
-    private function getFileLocations(): array
+    private function insertPluginInNamespaces(Plugin $plugin, array &$namespaces): void
     {
-        $locations = [
-            [
-                'key' => 'forumify',
-                'namespace' => '@Forumify',
-                'location' => "{$this->rootDir}/vendor/forumify/forumify-platform/templates",
-                'readonly' => true,
-            ],
-            [
-                'key' => 'local',
-                'namespace' => 'Local',
-                'location' => "{$this->getThemeOverrideDir()}/Forumify",
-                'readonly' => false,
-            ]
+        $namespace = $this->pluginToNamespace($plugin);
+        $namespaces['@' . $namespace] = [
+            'file' => '@' . $namespace,
+            'namespace' => $namespace,
+            'directory' => true,
+            'root' => "{$this->rootDir}/vendor/{$plugin->getPackage()}/templates",
+            'overrideRoot' => "{$this->rootDir}/vendor/{$plugin->getPackage()}/templates/bundles",
         ];
-
-        return $locations;
     }
 
     private function getThemeOverrideDir(): string
@@ -290,5 +279,17 @@ class TemplateEditor
     {
         $class = $plugin->getPluginClass();
         return substr($class, strrpos($class, '\\') + 1);
+    }
+
+    private function getOverrideDefaultContent(string $file): string
+    {
+        $path = explode(DIRECTORY_SEPARATOR, $file);
+        $namespace = array_shift($path);
+        if (str_starts_with($namespace, '@')) {
+            $namespace = substr($namespace, 1);
+        }
+
+        $originalTemplate = "@!$namespace/" . implode('/', $path);
+        return "{% extends '$originalTemplate' %}";
     }
 }
