@@ -28,7 +28,7 @@ class UsersInRoleTable extends UserTable
         private readonly Security $security,
         private readonly UserRepository $userRepository,
     ) {
-        parent::__construct($twig, $userRepository);
+        parent::__construct($twig, $userRepository, $security);
     }
 
     #[LiveAction]

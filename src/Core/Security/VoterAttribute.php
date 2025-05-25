@@ -11,6 +11,8 @@ enum VoterAttribute: string
     case Moderator = 'MODERATOR';
 
     case AssignRole = 'ASSIGN_ROLE';
+    case UserDelete = 'USER_DELETE';
+    case UserBan = 'USER_BAN';
 
     case ACL = 'ACCESS_CONTROL_LIST';
 
