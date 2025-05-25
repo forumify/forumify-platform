@@ -4,22 +4,24 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Security\Voter;
 
-use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
- * @extends Voter<string, Role>
+ * @extends Voter<string, User>
  */
-class AssignRoleVoter extends Voter
+class RolePositionVoter extends Voter
 {
     use LowestUserRoleTrait;
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === VoterAttribute::AssignRole->value && $subject instanceof Role;
+        return $subject instanceof User && in_array($attribute, [
+            VoterAttribute::UserBan->value,
+            VoterAttribute::UserDelete->value,
+        ]);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
@@ -29,7 +31,9 @@ class AssignRoleVoter extends Voter
             return false;
         }
 
-        $lowestRolePos = $this->getLowestRolePos($user);
-        return $lowestRolePos <= $subject->getPosition();
+        $userLowestRole = $this->getLowestRolePos($user);
+        $subjectLowestRole = $this->getLowestRolePos($subject);
+
+        return $userLowestRole <= $subjectLowestRole;
     }
 }

@@ -7,6 +7,9 @@ namespace Forumify\Admin\Components\Table;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\UserRepository;
+use Forumify\Core\Security\VoterAttribute;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -20,6 +23,7 @@ class UserTable extends AbstractDoctrineTable
     public function __construct(
         private readonly Environment $twig,
         private readonly UserRepository $userRepository,
+        private readonly Security $security,
     ) {
     }
 
@@ -58,6 +62,10 @@ class UserTable extends AbstractDoctrineTable
         $user = $this->userRepository->find($id);
         if ($user === null) {
             return;
+        }
+
+        if (!$this->security->isGranted(VoterAttribute::UserBan->value, $user)) {
+            throw new AccessDeniedException();
         }
 
         $user->setBanned(!$user->isBanned());

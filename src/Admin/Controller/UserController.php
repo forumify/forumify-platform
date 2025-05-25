@@ -9,6 +9,7 @@ use Forumify\Admin\Form\UserManageBadgesType;
 use Forumify\Admin\Form\UserManageRolesType;
 use Forumify\Admin\Form\UserType;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,6 +42,17 @@ class UserController extends AbstractCrudController
     protected function getForm(?object $data): FormInterface
     {
         return $this->createForm(UserType::class, $data);
+    }
+
+    #[Route('/{identifier}/delete', '_delete')]
+    public function delete(Request $request, string $identifier): Response
+    {
+        $user = $this->repository->find($identifier);
+        if ($user !== null) {
+            $this->denyAccessUnlessGranted(VoterAttribute::UserDelete->value, $user);
+        }
+
+        return parent::delete($request, $identifier);
     }
 
     #[Route('/{id}/badges', '_badges')]

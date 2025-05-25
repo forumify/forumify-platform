@@ -33,7 +33,7 @@
                     {% endif %}
                 {% endblock %}
                 {% block actions_ban %}
-                    {% if canManage %}
+                    {% if canManage and is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::UserBan').value, user) %}
                         <a class="btn-link" {{ live_action('toggleBanned', { id: user.id }) }}>
                             {% if user.banned %}
                                 <i class="ph ph-check-circle"></i> {{ 'admin.user.actions.unban'|trans }}
@@ -44,7 +44,7 @@
                     {% endif %}
                 {% endblock %}
                 {% block actions_delete %}
-                    {% if canManage %}
+                    {% if canManage and is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::UserDelete').value, user) %}
                         <hr />
                         <a class="btn-link" href="{{ path('forumify_admin_users_delete', { identifier: user.id }) }}">
                             <i class="ph ph-x"></i> {{ 'admin.user.actions.delete'|trans }}
