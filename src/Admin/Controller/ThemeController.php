@@ -8,7 +8,9 @@ use Forumify\Admin\Crud\AbstractCrudController;
 use Forumify\Admin\Form\ThemeType;
 use Forumify\Core\Entity\Theme;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('themes', 'themes')]
 class ThemeController extends AbstractCrudController
@@ -34,5 +36,14 @@ class ThemeController extends AbstractCrudController
     protected function getForm(?object $data): FormInterface
     {
         return $this->createForm(ThemeType::class, $data);
+    }
+
+    #[Route('/{id}/templates', '_templates')]
+    #[IsGranted('forumify.admin.settings.themes.manage')]
+    public function templateEditor(Theme $theme): Response
+    {
+        return $this->render('@Forumify/admin/theme/template_editor.html.twig', [
+            'theme' => $theme,
+        ]);
     }
 }

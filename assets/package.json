@@ -100,6 +100,12 @@
                 "enabled": true,
                 "autoimport": {}
             },
+            "template_editor": {
+                "main": "dist/template_editor_controller.js",
+                "fetch": "lazy",
+                "enabled": true,
+                "autoimport": {}
+            },
             "theme": {
                 "main": "dist/theme_controller.js",
                 "fetch": "eager",

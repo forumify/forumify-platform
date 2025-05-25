@@ -54,16 +54,20 @@
     {% include '@Forumify/frontend/blocks/alerts.html.twig' %}
     {% block body_wrapper %}
         <main class="responsive">
-            {% block body %}{% endblock %}
+            {% block main %}
+                {% block body %}{% endblock %}
+            {% endblock %}
         </main>
     {% endblock %}
 {% endblock %}
-<footer class="mt-10">
-    <p class="text-small">
-        <!-- Modifying, hiding, or removing this section is forbidden. See LICENSE.md for more information. -->
-        Powered by <a href="https://forumify.net">forumify</a>
-    </p>
-</footer>
+{% block footer %}
+    <footer class="mt-10">
+        <p class="text-small">
+            <!-- Modifying, hiding, or removing this section is forbidden. See LICENSE.md for more information. -->
+            Powered by <a href="https://forumify.net">forumify</a>
+        </p>
+    </footer>
+{% endblock %}
 {% block javascripts %}
     {{ encore_entry_script_tags('frontend') }}
 {% endblock %}

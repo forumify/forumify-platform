@@ -18,8 +18,7 @@ export default class extends Controller {
       tabPanel.role = 'tabpanel';
     }
 
-    this.handleTabClicked(this.tabsTarget.firstElementChild);
-
+    this.selectFirstTab();
     this.tabPanelsTarget.classList.remove('d-none');
   }
 
@@ -43,5 +42,9 @@ export default class extends Controller {
     const selectedTabId = tab.dataset.tabId;
     const selectedTabBody = this.tabPanelsTarget.querySelector(`#${selectedTabId}`);
     selectedTabBody.classList.remove('d-none');
+  }
+
+  selectFirstTab() {
+    this.handleTabClicked(this.tabsTarget.firstElementChild);
   }
 }

@@ -1,0 +1,39 @@
+<div id="{{ location.key }}" class="h-100" style="position: relative">
+    {% set editorId = 'code-editor-' ~ location.key %}
+    <div
+        class="form-row code-editor code-editor-fullscreen"
+        {{ stimulus_controller('forumify/forumify-platform/code_editor', {
+            editorId: editorId,
+            language: 'twig',
+            value: location.content ?? location.defaultContent,
+            readonly: location.readonly,
+            dispatchOnChange: true,
+        }) }}
+    >
+        <div id="{{ editorId }}"></div>
+        <textarea
+            id="code-editor-{{ editorId }}"
+            class="d-none"
+            {% if not location.readonly %}
+                {{ stimulus_target('forumify/forumify-platform/template_editor', 'codeEditor') }}
+            {% endif %}
+        >{{ location.content ?? location.defaultContent }}</textarea>
+    </div>
+    {% if not location.readonly %}
+        <div class="toolbar">
+            <button
+                class="btn-link btn-small"
+                {{ stimulus_action('forumify/forumify-platform/template_editor', 'save') }}
+            >
+                <i class="ph ph-floppy-disk"></i> {{ 'admin.theme.template_editor.save'|trans }}
+            </button>
+            <button
+                class="btn-link btn-icon btn-small"
+                data-action="live#action forumify--forumify-platform--tabs#selectFirstTab"
+                data-live-action-param="deleteOpenFile"
+            >
+                <i class="ph ph-trash"></i>
+            </button>
+        </div>
+    {% endif %}
+</div>
