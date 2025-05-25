@@ -1,5 +1,7 @@
 {% extends '@Forumify/frontend/page.html.twig' %}
 {% import '@Forumify/frontend/cms/macros.html.twig' as cms %}
 {% block body %}
-    {{ cms.slot(tree) }}
+    <div class="flex flex-col gap-4">
+        {{ cms.slot(tree) }}
+    </div>
 {% endblock %}

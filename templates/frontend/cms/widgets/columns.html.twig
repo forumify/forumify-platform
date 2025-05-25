@@ -6,7 +6,7 @@
     {% for i in 1..colCount %}
         {% set colSize = widget.settings.columns['column' ~ i]|default(12 / colCount) %}
         {% set colClass = isResponsive ? ('col-xs-12 col-md-' ~ colSize) : ('col-' ~ colSize) %}
-        <div class="{{ colClass }}">
+        <div class="{{ colClass }} flex flex-col gap-4">
             {{ cms.slot(widget.slots[i - 1]) }}
         </div>
     {% endfor %}
