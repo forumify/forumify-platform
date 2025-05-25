@@ -56,10 +56,14 @@ class UserTable extends AbstractDoctrineTable
     {
         /** @var User|null $user */
         $user = $this->userRepository->find($id);
-        if ($user !== null) {
-            $user->setBanned(!$user->isBanned());
-            $this->userRepository->save($user);
+        if ($user === null) {
+            return;
         }
+
+        $user->setBanned(!$user->isBanned());
+        $user->setRoleEntities([]);
+
+        $this->userRepository->save($user);
     }
 
     protected function renderActionColumn(int $id, User $user): string
