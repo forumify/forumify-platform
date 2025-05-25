@@ -7,8 +7,11 @@ namespace Forumify\Automation\Action;
 use Forumify\Automation\Entity\Automation;
 use Forumify\Automation\Form\GiveBadgeActionType;
 use Forumify\Automation\Service\UserExpressionResolver;
+use Forumify\Core\Entity\Notification;
 use Forumify\Core\Notification\ContextSerializer;
+use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Repository\UserRepository;
+use Forumify\Forum\Notification\NewBadgeNotificationType;
 
 class GiveBadgeAction implements ActionInterface
 {
@@ -16,6 +19,7 @@ class GiveBadgeAction implements ActionInterface
         private readonly ContextSerializer $contextSerializer,
         private readonly UserExpressionResolver $userExpressionResolver,
         private readonly UserRepository $userRepository,
+        private readonly NotificationService $notificationService,
     ) {
     }
 
@@ -37,10 +41,18 @@ class GiveBadgeAction implements ActionInterface
             return;
         }
 
-        if (!$recipient->getBadges()->contains($badge)) {
-            $recipient->getBadges()->add($badge);
-            $this->userRepository->save($recipient);
+        if ($recipient->getBadges()->contains($badge)) {
+            return;
         }
+
+        $recipient->getBadges()->add($badge);
+        $this->userRepository->save($recipient);
+
+        $this->notificationService->sendNotification(new Notification(
+            NewBadgeNotificationType::TYPE,
+            $recipient,
+            ['badge' => $badge],
+        ));
     }
 
     public function getPayloadFormType(): ?string

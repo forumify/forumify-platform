@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Admin\Controller;
 
 use Forumify\Admin\Crud\AbstractCrudController;
-use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
 use Forumify\Admin\Form\UserManageBadgesType;
 use Forumify\Admin\Form\UserManageRolesType;
 use Forumify\Admin\Form\UserType;
@@ -46,7 +45,7 @@ class UserController extends AbstractCrudController
 
     #[Route('/{id}/badges', '_badges')]
     #[IsGranted('forumify.admin.users.manage_badges')]
-    public function giveBadge(User $user, Request $request): Response
+    public function manageBadges(User $user, Request $request): Response
     {
         $form = $this->createForm(UserManageBadgesType::class, $user);
 
