@@ -1,0 +1,22 @@
+{% extends '@Forumify/emails/base.html.twig' %}
+{% block title %}
+    {{ badge.name }}
+{% endblock %}
+{% block body %}
+    <h2>{{ 'notification.new_badge.title'|trans({ badge: badge.name }) }}</h2>
+    <hr>
+    <div class="content-block">
+        <h1>{{ badge.name }}</h1>
+        {% if badge.description %}
+            <p>{{ badge.description }}</p>
+        {% endif %}
+        <p style="text-align: center;">
+            <img height="128px" width="auto" src="{{ absolute_url(asset(badge.image, 'forumify.asset')) }}" alt="badge">
+        </p>
+    </div>
+    <hr>
+    {% include '@Forumify/emails/components/button.html.twig' with {
+        href: path('forumify_forum_profile', { username: notification.recipient.username }),
+        label: 'notification.new_badge.view_profile'|trans,
+    } only %}
+{% endblock %}

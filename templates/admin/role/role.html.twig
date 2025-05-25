@@ -21,9 +21,7 @@
                     {{ form_row(form.color) }}
                     <div class="flex justify-center items-center gap-2">
                         <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
-                        {% if cancelPath is defined %}
-                            <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
-                        {% endif %}
+                        <a href="{{ path('forumify_admin_roles_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
                     </div>
                 </div>
                 <div id="permission">
@@ -43,9 +41,7 @@
                     {% endembed %}
                     <div class="flex justify-center items-center gap-2">
                         <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
-                        {% if cancelPath is defined %}
-                            <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
-                        {% endif %}
+                        <a href="{{ path('forumify_admin_roles_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
                     </div>
                 </div>
                 {% if data is not null %}
