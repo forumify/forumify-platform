@@ -38,7 +38,11 @@
                 }) }}
                 {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Moderator').value) %}
                     <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
-                        <a class="btn-outlined btn-icon" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+                        <a
+                            class="btn-outlined btn-icon"
+                            aria-label="{{ 'forum.topic.actions.manage'|trans }}"
+                            {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}
+                        >
                             <i class="ph ph-wrench"></i>
                         </a>
                         <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
@@ -84,7 +88,11 @@
                         </div>
                     </div>
                 {% elseif app.user is not null and topic.createdBy is not null and app.user.id == topic.createdBy.id %}
-                    <a class="btn-outlined btn-icon" href="{{ path('forumify_forum_topic_edit', { slug: topic.slug }) }}">
+                    <a
+                        class="btn-outlined btn-icon"
+                        aria-label="{{ 'forum.topic.actions.edit' }}"
+                        href="{{ path('forumify_forum_topic_edit', { slug: topic.slug }) }}"
+                    >
                         <i class="ph ph-pencil-simple-line"></i>
                     </a>
                 {% endif %}

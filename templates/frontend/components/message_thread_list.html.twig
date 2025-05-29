@@ -1,5 +1,4 @@
 {% extends '@Forumify/components/list.html.twig' %}
-
 {% block container %}
     <div class="messenger">
         <div class="thread-list {% if this.selectedThread is not null %}thread-selected{% endif %}">
@@ -20,7 +19,10 @@
                         <div>
                             <h3 class="mb-0">{{ this.selectedThread.title }}</h3>
                             <div class="text-small text-secondary">
-                                <p>Sent by {% include '@Forumify/components/username.html.twig' with { user: this.selectedThread.createdBy } only %}</p>
+                                <p>
+                                    {{ 'messenger.sent_by'|trans }}
+                                    {% include '@Forumify/components/username.html.twig' with { user: this.selectedThread.createdBy } only %}
+                                </p>
                                 {{ this.selectedThread.createdAt|format_date }}
                             </div>
                         </div>
@@ -39,7 +41,8 @@
                                 <a
                                     href="{{ path('forumify_forum_messenger_remove_participant', { id: this.selectedThread.id, participantId: participant.id }) }}"
                                     class="btn-link btn-icon btn-small"
-                                    title="{{ 'remove_participant'|trans }}"
+                                    aria-label="{{ 'messenger.remove_participant'|trans }}"
+                                    title="{{ 'messenger.remove_participant'|trans }}"
                                 >
                                     <i class="ph ph-minus-circle"></i>
                                 </a>
@@ -49,7 +52,8 @@
                             <a
                                 href="{{ path('forumify_forum_messenger_add_participant', { id: this.selectedThread.id }) }}"
                                 class="btn-link btn-icon btn-small"
-                                title="{{ 'add_participant'|trans }}"
+                                aria-label="{{ 'messenger.add_participant'|trans }}"
+                                title="{{ 'messenger.add_participant'|trans }}"
                             >
                                 <i class="ph ph-plus-circle"></i>
                             </a>
@@ -65,17 +69,19 @@
         </div>
     </div>
 {% endblock %}
-
 {% block pagination_top %}
     <div class="card-title flex justify-between items-center">
-        <span>{{ 'inbox'|trans }}</span>
-        <a class="btn-primary btn-icon" href="{{ path('forumify_forum_messenger_thread_create') }}">
+        <span>{{ 'messenger.inbox'|trans }}</span>
+        <a
+            class="btn-primary btn-icon"
+            aria-label="{{ 'messenger.new_message'|trans }}"
+            href="{{ path('forumify_forum_messenger_thread_create') }}"
+        >
             <i class="ph ph-paper-plane-tilt"></i>
         </a>
     </div>
     {{ parent() }}
 {% endblock %}
-
 {% block row %}
     <a
         class="btn-link thread-row {% if this.selectedThread is not null and this.selectedThread.id == item.id %}thread-active{% endif %}"
@@ -100,7 +106,6 @@
         </div>
     </a>
 {% endblock %}
-
 {% block empty %}
     <span class="p-4">{{ 'no_messages'|trans }}</span>
 {% endblock %}

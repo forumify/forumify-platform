@@ -11,7 +11,11 @@
         </a>
     {% endfor %}
     <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
-        <a class="btn-small btn-outlined btn-icon" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+        <a
+            class="btn-small btn-outlined btn-icon"
+            aria-label="{{ 'forum.comment.reactions'|trans }}"
+            {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}
+        >
             <i class="ph ph-smiley"></i>
         </a>
         <div class="reactions-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
@@ -24,8 +28,9 @@
                         data-live-action-param="toggleReaction"
                         data-live-reaction-id-param="{{ reaction.id }}"
                         data-live-allow-remove="0"
+                        aria-label="{{ reaction.name }}"
                     >
-                        <img class="reaction" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="">
+                        <img class="reaction" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="{{ reaction.name }}">
                     </button>
                 {% endfor %}
             </div>

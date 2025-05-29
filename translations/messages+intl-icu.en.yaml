@@ -57,6 +57,7 @@ unsubscribe: 'Unsubscribe'
 first: 'First'
 last: 'Last'
 profile:
+    message: 'Message this user'
     activity:
         activity: 'Activity'
         commented: 'Commented on'
@@ -72,6 +73,8 @@ profile:
     last_seen: 'Last Seen: {date}'
 follow: 'Follow'
 unfollow: 'Unfollow'
+toggle_theme: 'Toggle Theme'
+view_notifications: 'Notifications'
 no_notifications: 'No notifications'
 mark_read: 'Mark as read'
 notification:
@@ -110,9 +113,13 @@ select_message_thread: 'Select a thread from your inbox, or create a new message
 create_message_thread: 'Send message'
 message:
     edited: 'Edited on {date}'
-reply: 'Reply'
-add_participant: 'Add participant'
-remove_participant: 'Remove participant'
+messenger:
+    new_message: 'Send new message'
+    inbox: 'Inbox'
+    reply: 'Reply'
+    sent_by: 'Sent by'
+    add_participant: 'Add participant'
+    remove_participant: 'Remove participant'
 username: 'Username'
 email: 'Email'
 username_and_email: 'Username or Email'
@@ -223,8 +230,12 @@ forum:
         mark_answer: 'Mark as answer'
         is_answer: 'The author of this topic marked this comment as the answer.'
         marked_as_answer: 'Comment marked as answer.'
+        reactions: 'Reactions'
+        edit: 'Edit Comment'
+        delete: 'Delete Comment'
     topic:
         actions:
+            manage: 'Manage Topic'
             edit: 'Edit'
             pin: 'Pin'
             unpin: 'Unpin'
@@ -251,6 +262,7 @@ forum:
                 other {# views}
             }
 admin:
+    toggle_nav: 'Toggle Navigation'
     badge:
         crud:
             single: 'badge'
@@ -473,6 +485,7 @@ admin:
             single: 'user'
             plural: 'users'
         actions:
+            edit: 'Edit'
             ban: 'Ban'
             unban: 'Unban'
             manage_roles: 'Manage Roles'

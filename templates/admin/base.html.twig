@@ -33,6 +33,7 @@
                 <div class="nav-controls">
                     <a
                         class="btn-link btn-icon btn-small theme-selector"
+                        aria-label="{{ 'toggle_theme'|trans }}"
                         href="{{ path('forumify_core_theme_toggle', { '_target_path': app.request.requestUri }) }}"
                         {{ stimulus_controller('forumify/forumify-platform/theme') }}
                     >
@@ -41,6 +42,7 @@
                     <button
                         type="button"
                         class="btn-link btn-icon btn-small menu-toggle"
+                        aria-label="{{ 'admin.toggle_nav'|trans }}"
                         {{ stimulus_action('forumify/forumify-platform/admin', 'toggleNavigation') }}
                     >
                         <i class="ph ph-caret-line-left"></i>
@@ -51,7 +53,10 @@
                 {% include '@Forumify/admin/components/navigation.html.twig' %}
             </div>
             <div class="navigation-section">
-                <a class="btn-link navigation-row" href="{{ path('forumify_core_logout') }}"><i class="ph ph-sign-out"></i> {{ 'logout'|trans }}</a>
+                <a class="btn-link navigation-row" href="{{ path('forumify_core_logout') }}">
+                    <i class="ph ph-sign-out"></i>
+                    {{ 'logout'|trans }}
+                </a>
             </div>
         {% endblock %}
     </nav>

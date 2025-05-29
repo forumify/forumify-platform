@@ -17,6 +17,7 @@
                     <a
                         class="btn-link btn-icon hide-phone"
                         href="{{ path('forumify_core_theme_toggle', { '_target_path': app.request.requestUri }) }}"
+                        aria-label="{{ 'toggle_theme'|trans }}"
                         {{ stimulus_controller('forumify/forumify-platform/theme') }}
                     >
                         <i class="ph ph-circle-half-tilt"></i>

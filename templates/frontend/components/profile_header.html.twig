@@ -20,7 +20,11 @@
                 {% endblock %}
                 {% block profile_user_actions %}
                     {% if this.showUserActions and app.user is not null and app.user.id != user.id %}
-                        <a href="{{ path('forumify_forum_messenger_thread_create', { recipient: user.id }) }}" class="btn-outlined btn-icon">
+                        <a
+                            class="btn-outlined btn-icon"
+                            aria-label="{{ 'profile.message'|trans }}"
+                            href="{{ path('forumify_forum_messenger_thread_create', { recipient: user.id }) }}"
+                        >
                             <i class="ph ph-paper-plane-tilt"></i>
                         </a>
                         {{ component('SubscribeButton', {

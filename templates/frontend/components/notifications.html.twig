@@ -5,6 +5,7 @@
             class="btn-link btn-icon{% if unseenCount == 0 %} btn-icon{% endif %}"
             data-action="live#action"
             data-live-action-param="markAsRead"
+            aria-label="{{ 'view_notifications'|trans }}"
             {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}
         >
             {% if unseenCount > 0 %}
