@@ -83,6 +83,10 @@
                             </a>
                         </div>
                     </div>
+                {% elseif app.user is not null and topic.createdBy is not null and app.user.id == topic.createdBy.id %}
+                    <a class="btn-outlined btn-icon" href="{{ path('forumify_forum_topic_edit', { slug: topic.slug }) }}">
+                        <i class="ph ph-pencil-simple-line"></i>
+                    </a>
                 {% endif %}
             </div>
         </div>
