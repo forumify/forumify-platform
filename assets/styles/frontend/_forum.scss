@@ -152,7 +152,7 @@
         transition: opacity 200ms;
 
         position: absolute;
-        right: 0;
+        right: var(--spacing-2);
     }
 
     &:hover {

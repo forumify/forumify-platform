@@ -4,7 +4,11 @@
 <div class="flex justify-end">
     {% block actions_edit %}
         {% if canManage %}
-            <a class="btn-link btn-icon btn-small" href="{{ path('forumify_admin_users_edit', { identifier: user.id }) }}">
+            <a
+                class="btn-link btn-icon btn-small"
+                aria-label="{{ 'admin.user.actions.edit'|trans }}"
+                href="{{ path('forumify_admin_users_edit', { identifier: user.id }) }}"
+            >
                 <i class="ph ph-pencil-simple-line"></i>
             </a>
         {% endif %}

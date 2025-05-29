@@ -59,12 +59,20 @@
                             <div class="comment-toolbar">
                                 {% block comment_list_comment_content_toolbar_buttons %}
                                     {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
-                                        <a class="btn-link btn-small btn-icon text-secondary" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'toggleEdit') }}>
+                                        <a
+                                            class="btn-link btn-small btn-icon text-secondary"
+                                            aria-label="{{ 'forum.comment.edit'|trans }}"
+                                            {{ stimulus_action('forumify/forumify-platform/comment_edit', 'toggleEdit') }}
+                                        >
                                             <i class="ph ph-pencil"></i>
                                         </a>
                                     {% endif %}
                                     {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentDelete').value, item) %}
-                                        <a class="btn-link btn-small btn-icon text-secondary" href="{{ path('forumify_forum_comment_delete', { id: item.id }) }}">
+                                        <a
+                                            class="btn-link btn-small btn-icon text-secondary"
+                                            aria-label="{{ 'forum.comment.delete'|trans }}"
+                                            href="{{ path('forumify_forum_comment_delete', { id: item.id }) }}"
+                                        >
                                             <i class="ph ph-trash"></i>
                                         </a>
                                     {% endif %}

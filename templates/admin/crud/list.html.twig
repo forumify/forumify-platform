@@ -7,7 +7,11 @@
     <h2>
         {{ title }}
         {% if capabilities.create %}
-            <a class="btn-primary btn-small btn-icon" href="{{ path(route ~ '_create') }}">
+            <a
+                class="btn-primary btn-small btn-icon"
+                aria-label="{{ 'admin.crud.create'|trans({ single: (translationPrefix ~ 'single')|trans }) }}"
+                href="{{ path(route ~ '_create') }}"
+            >
                 <i class="ph ph-plus"></i>
             </a>
         {% endif %}

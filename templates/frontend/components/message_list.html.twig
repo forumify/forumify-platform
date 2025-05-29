@@ -1,5 +1,4 @@
 {% extends '@Forumify/components/list.html.twig' %}
-
 {% block container %}
     <div class="w-100" data-loading="hide">
         {{ parent() }}
@@ -9,14 +8,13 @@
             <div class="flex justify-center">
                 <button type="submit" class="btn-primary">
                     <i class="ph ph-paper-plane-tilt"></i>
-                    {{ 'reply'|trans }}
+                    {{ 'messenger.reply'|trans }}
                 </button>
             </div>
             {{ form_end(this.replyForm) }}
         </div>
     </div>
 {% endblock %}
-
 {% block row %}
     <div class="message" {{ stimulus_controller('forumify/forumify-platform/comment_edit', {
         updateUrl: path('forumify_forum_messenger_message_edit', { id: item.id })
