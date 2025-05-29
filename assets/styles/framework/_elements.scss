@@ -206,13 +206,8 @@ input[type='file'] {
     max-width: 600px;
     margin-right: var(--spacing-4);
     z-index: 999;
-
-    @for $i from 1 through 25 {
-        div[class^="alert-"]:nth-child(#{$i}) {
-            animation: 600ms fadeOut forwards;
-            animation-delay: #{5 + $i * 1}s;
-        }
-    }
+    animation: 600ms fadeOut forwards;
+    animation-delay: 6s;
 
     div[class^="alert-"] {
         @include box-shadow;
