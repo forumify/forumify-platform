@@ -13,7 +13,7 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('Notifications', '@Forumify/frontend/components/notifications.html.twig', csrf: false)]
+#[AsLiveComponent('Notifications', '@Forumify/frontend/components/notifications.html.twig')]
 class Notifications extends AbstractController
 {
     use DefaultActionTrait;

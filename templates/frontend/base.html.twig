@@ -11,19 +11,17 @@
 
     {% block meta_tags %}
         {%- set title -%}
-            {% apply spaceless %}
-                {%- if block('title_page') is not empty -%}
-                    {%- block title_page -%}{%- endblock -%}
-                    {{- ' - ' -}}
-                {%- endif -%}
-                {{- setting('forumify.title') -}}
-            {% endapply %}
+            {%- if block('title_page') is not empty -%}
+                {%- block title_page -%}{%- endblock -%}
+                {{- ' - ' -}}
+            {%- endif -%}
+            {{- setting('forumify.title') -}}
         {%- endset -%}
         {% set absolute_request_url = absolute_url(app.request.requestUri) %}
         {% set absolute_logo = absolute_url(logo) %}
 
         {# Generic #}
-        <title>{% block title %}{{ title }}{% endblock %}</title>
+        <title>{% block title %}{{- title -}}{% endblock %}</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="title" content="{{ title }}">
