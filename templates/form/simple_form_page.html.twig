@@ -1,4 +1,4 @@
-{% extends admin|default(false) ? '@Forumify/frontend/base.html.twig' : '@Forumify/admin/base.html.twig' %}
+{% extends admin|default(false) ? '@Forumify/admin/base.html.twig' : '@Forumify/frontend/base.html.twig' %}
 {% block body %}
     {% if title is defined %}
         {% set title = title|trans(titleArgs|default({})) %}

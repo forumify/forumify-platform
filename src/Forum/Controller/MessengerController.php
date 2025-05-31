@@ -112,7 +112,7 @@ class MessengerController extends AbstractController
         $form->handleRequest($request);
         if (!($form->isSubmitted() && $form->isValid())) {
             return $this->render('@Forumify/form/simple_form_page.html.twig', [
-                'title' => 'add_participant',
+                'title' => 'messenger.add_participant',
                 'form' => $form->createView(),
                 'cancelPath' => $this->generateUrl('forumify_forum_messenger_thread', ['id' => $thread->getId()]),
             ]);
