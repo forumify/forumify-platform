@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Component;
 
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Entity\ReadMarker;
@@ -79,33 +77,34 @@ class MessageThreadList extends AbstractDoctrineList
         return $this->selectedThread;
     }
 
-    protected function getQueryBuilder(): QueryBuilder
+    protected function getEntityClass(): string
     {
-        return $this->messageThreadRepository
-            ->createQueryBuilder('mt')
-            ->select('mt, MAX(m.createdAt) AS HIDDEN maxCreatedAt')
-            ->leftJoin('mt.messages', 'm')
-            ->join('mt.participants', 'p')
-            ->where('p = (:user)')
-            ->setParameter('user', $this->getUser())
-            ->groupBy('mt.id')
-            ->orderBy('maxCreatedAt', 'DESC');
+        return MessageThread::class;
     }
 
-    protected function getCount(): int
+    protected function getQuery(): QueryBuilder
     {
-        try {
-            return $this->messageThreadRepository
-                ->createQueryBuilder('mt')
-                ->select('COUNT(mt.id)')
-                ->join('mt.participants', 'p')
-                ->where('p = (:user)')
-                ->setParameter('user', $this->getUser())
-                ->getQuery()
-                ->getSingleScalarResult();
-        } catch (NoResultException|NonUniqueResultException) {
-            return 0;
-        }
+        return parent::getQuery()
+            ->select('e, MAX(m.createdAt) AS HIDDEN maxCreatedAt')
+            ->leftJoin('e.messages', 'm')
+            ->join('e.participants', 'p')
+            ->where('p = (:user)')
+            ->setParameter('user', $this->getUser())
+            ->groupBy('e.id')
+            ->orderBy('maxCreatedAt', 'DESC')
+        ;
+    }
+
+    protected function getTotalCount(): int
+    {
+        return parent::getQuery()
+            ->select('COUNT(e.id)')
+            ->join('e.participants', 'p')
+            ->where('p = (:user)')
+            ->setParameter('user', $this->getUser())
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
     }
 
     private function getUser(): User
