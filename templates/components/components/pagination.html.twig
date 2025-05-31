@@ -1,8 +1,8 @@
-{% if this.result.count > this.result.size %}
+{% if this.result.totalCount > this.limit %}
     <div class="{{ class|default('') }}">
         <div>
-            {% set lastPage = range(1, this.result.count, this.result.size)|keys|last + 1 %}
-            {% set visiblePages = ((this.result.page - 3)..this.result.page)|merge((this.result.page + 1)..(this.result.page + 3))|filter(page => page > 0 and page <= lastPage) %}
+            {% set lastPage = range(1, this.result.totalCount, this.limit)|keys|last + 1 %}
+            {% set visiblePages = ((this.page - 3)..this.page)|merge((this.page + 1)..(this.page + 3))|filter(page => page > 0 and page <= lastPage) %}
 
             {% block pagination_first_page %}
                 {% if 1 not in visiblePages %}
@@ -20,7 +20,7 @@
 
             {% block pagination_pages %}
                 {% for page in visiblePages %}
-                    {% if page == this.result.page %}
+                    {% if page == this.page %}
                         <span class="pagination-selected-page">{{ page }}</span>
                     {% else %}
                         <a

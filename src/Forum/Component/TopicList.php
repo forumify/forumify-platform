@@ -8,6 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -25,7 +26,12 @@ class TopicList extends AbstractDoctrineList
     ) {
     }
 
-    protected function getQueryBuilder(): QueryBuilder
+    protected function getEntityClass(): string
+    {
+        return Topic::class;
+    }
+
+    protected function getQuery(): QueryBuilder
     {
         $qb = $this->getBaseQueryBuilder()
             ->addSelect('MAX(tc.createdAt) AS HIDDEN lastCommentDate')
@@ -56,7 +62,7 @@ class TopicList extends AbstractDoctrineList
         return $qb;
     }
 
-    protected function getCount(): int
+    protected function getTotalCount(): int
     {
         return $this->getBaseQueryBuilder()
             ->select('COUNT(t)')

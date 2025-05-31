@@ -6,7 +6,7 @@
             {% endblock %}
             {% block list %}
                 <ul class="card-body">
-                    {% for item in this.result.data %}
+                    {% for item in this.result.rows %}
                         {% block row %}
                         {% endblock %}
                     {% else %}

@@ -7,6 +7,7 @@ namespace Forumify\Forum\Component;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReplyType;
 use Forumify\Forum\Repository\MessageRepository;
@@ -41,18 +42,17 @@ class MessageList extends AbstractDoctrineList
     ) {
     }
 
-    protected function getQueryBuilder(): QueryBuilder
+    protected function getEntityClass(): string
     {
-        return $this->messageRepository
-            ->createQueryBuilder('m')
-            ->where('m.thread = :thread')
-            ->orderBy('m.createdAt', 'ASC')
-            ->setParameter('thread', $this->getThread());
+        return Message::class;
     }
 
-    protected function getCount(): int
+    protected function getQuery(): QueryBuilder
     {
-        return $this->messageRepository->count(['thread' => $this->getThread()]);
+        return parent::getQuery()
+            ->where('e.thread = :thread')
+            ->orderBy('e.createdAt', 'ASC')
+            ->setParameter('thread', $this->getThread());
     }
 
     public function getThread(): ?MessageThread

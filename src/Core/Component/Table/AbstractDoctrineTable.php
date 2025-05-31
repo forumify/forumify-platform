@@ -18,8 +18,14 @@ abstract class AbstractDoctrineTable extends AbstractTable
 
     abstract protected function getEntityClass(): string;
 
-    protected function getData(int $limit, int $offset, array $search, array $sort): array
+    protected function getData(): array
     {
+        $search = array_filter($this->search);
+        $sort = array_filter($this->sort);
+
+        $limit = $this->limit;
+        $offset = ($this->page - 1) * $limit;
+
         $qb = $this->getQuery($search)
             ->setMaxResults($limit)
             ->setFirstResult($offset);
@@ -31,8 +37,10 @@ abstract class AbstractDoctrineTable extends AbstractTable
         return $qb->getQuery()->getResult();
     }
 
-    protected function getTotalCount(array $search): int
+    protected function getTotalCount(): int
     {
+        $search = array_filter($this->search);
+
         $ids = implode(',', array_map(static fn (string $id) => "e.$id", $this->identifiers));
         return $this->getQuery($search)
             ->select("COUNT($ids)")
