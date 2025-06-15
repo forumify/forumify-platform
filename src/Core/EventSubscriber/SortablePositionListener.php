@@ -20,6 +20,10 @@ class SortablePositionListener
             return;
         }
 
+        if ($entity->getPosition() !== 0) {
+            return;
+        }
+
         $repository = $event->getObjectManager()->getRepository($entity::class);
         if (!$repository instanceof AbstractRepository) {
             return;
