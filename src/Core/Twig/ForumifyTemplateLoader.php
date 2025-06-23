@@ -115,7 +115,7 @@ class ForumifyTemplateLoader implements LoaderInterface
                 continue;
             }
 
-            $firstLineBreak = strpos($contents, PHP_EOL);
+            $firstLineBreak = strpos($contents, PHP_EOL) ?: null;
             $firstLine = substr($contents, 0, $firstLineBreak);
             if (str_contains($firstLine, 'extends')) {
                 $contents = substr($contents, $firstLineBreak + 1);
