@@ -14,6 +14,7 @@ abstract class AbstractDoctrineTable extends AbstractTable
 {
     private AbstractRepository $repository;
     private array $identifiers = [];
+    private array $aliases = [];
 
     abstract protected function getEntityClass(): string;
 
@@ -24,7 +25,7 @@ abstract class AbstractDoctrineTable extends AbstractTable
             ->setFirstResult($offset);
 
         foreach ($sort as $column => $direction) {
-            $qb->addOrderBy("e.$column", $direction);
+            $qb = $this->addSortBy($qb, $column, $direction);
         }
 
         return $qb->getQuery()->getResult();
@@ -42,9 +43,10 @@ abstract class AbstractDoctrineTable extends AbstractTable
     protected function getQuery(array $search): QueryBuilder
     {
         $qb = $this->repository->createQueryBuilder('e');
+        $this->addJoins($qb);
+
         foreach ($search as $column => $value) {
-            $qb->andWhere("e.$column LIKE :$column");
-            $qb->setParameter($column, "%$value%");
+            $qb = $this->addSearch($qb, $column, $value);
         }
 
         return $qb;
@@ -63,5 +65,45 @@ abstract class AbstractDoctrineTable extends AbstractTable
         if (empty($this->identifiers)) {
             throw new RuntimeException('Your entity must have at least 1 identifier (#[ORM\Id])');
         }
+    }
+
+    private function addJoins(QueryBuilder $qb): QueryBuilder
+    {
+        foreach ($this->getColumns() as $columnName => $column) {
+            $field = $column['field'] ?? $columnName;
+            $property = explode('.', str_replace('?', '', $field));
+
+            if (count($property) === 1) {
+                $this->aliases[$columnName] = 'e.' . reset($property);
+                continue;
+            }
+
+            if (count($property) === 2) {
+                [$join, $property] = $property;
+                $alias = uniqid($join . '_');
+                $qb->leftJoin("e.$join", $alias);
+                $this->aliases[$columnName] = "$alias.$property";
+                continue;
+            }
+
+            throw new RuntimeException('Having properties nested deeper than 2 is not allowed.');
+        }
+
+        return $qb;
+    }
+
+    private function addSearch(QueryBuilder $qb, string $column, string $value): QueryBuilder
+    {
+        $alias = $this->aliases[$column];
+        return $qb
+            ->andWhere("$alias LIKE :value")
+            ->setParameter('value', "%$value%")
+        ;
+    }
+
+    private function addSortBy(QueryBuilder $qb, string $column, string $direction): QueryBuilder
+    {
+        $alias = $this->aliases[$column];
+        return $qb->addOrderBy($alias, $direction);
     }
 }
