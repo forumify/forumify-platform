@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Forumify\Core\Entity\MenuItem;
 use Forumify\Core\MenuBuilder\MenuTypeInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,7 +24,7 @@ class MenuItemType extends AbstractType
     private array $menuTypes = [];
 
     public function __construct(
-        #[TaggedIterator('forumify.menu_builder.type')]
+        #[AutowireIterator('forumify.menu_builder.type')]
         iterable $menuTypes,
     ) {
         /** @var MenuTypeInterface $menuType */

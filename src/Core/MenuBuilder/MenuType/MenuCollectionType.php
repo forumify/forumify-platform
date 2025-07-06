@@ -6,7 +6,7 @@ namespace Forumify\Core\MenuBuilder\MenuType;
 
 use Forumify\Core\Entity\MenuItem;
 use Forumify\Core\MenuBuilder\MenuTypeInterface;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Twig\Environment;
 
 class MenuCollectionType extends AbstractMenuType
@@ -17,7 +17,7 @@ class MenuCollectionType extends AbstractMenuType
     private array $menuTypes;
 
     public function __construct(
-        #[TaggedIterator('forumify.menu_builder.type')]
+        #[AutowireIterator('forumify.menu_builder.type')]
         iterable $menuTypes,
         private readonly Environment $twig,
     ) {

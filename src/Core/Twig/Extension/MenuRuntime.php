@@ -7,7 +7,7 @@ namespace Forumify\Core\Twig\Extension;
 use Forumify\Core\MenuBuilder\MenuTypeInterface;
 use Forumify\Core\Repository\MenuItemRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -29,7 +29,7 @@ class MenuRuntime implements RuntimeExtensionInterface
         private readonly MenuItemRepository $menuItemRepository,
         private readonly Security $security,
         private readonly CacheInterface $cache,
-        #[TaggedIterator('forumify.menu_builder.type')]
+        #[AutowireIterator('forumify.menu_builder.type')]
         iterable $menuTypes,
     ) {
         foreach ($menuTypes as $menuType) {

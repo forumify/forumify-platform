@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Notification;
 
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 class NotificationTypeCollection
 {
     private array $notificationTypes;
 
     public function __construct(
-        #[TaggedIterator('forumify.notification.type')]
+        #[AutowireIterator('forumify.notification.type')]
         iterable $notifications,
     ) {
         /** @var NotificationTypeInterface $notification */
