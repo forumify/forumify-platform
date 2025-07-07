@@ -17,7 +17,7 @@ class Role implements SortableEntityInterface
     use SluggableEntityTrait;
     use SortableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $title;
 
     #[ORM\Column(type: 'text')]
@@ -38,7 +38,7 @@ class Role implements SortableEntityInterface
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $showOnForum = false;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 7, nullable: true, options: ['fixed' => true])]
     private ?string $color = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]

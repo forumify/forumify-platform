@@ -27,11 +27,9 @@ class ReadMarkerRepository extends AbstractRepository
                 ->where('rm.user = :user')
                 ->andWhere('rm.subject = :subject')
                 ->andWhere('rm.subjectId = :subjectId')
-                ->setParameters([
-                    'user' => $user,
-                    'subject' => $subject,
-                    'subjectId' => $subjectId,
-                ])
+                ->setParameter('user', $user)
+                ->setParameter('subject', $subject)
+                ->setParameter('subjectId', $subjectId)
                 ->getQuery()
                 ->getSingleScalarResult();
             return $count > 0;
@@ -48,11 +46,9 @@ class ReadMarkerRepository extends AbstractRepository
                 ->where('rm.user = :user')
                 ->andWhere('rm.subject = :subject')
                 ->andWhere('rm.subjectId IN (:subjectIds)')
-                ->setParameters([
-                    'user' => $user,
-                    'subject' => $subject,
-                    'subjectIds' => $subjectIds,
-                ])
+                ->setParameter('user', $user)
+                ->setParameter('subject', $subject)
+                ->setParameter('subjectIds', $subjectIds)
                 ->getQuery()
                 ->getSingleScalarResult();
 
@@ -86,10 +82,9 @@ class ReadMarkerRepository extends AbstractRepository
             ->delete(ReadMarker::class, 'rm')
             ->where('rm.subject = :subject')
             ->andWhere('rm.subjectId = :subjectId')
+            ->setParameter('subject', $subject)
+            ->setParameter('subjectId', $subjectId)
             ->getQuery()
-            ->execute([
-                'subject' => $subject,
-                'subjectId' => $subjectId,
-            ]);
+            ->execute();
     }
 }

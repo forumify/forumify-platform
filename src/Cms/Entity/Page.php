@@ -26,16 +26,16 @@ class Page implements AccessControlledEntityInterface
     use TimestampableEntityTrait;
     use SluggableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $title = '';
 
-    #[ORM\Column(unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $urlKey = '';
 
     #[ORM\Column(type: 'text')]
     private string $seoDescription = '';
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $seoKeywords = '';
 
     #[ORM\Column(options: ['default' => self::TYPE_TWIG])]

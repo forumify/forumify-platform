@@ -10,7 +10,6 @@ use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReplyType;
-use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -35,7 +34,6 @@ class MessageList extends AbstractDoctrineList
 
     public function __construct(
         private readonly MessageThreadRepository $messageThreadRepository,
-        private readonly MessageRepository $messageRepository,
         private readonly FormFactoryInterface $formFactory,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security,

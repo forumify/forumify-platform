@@ -17,10 +17,10 @@ class OAuthClient implements UserInterface
     /**
      * @var non-empty-string
      */
-    #[ORM\Column(unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $clientId;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $clientSecret;
 
     /**

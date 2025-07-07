@@ -18,14 +18,14 @@ class Snippet
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $name;
 
     #[Gedmo\Slug(fields: ['name'])]
-    #[ORM\Column(unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $slug;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $type;
 
     #[ORM\Column(type: 'text')]

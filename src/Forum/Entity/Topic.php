@@ -31,7 +31,7 @@ class Topic implements SubscribableInterface
     /**
      * @var Collection<int, TopicImage>
      */
-    #[ORM\OneToMany('topic', TopicImage::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'topic', targetEntity: TopicImage::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $images;
 

@@ -23,13 +23,13 @@ class Badge implements SortableEntityInterface
     use TimestampableEntityTrait;
     use SortableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $name;
 
     #[ORM\Column(type: 'text')]
     private string $description;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $image;
 
     /**

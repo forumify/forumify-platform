@@ -14,7 +14,7 @@ use Forumify\OAuth\Repository\OAuthAuthorizationCodeRepository;
 class OAuthAuthorizationCode
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $code;
 
     #[ORM\ManyToOne(targetEntity: OAuthClient::class)]
@@ -31,7 +31,7 @@ class OAuthAuthorizationCode
     #[ORM\Column(type: 'datetime')]
     private DateTime $validUntil;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $redirectUri;
 
     public function __construct()

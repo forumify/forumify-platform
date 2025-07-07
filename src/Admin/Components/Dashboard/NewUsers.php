@@ -9,13 +9,12 @@ use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Entity\User;
-use Forumify\Core\Repository\UserRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
 #[AsLiveComponent('Forumify\\Admin\\NewUsers', '@Forumify/admin/dashboard/components/users.html.twig')]
 class NewUsers extends AbstractDoctrineList
 {
-    public function __construct(private readonly UserRepository $userRepository)
+    public function __construct()
     {
         $this->limit = 8;
     }

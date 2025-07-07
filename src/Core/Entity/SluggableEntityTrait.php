@@ -10,7 +10,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait SluggableEntityTrait
 {
     #[Gedmo\Slug(fields: ['title'])]
-    #[ORM\Column(unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $slug;
 
     public function getSlug(): string

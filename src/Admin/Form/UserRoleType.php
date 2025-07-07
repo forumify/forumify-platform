@@ -42,10 +42,9 @@ class UserRoleType extends AbstractType
             ->andWhere('r.slug != :guest')
             ->andWhere('r.slug != :user')
             ->orderBy('r.position', 'ASC')
-            ->setParameters([
-                'guest' => 'guest',
-                'user' => 'user',
-            ]);
+            ->setParameter('guest', 'guest')
+            ->setParameter('user', 'user')
+        ;
     }
 
     private function getChoiceLabel(Role $role): string

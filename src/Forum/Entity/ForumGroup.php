@@ -20,7 +20,7 @@ class ForumGroup implements AccessControlledEntityInterface, SortableEntityInter
     use IdentifiableEntityTrait;
     use SortableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $title;
 
     /**

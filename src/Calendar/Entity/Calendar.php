@@ -19,16 +19,16 @@ class Calendar implements AccessControlledEntityInterface
     use IdentifiableEntityTrait;
     use SluggableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $title;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 7, options: ['fixed' => true])]
     private string $color;
 
     /**
      * @var Collection<int, CalendarEvent>
      */
-    #[ORM\OneToMany('calendar', CalendarEvent::class, ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'calendar', targetEntity: CalendarEvent::class, cascade: ['persist', 'remove'])]
     private Collection $events;
 
     public function __construct()

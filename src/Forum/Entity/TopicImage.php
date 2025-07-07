@@ -19,7 +19,7 @@ class TopicImage
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private Topic $topic;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $image;
 
     public function getTopic(): Topic

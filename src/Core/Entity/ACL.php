@@ -15,13 +15,13 @@ class ACL
 {
     use IdentifiableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $entity;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $entityId;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $permission;
 
     /** @var Collection<Role> */

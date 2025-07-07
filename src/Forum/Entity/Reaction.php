@@ -17,10 +17,10 @@ class Reaction
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $image;
 
     public function getName(): string

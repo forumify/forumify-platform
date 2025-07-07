@@ -20,7 +20,7 @@ class CalendarEvent
     use TimestampableEntityTrait;
     use BlameableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $title;
 
     #[ORM\Column(type: 'datetime')]

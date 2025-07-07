@@ -12,7 +12,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class Media
 {
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $path;
 
     #[Gedmo\Blameable(on: 'create')]

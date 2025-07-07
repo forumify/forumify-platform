@@ -11,7 +11,7 @@ use Forumify\Core\Repository\SettingRepository;
 class Setting
 {
     #[ORM\Id]
-    #[ORM\Column('`key`')]
+    #[ORM\Column(name: '`key`', length: 255)]
     private readonly string $key;
 
     #[ORM\Column(type: 'json', nullable: true)]

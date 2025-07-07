@@ -27,7 +27,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     use IdentifiableEntityTrait;
     use SortableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $title = '';
 
     #[Gedmo\Slug(fields: ['title'])]

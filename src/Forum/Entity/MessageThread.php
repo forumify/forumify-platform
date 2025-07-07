@@ -20,7 +20,7 @@ class MessageThread
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $title;
 
     /**

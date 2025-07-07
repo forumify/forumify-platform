@@ -16,7 +16,7 @@ class Notification
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private User $recipient;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $type;
 
     #[ORM\Column(type: 'json')]

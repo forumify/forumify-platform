@@ -35,7 +35,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $roles;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $password;
 
     #[ORM\Column(length: 32)]
@@ -44,13 +44,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * ISO 639-1 representation of the user's language
      */
-    #[ORM\Column(length: 2)]
+    #[ORM\Column(length: 2, options: ['fixed' => true])]
     private string $language = 'en';
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $timezone = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
