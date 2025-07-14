@@ -364,6 +364,9 @@ admin:
         mailer_from_help: 'Email address that the platform will use to send emails from.'
     dashboard:
         greeting: 'Welcome, {user}!'
+        cloud_deletion_warning: 'This cloud instance has been scheduled for deletion on {date, date} and will be inaccessible after this date.'
+        cloud_view: 'View on forumify.net'
+        cloud_refresh: 'Refresh status'
         users: 'Users'
         topics: 'Topics'
         new_users: >
