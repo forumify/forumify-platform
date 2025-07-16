@@ -63,8 +63,7 @@ class AuthController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $trapChecked = $request->get('terms-of-service');
             if ($trapChecked) {
-                $this->addFlash('error', 'flashes.bot_detected');
-                return $this->redirectToRoute('forumify_core_register');
+                return $this->redirectToRoute('forumify_core_index');
             }
 
             if ($settingRepository->get('forumify.recaptcha.enabled')) {
