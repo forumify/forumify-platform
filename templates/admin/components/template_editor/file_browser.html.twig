@@ -2,7 +2,7 @@
     <p class="text-small border-b p-2" style="height: 41px; background-color: var(--c-elevation-1);">
         {{ this.cwd }}
     </p>
-    <ul class="flex-grow menu flex" style="background-color: var(--c-elevation-1);">
+    <ul class="flex-grow menu flex" style="background-color: var(--c-elevation-1); z-index: 0;">
         {% for item in this.ls %}
             <li>
                 <button
