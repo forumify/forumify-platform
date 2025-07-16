@@ -1,0 +1,8 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/confirm.html.twig' with {
+        warningText: 'forum.topic.actions.delete_warning'|trans({ topic: topic.title }),
+        confirmPath: path('forumify_forum_topic_delete', { slug: topic.slug, confirmed: 1 }),
+        cancelPath: path('forumify_forum_topic', { slug: topic.slug })
+    } only %}
+{% endblock %}

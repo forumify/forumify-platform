@@ -171,9 +171,15 @@ class TopicController extends AbstractController
     }
 
     #[Route('/{slug}/delete', '_delete')]
-    public function delete(Topic $topic): Response
+    public function delete(Request $request, Topic $topic): Response
     {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicDelete->value, $topic);
+
+        if (!$request->get('confirmed')) {
+            return $this->render('@Forumify/frontend/forum/topic_delete.html.twig', [
+                'topic' => $topic,
+            ]);
+        }
 
         $forum = $topic->getForum();
         $this->topicRepository->remove($topic);

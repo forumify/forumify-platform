@@ -245,6 +245,7 @@ forum:
             reveal: 'Reveal'
             move: 'Move'
             delete: 'Delete'
+            delete_warning: 'You are about to delete "{topic}". This will delete all comments and reactions associated with this topic.'
         flashes:
             topic_moved: 'Topic moved.'
         locked_moderator: 'This topic is locked, but as a moderator you can still add comments.'
