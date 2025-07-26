@@ -2,6 +2,14 @@
     padding: var(--spacing-4);
     font-weight: 500;
     border-radius: var(--border-radius);
+
+    a {
+        font-weight: 600;
+        color: currentColor;
+        &:hover {
+            opacity: 0.75;
+        }
+    }
 }
 
 .alert-success {

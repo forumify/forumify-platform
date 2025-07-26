@@ -9,6 +9,7 @@ use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\AccountService;
 use Forumify\Core\Service\RecaptchaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -37,8 +38,8 @@ class ForgotPasswordController extends AbstractController
         }
 
         $form = $this->createFormBuilder()
-            ->add('email', EmailType::class, [
-                'label' => 'email',
+            ->add('query', EmailType::class, [
+                'label' => 'Username or email',
                 'help' => 'forgot_password.email_help',
                 'attr' => ['autocomplete' => 'email', 'autofocus' => 'true'],
             ])
@@ -51,6 +52,11 @@ class ForgotPasswordController extends AbstractController
             ]);
         }
 
+        $trapChecked = $request->get('human');
+        if ($trapChecked) {
+            return $this->redirectToRoute('forumify_core_index');
+        }
+
         if ($this->settingRepository->get('forumify.recaptcha.enabled')) {
             $score = $this->recaptchaService->verifyRequest($request);
             if ($score < 0.8) {
@@ -60,8 +66,16 @@ class ForgotPasswordController extends AbstractController
             }
         }
 
-        $email = $form->getData()['email'];
-        $user = $this->userRepository->findOneBy(['email' => $email]);
+        $query = $form->get('query')->getData();
+        $user = $this->userRepository
+            ->createQueryBuilder('u')
+            ->where('u.email = :q')
+            ->orWhere('u.username = :q')
+            ->setParameter('q', $query)
+            ->getQuery()
+            ->getSingleResult()
+        ;
+
         if ($user !== null) {
             $this->accountService->sendPasswordForgetEmail($user);
         }

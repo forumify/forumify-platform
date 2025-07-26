@@ -4,6 +4,10 @@
 {% block form %}
     {{ form_start(form, { attr: { id: 'forgot-password-form' } }) }}
     {{ form_widget(form) }}
+    <div class="form-row d-none">
+        <input id="human" type="checkbox" name="human">
+        <label for="human">I am human</label>
+    </div>
     <div class="flex justify-center gap-2">
         {% if setting('forumify.recaptcha.enabled') %}
             <button

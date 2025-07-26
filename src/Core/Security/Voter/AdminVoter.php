@@ -14,6 +14,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class AdminVoter extends Voter
 {
+    private array $memo = [];
+
     protected function supports(string $attribute, mixed $subject): bool
     {
         return $attribute === 'ROLE_ADMIN' || $attribute === VoterAttribute::Administrator->value;
@@ -21,12 +23,22 @@ class AdminVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        /** @var User|null $user */
         $user = $token->getUser();
-        if ($user === null) {
+        if (!$user instanceof User) {
             return false;
         }
 
+        $userId = $user->getId();
+        if (isset($this->memo[$userId])) {
+            return $this->memo[$userId];
+        }
+
+        $this->memo[$userId] = $this->isAdmin($user);
+        return $this->memo[$userId];
+    }
+
+    private function isAdmin(User $user): bool
+    {
         foreach ($user->getRoleEntities() as $role) {
             if ($role->isAdministrator()) {
                 return true;

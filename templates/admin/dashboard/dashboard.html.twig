@@ -14,6 +14,9 @@
             <p class="text-light">{{ 'admin.dashboard.greeting'|trans({ user: app.user.displayName }) }}</p>
         </div>
     </div>
+    {% if isCloudInstance %}
+        {{ component('Forumify\\CloudInstanceStatus') }}
+    {% endif %}
     <div class="grid gap-6">
         <div class="col-xs-12 col-md-6 col-lg-8">
             {{ component('Forumify\\Admin\\UserGraph') }}

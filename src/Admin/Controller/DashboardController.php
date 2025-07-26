@@ -13,6 +13,9 @@ class DashboardController extends AbstractController
     #[Route('/', name: 'dashboard')]
     public function __invoke(): Response
     {
-        return $this->render('@Forumify/admin/dashboard/dashboard.html.twig');
+        $isCloudInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
+        return $this->render('@Forumify/admin/dashboard/dashboard.html.twig', [
+            'isCloudInstance' => $isCloudInstance,
+        ]);
     }
 }

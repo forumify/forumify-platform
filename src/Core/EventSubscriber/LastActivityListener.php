@@ -23,8 +23,14 @@ class LastActivityListener
     public function __invoke(): void
     {
         $user = $this->security->getUser();
-        if ($user instanceof User) {
-            $user->setLastActivity(new DateTime());
+        if (!$user instanceof User) {
+            return;
+        }
+
+        $now = new DateTime();
+        $lastActivity = $user->getLastActivity();
+        if ($lastActivity === null || $now->getTimestamp() - $lastActivity->getTimestamp() >= 60) {
+            $user->setLastActivity($now);
             $this->userRepository->save($user);
         }
     }
