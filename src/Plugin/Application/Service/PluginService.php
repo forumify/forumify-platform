@@ -7,6 +7,7 @@ namespace Forumify\Plugin\Application\Service;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Tools\DsnParser;
 use Forumify\Plugin\Application\Exception\PluginException;
 use Forumify\Plugin\Application\Exception\PluginNotFoundException;
 use JsonException;
@@ -25,9 +26,14 @@ class PluginService
      */
     public function __construct(array $context)
     {
-        $this->connection = DriverManager::getConnection([
-            'url' => $context['DATABASE_URL'],
-        ]);
+        $dbUrl = $context['DATABASE_URL'];
+        if (str_starts_with($dbUrl, 'mysql://')) {
+            $dbUrl = 'pdo-' . $dbUrl;
+        }
+
+        $dsnParser = new DsnParser();
+        $connectionParams = $dsnParser->parse($dbUrl);
+        $this->connection = DriverManager::getConnection($connectionParams);
 
         $this->rootDir = dirname($context['DOCUMENT_ROOT']);
         $this->frameworkCacheClearer = new FrameworkCacheClearer($this->rootDir);
