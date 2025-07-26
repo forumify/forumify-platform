@@ -8,13 +8,21 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Repository\AbstractRepository;
 use RuntimeException;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Service\Attribute\Required;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
 
 abstract class AbstractDoctrineTable extends AbstractTable
 {
-    private AbstractRepository $repository;
+    private EntityManagerInterface $entityManager;
+    protected Security $security;
+    protected AbstractRepository $repository;
+
     private array $identifiers = [];
     private array $aliases = [];
+
+    protected ?string $permissionReorder = null;
 
     abstract protected function getEntityClass(): string;
 
@@ -61,8 +69,9 @@ abstract class AbstractDoctrineTable extends AbstractTable
     }
 
     #[Required]
-    public function setServices(EntityManagerInterface $em): void
+    public function setServices(EntityManagerInterface $em, Security $security): void
     {
+        $this->entityManager = $em;
         $repository = $em->getRepository($this->getEntityClass());
         if (!$repository instanceof AbstractRepository) {
             throw new RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
@@ -73,6 +82,7 @@ abstract class AbstractDoctrineTable extends AbstractTable
         if (empty($this->identifiers)) {
             throw new RuntimeException('Your entity must have at least 1 identifier (#[ORM\Id])');
         }
+        $this->security = $security;
     }
 
     private function addJoins(QueryBuilder $qb): QueryBuilder
@@ -113,5 +123,77 @@ abstract class AbstractDoctrineTable extends AbstractTable
     {
         $alias = $this->aliases[$column];
         return $qb->addOrderBy($alias, $direction);
+    }
+
+    protected function addPositionColumn(string $field = 'position'): static
+    {
+        $this->sort = ['position' => self::SORT_ASC];
+        $this->addColumn('position', [
+            'class' => 'w-10',
+            'field' => $field,
+            'label' => '#',
+            'renderer' => $this->renderPositionColumn(),
+            'searchable' => false,
+        ]);
+        return $this;
+    }
+
+    protected function renderPositionColumn(): callable
+    {
+        $metadata = $this->entityManager->getClassMetadata($this->getEntityClass());
+        return function ($_, object $entity) use ($metadata): string {
+            if (!$this->canReorder($entity)) {
+                return '';
+            }
+
+            $identifier = $metadata->getIdentifierValues($entity);
+            $identifier = reset($identifier);
+
+            return '
+                <button
+                    class="btn-link btn-small btn-icon p-1"
+                    data-action="live#action"
+                    data-live-action-param="changePosition"
+                    data-live-id-param="' . $identifier . '"
+                    data-live-direction-param="down"
+                >
+                    <i class="ph ph-arrow-down"></i>
+                </button>
+                <button
+                    class="btn-link btn-small btn-icon p-1"
+                    data-action="live#action"
+                    data-live-action-param="changePosition"
+                    data-live-id-param="' . $identifier . '"
+                    data-live-direction-param="up"
+                >
+                    <i class="ph ph-arrow-up"></i>
+                </button>
+            ';
+        };
+    }
+
+    #[LiveAction]
+    public function changePosition(#[LiveArg] int $id, #[LiveArg] string $direction): void
+    {
+        $entity = $this->repository->find($id);
+        if ($entity === null) {
+            return;
+        }
+
+        if (!$this->canReorder($entity)) {
+            return;
+        }
+
+        $this->reorderItem($entity, $direction);
+    }
+
+    protected function canReorder(object $entity): bool
+    {
+        return $this->permissionReorder === null || $this->security->isGranted($this->permissionReorder);
+    }
+
+    protected function reorderItem(object $entity, string $direction): void
+    {
+        $this->repository->reorder($entity, $direction);
     }
 }

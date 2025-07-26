@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Security\Voter;
 
+use Forumify\Core\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -15,6 +16,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class SuperAdminVoter extends Voter
 {
+    private array $memo = [];
+
     /** @inheritDoc */
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -24,6 +27,27 @@ class SuperAdminVoter extends Voter
     /** @inheritDoc */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        return in_array('ROLE_SUPER_ADMIN', $token->getRoleNames(), true);
+        $user = $token->getUser();
+        if (!$user instanceof User) {
+            return false;
+        }
+
+        $userId = $user->getId();
+        if (isset($this->memo[$userId])) {
+            return $this->memo[$userId];
+        }
+
+        $this->memo[$userId] = $this->isSuperAdmin($user);
+        return $this->memo[$userId];
+    }
+
+    private function isSuperAdmin(User $user): bool
+    {
+        foreach ($user->getRoleEntities() as $role) {
+            if ($role->getRoleName() === 'ROLE_SUPER_ADMIN') {
+                return true;
+            }
+        }
+        return false;
     }
 }

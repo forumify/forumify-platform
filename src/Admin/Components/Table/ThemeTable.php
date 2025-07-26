@@ -8,7 +8,6 @@ use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Component\Table\AbstractTable;
 use Forumify\Core\Entity\Theme;
 use Forumify\Plugin\Entity\Plugin;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -16,9 +15,8 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 #[IsGranted('forumify.admin.settings.themes.view')]
 class ThemeTable extends AbstractDoctrineTable
 {
-    public function __construct(
-        private readonly Security $security,
-    ) {
+    public function __construct()
+    {
         $this->sort = [
             'active' => AbstractTable::SORT_DESC,
             'name' => AbstractTable::SORT_DESC,

@@ -43,6 +43,7 @@ class MentionSubscriber implements EventSubscriberInterface
                 continue;
             }
 
+            // TODO: Symfony 7.3 adds $security->isGrantedForUser that does exactly this.
             $canViewTopic = $this->accessDecisionManager->decide(
                 new UserToken($recipient),
                 [VoterAttribute::ACL->value],

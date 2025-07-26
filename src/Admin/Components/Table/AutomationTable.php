@@ -6,7 +6,6 @@ namespace Forumify\Admin\Components\Table;
 
 use Forumify\Automation\Entity\Automation;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -14,10 +13,6 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 #[IsGranted('forumify.admin.settings.automations.view')]
 class AutomationTable extends AbstractDoctrineTable
 {
-    public function __construct(private readonly Security $security)
-    {
-    }
-
     protected function getEntityClass(): string
     {
         return Automation::class;

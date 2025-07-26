@@ -6,6 +6,7 @@ namespace Forumify\Forum\EventSubscriber;
 
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Notification\NotificationService;
+use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Subscription;
 use Forumify\Forum\Event\CommentCreatedEvent;
 use Forumify\Forum\Event\MessageCreatedEvent;
@@ -14,8 +15,10 @@ use Forumify\Forum\Notification\CommentCreatedNotificationType;
 use Forumify\Forum\Notification\MessageReplyNotificationType;
 use Forumify\Forum\Notification\TopicCreatedNotificationType;
 use Forumify\Forum\Repository\SubscriptionRepository;
+use Forumify\Forum\Security\UserToken;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class NotificationSubscriber implements EventSubscriberInterface
 {
@@ -23,6 +26,7 @@ class NotificationSubscriber implements EventSubscriberInterface
         private readonly SubscriptionRepository $subscriptionRepository,
         private readonly NotificationService $notificationService,
         private readonly Security $security,
+        private readonly AccessDecisionManagerInterface $accessDecisionManager,
     ) {
     }
 
@@ -47,6 +51,20 @@ class NotificationSubscriber implements EventSubscriberInterface
                 continue;
             }
 
+            // TODO: Symfony 7.3 adds $security->isGrantedForUser that does exactly this.
+            $canViewComment = $this->accessDecisionManager->decide(
+                new UserToken($subscriber),
+                [VoterAttribute::ACL->value],
+                [
+                    'permission' => 'view',
+                    'entity' => $comment->getTopic()->getForum(),
+                ],
+            );
+
+            if (!$canViewComment) {
+                continue;
+            }
+
             $this->notificationService->sendNotification(new Notification(
                 CommentCreatedNotificationType::TYPE,
                 $subscriber,
@@ -64,6 +82,20 @@ class NotificationSubscriber implements EventSubscriberInterface
         foreach ($subscriptions as $subscription) {
             $subscriber = $subscription->getUser();
             if ($subscriber->getUserIdentifier() === $selfIdentifier) {
+                continue;
+            }
+
+            // TODO: Symfony 7.3 adds $security->isGrantedForUser that does exactly this.
+            $canViewTopic = $this->accessDecisionManager->decide(
+                new UserToken($subscriber),
+                [VoterAttribute::ACL->value],
+                [
+                    'permission' => 'view',
+                    'entity' => $topic->getForum(),
+                ],
+            );
+
+            if (!$canViewTopic) {
                 continue;
             }
 

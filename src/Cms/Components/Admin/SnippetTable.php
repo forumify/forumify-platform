@@ -6,8 +6,6 @@ namespace Forumify\Cms\Components\Admin;
 
 use Forumify\Cms\Entity\Snippet;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -15,12 +13,6 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 #[IsGranted('forumify.admin.cms.snippets.view')]
 class SnippetTable extends AbstractDoctrineTable
 {
-    public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly Security $security,
-    ) {
-    }
-
     protected function getEntityClass(): string
     {
         return Snippet::class;
@@ -50,12 +42,9 @@ class SnippetTable extends AbstractDoctrineTable
             return '';
         }
 
-        $editUrl = $this->urlGenerator->generate('forumify_admin_cms_snippet_edit', ['slug' => $slug]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_cms_snippet_delete', ['slug' => $slug]);
-
-        return "
-            <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>
-            <a class='btn-link btn-icon btn-small' href='$deleteUrl'><i class='ph ph-x'></i></a>
-        ";
+        $actions = '';
+        $actions .= $this->renderAction('forumify_admin_cms_snippet_edit', ['slug' => $slug], 'pencil-simple-line');
+        $actions .= $this->renderAction('forumify_admin_cms_snippet_delete', ['slug' => $slug], 'x');
+        return $actions;
     }
 }

@@ -1,0 +1,21 @@
+<div {{ attributes }}>
+    {% set cloudStatus = this.status %}
+    {% if cloudStatus is not null and cloudStatus.deletionDate is not null %}
+        <div class="alert-error mb-4" data-loading="hide">
+            <p class="mb-2">{{ 'admin.dashboard.cloud_deletion_warning'|trans({ date: date(cloudStatus.deletionDate) }) }}</p>
+            <a class="mr-2" href="https://forumify.net/hosting" target="_blank">
+                <i class="ph ph-arrow-square-out"></i>
+                {{ 'admin.dashboard.cloud_view'|trans }}
+            </a>
+            <a {{ live_action('refresh') }}>
+                <i class="ph ph-arrows-clockwise"></i>
+                {{ 'admin.dashboard.cloud_refresh'|trans }}
+            </a>
+        </div>
+        <div data-loading class="flex justify-center items-center">
+            <div class="flex justify-center items-center" style="height: 100%">
+                {% include '@Forumify/components/loader.html.twig' %}
+            </div>
+        </div>
+    {% endif %}
+</div>
