@@ -178,21 +178,21 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
         $entity ??= $this->getEntityName();
         $qb->innerJoin(ACL::class, 'acl', 'WITH', "acl.entity = :entity AND acl.entityId = $alias.$identifier AND acl.permission = :permission")
-            ->innerJoin('acl.roles', 'r')
+            ->innerJoin('acl.roles', 'acl_role')
             ->setParameter('permission', $permission)
             ->setParameter('entity', $entity);
 
         $user = $this->security->getUser();
         if ($user instanceof User) {
-            $qb->leftJoin('r.users', 'u')
+            $qb->leftJoin('acl_role.users', 'acl_role_users')
                 ->andWhere($qb->expr()->orX(
-                    'u.id = :userId',
-                    'r.slug = :userRole'
+                    'acl_role_users.id = :userId',
+                    'acl_role.slug = :userRole'
                 ))
                 ->setParameter('userId', $user->getId())
                 ->setParameter('userRole', 'user');
         } else {
-            $qb->andWhere('r.slug = :guestRole')
+            $qb->andWhere('acl_role.slug = :guestRole')
                 ->setParameter('guestRole', 'guest');
         }
 
