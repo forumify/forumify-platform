@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Forum\Repository\ReactionRepository;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: ReactionRepository::class)]
 class Reaction
 {
@@ -18,9 +21,11 @@ class Reaction
     use TimestampableEntityTrait;
 
     #[ORM\Column(length: 255)]
+    #[Groups('Reaction')]
     private string $name;
 
     #[ORM\Column(length: 255)]
+    #[Groups('Reaction')]
     private string $image;
 
     public function getName(): string

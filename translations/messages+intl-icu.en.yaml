@@ -272,6 +272,10 @@ admin:
         crud:
             single: 'calendar'
             plural: 'calendars'
+    o_auth_client:
+        crud:
+            single: 'api client'
+            plural: 'api clients'
     crud:
         edit: 'Editing {single}'
         create: 'New {single}'

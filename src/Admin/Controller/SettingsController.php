@@ -51,6 +51,10 @@ class SettingsController extends AbstractController
             new MenuItem($t->trans('admin.automations.title'), $u->generate('forumify_admin_automation_list'), [
                 'icon' => 'ph ph-git-branch',
                 'permission' => 'forumify.admin.settings.automations.view'
+            ]),
+            new MenuItem($t->trans('admin.o_auth_client.crud.plural'), $u->generate('forumify_admin_oauth_clients_list'), [
+                'icon' => 'ph ph-hard-drives',
+                'permission' => 'forumify.admin.settings.oauth_clients.view',
             ])
         ]);
 

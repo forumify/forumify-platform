@@ -11,11 +11,13 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Forumify\Core\Entity\ACL;
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Event\EntityPostRemoveEvent;
 use Forumify\Core\Event\EntityPostSaveEvent;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -165,7 +167,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
     }
 
-    protected function addACLToQuery(
+    public function addACLToQuery(
         QueryBuilder $qb,
         string $permission,
         ?string $entity = null,
@@ -177,25 +179,27 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         $entity ??= $this->getEntityName();
-        $qb->innerJoin(ACL::class, 'acl', 'WITH', "acl.entity = :entity AND acl.entityId = $alias.$identifier AND acl.permission = :permission")
+        $qb
+            ->innerJoin(ACL::class, 'acl', 'WITH', "acl.entity = :entity AND acl.entityId = $alias.$identifier AND acl.permission = :permission")
             ->innerJoin('acl.roles', 'acl_role')
             ->setParameter('permission', $permission)
-            ->setParameter('entity', $entity);
+            ->setParameter('entity', $entity)
+        ;
 
         $user = $this->security->getUser();
-        if ($user instanceof User) {
-            $qb->leftJoin('acl_role.users', 'acl_role_users')
-                ->andWhere($qb->expr()->orX(
-                    'acl_role_users.id = :userId',
-                    'acl_role.slug = :userRole'
-                ))
-                ->setParameter('userId', $user->getId())
-                ->setParameter('userRole', 'user');
-        } else {
-            $qb->andWhere('acl_role.slug = :guestRole')
-                ->setParameter('guestRole', 'guest');
+        if (!$user instanceof AuthorizableInterface) {
+            return $qb->andWhere('acl_role.slug = :guestRole')->setParameter('guestRole', 'guest');
         }
 
-        return $qb;
+        $join = $user instanceof User ? 'acl_role.users' : 'acl_role.clients';
+        return $qb
+            ->leftJoin($join, 'acl_role_users')
+            ->andWhere($qb->expr()->orX(
+                ':user MEMBER OF acl_role_users',
+                'acl_role.slug = :userRole'
+            ))
+            ->setParameter('user', $user)
+            ->setParameter('userRole', 'user')
+        ;
     }
 }

@@ -1,9 +1,9 @@
 {% extends '@Forumify/frontend/base.html.twig' %}
 {% block title_page %}{{ 'messenger.inbox'|trans }}{% endblock %}
 {% block body %}
-    {% if initialThreadId is defined %}
-        {{ component('MessageThreadList', { selectedThread: initialThreadId }) }}
-    {% else %}
-        {{ component('MessageThreadList') }}
-    {% endif %}
+    {{ component('MessageThreadList', {
+        limit: 20,
+        infiniteScroll: true,
+        selectedThread: initialThreadId is defined ? initialThreadId : null
+    }) }}
 {% endblock %}

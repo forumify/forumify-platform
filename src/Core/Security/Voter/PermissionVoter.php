@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Security\Voter;
 
-use Forumify\Core\Entity\User;
-use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Entity\AuthorizableInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -24,7 +23,7 @@ class PermissionVoter extends Voter
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        /** @var User|null $user */
+        /** @var AuthorizableInterface|null $user */
         $user = $token->getUser();
         if ($user === null) {
             return false;
@@ -37,7 +36,7 @@ class PermissionVoter extends Voter
     /**
      * @return array<string>
      */
-    private function getPermissions(User $user): array
+    private function getPermissions(AuthorizableInterface $user): array
     {
         if ($this->permissions !== null) {
             return $this->permissions;

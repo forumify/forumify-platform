@@ -22,6 +22,9 @@ abstract class AbstractList
     #[LiveProp(writable: true)]
     public int $limit = 10;
 
+    #[LiveProp]
+    public bool $infiniteScroll = false;
+
     private ?ListResult $result = null;
 
     #[LiveAction]

@@ -1,0 +1,19 @@
+api_platform:
+    title: forumify API
+    version: 1.0.0
+    path_segment_name_generator: api_platform.metadata.path_segment_name_generator.dash
+    use_symfony_listeners: true
+    defaults:
+        cache_headers:
+            vary: [ 'Content-Type', 'Authorization', 'Origin' ]
+        pagination_items_per_page: 25
+        pagination_enabled: true
+    formats:
+        jsonld: [ 'application/ld+json', 'application/json' ]
+        multipart: [ 'multipart/form-data' ]
+    patch_formats:
+        json: [ 'application/merge-patch+json', 'application/json' ]
+    mapping:
+        paths:
+            - '%kernel.project_dir%/src/'
+            - '%forumify.project_dir%/src/'

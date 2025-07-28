@@ -22,7 +22,7 @@ class ForumifyBundle extends AbstractForumifyBundle
                     'view',
                     'manage_badges',
                     'manage_roles',
-                    'manage'
+                    'manage',
                 ],
                 'forums' => [
                     'manage',
@@ -31,15 +31,15 @@ class ForumifyBundle extends AbstractForumifyBundle
                     'view',
                     'pages' => [
                         'view',
-                        'manage'
+                        'manage',
                     ],
                     'resources' => [
                         'view',
-                        'manage'
+                        'manage',
                     ],
                     'snippets' => [
                         'view',
-                        'manage'
+                        'manage',
                     ]
                 ],
                 'settings' => [
@@ -50,30 +50,34 @@ class ForumifyBundle extends AbstractForumifyBundle
                     ],
                     'calendars' => [
                         'view',
-                        'manage'
+                        'manage',
                     ],
                     'badges' => [
                         'view',
-                        'manage'
+                        'manage',
                     ],
                     'menu_builder' => [
-                        'manage'
+                        'manage',
                     ],
                     'plugins' => [
-                        'manage'
+                        'manage',
                     ],
                     'reactions' => [
                         'view',
-                        'manage'
+                        'manage',
                     ],
                     'roles' => [
                         'view',
-                        'manage'
+                        'manage',
                     ],
                     'themes' => [
                         'view',
-                        'manage'
+                        'manage',
                     ],
+                    'oauth_clients' => [
+                        'view',
+                        'manage',
+                    ]
                 ],
             ],
         ];

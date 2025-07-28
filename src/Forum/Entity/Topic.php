@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Link;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\State\CreateProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +20,16 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Forum\Repository\TopicRepository;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource(
+    uriTemplate: '/forums/{forumId}/topics',
+    uriVariables: [
+        'forumId' => new Link(fromClass: Forum::class, toProperty: 'forum'),
+    ],
+    operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
+)]
+#[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
 #[ORM\Entity(repositoryClass: TopicRepository::class)]
 class Topic implements SubscribableInterface
 {
@@ -22,10 +39,12 @@ class Topic implements SubscribableInterface
     use SluggableEntityTrait;
 
     #[ORM\Column]
+    #[Groups('Topic')]
     private string $title;
 
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'topics')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[Groups('Topic')]
     private Forum $forum;
 
     /**
@@ -33,6 +52,7 @@ class Topic implements SubscribableInterface
      */
     #[ORM\OneToMany(mappedBy: 'topic', targetEntity: TopicImage::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
+    #[Groups('Topic')]
     private Collection $images;
 
     /**
@@ -51,15 +71,19 @@ class Topic implements SubscribableInterface
     private ?Comment $answer = null;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups('Topic')]
     private bool $locked = false;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups('Topic')]
     private bool $pinned = false;
 
     #[ORM\Column(type: 'boolean')]
+    #[Groups('Topic')]
     private bool $hidden = false;
 
     #[ORM\Column(type: 'integer', options: ['unsigned' => true, 'default' => 0])]
+    #[Groups('Topic')]
     private int $views = 0;
 
     public function __construct()

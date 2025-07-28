@@ -173,6 +173,8 @@
 
 .thread-list {
     width: 100%;
+    max-height: 800px;
+    overflow-y: scroll;
 
     @include min-width-lg {
         width: 25%;
@@ -190,7 +192,7 @@
         padding-right: var(--spacing-2);
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-2)
+        gap: var(--spacing-1)
     }
 }
 
@@ -198,6 +200,8 @@
     width: 100%;
     height: auto;
     overflow: hidden;
+    padding-bottom: var(--spacing-1);
+    padding-top: var(--spacing-1);
 }
 
 .thread-title {

@@ -10,10 +10,9 @@ use Forumify\Core\Repository\UserRepository;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Forum\Entity\Subscription;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;

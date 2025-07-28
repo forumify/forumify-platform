@@ -7,6 +7,7 @@ namespace Forumify\Core\Entity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\RoleRepository;
+use Forumify\OAuth\Entity\OAuthClient;
 
 use function Symfony\Component\String\u;
 
@@ -45,10 +46,16 @@ class Role implements SortableEntityInterface
     private bool $showOnUsername = false;
 
     /**
-     * @var Collection<User>
+     * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
     private Collection $users;
+
+    /**
+     * @var Collection<int, OAuthClient>
+     */
+    #[ORM\ManyToMany(targetEntity: OAuthClient::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
+    private Collection $clients;
 
     public function getTitle(): string
     {
@@ -155,5 +162,15 @@ class Role implements SortableEntityInterface
     public function setShowOnUsername(bool $showOnUsername): void
     {
         $this->showOnUsername = $showOnUsername;
+    }
+
+    public function getClients(): Collection
+    {
+        return $this->clients;
+    }
+
+    public function setClients(Collection $clients): void
+    {
+        $this->clients = $clients;
     }
 }
