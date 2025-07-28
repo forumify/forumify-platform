@@ -7,7 +7,6 @@ namespace Forumify\Cms\Components\Admin;
 use Forumify\Cms\Entity\Page;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Component\Table\AbstractTable;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -18,7 +17,6 @@ class PageTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly Security $security,
     ) {
         $this->sort = ['title' => AbstractTable::SORT_ASC];
     }

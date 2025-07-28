@@ -7,8 +7,6 @@ namespace Forumify\Admin\Components\Table;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
-use Forumify\Core\Repository\UserRepository;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -23,12 +21,9 @@ class UsersInRoleTable extends UserTable
     #[LiveProp]
     public int $roleId;
 
-    public function __construct(
-        Environment $twig,
-        private readonly Security $security,
-        private readonly UserRepository $userRepository,
-    ) {
-        parent::__construct($twig, $userRepository, $security);
+    public function __construct(Environment $twig)
+    {
+        parent::__construct($twig);
     }
 
     #[LiveAction]
@@ -36,14 +31,14 @@ class UsersInRoleTable extends UserTable
     public function removeUser(#[LiveArg] int $userId): void
     {
         /** @var User|null $user */
-        $user = $this->userRepository->find($userId);
+        $user = $this->repository->find($userId);
         if ($user === null) {
             return;
         }
 
         $newRoles = $user->getRoleEntities()->filter(fn (Role $role) => $role->getId() !== $this->roleId);
         $user->setRoleEntities($newRoles);
-        $this->userRepository->save($user);
+        $this->repository->save($user);
     }
 
     protected function buildTable(): void
