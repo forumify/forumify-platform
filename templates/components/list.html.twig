@@ -1,4 +1,4 @@
-<div {{ attributes.defaults(stimulus_controller('@forumify/forumify-platform/list', {
+<div {{ attributes.defaults(stimulus_controller('forumify/list', {
     lastPageFirst: this.lastPageFirst,
     infiniteScroll: this.infiniteScroll,
 })) }}>
@@ -28,7 +28,7 @@
                             <li
                                 id="item--{{ this.page + 1 }}-{{ i }}"
                                 {% if loop.first %}
-                                    {{ stimulus_target('@forumify/forumify-platform/list', 'firstItem') }}
+                                    {{ stimulus_target('@forumify/list', 'firstItem') }}
                                     data-action="appear->live#action"
                                     data-live-action-param="setPage"
                                     data-live-page-param="{{ this.page + 1 }}"

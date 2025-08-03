@@ -1,7 +1,7 @@
 {% set editorId = 'code-editor-' ~ form.vars.id %}
 <div
     class="form-row code-editor code-editor-{{ form.vars.density|default('default') }}"
-    {{ stimulus_controller('forumify/forumify-platform/code_editor', {
+    {{ stimulus_controller('forumify/code-editor', {
         editorId: editorId,
         language: form.vars.language,
         value: form.vars.value,

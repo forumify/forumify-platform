@@ -1,0 +1,15 @@
+{% set otherParticipants = thread.participants|filter(u => u.id != app.user.id) %}
+{% if otherParticipants|length == 1 %}
+    {% include '@Forumify/components/avatar.html.twig' with {
+        user: otherParticipants|first,
+        className: 'avatar-sm'
+    } only %}
+{% else %}
+    <div class="thread-icon">
+        <i class="ph ph-users"></i>
+    </div>
+{% endif %}
+<span class="thread-title">
+    {{ thread.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : thread.title }}
+    {% if not thread|read %}<i class="dot ml-1"></i>{% endif %}
+</span>

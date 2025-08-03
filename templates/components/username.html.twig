@@ -3,7 +3,7 @@
     <a
         class="inline-flex items-center gap-1 {{ className|default('') }}"
         href="{{ path('forumify_forum_profile', { username: user.username }) }}"
-        {{ stimulus_controller('forumify/forumify-platform/profile_preview', { userId: user.id }) }}
+        {{ stimulus_controller('forumify/profile-preview', { userId: user.id }) }}
         {% if color is not null %}
             style="color: {{ color }};"
         {% endif %}

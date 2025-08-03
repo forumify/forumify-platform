@@ -34,7 +34,7 @@
                 {% block button_text %}{{ 'admin.plugins.manage'|trans }}{% endblock %}
                 {% block menu_items %}
                     {% if updateAvailable %}
-                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePackage', null, {
+                        <a class="btn-link" {{ stimulus_action('forumify/plugin-manager', 'updatePackage', null, {
                             package: plugin.package,
                             version: plugin.latestVersion
                         }) }}>
@@ -47,18 +47,18 @@
                                 <i class="ph ph-wrench"></i>{{ 'admin.plugins.settings'|trans }}
                             </a>
                         {% endif %}
-                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'deactivate', null, {
+                        <a class="btn-link" {{ stimulus_action('forumify/plugin-manager', 'deactivate', null, {
                             plugin: plugin.id
                         }) }}>
                             <i class="ph ph-power"></i>{{ 'admin.plugins.deactivate'|trans }}
                         </a>
                     {% else %}
-                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'activate', null, {
+                        <a class="btn-link" {{ stimulus_action('forumify/plugin-manager', 'activate', null, {
                             plugin: plugin.id
                         }) }}>
                             <i class="ph ph-power"></i>{{ 'admin.plugins.activate'|trans }}
                         </a>
-                        <a class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'uninstall', null, {
+                        <a class="btn-link" {{ stimulus_action('forumify/plugin-manager', 'uninstall', null, {
                             package: plugin.package
                         }) }}>
                             <i class="ph ph-trash"></i>{{ 'admin.plugins.uninstall'|trans }}
@@ -68,7 +68,7 @@
             {% endembed %}
         {% elseif plugin.type == constant('Forumify\\Plugin\\Entity\\Plugin::TYPE_THEME') %}
             {% if plugin.package != 'forumify/forumify-theme' %}
-                <a class="btn-outlined" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'uninstall', null, {
+                <a class="btn-outlined" {{ stimulus_action('forumify/plugin-manager', 'uninstall', null, {
                     package: plugin.package
                 }) }}>
                     <i class="ph ph-trash"></i>{{ 'admin.plugins.uninstall'|trans }}

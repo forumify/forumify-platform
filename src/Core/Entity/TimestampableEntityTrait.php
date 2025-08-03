@@ -10,11 +10,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
 trait TimestampableEntityTrait
 {
     #[Gedmo\Timestampable(on: 'create')]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime', nullable: true, index: true)]
     private DateTime $createdAt;
 
     #[Gedmo\Timestampable(on: 'update')]
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'datetime', nullable: true, index: true)]
     private ?DateTime $updatedAt = null;
 
     public function getCreatedAt(): DateTime

@@ -6,26 +6,26 @@
         </button>
     {% endblock %}
     {% block modalContent %}
-        <div {{ stimulus_target('forumify/forumify-platform/plugin-manager', 'installMethod') }} class="card">
+        <div {{ stimulus_target('forumify/plugin-manager', 'installMethod') }} class="card">
             <div class="card-title">{{ 'admin.plugins.install'|trans }}</div>
             <div class="card-body flex justify-center gap-2">
                 <a href="{{ path('forumify_admin_marketplace') }}" class="btn-cta">{{ 'admin.plugins.marketplace_button'|trans }}</a>
                 <button
                     class="btn-primary"
-                    {{ stimulus_action('forumify/forumify-platform/plugin-manager', 'toggleManualInstall') }}
+                    {{ stimulus_action('forumify/plugin-manager', 'toggleManualInstall') }}
                 >
                     {{ 'admin.plugins.packagist_button'|trans }}
                 </button>
             </div>
         </div>
-        <div {{ stimulus_target('forumify/forumify-platform/plugin-manager', 'manualInstall') }} class="card d-none">
+        <div {{ stimulus_target('forumify/plugin-manager', 'manualInstall') }} class="card d-none">
             <div class="card-title">{{ 'admin.plugins.install_plugin_temp'|trans }}</div>
             <div class="card-body">
                 <p class="text-small mb-4">
                     <i class="ph ph-info"></i>
                     {{ 'admin.plugins.install_plugin_temp_warning'|trans }}
                 </p>
-                <form data-action="forumify--forumify-platform--plugin-manager#install forumify--forumify-platform--modal#close">
+                <form data-action="forumify--plugin-manager#install forumify--modal#close">
                     <div class="form-row">
                         <label for="plugin-package">{{ 'admin.plugins.plugin_package'|trans }}</label>
                         <input id="plugin-package" type="text" name="pluginPackage">
@@ -41,7 +41,7 @@
                         </button>
                         <button
                             type="button" class="btn-outlined"
-                            {{ stimulus_action('forumify/forumify-platform/plugin-manager', 'toggleManualInstall') }}
+                            {{ stimulus_action('forumify/plugin-manager', 'toggleManualInstall') }}
                         >
                             {{ 'cancel'|trans }}
                         </button>

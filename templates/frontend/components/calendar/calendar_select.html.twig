@@ -1,6 +1,6 @@
 {% embed '@Forumify/components/menu.html.twig' with { placement: 'bottom-start' } %}
     {% block open_button %}
-        <button class='btn-outlined' {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+        <button class='btn-outlined' {{ stimulus_target('forumify/menu', 'openButton') }}>
             {% if this.selectedCalendar is null %}
                 <i class="ph ph-calendar-blank"></i>
                 {{ 'calendar.all_calendars'|trans }}

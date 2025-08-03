@@ -21,7 +21,7 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(name: 'MessageList', template: '@Forumify/frontend/components/message_list.html.twig')]
+#[AsLiveComponent(name: 'MessageList', template: '@Forumify/frontend/components/messenger/message_list.html.twig')]
 class MessageList extends AbstractDoctrineList
 {
     use DefaultActionTrait;

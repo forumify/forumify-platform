@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,8 +12,11 @@ use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Core\Entity\User;
+use Forumify\Forum\Provider\MessageThreadProvider;
 use Forumify\Forum\Repository\MessageThreadRepository;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource(provider: MessageThreadProvider::class)]
 #[ORM\Entity(repositoryClass: MessageThreadRepository::class)]
 class MessageThread
 {
@@ -20,12 +24,14 @@ class MessageThread
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
+    #[Groups('MessageThread')]
     #[ORM\Column(length: 255)]
-    private string $title;
+    private string $title = '';
 
     /**
      * @var Collection<int, User>
      */
+    #[Groups('MessageThread')]
     #[ORM\ManyToMany(targetEntity: User::class)]
     private Collection $participants;
 
