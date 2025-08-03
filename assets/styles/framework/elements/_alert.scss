@@ -14,25 +14,37 @@
 
 .alert-success {
     @include alert;
-    color: var(--c-success-text);
-    background-color: var(--c-success);
+
+    & {
+        color: var(--c-success-text);
+        background-color: var(--c-success);
+    }
 }
 
 .alert-info {
     @include alert;
-    color: var(--c-info-text);
-    background-color: var(--c-info);
+
+    & {
+        color: var(--c-info-text);
+        background-color: var(--c-info);
+    }
 }
 
 .alert-warning {
     @include alert;
-    color: var(--c-warning-text);
-    background-color: var(--c-warning);
+
+    & {
+        color: var(--c-warning-text);
+        background-color: var(--c-warning);
+    }
 }
 
 .alert-error {
     @include alert;
-    color: var(--c-error-text);
-    background-color: var(--c-error);
+
+    & {
+        color: var(--c-error-text);
+        background-color: var(--c-error);
+    }
 }
 
