@@ -6,6 +6,7 @@ namespace Forumify\Core;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Tools\DsnParser;
 use Forumify\Plugin\Entity\Plugin;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel;
@@ -28,17 +29,16 @@ class ForumifyKernel extends Kernel
     {
         yield from $this->registerSymfonyBundles();
 
-        try {
-            $connection = DriverManager::getConnection([
-                'url' => $_SERVER['DATABASE_URL'],
-            ]);
+        $dsnParser = new DsnParser(['mysql' => 'pdo_mysql']);
+        $connectionParams = $dsnParser->parse($_SERVER['DATABASE_URL']);
 
-            $plugins = $connection
+        try {
+            $plugins = DriverManager::getConnection($connectionParams)
                 ->executeQuery('SELECT plugin_class FROM plugin WHERE type = :type AND active = 1', [
                     'type' => Plugin::TYPE_PLUGIN
                 ])
                 ->fetchFirstColumn();
-        } catch (Exception $ex) {
+        } catch (Exception) {
             $plugins = [];
         }
 
