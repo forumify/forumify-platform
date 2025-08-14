@@ -17,7 +17,7 @@ class ProfileController extends AbstractController
     ) {
     }
 
-    #[Route('/profile/{username}', name: 'profile')]
+    #[Route('/profile/{username:user}', name: 'profile')]
     public function __invoke(User $user): Response
     {
         return $this->render('@Forumify/frontend/profile/profile.html.twig', [
@@ -26,7 +26,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route('/profile/{id}', 'profile_id', requirements: ['id' => '\d+'], priority: 1)]
+    #[Route('/profile/{id:user}', 'profile_id', requirements: ['id' => '\d+'], priority: 1)]
     public function profileById(User $user): Response
     {
         return $this->redirectToRoute('forumify_forum_profile', [
@@ -34,7 +34,7 @@ class ProfileController extends AbstractController
         ], Response::HTTP_MOVED_PERMANENTLY);
     }
 
-    #[Route('/profile/{id}/preview', 'profile_preview', requirements: ['id' => '\d+'])]
+    #[Route('/profile/{id:user}/preview', 'profile_preview', requirements: ['id' => '\d+'])]
     public function profilePreview(User $user): Response
     {
         return $this->render('@Forumify/frontend/profile/preview.html.twig', [

@@ -57,7 +57,7 @@ class PageBuilderController extends AbstractController
         return null;
     }
 
-    #[Route('/resource/{slug}', 'resource')]
+    #[Route('/resource/{slug:resource}', 'resource')]
     public function previewResource(Resource $resource): Response
     {
         $path = $resource->getPath();

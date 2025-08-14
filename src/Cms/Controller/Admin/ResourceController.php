@@ -40,14 +40,14 @@ class ResourceController extends AbstractController
         return $this->handleForm($request, null);
     }
 
-    #[Route('/{slug}', 'edit')]
+    #[Route('/{slug:resource}', 'edit')]
     #[IsGranted('forumify.admin.cms.resources.manage')]
     public function edit(Request $request, Resource $resource): Response
     {
         return $this->handleForm($request, $resource);
     }
 
-    #[Route('/{slug}/delete', 'delete')]
+    #[Route('/{slug:resource}/delete', 'delete')]
     #[IsGranted('forumify.admin.cms.resources.manage')]
     public function delete(Resource $resource, Request $request): Response
     {

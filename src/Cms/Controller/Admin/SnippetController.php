@@ -35,14 +35,14 @@ class SnippetController extends AbstractController
         return $this->handleForm($request, null);
     }
 
-    #[Route('/{slug}', 'edit')]
+    #[Route('/{slug:snippet}', 'edit')]
     #[IsGranted('forumify.admin.cms.snippets.manage')]
     public function edit(Request $request, Snippet $snippet): Response
     {
         return $this->handleForm($request, $snippet);
     }
 
-    #[Route('/{slug}/delete', 'delete')]
+    #[Route('/{slug:snippet}/delete', 'delete')]
     #[IsGranted('forumify.admin.cms.snippets.manage')]
     public function delete(Snippet $snippet, Request $request): Response
     {

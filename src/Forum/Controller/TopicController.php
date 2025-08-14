@@ -36,7 +36,7 @@ class TopicController extends AbstractController
     ) {
     }
 
-    #[Route('/{slug}', name: '')]
+    #[Route('/{slug:topic}', name: '')]
     public function __invoke(Topic $topic, Request $request): Response
     {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicView->value, $topic);
@@ -69,7 +69,7 @@ class TopicController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/edit', '_edit')]
+    #[Route('/{slug:topic}/edit', '_edit')]
     public function edit(
         Request $request,
         Topic $topic,
@@ -107,7 +107,7 @@ class TopicController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/pin', '_pin')]
+    #[Route('/{slug:topic}/pin', '_pin')]
     #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
     public function pin(Topic $topic): Response
     {
@@ -117,7 +117,7 @@ class TopicController extends AbstractController
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
     }
 
-    #[Route('/{slug}/toggle-lock', '_lock')]
+    #[Route('/{slug:topic}/toggle-lock', '_lock')]
     #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
     public function lock(Topic $topic): Response
     {
@@ -127,7 +127,7 @@ class TopicController extends AbstractController
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
     }
 
-    #[Route('/{slug}/toggle-visibility', '_hide')]
+    #[Route('/{slug:topic}/toggle-visibility', '_hide')]
     #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
     public function hide(Topic $topic): Response
     {
@@ -139,7 +139,7 @@ class TopicController extends AbstractController
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
     }
 
-    #[Route('/{slug}/move', '_move')]
+    #[Route('/{slug:topic}/move', '_move')]
     #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
     public function move(Topic $topic, Request $request): Response
     {
@@ -170,7 +170,7 @@ class TopicController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/delete', '_delete')]
+    #[Route('/{slug:topic}/delete', '_delete')]
     public function delete(Request $request, Topic $topic): Response
     {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicDelete->value, $topic);

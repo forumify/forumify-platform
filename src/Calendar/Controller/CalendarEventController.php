@@ -39,7 +39,7 @@ class CalendarEventController extends AbstractController
         return $this->handleForm($event, $request, true);
     }
 
-    #[Route('/{slug}/edit', '_edit')]
+    #[Route('/{slug:event}/edit', '_edit')]
     public function edit(CalendarEvent $event, Request $request): Response
     {
         $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
@@ -50,7 +50,7 @@ class CalendarEventController extends AbstractController
         return $this->handleForm($event, $request, false);
     }
 
-    #[Route('/{slug}/delete', '_delete')]
+    #[Route('/{slug:event}/delete', '_delete')]
     public function delete(CalendarEvent $event, Request $request): Response
     {
         $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
