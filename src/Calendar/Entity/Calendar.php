@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Calendar\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,16 +13,20 @@ use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\ACLParameters;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource]
 #[ORM\Entity(repositoryClass: CalendarRepository::class)]
 class Calendar implements AccessControlledEntityInterface
 {
     use IdentifiableEntityTrait;
     use SluggableEntityTrait;
 
+    #[Groups('Calendar')]
     #[ORM\Column(length: 255)]
     private string $title;
 
+    #[Groups('Calendar')]
     #[ORM\Column(length: 7, options: ['fixed' => true])]
     private string $color;
 

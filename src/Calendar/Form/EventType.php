@@ -11,19 +11,23 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Form\RichTextEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class EventType extends AbstractType
 {
     public function __construct(
         private readonly CalendarRepository $calendarRepository,
         private readonly Security $security,
+        private readonly Packages $packages,
     ) {
     }
 
@@ -51,6 +55,11 @@ class EventType extends AbstractType
                 'widget' => 'single_text',
                 'view_timezone' => $user?->getTimezone() ?? 'UTC',
             ])
+            ->add('end', DateTimeType::class, [
+                'required' => false,
+                'widget' => 'single_text',
+                'view_timezone' => $user?->getTimezone() ?? 'UTC',
+            ])
             ->add('repeat', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => 'Never',
@@ -67,6 +76,20 @@ class EventType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('title', TextType::class)
+            ->add('newBanner', FileType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Banner',
+                'help' => 'Maximum 2MB, recommended is a landscape image with max width of 800px.',
+                'attr' => [
+                    'preview' => ($banner = $options['data']->getBanner() ?? null)
+                        ? $this->packages->getUrl($banner, 'forumify.asset')
+                        : null
+                ],
+                'constraints' => [
+                    new Assert\Image(maxSize: '2M'),
+                ]
+            ])
             ->add('content', RichTextEditorType::class, [
                 'required' => false,
                 'empty_data' => '',

@@ -21,14 +21,31 @@
                 {% endblock %}
                 {% block modalCloseButton %}{% endblock %}
                 {% block modalContent %}
-                    <div class="box rounded">
-                        <div class="flex justify-between">
+                    <div class="box rounded p-0">
+                        {% if event.banner is not null %}
+                            <img
+                                class="rounded"
+                                src="{{ asset(event.banner, 'forumify.asset') }}"
+                                style="width: 100%; height: auto; border-bottom-left-radius: 0; border-bottom-right-radius: 0;"
+                            >
+                        {% endif %}
+                        <div class="flex justify-between pt-2 pl-4 pr-4">
                             <div>
                                 <p class="text-huge text-bold mb-2">
                                     <i style="background-color: {{ event.calendar.color }}; display: inline-block; width: 16px; height: 16px; border-radius: 8px"></i>
                                     {{ event.title }}
                                 </p>
-                                <p>{{ event.start|format_date(true) }}</p>
+                                <p>
+                                    {{ event.start|format_date(true) }}
+                                    {{ 'calendar.event.until'|trans }}
+                                    {% if event.end is not null %}
+                                        {% if event.end|date('Ymd') == event.start|date('Ymd') %}
+                                            {{ event.end|date('g:i A') }}
+                                        {% else %}
+                                            {{ event.end|format_date(true) }}
+                                        {%endif %}
+                                    {% endif %}
+                                </p>
                             </div>
                             <div class="flex justify-end gap-1">
                                 {% if can('manage_events', event.calendar) %}
@@ -45,7 +62,7 @@
                             </div>
                         </div>
                         {% if event.content|striptags(['img']) is not empty %}
-                            <div class="mt-4">
+                            <div class="p-4">
                                 {{ event.content|rich }}
                             </div>
                         {% endif %}

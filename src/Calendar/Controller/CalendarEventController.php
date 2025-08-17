@@ -9,7 +9,10 @@ use Forumify\Calendar\Form\EventType;
 use Forumify\Calendar\Repository\CalendarEventRepository;
 use Forumify\Calendar\Repository\CalendarRepository;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Service\MediaService;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,6 +23,8 @@ class CalendarEventController extends AbstractController
     public function __construct(
         private readonly CalendarRepository $calendarRepository,
         private readonly CalendarEventRepository $calendarEventRepository,
+        private readonly FilesystemOperator $assetStorage,
+        private readonly MediaService $mediaService,
     ) {
     }
 
@@ -74,23 +79,30 @@ class CalendarEventController extends AbstractController
     {
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            /** @var CalendarEvent $event */
-            $event = $form->getData();
-            $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
-                'entity' => $event->getCalendar(),
-                'permission' => 'manage_events',
+        if (!$form->isSubmitted() || !$form->isValid()) {
+            return $this->render('@Forumify/form/simple_form_page.html.twig', [
+                'form' => $form->createView(),
+                'title' => $isNew ? 'calendar.event.create' : 'calendar.event.edit',
+                'cancelPath' =>$this->generateUrl('forumify_calendar_all'),
             ]);
-            $this->calendarEventRepository->save($event);
-
-            $this->addFlash('success', 'calendar.event.created');
-            return $this->redirectToRoute('forumify_calendar_all');
         }
 
-        return $this->render('@Forumify/form/simple_form_page.html.twig', [
-            'form' => $form->createView(),
-            'title' => $isNew ? 'calendar.event.create' : 'calendar.event.edit',
-            'cancelPath' =>$this->generateUrl('forumify_calendar_all'),
+        /** @var CalendarEvent $event */
+        $event = $form->getData();
+        $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
+            'entity' => $event->getCalendar(),
+            'permission' => 'manage_events',
         ]);
+
+        $newBanner = $form->get('newBanner')->getData();
+        if ($newBanner instanceof UploadedFile) {
+            $banner = $this->mediaService->saveToFilesystem($this->assetStorage, $newBanner);
+            $event->setBanner($banner);
+        }
+
+        $this->calendarEventRepository->save($event);
+
+        $this->addFlash('success', 'calendar.event.created');
+        return $this->redirectToRoute('forumify_calendar_all');
     }
 }

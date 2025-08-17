@@ -563,6 +563,7 @@ calendar:
     title: 'Calendar'
     all_calendars: 'All Calendars'
     event:
+        until: 'until'
         create: 'Create Event'
         created: 'Event created.'
         created_by: 'Event by'
