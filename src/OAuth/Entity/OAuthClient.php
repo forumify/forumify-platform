@@ -9,18 +9,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
-use Forumify\Core\Entity\Role;
+use Forumify\Core\Entity\User;
 use Forumify\OAuth\Repository\OAuthClientRepository;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OAuthClientRepository::class)]
 class OAuthClient implements AuthorizableInterface
 {
     use IdentifiableEntityTrait;
-
-    #[Assert\NotBlank(allowNull: false)]
-    #[ORM\Column(length: 255)]
-    private string $name;
 
     #[ORM\Column(length: 255, unique: true)]
     private string $clientId = '';
@@ -34,27 +29,23 @@ class OAuthClient implements AuthorizableInterface
     #[ORM\Column(type: 'simple_array', nullable: true)]
     private array $redirectUris = [];
 
-    /** @var Collection<int, Role> */
-    #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'clients', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
-    #[ORM\JoinTable(
-        'oauth_client_role',
-        joinColumns: [new ORM\JoinColumn('client', onDelete: 'CASCADE')],
-        inverseJoinColumns: [new ORM\JoinColumn('role', onDelete: 'CASCADE')],
-    )]
-    #[ORM\OrderBy(['position' => 'ASC'])]
-    private Collection $roles;
+    #[ORM\OneToOne(targetEntity: User::class, mappedBy: 'oAuthClient', fetch: 'EXTRA_LAZY', cascade: ['persist'])]
+    private User $user;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
-    private ?DateTime $lastActivity = null;
+    public function __construct()
+    {
+        $this->user = new User();
+        $this->user->setOAuthClient($this);
+    }
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->user->getDisplayName();
     }
 
     public function setName(string $name): void
     {
-        $this->name = $name;
+        $this->user->setDisplayName($name);
     }
 
     public function getClientId(): string
@@ -65,6 +56,7 @@ class OAuthClient implements AuthorizableInterface
     public function setClientId(string $clientId): void
     {
         $this->clientId = $clientId;
+        $this->user->setUsername($clientId);
     }
 
     public function getUserIdentifier(): string
@@ -110,21 +102,31 @@ class OAuthClient implements AuthorizableInterface
 
     public function getRoleEntities(): Collection
     {
-        return $this->roles;
+        return $this->user->getRoleEntities();
     }
 
     public function setRoleEntities(Collection $roles): void
     {
-        $this->roles = $roles;
+        $this->user->setRoleEntities($roles);
     }
 
     public function getLastActivity(): ?DateTime
     {
-        return $this->lastActivity;
+        return $this->user->getLastActivity();
     }
 
     public function setLastActivity(DateTime $lastActivity): void
     {
-        $this->lastActivity = $lastActivity;
+        $this->user->setLastActivity($lastActivity);
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $User): void
+    {
+        $this->user = $User;
     }
 }

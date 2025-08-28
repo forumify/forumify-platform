@@ -11,6 +11,7 @@ use Forumify\Api\Serializer\Attribute\Asset;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Forum\Entity\Subscription;
+use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -26,8 +27,8 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 32, unique: true)]
     private string $username;
 
-    #[ORM\Column(length: 128, unique: true)]
-    private string $email;
+    #[ORM\Column(length: 128, unique: true, nullable: true)]
+    private ?string $email = null;
 
     /** @var Collection<int, Role> */
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
@@ -39,8 +40,8 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $roles;
 
-    #[ORM\Column(length: 255)]
-    private string $password;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $password = null;
 
     #[Groups(['MessageThread'])]
     #[ORM\Column(length: 32)]
@@ -92,6 +93,10 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $badges;
 
+    #[ORM\OneToOne(targetEntity: OAuthClient::class, inversedBy: 'user')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?OAuthClient $oAuthClient = null;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -109,12 +114,12 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
@@ -294,5 +299,15 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
         $this->badges = $badges instanceof Collection
             ? $badges
             : new ArrayCollection($badges);
+    }
+
+    public function getOAuthClient(): ?OAuthClient
+    {
+        return $this->oAuthClient;
+    }
+
+    public function setOAuthClient(?OAuthClient $oAuthClient): void
+    {
+        $this->oAuthClient = $oAuthClient;
     }
 }
