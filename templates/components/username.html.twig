@@ -11,7 +11,7 @@
         {{ user.displayName|default(user.username) }}
         {% if user.oAuthClient is null %}
             {% if not hideOnline|default(false) and user.online %}
-                <span class="dot" style="background-color: #57B357"></span>
+                <span class="dot relative" style="background-color: #57B357; top: -2px"></span>
             {% endif %}
         {% else %}
             <span class="tag text-extra-small text-black relative" style="top: -3px">APP</span>

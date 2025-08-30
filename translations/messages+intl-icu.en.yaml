@@ -112,7 +112,7 @@ inbox: 'Inbox'
 select_message_thread: 'Select a thread from your inbox, or create a new message.'
 create_message_thread: 'Send message'
 message:
-    edited: 'Edited on {date}'
+    edited: 'Edited {date}'
 messenger:
     new_message: 'Send new message'
     inbox: 'Inbox'

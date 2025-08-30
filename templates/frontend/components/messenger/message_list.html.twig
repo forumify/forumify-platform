@@ -22,17 +22,17 @@
         {% include '@Forumify/components/avatar.html.twig' with {
             user: item.createdBy,
         } only %}
-        <div class="w-100">
-            <div class="mb-2">
+        <div class="flex-grow">
+            <div>
                 {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
-                <p class="text-small">
+                <span class="text-small ml-2">
                     {{ item.createdAt|format_date }}
                     {% if item.updatedAt != item.createdAt and item.updatedBy is not null %}
-                        <span class="text-light text-extra-small hide-phone">
+                        <span class="text-light text-extra-small hide-phone ml-1">
                         {{ 'message.edited'|trans({ date: item.updatedAt|format_date }) }}
                     </span>
                     {% endif %}
-                </p>
+                </span>
             </div>
             {% set canEdit = item.createdBy is not null and item.createdBy.userIdentifier == app.user.userIdentifier %}
             <div class="message-toolbar">
@@ -42,7 +42,9 @@
                     </button>
                 {% endif %}
             </div>
-            {{ item.content|rich }}
+            <div class="mb-4">
+                {{ item.content|rich }}
+            </div>
             {% if canEdit %}
                 <div class="d-none rich-editor" {{ stimulus_target('forumify/comment-editor', 'editorContainer') }}>
                     <div class="flex justify-center items-center gap-2 mt-2">

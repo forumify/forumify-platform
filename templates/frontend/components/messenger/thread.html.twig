@@ -1,49 +1,56 @@
 {% set otherParticipants = thread.participants|filter(u => u.id != app.user.id) %}
-{% set isGroupThread = otherParticipants|length > 1 %}
 <div class="mb-4 hide-desktop">
     <button type="button" class="btn-icon btn-link" {{ live_action('setSelectedThread') }}>
         <i class="ph ph-arrow-left"></i>
     </button>
 </div>
 <div class="card mb-4">
-    <div class="card-title flex justify-start items-center text-bold gap-2 p-2">
-        {% include '@Forumify/frontend/components/messenger/thread_title.html.twig' %}
-        {% if isGroupThread %}
-            <ul class="thread-participants flex flex-wrap card-body items-center">
-                {% for participant in thread.participants %}
-                    <li class="flex items-center border-r pr-2 mr-2 gap-2">
-                        <a class="flex items-center gap-2" href="{{ path('forumify_forum_profile', { username: participant.username }) }}">
-                            {% include '@Forumify/components/avatar.html.twig' with {
-                                user: participant,
-                                className: 'avatar-sm'
-                            } only %}
-                            {{ participant.displayName }}
-                        </a>
-                        {% if not thread|read(participant) %}<i class="dot ml-1"></i>{% endif %}
-                        <a
-                            href="{{ path('forumify_forum_messenger_remove_participant', { id: thread.id, participantId: participant.id }) }}"
-                            class="btn-link btn-icon btn-small"
-                            aria-label="{{ 'messenger.remove_participant'|trans }}"
-                            title="{{ 'messenger.remove_participant'|trans }}"
-                        >
-                            <i class="ph ph-minus-circle"></i>
-                        </a>
-                    </li>
-                {% endfor %}
-                <li>
+    <div class="card-title flex flex-col text-bold gap-2 p-2">
+        <div class="flex items-center gap-2">
+            <div class="thread-icon">
+                <i class="ph ph-chats"></i>
+            </div>
+            <span class="thread-title">
+                {{ thread.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : thread.title }}
+            </span>
+            <button class="btn-link btn-icon btn-small">
+                <i class="ph ph-pencil-simple-line"></i>
+            </button>
+        </div>
+        <ul class="flex flex-wrap items-center">
+            {% for participant in otherParticipants %}
+                <li class="flex items-center border-r pr-2 mr-2 gap-2">
+                    <a class="flex items-center gap-2" href="{{ path('forumify_forum_profile', { username: participant.username }) }}">
+                        {% include '@Forumify/components/avatar.html.twig' with {
+                            user: participant,
+                            className: 'avatar-sm'
+                        } only %}
+                        {{ participant.displayName }}
+                    </a>
+                    {% if not thread|read(participant) %}<i class="dot ml-1"></i>{% endif %}
                     <a
-                        href="{{ path('forumify_forum_messenger_add_participant', { id: thread.id }) }}"
+                        href="{{ path('forumify_forum_messenger_remove_participant', { id: thread.id, participantId: participant.id }) }}"
                         class="btn-link btn-icon btn-small"
-                        aria-label="{{ 'messenger.add_participant'|trans }}"
-                        title="{{ 'messenger.add_participant'|trans }}"
+                        aria-label="{{ 'messenger.remove_participant'|trans }}"
+                        title="{{ 'messenger.remove_participant'|trans }}"
                     >
-                        <i class="ph ph-plus-circle"></i>
+                        <i class="ph ph-minus-circle"></i>
                     </a>
                 </li>
-            </ul>
-        {% endif %}
+            {% endfor %}
+            <li>
+                <a
+                    href="{{ path('forumify_forum_messenger_add_participant', { id: thread.id }) }}"
+                    class="btn-link btn-icon btn-small"
+                    aria-label="{{ 'messenger.add_participant'|trans }}"
+                    title="{{ 'messenger.add_participant'|trans }}"
+                >
+                    <i class="ph ph-plus-circle"></i>
+                </a>
+            </li>
+        </ul>
     </div>
     <div class="card-body p-2">
-        {{ component('MessageList', { lastPageFirst: true, infiniteScroll: true, threadId: thread.id }) }}
+        {{ component('MessageList', { lastPageFirst: true, threadId: thread.id }) }}
     </div>
 </div>

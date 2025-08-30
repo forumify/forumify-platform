@@ -1,6 +1,6 @@
 {% extends '@Forumify/components/list.html.twig' %}
 {% block container %}
-    <div class="messenger">
+    <div class="messenger" {{ stimulus_controller('forumify/messenger') }}>
         <div class="thread-list {% if this.selectedThread is not null %}thread-selected{% endif %}">
             {{ parent() }}
         </div>
@@ -30,13 +30,27 @@
 {% endblock %}
 {% block row %}
     <a
-        class="btn-link thread-row {% if this.selectedThread is not null and this.selectedThread.id == item.id %}thread-active{% endif %}"
-        data-action="live#action"
-        data-live-action-param="setSelectedThread"
-        data-live-thread-id-param="{{ item.id }}"
+        class="btn-link thread-row {% if this.selectedThreadId == item.id and false %}thread-active{% endif %}"
+        {{ live_action('setSelectedThread', { threadId: item.id }) }}
     >
         <div class="thread-row-inner">
-            {% include '@Forumify/frontend/components/messenger/thread_title.html.twig' with { thread: item } only %}
+            {% set otherParticipants = item.participants|filter(u => u.id != app.user.id) %}
+            <div class="flex items-center gap-2">
+                {% if otherParticipants|length == 1 %}
+                    {% include '@Forumify/components/avatar.html.twig' with {
+                        user: otherParticipants|first,
+                        className: 'avatar-sm'
+                    } only %}
+                {% else %}
+                    <div class="thread-icon">
+                        <i class="ph ph-users"></i>
+                    </div>
+                {% endif %}
+                <span class="thread-title">
+                    {{ item.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : item.title }}
+                    {% if not item|read %}<i class="dot ml-1"></i>{% endif %}
+                </span>
+            </div>
         </div>
     </a>
 {% endblock %}
