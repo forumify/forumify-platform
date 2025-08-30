@@ -1,7 +1,7 @@
 {%- if user is not null -%}
     {% set color = user|role_color %}
     <a
-        class="inline-flex items-center gap-1 {{ className|default('') }}"
+        class="{{ className|default('') }}"
         href="{{ path('forumify_forum_profile', { username: user.username }) }}"
         {{ stimulus_controller('forumify/profile-preview', { userId: user.id }) }}
         {% if color is not null %}
@@ -9,8 +9,12 @@
         {% endif %}
     >
         {{ user.displayName|default(user.username) }}
-        {% if not hideOnline|default(false) and user.online %}
-            <span class="dot" style="background-color: #57B357"></span>
+        {% if user.oAuthClient is null %}
+            {% if not hideOnline|default(false) and user.online %}
+                <span class="dot" style="background-color: #57B357"></span>
+            {% endif %}
+        {% else %}
+            <span class="tag text-extra-small text-black relative" style="top: -3px">APP</span>
         {% endif %}
     </a>
 {%- else -%}

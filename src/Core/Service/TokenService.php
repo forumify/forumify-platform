@@ -7,6 +7,7 @@ namespace Forumify\Core\Service;
 use DateTime;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Forumify\OAuth\Entity\OAuthClient;
 use SensitiveParameter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -23,11 +24,17 @@ class TokenService
      */
     public function createJwt(UserInterface $user, DateTime $expiresAt, array $resourceAccess = []): string
     {
-        return JWT::encode([
+        $payload = [
             'exp' => $expiresAt->getTimestamp(),
             'sub' => $user->getUserIdentifier(),
             'resource_access' => $resourceAccess,
-        ], $this->appSecret, 'HS256');
+        ];
+
+        if ($user instanceof OAuthClient) {
+            $payload['client'] = true;
+        }
+
+        return JWT::encode($payload, $this->appSecret, 'HS256');
     }
 
     /**

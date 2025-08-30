@@ -26,7 +26,7 @@ class ForumController extends AbstractController
         $this->forumTypes = iterator_to_array($forumTypes);
     }
 
-    #[Route('/forum/{slug?}', name: 'forum')]
+    #[Route('/forum/{slug:forum?}', name: 'forum')]
     public function __invoke(ForumRepository $forumRepository, ?Forum $forum = null): Response
     {
         if ($forum !== null) {
