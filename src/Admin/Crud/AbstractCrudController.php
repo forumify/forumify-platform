@@ -47,7 +47,7 @@ abstract class AbstractCrudController extends AbstractController
     protected ?string $permissionDelete = null;
 
     /**
-     * @return string The classname for the entity this controller will act on, for example Forum::class
+     * @return class-string<TEntity> The classname for the entity this controller will act on, for example Forum::class
      */
     abstract protected function getEntityClass(): string;
 
@@ -140,7 +140,7 @@ abstract class AbstractCrudController extends AbstractController
             if ($isNew && $entity instanceof AccessControlledEntityInterface) {
                 return $this->redirectToRoute('forumify_admin_acl', (array)$entity->getACLParameters());
             }
-            return $this->redirectAfterSave($entity);
+            return $this->redirectAfterSave($entity, $isNew);
         }
 
         return $this->render($this->formTemplate, $this->templateParams([
@@ -174,7 +174,7 @@ abstract class AbstractCrudController extends AbstractController
     /**
      * @param TEntity $entity
      */
-    protected function redirectAfterSave(mixed $entity): Response
+    protected function redirectAfterSave(mixed $entity, bool $isNew): Response
     {
         return $this->redirectToRoute($this->getRoute('list'));
     }

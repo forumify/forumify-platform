@@ -125,9 +125,14 @@ email: 'Email'
 username_and_email: 'Username or Email'
 password: 'Password'
 remember_me: 'Remember me'
-login: 'Login'
 logout: 'Logout'
-no_account: 'No account yet? Register'
+login:
+    login: 'Log In'
+    no_account: 'Don''t have an account?'
+    register: 'Register'
+    idp:
+        unknown_type: 'This identity provider does not exist.'
+        discord: 'Sign in with Discord'
 registration:
     register: 'Register'
     validation_error:
@@ -505,6 +510,13 @@ admin:
         manage_roles:
             title: 'Roles for {username}'
             success: 'Roles saved.'
+    identity_provider:
+        crud:
+            single: 'identity provider'
+            plural: 'identity providers'
+        type_placeholder: 'Select a type'
+        redirect_uri: 'Redirect URI'
+        redirect_uri_help: 'OAuth2 identity providers require you to register your "Redirect URI" with the provider. This link must be registered in the provider.'
     marketplace:
         connect:
             title: 'Connect a forumify.net account'

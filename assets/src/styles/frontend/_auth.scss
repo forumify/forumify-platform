@@ -1,6 +1,6 @@
 .auth-container {
     margin: 15vh auto auto;
-    max-width: 500px;
+    max-width: 400px;
 }
 
 .auth-website-logo {
@@ -21,10 +21,14 @@
     }
 }
 
-.login-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-top: calc(var(--spacing-2) * -1);
-    margin-bottom: var(--spacing-4);
+.btn-idp-discord {
+    @include btn-contained;
+    color: white;
+    background-color: #5865f2;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    &:hover {
+        color: white;
+        background-color: #4654c0;
+    }
 }

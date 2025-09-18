@@ -77,7 +77,11 @@ class ForumifyBundle extends AbstractForumifyBundle
                     'oauth_clients' => [
                         'view',
                         'manage',
-                    ]
+                    ],
+                    'identitiy_providers' => [
+                        'view',
+                        'manage',
+                    ],
                 ],
             ],
         ];

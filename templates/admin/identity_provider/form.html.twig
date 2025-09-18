@@ -1,0 +1,19 @@
+{% extends '@Forumify/admin/crud/form.html.twig' %}
+{% block body %}
+    {% embed '@Forumify/admin/components/simple_form.html.twig' with {
+        cancelPath: path(route ~ '_list')
+    } %}
+        {% block form_widget %}
+            {{ parent() }}
+            {% if data is not null %}
+            <div class="mb-4">
+                <label>{{ 'admin.identity_provider.redirect_uri'|trans }}</label>
+                <div class="rich-text mb-1">
+                    <pre class="mt-0 mb-0"><code class="mb-0">{{ absolute_url(path('forumify_oauth_idp_callback', { slug: data.slug })) }}</code></pre>
+                </div>
+                <p class="help-text">{{ 'admin.identity_provider.redirect_uri_help'|trans }}</p>
+            </div>
+            {% endif %}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

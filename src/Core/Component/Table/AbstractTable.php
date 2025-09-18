@@ -179,6 +179,23 @@ abstract class AbstractTable
         return $rows;
     }
 
+    /**
+     * Helper that sets defaults for action columns. The renderer callable should produce HTML for the actions.
+     * You can use the renderAction function to render individual action buttons in your callable.
+     *
+     * @param callable(mixed $id, mixed $row): string
+     */
+    protected function addActionColumn(callable $renderer, string $idColumn = 'id'): static
+    {
+        return $this->addColumn('actions', [
+            'label' => '',
+            'searchable' => false,
+            'sortable' => false,
+            'field' => $idColumn,
+            'renderer' => $renderer,
+        ]);
+    }
+
     protected function renderAction(string $path, array $pathArguments, string $icon): string
     {
         $url = $this->urlGenerator->generate($path, $pathArguments);

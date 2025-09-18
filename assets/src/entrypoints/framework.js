@@ -1,5 +1,6 @@
 import { Application } from '@hotwired/stimulus';
 import '@phosphor-icons/web/regular';
+import '@phosphor-icons/web/fill';
 import '@symfony/ux-live-component';
 import { Chart } from '../controllers/Chart';
 import { CodeEditor } from '../controllers/CodeEditor';

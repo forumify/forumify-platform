@@ -9,6 +9,7 @@ use Forumify\Core\Form\RegisterType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\CreateUserService;
 use Forumify\Core\Service\RecaptchaService;
+use Forumify\OAuth\Repository\IdentityProviderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,18 +20,23 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class AuthController extends AbstractController
 {
     #[Route('/login', name: 'login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
-    {
+    public function login(
+        AuthenticationUtils $authenticationUtils,
+        IdentityProviderRepository $idpRepository,
+    ): Response {
         if ($this->getUser() !== null) {
             return $this->redirectToRoute('forumify_core_index');
         }
 
-        $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
+        $error = $authenticationUtils->getLastAuthenticationError();
+
+        $idps = $idpRepository->findAll();
 
         return $this->render('@Forumify/frontend/auth/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
+            'idps' => $idps,
         ]);
     }
 

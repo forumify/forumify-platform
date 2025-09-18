@@ -11,7 +11,6 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Forumify\Core\Entity\ACL;
-use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Event\EntityPostRemoveEvent;
@@ -130,7 +129,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
         try {
             $toSwap = $qb->getQuery()->getSingleResult();
-        } catch (NoResultException|NonUniqueResultException) {
+        } catch (NoResultException | NonUniqueResultException) {
             return;
         }
 
@@ -160,8 +159,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
                 ->createQueryBuilder('e')
                 ->select('MAX(e.position)')
                 ->getQuery()
-                ->getSingleScalarResult() ?? 0
-            ;
+                ->getSingleScalarResult() ?? 0;
         } catch (Exception) {
             return 0;
         }
@@ -187,19 +185,23 @@ abstract class AbstractRepository extends ServiceEntityRepository
         ;
 
         $user = $this->security->getUser();
-        if (!$user instanceof AuthorizableInterface) {
-            return $qb->andWhere('acl_role.slug = :guestRole')->setParameter('guestRole', 'guest');
+        if ($user instanceof OAuthClient) {
+            $user = $user->getUser();
         }
 
-        $join = $user instanceof User ? 'acl_role.users' : 'acl_role.clients';
-        return $qb
-            ->leftJoin($join, 'acl_role_users')
-            ->andWhere($qb->expr()->orX(
-                ':user MEMBER OF acl_role_users',
-                'acl_role.slug = :userRole'
-            ))
-            ->setParameter('user', $user)
-            ->setParameter('userRole', 'user')
-        ;
+        if ($user instanceof User) {
+            $qb->leftJoin('acl_role.users', 'acl_role_users')
+                ->andWhere($qb->expr()->orX(
+                    'acl_role_users.id = :userId',
+                    'acl_role.slug = :userRole'
+                ))
+                ->setParameter('userId', $user->getId())
+                ->setParameter('userRole', 'user');
+        } else {
+            $qb->andWhere('acl_role.slug = :guestRole')
+                ->setParameter('guestRole', 'guest');
+        }
+
+        return $qb;
     }
 }
