@@ -515,8 +515,19 @@ admin:
             single: 'identity provider'
             plural: 'identity providers'
         type_placeholder: 'Select a type'
+        type_help: 'If you need to change the type, delete this identity provider and create a new one instead.'
         redirect_uri: 'Redirect URI'
         redirect_uri_help: 'OAuth2 identity providers require you to register your "Redirect URI" with the provider. This link must be registered in the provider.'
+        discord:
+            instructions: >
+                <ol>
+                    <li>Create a new <strong>Application</strong> in the <a href="https://discord.com/developers/applications" target="_blank">Discord Developer Center</a>.</li>
+                    <li>After creating your Application, navigate to <strong>OAuth2</strong> in the left sidebar.</li>
+                    <li>From the <i>Client information</i> section, copy the <strong>Client ID</strong> and <strong>Client Secret</strong> into this form.</li>
+                    <li>Next, in the <i>Redirects</i> section, click the <strong>Add Redirect</strong> button.</li>
+                    <li>Copy the <strong>Redirect URI</strong> from the bottom of this form into Discord.</li>
+                    <li>Make sure you <i>Save Changes</i> on Discord, and save this form.</li>
+                </ol>
     marketplace:
         connect:
             title: 'Connect a forumify.net account'

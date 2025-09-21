@@ -120,6 +120,19 @@ input[type='file'] {
     margin-bottom: var(--spacing-2);
 }
 
+.form-row .pre {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+    width: 100%;
+    font-size: 0.875rem;
+    margin: 0;
+    padding: 0 1em;
+    box-sizing: border-box;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+}
+
 .responsive {
     max-width: 1600px;
     width: calc(11 / 12) * 100%;

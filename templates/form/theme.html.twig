@@ -63,6 +63,14 @@
     {% include '@Forumify/form/type/code_editor.html.twig' %}
 {% endblock %}
 
+{% block info_row %}
+    {% include '@Forumify/form/type/info.html.twig' %}
+{% endblock %}
+
+{% block pre_row %}
+    {% include '@Forumify/form/type/pre.html.twig' %}
+{% endblock %}
+
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {%- if type == 'file' -%}

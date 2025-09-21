@@ -17,7 +17,10 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/identity-providers', 'identity_providers')]
 class IdentityProviderController extends AbstractCrudController
 {
-    protected string $formTemplate = '@Forumify/admin/identity_provider/form.html.twig';
+    protected ?string $permissionView = 'forumify.admin.settings.identity_providers.view';
+    protected ?string $permissionCreate = 'forumify.admin.settings.identity_providers.manage';
+    protected ?string $permissionEdit = 'forumify.admin.settings.identity_providers.manage';
+    protected ?string $permissionDelete = 'forumify.admin.settings.identity_providers.manage';
 
     protected function getEntityClass(): string
     {

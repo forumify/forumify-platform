@@ -13,6 +13,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+use function Symfony\Component\String\u;
+
 class IdentityProviderType extends AbstractType
 {
     /**
@@ -20,7 +22,7 @@ class IdentityProviderType extends AbstractType
      */
     public function __construct(
         #[AutowireIterator('forumify.oauth.identity_provider', defaultIndexMethod: 'getType')]
-        private readonly iterable $idps
+        private readonly iterable $idpTypes
     ) {
     }
 
@@ -33,28 +35,37 @@ class IdentityProviderType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /** @var IdentityProvider|null $idp */
+        $idp = $options['data'] ?? null;
+
+        /** @var array<string, IdentityProviderInterface> $idpTypes */
+        $idpTypes = iterator_to_array($this->idpTypes);
+        $idpChoices = [];
+        $selectedType = null;
+        foreach ($idpTypes as $key => $type) {
+            $idpChoices[u($key)->title(true)->toString()] = $key;
+
+            if ($idp !== null && $idp->getType() === $key) {
+                $selectedType = $type;
+            }
+        }
+
         $builder
             ->add('name', TextType::class)
             ->add('type', ChoiceType::class, [
                 'placeholder' => 'admin.identity_provider.type_placeholder',
-                'choices' => [
-                    'Discord' => 'discord',
-                ],
+                'choices' => $idpChoices,
+                'disabled' => $idp !== null,
+                'help' => $idp !== null ? 'admin.identity_provider.type_help' : null,
             ])
         ;
 
-        if (empty($options['data'])) {
+        if ($idp === null || $selectedType === null) {
             return;
         }
 
-        $idps = iterator_to_array($this->idps);
-        $type = $options['data']->getType();
-        /** @var IdentityProviderInterface|null $idp */
-        $idp = $idps[$type] ?? null;
-        if ($idp === null) {
-            return;
-        }
-
-        $builder->add('data', $idp::getDataType());
+        $builder->add('data', $selectedType::getDataType(), [
+            'idp' => $idp,
+        ]);
     }
 }

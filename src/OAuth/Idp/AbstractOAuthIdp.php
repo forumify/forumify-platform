@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\OAuth\Idp;
 
-use Forumify\Admin\Form\IdentityProvider\GenericOAuth;
+use Forumify\Admin\Form\IdentityProvider\DiscordIdpType;
 use Forumify\OAuth\Entity\IdentityProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,7 +25,7 @@ abstract class AbstractOAuthIdp implements IdentityProviderInterface
 
     public static function getDataType(): string
     {
-        return GenericOAuth::class;
+        return DiscordIdpType::class;
     }
 
     public function getIdpInitLink(IdentityProvider $idp): string
