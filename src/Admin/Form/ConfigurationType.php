@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Form;
 
+use Forumify\Core\Form\InfoType;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -87,10 +88,12 @@ class ConfigurationType extends AbstractType
                 'help' => 'admin.configuration.enable_auto_updates_help',
                 'required' => false,
             ])
+            ->add('forumify__recaptcha__info', InfoType::class, [
+                'label' => 'admin.configuration.recaptcha_info',
+                'help' => 'admin.configuration.recaptcha_help',
+            ])
             ->add('forumify__recaptcha__enabled', CheckboxType::class, [
                 'label' => 'admin.configuration.recaptcha_enabled',
-                'help' => 'admin.configuration.recaptcha_enabled_help',
-                'help_html' => true,
                 'required' => false,
             ])
             ->add('forumify__recaptcha__site_key', TextType::class, [

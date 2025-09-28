@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace Forumify\Core\Service;
 
 use Forumify\Core\Repository\SettingRepository;
-use GuzzleHttp\Client;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Throwable;
 
 class RecaptchaService
 {
-    public function __construct(private readonly SettingRepository $settingRepository)
-    {
+    public function __construct(
+        private readonly SettingRepository $settingRepository,
+        private readonly HttpClientInterface $httpClient,
+    ) {
     }
 
     public function verifyRequest(Request $request): float
@@ -21,17 +24,23 @@ class RecaptchaService
             return 0;
         }
 
-        $response = (new Client())
-            ->post('https://www.google.com/recaptcha/api/siteverify', [
-                'form_params' => [
-                    'secret' => $this->settingRepository->get('forumify.recaptcha.site_secret'),
-                    'response' => $token
-                ],
-            ])
-            ->getBody()
-            ->getContents();
+        $params = [
+            'body' => [
+                'secret' => $this->settingRepository->get('forumify.recaptcha.site_secret'),
+                'response' => $token
+            ]
+        ];
 
-        $result = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+        try {
+            $result = $this
+                ->httpClient
+                ->request('POST', 'https://www.google.com/recaptcha/api/siteverify', $params)
+                ->toArray()
+            ;
+        } catch (Throwable) {
+            return 0;
+        }
+
         return $result['success'] ? $result['score'] : 0;
     }
 }

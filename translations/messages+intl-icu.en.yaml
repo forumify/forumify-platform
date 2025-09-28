@@ -366,8 +366,25 @@ admin:
         index_help: 'The default path to use as frontend index. For example if you want to display a forum, you can use "forum/example-forum". Leave blank if plan to use a CMS page with an empty url key.'
         enable_auto_updates: 'Enable automatic updates'
         enable_auto_updates_help: 'Automatically keep forumify up to date with security patches. For major releases, you need to manually update in Settings -> Plugins.'
+        recaptcha_info: 'Google reCAPTCHA'
+        recaptcha_help: >
+            <p>Google reCAPTCHA is a free service that can detect bots and AI that are trying to access your website and blocks their access.</p>
+            <p>forumify adds some basic bot detection measures, reCAPTCHA can offer a second line of defence against malicious users.</p>
+            <p>Warning, misconfiguration can lead to users being unable to register or reset their password!</p>
+            <p>Setup instructions:</p>
+            <ol>
+                <li>Open the <a href="https://console.cloud.google.com/security/recaptcha">reCAPTCHA dashboard on Google Cloud Platform</a>.</li>
+                <li>(If you never used Google Cloud before) Create a new project for your website.</li>
+                <li>Press the <strong><i class="ph ph-plus"></i> Create Key</strong> button to add a new key.</li>
+                <li>Set up your key with a <strong>display name</strong> application type <strong>Web</strong>.</li>
+                <li>Click <strong>Add a domain</strong>, and enter your domain "example.org".</li>
+                <li>At the bottom of the page, click <strong>Create key</strong>.
+                <li>Copy the <strong>Site key</strong> located behind your key name, and paste it in this form.</li>
+                <li>In the big "Integrating with a third party?" box, click the <strong>Integrate with a third-party service or plugin</strong>.</li>
+                <li>Copy the <strong>legacy secret key</strong> and paste it in this form.</li>
+                <li>Go to your website's registration or forgot password form, and confirm the reCAPTCHA logo is showing in the bottom right without errors.</li>
+            </ol>
         recaptcha_enabled: 'Enable Google reCAPTCHA'
-        recaptcha_enabled_help: 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>.'
         recaptcha_site_key: 'reCAPTCHA site key'
         recaptcha_site_secret: 'reCAPTCHA site secret'
         mailer_from: 'Email from'

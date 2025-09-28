@@ -5,7 +5,7 @@
     {% if error %}
         <div class="alert-error mb-4">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
-    <form action="{{ app.request.requestUri }}" method="post">
+    <form id="login-form" action="{{ app.request.requestUri }}" method="post">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         {% set userIdentifier = setting('forumify.login_method') %}
         {%- set identifierLabel -%}
@@ -51,9 +51,20 @@
         {% block actions %}
             <div class="mt-8 mb-8 flex flex-col items-stretch gap-2 w-100">
                 {% block actions_login %}
-                    <button class="btn-primary" type="submit">
-                        <i class="ph ph-sign-in"></i>{{ 'login.login'|trans }}
-                    </button>
+                    {% if setting('forumify.recaptcha.enabled') %}
+                        <button
+                            class="btn-primary g-recaptcha"
+                            data-sitekey="{{ setting('forumify.recaptcha.site_key') }}"
+                            data-callback="onLogin"
+                            data-action="login"
+                        >
+                            <i class="ph ph-sign-in"></i>{{ 'login.login'|trans }}
+                        </button>
+                    {% else %}
+                        <button class="btn-primary" type="submit">
+                            <i class="ph ph-sign-in"></i>{{ 'login.login'|trans }}
+                        </button>
+                    {% endif %}
                 {% endblock %}
                 {% block actions_idp %}
                     {% for idp in idps %}{{ idp|idp_button }}{% endfor %}
@@ -69,4 +80,15 @@
             {% endif %}
         {% endblock %}
     </form>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    {% if setting('forumify.recaptcha.enabled') %}
+        <script src="https://www.google.com/recaptcha/api.js"></script>
+        <script type="text/javascript">
+            function onLogin() {
+                document.getElementById('login-form').submit();
+            }
+        </script>
+    {% endif %}
 {% endblock %}
