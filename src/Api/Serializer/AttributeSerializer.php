@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
 /**
- * @template T
+ * @template T of object
  */
 abstract class AttributeSerializer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {

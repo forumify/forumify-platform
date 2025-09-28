@@ -16,14 +16,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
 class GoogleIdp extends AbstractIdp
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly HttpClientInterface $httpClient,
         private readonly CacheItemPoolInterface $cache,
     ) {
     }

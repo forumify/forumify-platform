@@ -183,7 +183,7 @@ abstract class AbstractTable
      * Helper that sets defaults for action columns. The renderer callable should produce HTML for the actions.
      * You can use the renderAction function to render individual action buttons in your callable.
      *
-     * @param callable(mixed $id, mixed $row): string
+     * @param callable(mixed $id, mixed $row): string $renderer
      */
     protected function addActionColumn(callable $renderer, string $idColumn = 'id'): static
     {

@@ -18,7 +18,7 @@ use function Symfony\Component\String\u;
 class IdentityProviderType extends AbstractType
 {
     /**
-     * @param iterable<IdentityProviderInterface>
+     * @param iterable<IdentityProviderInterface> $idpTypes
      */
     public function __construct(
         #[AutowireIterator('forumify.oauth.identity_provider', defaultIndexMethod: 'getType')]

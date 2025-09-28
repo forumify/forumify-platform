@@ -156,14 +156,4 @@ class Role implements SortableEntityInterface
     {
         $this->showOnUsername = $showOnUsername;
     }
-
-    public function getClients(): Collection
-    {
-        return $this->clients;
-    }
-
-    public function setClients(Collection $clients): void
-    {
-        $this->clients = $clients;
-    }
 }

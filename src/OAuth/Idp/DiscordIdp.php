@@ -54,7 +54,6 @@ class DiscordIdp extends AbstractOAuthIdp
             return null;
         }
 
-        dd($data);
         return $this->getOrCreateUser(
             $idp,
             $data['id'],

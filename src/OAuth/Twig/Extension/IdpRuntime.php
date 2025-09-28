@@ -11,6 +11,9 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 class IdpRuntime implements RuntimeExtensionInterface
 {
+    /**
+     * @param iterable<string, IdentityProviderInterface> $idpTypes
+     */
     public function __construct(
         #[AutowireIterator('forumify.oauth.identity_provider', defaultIndexMethod: 'getType')]
         private readonly iterable $idpTypes
@@ -19,8 +22,13 @@ class IdpRuntime implements RuntimeExtensionInterface
 
     public function getIdpButton(IdentityProvider $idp): string
     {
-        /** @var array<string, IdentityProviderInterface> $idpTypes */
-        $idpTypes = iterator_to_array($this->idpTypes);
-        return $idpTypes[$idp->getType()]->getButtonHtml($idp) ?? '';
+        $type = $idp->getType();
+        foreach ($this->idpTypes as $key => $idpType) {
+            if ($key === $type) {
+                return $idpType->getButtonHtml($idp);
+            }
+        }
+
+        return '';
     }
 }
