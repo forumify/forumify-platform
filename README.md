@@ -33,7 +33,7 @@ Forumify consists of several different open-source repositories, **forumify-plat
 
 Learn how to customize your own forumify [here](https://docs.forumify.net/guides/customization/introduction).
 
-If you want created something you think others may benefit from, and you would like to share your customizations, you can move your customization to a plugin and publish it on packagist and promote it on the [forumify marketplace](https://forumify.net/marketplace).
+If you created something you think others may benefit from, and you would like to share your customizations, you can move your customization to a plugin and publish it on packagist and promote it on the [forumify marketplace](https://forumify.net/marketplace).
 
 ### Contributing
 

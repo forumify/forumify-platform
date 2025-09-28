@@ -16,6 +16,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Twig\Environment;
 
 #[AsLiveComponent(
     'Forumify\\Admin\\TemplateEditor',
@@ -36,6 +37,7 @@ class TemplateEditor
 
     public function __construct(
         private readonly ThemeTemplateService $themeTemplateService,
+        private readonly Environment $twig,
         private readonly SluggerInterface $slugger = new AsciiSlugger(),
         private readonly Filesystem $fs = new Filesystem(),
     ) {
@@ -78,6 +80,7 @@ class TemplateEditor
         }
 
         $this->fs->dumpFile($localPath, $this->getOverrideDefaultContent($this->openFile));
+        $this->twig->removeCache($this->openFile);
     }
 
     #[LiveAction]
@@ -100,6 +103,7 @@ class TemplateEditor
         );
 
         $this->fs->dumpFile($localPath, $content);
+        $this->twig->removeCache($this->openFile);
     }
 
     #[LiveAction]
@@ -119,6 +123,7 @@ class TemplateEditor
         );
         if (file_exists($realPath)) {
             @unlink($realPath);
+            $this->twig->removeCache($this->openFile);
         }
     }
 

@@ -131,6 +131,11 @@ class PluginService
                 '--optimize',
                 '--classmap-authoritative',
             ]);
+            $output[] = $this->run([
+                'composer',
+                'dump-env',
+                'prod',
+            ]);
         }
 
         $output[] = $this->run([

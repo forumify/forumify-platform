@@ -9,9 +9,9 @@ use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\AccountService;
 use Forumify\Core\Service\RecaptchaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -37,10 +37,10 @@ class ForgotPasswordController extends AbstractController
         }
 
         $form = $this->createFormBuilder()
-            ->add('query', EmailType::class, [
+            ->add('query', TextType::class, [
                 'label' => 'Username or email',
                 'help' => 'forgot_password.email_help',
-                'attr' => ['autocomplete' => 'email', 'autofocus' => 'true'],
+                'attr' => ['autofocus' => 'true'],
             ])
             ->getForm();
 
