@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
+use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 use Forumify\OAuth\Repository\OAuthClientRepository;
 
@@ -100,11 +101,17 @@ class OAuthClient implements AuthorizableInterface
     {
     }
 
+    /**
+     * @return Collection<int, Role>
+     */
     public function getRoleEntities(): Collection
     {
         return $this->user->getRoleEntities();
     }
 
+    /**
+     * @param Collection<int, Role> $roles
+     */
     public function setRoleEntities(Collection $roles): void
     {
         $this->user->setRoleEntities($roles);

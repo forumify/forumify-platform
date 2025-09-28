@@ -16,14 +16,13 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class ForumController extends AbstractController
 {
-    /** @var array<string, ForumTypeInterface> */
-    private readonly array $forumTypes;
-
+    /**
+     * @param iterable<string, ForumTypeInterface> $forumTypes
+     */
     public function __construct(
-        #[AutowireIterator('forumify.forum.type', defaultIndexMethod: 'getType')]
-        iterable $forumTypes,
+        #[AutowireIterator('forumify.forum.type')]
+        private readonly iterable $forumTypes,
     ) {
-        $this->forumTypes = iterator_to_array($forumTypes);
     }
 
     #[Route('/forum/{slug:forum?}', name: 'forum')]
@@ -50,16 +49,28 @@ class ForumController extends AbstractController
 
         uasort($groups, static fn (ForumGroup $a, ForumGroup $b) => $a->getPosition() - $b->getPosition());
 
-        $template = '@Forumify/frontend/forum/list.html.twig';
-        if ($forum !== null && isset($this->forumTypes[$forum->getType()])) {
-            $type = $this->forumTypes[$forum->getType()];
-            $template = $type->getTemplate();
-        }
+        $template = $this
+            ->getForumType($forum?->getType())
+            ?->getTemplate() ?? '@Forumify/frontend/forum/list.html.twig';
 
         return $this->render($template, [
             'forum' => $forum,
             'ungroupedForums' => $ungroupedForums,
             'groups' => $groups,
         ]);
+    }
+
+    private function getForumType(?string $type): ?ForumTypeInterface
+    {
+        if ($type === null) {
+            return null;
+        }
+
+        foreach ($this->forumTypes as $forumType) {
+            if ($forumType::getType() === $type) {
+                return $forumType;
+            }
+        }
+        return null;
     }
 }

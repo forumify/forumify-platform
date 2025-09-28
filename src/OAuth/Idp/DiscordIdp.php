@@ -49,11 +49,11 @@ class DiscordIdp extends AbstractOAuthIdp
 
     protected function tokenToUser(IdentityProvider $idp, array $token): ?UserInterface
     {
-        $data = $this->getUserDataFromDiscord($token['access_token']);
-        if (empty($data)) {
+        if (empty($token['access_token'])) {
             return null;
         }
 
+        $data = $this->getUserDataFromDiscord($token['access_token']);
         return $this->getOrCreateUser(
             $idp,
             $data['id'],
@@ -62,6 +62,9 @@ class DiscordIdp extends AbstractOAuthIdp
         );
     }
 
+    /**
+     * @return array{id: string, email: string, username: string}
+     */
     private function getUserDataFromDiscord(string $token): array
     {
         try {

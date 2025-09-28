@@ -106,13 +106,22 @@ abstract class AbstractOAuthIdp extends AbstractIdp
 
     abstract protected function getTokenUri(): string;
 
+    /**
+     * @param array<string, mixed> $token
+     */
     abstract protected function tokenToUser(IdentityProvider $idp, array $token): ?UserInterface;
 
+    /**
+     * @return array<string>
+     */
     protected function getScopes(): array
     {
         return [];
     }
 
+    /**
+     * @param array<string, mixed> $args
+     */
     protected function u(
         string $pathName,
         array $args = [],
@@ -121,6 +130,9 @@ abstract class AbstractOAuthIdp extends AbstractIdp
         return $this->urlGenerator->generate($pathName, $args, $referenceType);
     }
 
+    /**
+     * @param array<string, mixed> $args
+     */
     protected function t(string $transKey, array $args = []): string
     {
         return $this->translator->trans($transKey, $args);

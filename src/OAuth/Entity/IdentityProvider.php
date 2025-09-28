@@ -31,6 +31,9 @@ class IdentityProvider
     #[Assert\NotBlank(allowNull: false)]
     private string $type;
 
+    /**
+     * @var array<string, mixed>|null
+     */
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $data = null;
 
@@ -59,11 +62,17 @@ class IdentityProvider
         $this->type = $type;
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function getData(): ?array
     {
         return $this->data;
     }
 
+    /**
+     * @param array<string, mixed>|null $data
+     */
     public function setData(?array $data): void
     {
         $this->data = $data;

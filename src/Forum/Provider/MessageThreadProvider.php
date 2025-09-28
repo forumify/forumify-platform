@@ -7,9 +7,13 @@ namespace Forumify\Forum\Provider;
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProviderInterface;
 use Forumify\Core\Entity\User;
+use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ProviderInterface<MessageThread>
+ */
 class MessageThreadProvider implements ProviderInterface
 {
     public function __construct(
