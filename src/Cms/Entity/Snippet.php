@@ -21,8 +21,8 @@ class Snippet
     #[ORM\Column(length: 255)]
     private string $name;
 
-    #[Gedmo\Slug(fields: ['name'])]
     #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['name'])]
     private string $slug;
 
     #[ORM\Column(length: 255)]

@@ -27,7 +27,7 @@ class TopicVoter extends Voter
             VoterAttribute::TopicView->value,
             VoterAttribute::TopicCreate->value,
             VoterAttribute::TopicEdit->value,
-            VoterAttribute::TopicDelete->value
+            VoterAttribute::TopicDelete->value,
         ], true);
     }
 

@@ -44,7 +44,7 @@ class PageType extends AbstractType
                 'choices' => [
                     'Twig' => Page::TYPE_TWIG,
                     'Page Builder' => Page::TYPE_BUILDER,
-                ]
+                ],
             ]);
             return;
         }

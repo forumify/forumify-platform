@@ -30,7 +30,7 @@ class ProfileController extends AbstractController
     public function profileById(User $user): Response
     {
         return $this->redirectToRoute('forumify_forum_profile', [
-            'username' => $user->getUsername()
+            'username' => $user->getUsername(),
         ], Response::HTTP_MOVED_PERMANENTLY);
     }
 

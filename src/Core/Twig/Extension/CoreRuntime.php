@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Forumify\Core\Entity\User;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -17,7 +18,14 @@ class CoreRuntime implements RuntimeExtensionInterface
     public function __construct(
         private readonly Security $security,
         private readonly TranslatorInterface $translator,
+        #[Autowire(env: 'bool:FORUMIFY_DEMO')]
+        private readonly bool $isDemo,
     ) {
+    }
+
+    public function isDemo(): bool
+    {
+        return $this->isDemo;
     }
 
     public function formatDate(DateTime|DateTimeImmutable|null $date, ?bool $alwaysAbsolute = false): string

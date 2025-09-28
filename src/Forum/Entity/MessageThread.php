@@ -16,23 +16,23 @@ use Forumify\Forum\Provider\MessageThreadProvider;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ApiResource(provider: MessageThreadProvider::class)]
 #[ORM\Entity(repositoryClass: MessageThreadRepository::class)]
+#[ApiResource(provider: MessageThreadProvider::class)]
 class MessageThread
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
-    #[Groups('MessageThread')]
     #[ORM\Column(length: 255)]
+    #[Groups('MessageThread')]
     private string $title = '';
 
     /**
      * @var Collection<int, User>
      */
-    #[Groups('MessageThread')]
     #[ORM\ManyToMany(targetEntity: User::class)]
+    #[Groups('MessageThread')]
     private Collection $participants;
 
     /**

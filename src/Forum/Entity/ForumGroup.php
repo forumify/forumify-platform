@@ -23,6 +23,7 @@ use Forumify\Core\Entity\SortableEntityTrait;
 use Forumify\Forum\Repository\ForumGroupRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\Entity(repositoryClass: ForumGroupRepository::class)]
 #[ApiResource(
     uriTemplate: '/forums/{forumId}/forum-groups',
     uriVariables: [
@@ -31,7 +32,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
 )]
 #[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
-#[ORM\Entity(repositoryClass: ForumGroupRepository::class)]
 class ForumGroup implements AccessControlledEntityInterface, SortableEntityInterface
 {
     use IdentifiableEntityTrait;

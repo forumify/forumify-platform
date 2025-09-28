@@ -23,8 +23,8 @@ class IdentityProvider
     #[Assert\NotBlank(allowNull: false)]
     private string $name;
 
-    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     #[ORM\Column(length: 255, unique: true)]
+    #[Gedmo\Slug(fields: ['name'], updatable: false)]
     private string $slug;
 
     #[ORM\Column(length: 64)]

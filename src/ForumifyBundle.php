@@ -40,7 +40,7 @@ class ForumifyBundle extends AbstractForumifyBundle
                     'snippets' => [
                         'view',
                         'manage',
-                    ]
+                    ],
                 ],
                 'settings' => [
                     'view',

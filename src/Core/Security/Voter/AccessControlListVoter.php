@@ -8,7 +8,6 @@ use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ACLRepository;
 use Forumify\Core\Security\VoterAttribute;
-use RuntimeException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 

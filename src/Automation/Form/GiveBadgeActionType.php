@@ -18,7 +18,7 @@ class GiveBadgeActionType extends AbstractType
             ->add('badge', EntityType::class, [
                 'class' => Badge::class,
                 'autocomplete' => true,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
             ])
             ->add('recipient', CodeEditorType::class, [
                 'help' => 'admin.automations.action.badge.recipient_help',

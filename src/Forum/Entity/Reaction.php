@@ -12,8 +12,8 @@ use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Forum\Repository\ReactionRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ApiResource]
 #[ORM\Entity(repositoryClass: ReactionRepository::class)]
+#[ApiResource]
 class Reaction
 {
     use IdentifiableEntityTrait;

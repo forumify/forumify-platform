@@ -17,8 +17,8 @@ use Forumify\Core\Entity\User;
 use Forumify\Forum\Repository\BadgeRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ApiResource]
 #[ORM\Entity(BadgeRepository::class)]
+#[ApiResource]
 class Badge implements SortableEntityInterface
 {
     use IdentifiableEntityTrait;

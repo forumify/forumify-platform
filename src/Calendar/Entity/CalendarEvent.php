@@ -15,8 +15,8 @@ use Forumify\Core\Entity\SluggableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ApiResource]
 #[ORM\Entity(repositoryClass: CalendarEventRepository::class)]
+#[ApiResource]
 class CalendarEvent
 {
     use IdentifiableEntityTrait;
@@ -24,33 +24,33 @@ class CalendarEvent
     use TimestampableEntityTrait;
     use BlameableEntityTrait;
 
-    #[Groups('CalendarEvent')]
     #[ORM\Column(length: 255)]
+    #[Groups('CalendarEvent')]
     private string $title;
 
-    #[Groups('CalendarEvent')]
     #[ORM\Column(type: 'datetime')]
+    #[Groups('CalendarEvent')]
     private DateTime $start;
 
-    #[Groups('CalendarEvent')]
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Groups('CalendarEvent')]
     private ?DateTime $end;
 
-    #[Groups('CalendarEvent')]
     #[ORM\Column('`repeat`', nullable: true)]
+    #[Groups('CalendarEvent')]
     private ?string $repeat = null;
 
-    #[Groups('CalendarEvent')]
     #[ORM\Column(nullable: true)]
+    #[Groups('CalendarEvent')]
     private ?DateTime $repeatEnd = null;
 
-    #[Groups('CalendarEvent')]
     #[ORM\Column(type: 'text')]
+    #[Groups('CalendarEvent')]
     private string $content;
 
-    #[Asset('forumify.asset')]
-    #[Groups('CalendarEvent')]
     #[ORM\Column(nullable: true)]
+    #[Groups('CalendarEvent')]
+    #[Asset('forumify.asset')]
     private ?string $banner = null;
 
     #[ORM\ManyToOne(targetEntity: Calendar::class, inversedBy: 'events')]

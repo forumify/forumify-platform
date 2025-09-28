@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Admin\Form\IdentityProvider;
 
 use Forumify\Core\Form\InfoType;
-use Forumify\Core\Form\PreType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

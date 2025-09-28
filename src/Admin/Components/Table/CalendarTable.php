@@ -26,7 +26,7 @@ class CalendarTable extends AbstractDoctrineTable
             ])
             ->addColumn('color', [
                 'field' => 'color',
-                'renderer' => fn (string $color) => "<div class='rounded' style='height: 20px; width: 40px; background-color: {$color}'>&nbsp;</div>"
+                'renderer' => fn (string $color) => "<div class='rounded' style='height: 20px; width: 40px; background-color: {$color}'>&nbsp;</div>",
             ])
             ->addColumn('actions', [
                 'field' => 'id',

@@ -29,9 +29,11 @@ class LastActivityListener
 
         $now = new DateTime();
         $lastActivity = $user->getLastActivity();
-        if ($lastActivity === null || $now->getTimestamp() - $lastActivity->getTimestamp() >= 60) {
-            $user->setLastActivity($now);
-            $this->em->flush();
+        if ($lastActivity !== null && $now->getTimestamp() - $lastActivity->getTimestamp() < 60) {
+            return;
         }
+
+        $user->setLastActivity($now);
+        $this->em->flush();
     }
 }

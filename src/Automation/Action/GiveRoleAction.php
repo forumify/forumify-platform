@@ -37,10 +37,12 @@ class GiveRoleAction implements ActionInterface
             return;
         }
 
-        if (!$recipient->getRoleEntities()->contains($role)) {
-            $recipient->getRoleEntities()->add($role);
-            $this->userRepository->save($recipient);
+        if ($recipient->getRoleEntities()->contains($role)) {
+            return;
         }
+
+        $recipient->getRoleEntities()->add($role);
+        $this->userRepository->save($recipient);
     }
 
     public function getPayloadFormType(): ?string

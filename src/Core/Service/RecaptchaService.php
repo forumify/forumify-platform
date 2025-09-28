@@ -27,8 +27,8 @@ class RecaptchaService
         $params = [
             'body' => [
                 'secret' => $this->settingRepository->get('forumify.recaptcha.site_secret'),
-                'response' => $token
-            ]
+                'response' => $token,
+            ],
         ];
 
         try {

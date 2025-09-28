@@ -21,6 +21,7 @@ use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Forum\Repository\CommentRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource(
     uriTemplate: '/topics/{topicId}/comments',
     uriVariables: [
@@ -29,7 +30,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
 )]
 #[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
-#[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment implements SubscribableInterface
 {
     use IdentifiableEntityTrait;

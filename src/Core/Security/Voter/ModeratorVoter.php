@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace Forumify\Core\Security\Voter;
 
 use Forumify\Core\Entity\AccessControlledEntityInterface;
-use Forumify\Core\Entity\ACLParameters;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Comment;
-use Forumify\Forum\Entity\Forum;
-use Forumify\Forum\Entity\Message;
-use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Entity\Topic;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

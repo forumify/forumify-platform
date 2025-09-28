@@ -30,12 +30,13 @@ class ForumifyKernel extends Kernel
         yield from $this->registerSymfonyBundles();
 
         $dsnParser = new DsnParser(['mysql' => 'pdo_mysql']);
+        // phpcs:ignore
         $connectionParams = $dsnParser->parse($_SERVER['DATABASE_URL']);
 
         try {
             $plugins = DriverManager::getConnection($connectionParams)
                 ->executeQuery('SELECT plugin_class FROM plugin WHERE type = :type AND active = 1', [
-                    'type' => Plugin::TYPE_PLUGIN
+                    'type' => Plugin::TYPE_PLUGIN,
                 ])
                 ->fetchFirstColumn();
         } catch (Exception) {

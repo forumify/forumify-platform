@@ -9,4 +9,5 @@ public/build
 
 coverage/
 .phpunit.*
+.phpcs-cache
 var

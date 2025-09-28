@@ -107,7 +107,7 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
 
     public function getACLParameters(): ACLParameters
     {
-        $parentId =  $this->getParent()?->getId();
+        $parentId = $this->getParent()?->getId();
 
         return new ACLParameters(
             self::class,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Forumify\Core\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
@@ -15,16 +17,16 @@ use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
 
-#[ApiResource(operations: [])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource(operations: [])]
 class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
-    #[Groups(['MessageThread'])]
     #[ORM\Column(length: 32, unique: true)]
+    #[Groups(['MessageThread'])]
     private string $username;
 
     #[ORM\Column(length: 128, unique: true, nullable: true)]
@@ -43,8 +45,8 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $password = null;
 
-    #[Groups(['MessageThread'])]
     #[ORM\Column(length: 32)]
+    #[Groups(['MessageThread'])]
     private string $displayName;
 
     /**
@@ -56,9 +58,9 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $timezone = null;
 
-    #[Asset('forumify.avatar')]
-    #[Groups(['MessageThread'])]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['MessageThread'])]
+    #[Asset('forumify.avatar')]
     private ?string $avatar = null;
 
     #[ORM\Column(type: 'text', nullable: true)]

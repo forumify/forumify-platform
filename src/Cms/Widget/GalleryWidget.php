@@ -88,7 +88,7 @@ class GalleryWidget extends AbstractWidget
             ])
             ->add('hideControls', CheckboxType::class, [
                 'required' => false,
-                'help' => 'admin.cms.widget.gallery.hide_controls_help'
+                'help' => 'admin.cms.widget.gallery.hide_controls_help',
             ])
             ->getForm()
         ;

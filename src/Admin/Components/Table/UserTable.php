@@ -14,8 +14,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Twig\Environment;
 
-#[IsGranted('forumify.admin.users.view')]
 #[AsLiveComponent('UserTable', '@Forumify/components/table/table.html.twig')]
+#[IsGranted('forumify.admin.users.view')]
 class UserTable extends AbstractDoctrineTable
 {
     public function __construct(
@@ -39,7 +39,7 @@ class UserTable extends AbstractDoctrineTable
                 'label' => 'Display name',
             ])
             ->addColumn('email', [
-                'field' => 'email'
+                'field' => 'email',
             ])
             ->addColumn('actions', [
                 'label' => '',

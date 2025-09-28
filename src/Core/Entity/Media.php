@@ -15,9 +15,9 @@ class Media
     #[ORM\Column(length: 255)]
     private string $path;
 
-    #[Gedmo\Blameable(on: 'create')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn('created_by', onDelete: 'SET NULL')]
+    #[Gedmo\Blameable(on: 'create')]
     private ?User $createdBy = null;
 
     public function getPath(): string

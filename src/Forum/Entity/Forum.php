@@ -18,10 +18,10 @@ use Forumify\Forum\Repository\ForumRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\Entity(repositoryClass: ForumRepository::class)]
 #[ApiResource(
     extraProperties: ['acl' => ['permission' => 'view']],
 )]
-#[ORM\Entity(repositoryClass: ForumRepository::class)]
 class Forum implements HierarchicalInterface, AccessControlledEntityInterface, SortableEntityInterface
 {
     public const TYPE_TEXT = 'text';
@@ -36,9 +36,9 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     #[Groups('Forum')]
     private string $title = '';
 
-    #[Gedmo\Slug(fields: ['title'])]
     #[ORM\Column(unique: true)]
     #[Groups('Forum')]
+    #[Gedmo\Slug(fields: ['title'])]
     private string $slug;
 
     #[ORM\Column(options: ['default' => self::TYPE_TEXT])]

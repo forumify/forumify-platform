@@ -32,7 +32,7 @@ class ForumController extends AbstractController
         if ($forum !== null) {
             $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
                 'permission' => 'view',
-                'entity' => $forum
+                'entity' => $forum,
             ]);
         }
 

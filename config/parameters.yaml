@@ -1,5 +1,7 @@
 parameters:
     env(FORUMIFY_URL): 'https://forumify.net'
+    env(FORUMIFY_DEMO): false
+    env(FORUMIFY_HOSTED_INSTANCE): false
 
     forumify.asset.storage.path: '/storage/assets'
     forumify.avatar.storage.path: '/storage/avatars'

@@ -22,6 +22,7 @@ use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ORM\Entity(repositoryClass: TopicRepository::class)]
 #[ApiResource(
     uriTemplate: '/forums/{forumId}/topics',
     uriVariables: [
@@ -30,7 +31,6 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
 )]
 #[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
-#[ORM\Entity(repositoryClass: TopicRepository::class)]
 class Topic implements SubscribableInterface
 {
     use IdentifiableEntityTrait;

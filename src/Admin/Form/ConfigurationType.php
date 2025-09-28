@@ -6,6 +6,7 @@ namespace Forumify\Admin\Form;
 
 use Forumify\Core\Form\InfoType;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,6 +19,8 @@ class ConfigurationType extends AbstractType
 {
     public function __construct(
         private readonly Packages $packages,
+        #[Autowire(env: 'bool:FORUMIFY_HOSTED_INSTANCE')]
+        private readonly bool $isHostedInstance,
     ) {
     }
 
@@ -81,7 +84,7 @@ class ConfigurationType extends AbstractType
                 'label' => 'admin.configuration.index',
                 'help' => 'admin.configuration.index_help',
                 'required' => false,
-                'empty_data' => ''
+                'empty_data' => '',
             ])
             ->add('forumify__enable_auto_updates', CheckboxType::class, [
                 'label' => 'admin.configuration.enable_auto_updates',
@@ -105,8 +108,7 @@ class ConfigurationType extends AbstractType
                 'required' => false,
             ]);
 
-        $isCloudInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
-        if (!$isCloudInstance) {
+        if (!$this->isHostedInstance) {
             $builder
                 ->add('forumify__mailer__from', TextType::class, [
                     'label' => 'admin.configuration.mailer_from',

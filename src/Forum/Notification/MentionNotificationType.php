@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Forum\Notification;
 
 use Forumify\Core\Entity\Notification;
-use Forumify\Core\Entity\User;
 use Forumify\Core\Notification\AbstractEmailNotificationType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Forum\Entity\Comment;
@@ -42,10 +41,10 @@ class MentionNotificationType extends AbstractEmailNotificationType
 
         return match (get_class($subject)) {
             Comment::class => $this->translator->trans('notification.mention_comment', [
-                'author' => $subject->getCreatedBy()?->getDisplayName()
+                'author' => $subject->getCreatedBy()?->getDisplayName(),
             ]),
             Message::class => $this->translator->trans('notification.mention_message', [
-                'author' => $subject->getCreatedBy()?->getDisplayName()
+                'author' => $subject->getCreatedBy()?->getDisplayName(),
             ]),
             default => $this->translator->trans('notification.mention_generic'),
         };

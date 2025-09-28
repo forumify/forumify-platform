@@ -26,8 +26,8 @@ class AccountSettingsController extends AbstractController
     ) {
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/settings', name: 'settings')]
+    #[IsGranted('ROLE_USER')]
     public function __invoke(Request $request): Response
     {
         $form = $this->createForm(AccountSettingsType::class, $this->getUser());

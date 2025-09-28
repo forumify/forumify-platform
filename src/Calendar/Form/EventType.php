@@ -84,11 +84,11 @@ class EventType extends AbstractType
                 'attr' => [
                     'preview' => ($banner = $options['data']->getBanner() ?? null)
                         ? $this->packages->getUrl($banner, 'forumify.asset')
-                        : null
+                        : null,
                 ],
                 'constraints' => [
                     new Assert\Image(maxSize: '2M'),
-                ]
+                ],
             ])
             ->add('content', RichTextEditorType::class, [
                 'required' => false,

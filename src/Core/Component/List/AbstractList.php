@@ -53,5 +53,6 @@ abstract class AbstractList
     }
 
     abstract protected function getData(): array;
+
     abstract protected function getTotalCount(): int;
 }

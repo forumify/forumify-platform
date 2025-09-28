@@ -55,7 +55,7 @@ class ACLType extends AbstractType implements DataMapperInterface
      */
     public function mapDataToForms(mixed $viewData, \Traversable $forms): void
     {
-        /** @var FormInterface[] $fields */
+        /** @var array<FormInterface> $fields */
         $fields = iterator_to_array($forms);
 
         foreach ($viewData as $acl) {
@@ -75,7 +75,7 @@ class ACLType extends AbstractType implements DataMapperInterface
      */
     public function mapFormsToData(\Traversable $forms, mixed &$viewData): void
     {
-        /** @var FormInterface[] $fields */
+        /** @var array<FormInterface> $fields */
         $fields = iterator_to_array($forms);
 
         $viewData = [];

@@ -50,7 +50,7 @@ class TopicList extends AbstractDoctrineList
         if ($canOnlyShowOwnSetting) {
             $canSeeAll = $this->security->isGranted(VoterAttribute::ACL->value, [
                 'entity' => $this->forum,
-                'permission' => 'show_all_topics'
+                'permission' => 'show_all_topics',
             ]);
             if (!$canSeeAll) {
                 $user = $this->security->getUser();
@@ -87,7 +87,7 @@ class TopicList extends AbstractDoctrineList
         if ($canOnlyShowOwnSetting) {
             $canSeeAll = $this->security->isGranted(VoterAttribute::ACL->value, [
                 'entity' => $this->forum,
-                'permission' => 'show_all_topics'
+                'permission' => 'show_all_topics',
             ]);
             if (!$canSeeAll) {
                 $user = $this->security->getUser();

@@ -23,7 +23,7 @@ class IdentityProviderTable extends AbstractDoctrineTable
                 'field' => 'name',
             ])
             ->addColumn('type', [
-                'field' => 'type'
+                'field' => 'type',
             ])
             ->addActionColumn($this->renderActions(...))
         ;

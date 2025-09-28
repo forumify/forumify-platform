@@ -35,7 +35,7 @@ class PopularTopics extends AbstractDoctrineList
 
     protected function getQuery(): QueryBuilder
     {
-        $qb = $this->topicRepository
+        return $this->topicRepository
             ->getVisibleTopicsQuery()
             ->leftJoin('t.comments', 'c')
             ->leftJoin('c.reactions', 're')
@@ -44,7 +44,5 @@ class PopularTopics extends AbstractDoctrineList
             ->addGroupBy('t')
             ->addOrderBy('points', 'DESC')
         ;
-
-        return $qb;
     }
 }

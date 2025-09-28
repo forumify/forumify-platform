@@ -14,18 +14,22 @@ use Twig\TwigTest;
  */
 class CoreExtension extends AbstractExtension
 {
+    public function __construct()
+    {
+    }
+
     public function getFilters(): array
     {
         return [
             new TwigFilter('short_number', $this->shortNumber(...)),
-            new TwigFilter('format_date', [CoreRuntime::class, 'formatDate'])
+            new TwigFilter('format_date', [CoreRuntime::class, 'formatDate']),
         ];
     }
 
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('is_demo', fn () => (bool)($_SERVER['FORUMIFY_DEMO'] ?? false)),
+            new TwigFunction('is_demo', [CoreRuntime::class, 'isDemo']),
         ];
     }
 
@@ -47,7 +51,8 @@ class CoreExtension extends AbstractExtension
             $number = intdiv($number, 1000);
         }
 
-        $suffix = ['', 'K', 'M', 'B', 'T', 'aa', 'ab', 'ac'][$divs] ?? 'X'; // anything above sextillion would've probably made this crash already..
+        // anything above sextillion would've probably made this crash already..
+        $suffix = ['', 'K', 'M', 'B', 'T', 'aa', 'ab', 'ac'][$divs] ?? 'X';
         return $number . $suffix;
     }
 

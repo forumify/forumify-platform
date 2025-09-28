@@ -9,7 +9,6 @@ use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\AccountService;
 use Forumify\Core\Service\RecaptchaService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -96,8 +95,8 @@ class ForgotPasswordController extends AbstractController
                 'second_options' => ['label' => 'Repeat password', 'attr' => ['autocomplete' => 'new-password']],
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Length(min: 8)
-                ]
+                    new Assert\Length(min: 8),
+                ],
             ])
             ->getForm();
 

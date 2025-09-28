@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Forumify\Calendar\Service;
 
 use DateInterval;
@@ -19,7 +21,7 @@ class CalendarService
     }
 
     /**
-     * @return array<string, CalendarEvent[]>
+     * @return array<string, array<CalendarEvent>>
      */
     public function getAllEvents(\DateTime $date, ?Calendar $calendar): array
     {

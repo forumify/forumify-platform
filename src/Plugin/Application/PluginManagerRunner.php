@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Runtime\RunnerInterface;
 
+// phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
 /**
  * Self-contained application runner that can work without Symfony container.
  * Plugins enable/disable Symfony bundles dynamically, doing so from within Symfony will cause critical errors.

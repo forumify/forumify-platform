@@ -70,7 +70,8 @@
         "phpstan/phpstan-symfony": "^2.0",
         "phpstan/phpstan": "^2.0",
         "squizlabs/php_codesniffer": "^3.11",
-        "dg/bypass-finals": "^1.9"
+        "dg/bypass-finals": "^1.9",
+        "slevomat/coding-standard": "^8.15"
     },
     "autoload": {
         "psr-4": {
@@ -94,7 +95,8 @@
     "config": {
         "allow-plugins": {
             "symfony/flex": false,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {

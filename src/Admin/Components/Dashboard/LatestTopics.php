@@ -42,13 +42,11 @@ class LatestTopics extends AbstractDoctrineList
     protected function getQuery(): QueryBuilder
     {
         $min = (new DateTime())->sub(new DateInterval('P1M'));
-        $qb = $this->topicRepository
+        return $this->topicRepository
             ->getVisibleTopicsQuery()
             ->andWhere('t.createdAt > :min')
             ->setParameter('min', $min)
             ->orderBy('t.createdAt', 'desc')
         ;
-
-        return $qb;
     }
 }

@@ -26,17 +26,17 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[IsGranted('forumify.admin.automations.manage')]
 #[AsLiveComponent('Forumify\\AutomationForm', '@Forumify/admin/components/automation/form.html.twig')]
+#[IsGranted('forumify.admin.automations.manage')]
 class AutomationForm extends AbstractController
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
 
     /**
-     * @param TriggerInterface[] $triggers
-     * @param ConditionInterface[] $conditions
-     * @param ActionInterface[] $actions
+     * @param iterable<TriggerInterface> $triggers
+     * @param iterable<ConditionInterface> $conditions
+     * @param iterable<ActionInterface> $actions
      */
     public function __construct(
         #[AutowireIterator('forumify.automation.trigger', defaultIndexMethod: 'getType')]

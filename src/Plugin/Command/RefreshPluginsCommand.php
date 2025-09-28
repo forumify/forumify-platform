@@ -30,7 +30,7 @@ class RefreshPluginsCommand extends Command
         $io->success('Plugins refreshed.');
 
         $this->getApplication()?->doRun(new ArrayInput([
-            'command' => 'forumify:plugins:list'
+            'command' => 'forumify:plugins:list',
         ]), $output);
 
         return Command::SUCCESS;

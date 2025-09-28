@@ -14,6 +14,7 @@ use JsonException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
+// phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
 class PluginService
 {
     private readonly Connection $connection;
@@ -66,6 +67,7 @@ class PluginService
      */
     private function verifyPackage(string $package): void
     {
+
         $isDemo = (bool)($_SERVER['FORUMIFY_DEMO'] ?? false);
         $isCloudInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
         if (!$isDemo && !$isCloudInstance) {
@@ -77,7 +79,7 @@ class PluginService
             throw new PluginException("Unable to check if $package can be installed on cloud/demo instances.");
         }
 
-        /** @var array<string, string[]> $allowedPlugins */
+        /** @var array<string, array<string>> $allowedPlugins */
         $allowedPlugins = json_decode($allowedPluginsJson, true, 512, JSON_THROW_ON_ERROR);
         $pluginAvailability = $allowedPlugins[$package] ?? null;
         if ($pluginAvailability === null) {
@@ -213,7 +215,7 @@ class PluginService
             'bin/console',
             'doctrine:migrations:migrate',
             '--allow-no-migration',
-            '--no-interaction'
+            '--no-interaction',
         ]);
     }
 
