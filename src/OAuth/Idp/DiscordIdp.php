@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\OAuth\Idp;
 
-use Forumify\Core\Form\DTO\NewUser;
-use Forumify\Core\Repository\UserRepository;
-use Forumify\Core\Service\CreateUserService;
 use Forumify\OAuth\Entity\IdentityProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -16,8 +13,6 @@ class DiscordIdp extends AbstractOAuthIdp
 {
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly UserRepository $userRepository,
-        private readonly CreateUserService $createUserService,
     ) {
     }
 
@@ -59,19 +54,7 @@ class DiscordIdp extends AbstractOAuthIdp
             return null;
         }
 
-        $email = $data['email'];
-        $user = $this->userRepository->findOneBy(['email' => $email]);
-        if ($user !== null) {
-            return $user;
-        }
-
-        $username = $this->findAvailableUsername($data['username']);
-
-        $newUser = new NewUser();
-        $newUser->setUsername($username);
-        $newUser->setEmail($email);
-        $newUser->setPassword(bin2hex(random_bytes(24)));
-        return $this->createUserService->createUser($newUser);
+        return $this->getOrCreateUser($data['email'], $data['username']);
     }
 
     private function getUserDataFromDiscord(string $token): array
@@ -85,21 +68,5 @@ class DiscordIdp extends AbstractOAuthIdp
         } catch (Throwable $ex) {
             throw new IdentityProviderException('Unable to get Discord user data.', previous: $ex);
         }
-    }
-
-    private function findAvailableUsername(string $preferredUsername): string
-    {
-        $i = 0;
-        $username = $preferredUsername;
-        do {
-            if ($i > 0) {
-                $username = $preferredUsername . $i;
-            }
-
-            $foundUser = $this->userRepository->findOneBy(['username' => $username]);
-            $i++;
-        } while ($foundUser !== null);
-
-        return $username;
     }
 }

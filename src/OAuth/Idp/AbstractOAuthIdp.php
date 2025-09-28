@@ -7,6 +7,7 @@ namespace Forumify\OAuth\Idp;
 use Forumify\Admin\Form\IdentityProvider\DiscordIdpType;
 use Forumify\OAuth\Entity\IdentityProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -16,7 +17,7 @@ use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
-abstract class AbstractOAuthIdp implements IdentityProviderInterface
+abstract class AbstractOAuthIdp extends AbstractIdp
 {
     private UrlGeneratorInterface $urlGenerator;
     private TranslatorInterface $translator;
@@ -43,7 +44,7 @@ abstract class AbstractOAuthIdp implements IdentityProviderInterface
         }
 
         $state = bin2hex(random_bytes(16));
-        $session = $this->requestStack->getCurrentRequest()->getSession();
+        $session = $this->requestStack->getSession();
         $session->set("idp-state__{$idp->getSlug()}", $state);
 
         $qs = http_build_query([
@@ -58,21 +59,20 @@ abstract class AbstractOAuthIdp implements IdentityProviderInterface
         return new RedirectResponse($codeUri);
     }
 
-    public function callback(IdentityProvider $idp): ?UserInterface
+    public function callback(IdentityProvider $idp, Request $request): ?UserInterface
     {
         $data = $idp->getData();
         if (!is_array($data) || empty($data['clientId']) || empty($data['clientSecret'])) {
             throw new IdentityProviderException("{$idp->getName()} is not configured correctly.");
         }
 
-        $request = $this->requestStack->getCurrentRequest();
         $code = $request->query->get('code');
         if (empty($code)) {
             throw new IdentityProviderException('Identity provider did not return a code.');
         }
 
         $session = $request->getSession();
-        $sessionState = $session->get("idp-state__{$idp->getSlug()}");
+        $sessionState = $session->remove("idp-state__{$idp->getSlug()}");
         if (empty($sessionState) || $request->query->get('state') !== $sessionState) {
             throw new IdentityProviderException('State did not match. Please try again.');
         }

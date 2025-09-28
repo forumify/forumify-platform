@@ -6,6 +6,7 @@ namespace Forumify\OAuth\Idp;
 
 use Forumify\OAuth\Entity\IdentityProvider;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -29,5 +30,5 @@ interface IdentityProviderInterface
     /**
      * @throws IdentityProviderException
      */
-    public function callback(IdentityProvider $idp): ?UserInterface;
+    public function callback(IdentityProvider $idp, Request $request): ?UserInterface;
 }

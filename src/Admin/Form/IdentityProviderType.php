@@ -65,6 +65,7 @@ class IdentityProviderType extends AbstractType
         }
 
         $builder->add('data', $selectedType::getDataType(), [
+            'label' => false,
             'idp' => $idp,
         ]);
     }

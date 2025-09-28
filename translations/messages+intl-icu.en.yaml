@@ -541,9 +541,35 @@ admin:
                     <li>Create a new <strong>Application</strong> in the <a href="https://discord.com/developers/applications" target="_blank">Discord Developer Center</a>.</li>
                     <li>After creating your Application, navigate to <strong>OAuth2</strong> in the left sidebar.</li>
                     <li>From the <i>Client information</i> section, copy the <strong>Client ID</strong> and <strong>Client Secret</strong> into this form.</li>
-                    <li>Next, in the <i>Redirects</i> section, click the <strong>Add Redirect</strong> button.</li>
-                    <li>Copy the <strong>Redirect URI</strong> from the bottom of this form into Discord.</li>
+                    <li>Next, in the <i>Redirects</i> section, click the <strong>Add Redirect</strong> button and enter the following url: <pre><code>{redirectUrl}</code></pre></li>
                     <li>Make sure you <i>Save Changes</i> on Discord, and save this form.</li>
+                </ol>
+        google:
+            instructions: 'Instructions'
+            instructions_help: >
+                <strong>Create a new application with Google Cloud.</strong>
+                <ol>
+                    <li>Go to <a href="https://console.cloud.google.com/auth/overview" target="_blank">Google Auth</a>.</li>
+                    <li>(if you never used Google Cloud before, you will be asked to create a project)</li>
+                    <li>Create a new application, fill in the <strong>Name</strong> and <strong>Support email</strong>.</li>
+                    <li>In Audience, select <strong>External</strong>.</li>
+                    <li>Finally, add your contact information.</li>
+                </ol>
+                <strong>Create a client for your application.</strong>
+                <ol>
+                    <li>Open <strong>Clients</strong> in the left sidebar and <strong>Create a client</strong>.</li>
+                    <li>For the <strong>Type</strong> select <strong>Web Application</strong>.</li>
+                    <li>Add a new <strong>Allowed Origin</strong> and enter the following url: <pre><code>{originUrl}</code></pre></li>
+                    <li>Add a new <strong>Redirect URI</strong> and enter the following url: <pre><code>{redirectUrl}</code></pre></li>
+                    <li>Press <strong>Create</strong> and store the <strong>Client ID</strong> and <strong>Client Secret</strong> in this form.</li>
+                </ol>
+                <strong>Testing Mode.</strong>
+                <p>After creating a client with Google, it will default to testing mode, where you can verify your login is working as expected. To leave test mode, perform the following steps:</p>
+                <ol>
+                    <li>Go to <strong>Audience</strong>.</li>
+                    <li>Under <i>Test users</i>, add emails that are allowed to log in during test mode.</li>
+                    <li>Verify that your website's login is working with one of these test emails.</li>
+                    <li>Finally, press the <strong>Publish app</strong> button to leave test mode.</li>
                 </ol>
     marketplace:
         connect:

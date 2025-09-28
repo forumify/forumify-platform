@@ -64,7 +64,7 @@ class IdentityProviderAuthenticator extends AbstractAuthenticator
             throw new ProviderNotFoundException("No provider of type {$idp->getType()} exists.");
         }
 
-        $user = $idpType->callback($idp);
+        $user = $idpType->callback($idp, $request);
         if ($user === null) {
             throw new BadCredentialsException('Unable to get user information from identity provider.');
         }

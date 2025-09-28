@@ -30,8 +30,11 @@ class RecaptchaLoginListener
     public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        $route = $request->attributes->get('_route');
-        if ($request->getMethod() !== 'POST' || $route !== 'forumify_core_login') {
+        if ($request->getMethod() !== 'POST') {
+            return;
+        }
+
+        if ($request->attributes->get('_route') !== 'forumify_core_login') {
             return;
         }
 

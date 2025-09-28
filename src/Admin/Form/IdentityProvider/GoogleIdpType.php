@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Forumify\Admin\Form\IdentityProvider;
 
 use Forumify\Core\Form\InfoType;
-use Forumify\Core\Form\PreType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class DiscordIdpType extends AbstractIdpType
+class GoogleIdpType extends AbstractIdpType
 {
     public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
     {
@@ -18,15 +17,19 @@ class DiscordIdpType extends AbstractIdpType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $origin = $this->urlGenerator->generate('forumify_core_index', [], UrlGeneratorInterface::ABSOLUTE_URL);
+
         $idpSlug = $options['idp']->getSlug();
         $redirect = $this->urlGenerator->generate('forumify_oauth_idp_callback', [
             'slug' => $idpSlug,
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $builder
-            ->add('instructions', InfoType::class, [
-                'help' => 'admin.identity_provider.discord.instructions',
+            ->add('info', InfoType::class, [
+                'label' => 'admin.identity_provider.google.instructions',
+                'help' => 'admin.identity_provider.google.instructions_help',
                 'help_translation_parameters' => [
+                    'originUrl' => $origin,
                     'redirectUrl' => $redirect,
                 ],
             ])
