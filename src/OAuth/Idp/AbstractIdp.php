@@ -8,14 +8,40 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Form\DTO\NewUser;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\CreateUserService;
+use Forumify\OAuth\Entity\IdentityProvider;
+use Forumify\OAuth\Entity\IdentityProviderUser;
+use Forumify\OAuth\Repository\IdentityProviderUserRepository;
 use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractIdp implements IdentityProviderInterface
 {
     private UserRepository $userRepository;
     private CreateUserService $createUserService;
+    private IdentityProviderUserRepository $idpUserRepository;
 
-    public function getOrCreateUser(string $email, string $username): User
+    public function getOrCreateUser(
+        IdentityProvider $idp,
+        string $externalIdentifier,
+        string $email,
+        string $username,
+    ): User {
+        /** @var IdentityProviderUser|null $idpUser */
+        $idpUser = $this->idpUserRepository->findOneBy([
+            'identityProvider' => $idp,
+            'externalIdentifier' => $externalIdentifier,
+        ]);
+        if ($idpUser !== null) {
+            return $idpUser->getUser();
+        }
+
+        $user = $this->getUserForIdp($email, $username);
+        $idpUser = new IdentityProviderUser($user, $idp, $externalIdentifier);
+        $this->idpUserRepository->save($idpUser);
+
+        return $user;
+    }
+
+    private function getUserForIdp(string $email, string $username): User
     {
         $user = $this->userRepository->findOneBy(['email' => $email]);
         if ($user !== null) {
@@ -56,5 +82,11 @@ abstract class AbstractIdp implements IdentityProviderInterface
     public function setCreateUserService(CreateUserService $createUserService): void
     {
         $this->createUserService = $createUserService;
+    }
+
+    #[Required]
+    public function setIdpUserRepository(IdentityProviderUserRepository $idpUserRepository): void
+    {
+        $this->idpUserRepository = $idpUserRepository;
     }
 }

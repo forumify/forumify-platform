@@ -92,7 +92,7 @@ abstract class AbstractOAuthIdp extends AbstractIdp
             throw new IdentityProviderException('Unable to fetch access token.', previous: $ex);
         }
 
-        return $this->tokenToUser($token);
+        return $this->tokenToUser($idp, $token);
     }
 
     private function getRedirectUri(IdentityProvider $idp): string
@@ -106,7 +106,7 @@ abstract class AbstractOAuthIdp extends AbstractIdp
 
     abstract protected function getTokenUri(): string;
 
-    abstract protected function tokenToUser(array $token): ?UserInterface;
+    abstract protected function tokenToUser(IdentityProvider $idp, array $token): ?UserInterface;
 
     protected function getScopes(): array
     {
