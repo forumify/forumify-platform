@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class CalendarController extends AbstractController
 {
-    #[Route('{slug?}', name: 'all')]
+    #[Route('{slug:calendar?}', name: 'all')]
     public function __invoke(?Calendar $calendar): Response
     {
         if ($calendar !== null) {

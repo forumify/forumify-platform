@@ -1,0 +1,63 @@
+{% set cursor = this.startDay() %}
+<div class="flex justify-between">
+    <div class="border-r pl-2 pr-2 text-right text-small text-light" style="padding-top: 12px">
+        {% for hour in 0..23 %}
+            <div style="height: {{ this.HOUR_HEIGHT }}px">
+                {% if hour > 0 %}
+                    {{ this.toTime(hour) }}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    {% for day in 1..7 %}
+        {% set isToday = cursor|date('Y-m-d') == this.now|date('Y-m-d') %}
+        {% set events = this.eventsWeekView(cursor) %}
+        <div class="flex flex-col w-100" style="{% if isToday %}background-color: var(--c-elevation-2);{% endif %}">
+            <div
+                class="w-100 flex justify-center items-center border-b{% if not loop.last %} border-r{% endif %} text-small text-light"
+                style="height: {{ this.HOUR_HEIGHT / 2 }}px;"
+            >
+                {{ cursor|date('D d')|upper }}
+            </div>
+            <div class="relative{% if not loop.last %} border-r{% endif %}" style="overflow-y: hidden">
+                {% for hour in 0..23 %}
+                    <div class="{% if not loop.last %}border-b{% endif %}" style="height: 40px">
+                        <div style="height: {{ this.HOUR_HEIGHT / 2 }}px; border-bottom: dashed 1px var(--border-color);">
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for event in events %}
+                    <div {{ stimulus_controller('forumify/modal') }}>
+                        <div
+                            class="absolute rounded border text-small flex flex-col pt-1 pb-1 pl-2 pr-2"
+                            style="
+                                top: {{ event.top }}px;
+                                height: {{ event.height }}px;
+                                width: 100%;
+                                cursor: pointer;
+                                background-color: {{ event.event.calendar.color }};
+                                color: {{ event.event.calendar.color|fg_color }};
+                                overflow: hidden;
+                            "
+                        >
+                            <span class="text-bold">{{ event.event.title }}</span>
+                            <span class="text-light">
+                                {{ event.event.start|date('H:i') }}
+                                {% if event.event.end %}
+                                    -
+                                    {{ event.event.end|date('H:i') }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="modal" {{ stimulus_target('forumify/modal', 'modal') }}>
+                            <div class="modal-body" {{ stimulus_target('forumify/modal', 'modalBody') }}>
+                                {% include '@Forumify/frontend/components/calendar/event.html.twig' with { event: event.event } %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% set cursor = cursor|date_modify('next day') %}
+    {% endfor %}
+</div>

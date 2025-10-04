@@ -1,0 +1,46 @@
+{% set cursor = this.startDay() %}
+<div class="flex justify-between">
+    {% for day in 1..7 %}
+        <div class="w-100 flex justify-center p-1 border-b {% if not loop.last %}border-r{% endif %} text-small text-light">
+            {{ cursor|date('D')|upper }}
+            {% set cursor = cursor|date_modify('next day') %}
+        </div>
+    {% endfor %}
+</div>
+{% set cursor = this.startDay() %}
+{% for x in 0..5 %}
+    <div class="flex justify-between">
+        {% for y in 0..6 %}
+            {% set isCurrentMonth = cursor|date('n') == this.view|date('n') %}
+            {% set isToday = cursor|date('Y-m-d') == this.now|date('Y-m-d') %}
+            <div class="
+                calendar-day
+                {% if not loop.parent.loop.last %}border-b{% endif %}
+                {% if not loop.last %}border-r{% endif %}
+                {% if not isCurrentMonth %}off-month{% endif %}
+            ">
+                <span class="text-small mb-1{% if isToday %} today{% endif %}">
+                    {{ cursor|date('j') }}
+                </span>
+                <div class="w-100 flex flex-col p-1">
+                    {% for event in this.events(cursor) %}
+                        {% embed '@Forumify/components/modal.html.twig' %}
+                            {% block modalOpenButton %}
+                                <a class="text-small">
+                                    <i class="dot mr-1" style="background-color: {{ event.calendar.color }}"></i>
+                                    <span class="text-bold">{{ event.start|date('H:i', event.start.timezone) }}</span>
+                                    <span class="text-light">{{ event.title }}</span>
+                                </a>
+                            {% endblock %}
+                            {% block modalCloseButton %}{% endblock %}
+                            {% block modalContent %}
+                                {% include '@Forumify/frontend/components/calendar/event.html.twig' %}
+                            {% endblock %}
+                        {% endembed %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% set cursor = cursor|date_modify('next day') %}
+        {% endfor %}
+    </div>
+{% endfor %}

@@ -23,6 +23,7 @@ class CoreExtension extends AbstractExtension
         return [
             new TwigFilter('short_number', $this->shortNumber(...)),
             new TwigFilter('format_date', [CoreRuntime::class, 'formatDate']),
+            new TwigFilter('fg_color', $this->foregroundColor(...)),
         ];
     }
 
@@ -62,5 +63,20 @@ class CoreExtension extends AbstractExtension
             return false;
         }
         return $object instanceof $classname;
+    }
+
+    public function foregroundColor(string $hex): string
+    {
+        $hex = substr($hex, 1);
+
+        $r = hexdec(substr($hex, 0, 2)) / 255;
+        $g = hexdec(substr($hex, 2, 2)) / 255;
+        $b = hexdec(substr($hex, 4, 2)) / 255;
+
+        $max = max($r, $g, $b);
+        $min = min($r, $g, $b);
+        $l = ($max + $min) / 2;
+
+        return $l < 0.4 ? 'white' : 'black';
     }
 }
