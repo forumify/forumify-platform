@@ -11,10 +11,13 @@
             {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
         {%- endif -%}
         <{{ element|default('label') }}{% if label_attr %}{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}{% endif %}>
-        {{- block('form_label_content') -}}
-        {% if not required -%}
-            <span class="text-small text-small text-italic text-secondary"><i class="ph ph-dot"></i>{{ 'optional'|trans }}</span>
-        {%- endif -%}
+            {{- block('form_label_content') -}}
+            {% if not required -%}
+                <span class="text-small text-small text-italic text-secondary"><i class="ph ph-dot"></i>{{ 'optional'|trans }}</span>
+            {%- endif -%}
+            {%- if errors|length > 0 -%}
+                <i class="ph ph-warning ml-1"></i>
+            {%- endif -%}
         </{{ element|default('label') }}>
     {%- endif -%}
 {% endblock %}
@@ -26,19 +29,17 @@
     {%- endif -%}
     <div{% with {attr: row_attr|merge({ class: (row_attr.class|default('') ~ ' form-row') })} %}{{ block('attributes') }}{% endwith %}>
         {{- form_label(form) -}}
-        {{- form_errors(form) -}}
         {{- form_widget(form, widget_attr) -}}
+        {{- form_errors(form) -}}
         {{- form_help(form) -}}
     </div>
 {% endblock %}
 
 {%- block form_errors -%}
     {%- if errors|length > 0 -%}
-        <ul class="form-errors">
-            {%- for error in errors -%}
-                <li>{{ error.message }}</li>
-            {%- endfor -%}
-        </ul>
+        {%- for error in errors -%}
+            <p>{{ error.message }}</p>
+        {%- endfor -%}
     {%- endif -%}
 {%- endblock form_errors -%}
 

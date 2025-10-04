@@ -4,17 +4,37 @@
         <i class="ph ph-arrow-left"></i>
     </button>
 </div>
-<div class="card mb-4">
+<div class="card mb-4" {{ stimulus_target('forumify/messenger', 'thread') }}>
     <div class="card-title flex flex-col text-bold gap-2 p-2">
         <div class="flex items-center gap-2">
             <div class="thread-icon">
                 <i class="ph ph-chats"></i>
             </div>
+            {% set threadTitle = thread.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : thread.title %}
             <span class="thread-title">
-                {{ thread.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : thread.title }}
+                {{ threadTitle }}
             </span>
-            <button class="btn-link btn-icon btn-small">
+            <span class="thread-title-edit d-none">
+                <input
+                    type="text"
+                    value="{{ threadTitle }}"
+                    {{ stimulus_target('forumify/messenger', 'titleInput') }}
+                    {{ stimulus_action('forumify/messenger', 'toggleTitleEdit', 'keydown.esc') }}
+                >
+            </span>
+            <button
+                class="btn-link btn-icon btn-small"
+                {{ stimulus_target('forumify/messenger', 'titleEditBtn') }}
+                {{ stimulus_action('forumify/messenger', 'toggleTitleEdit') }}
+            >
                 <i class="ph ph-pencil-simple-line"></i>
+            </button>
+            <button
+                class="btn-link btn-icon btn-small d-none"
+                {{ stimulus_target('forumify/messenger', 'titleEditConfirmBtn') }}
+                {{ stimulus_action('forumify/messenger', 'confirmTitleEdit', null, { thread: thread.id }) }}
+            >
+                <i class="ph ph-check"></i>
             </button>
         </div>
         <ul class="flex flex-wrap items-center">
