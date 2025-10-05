@@ -1,3 +1,9 @@
+@use 'vendor';
+@use 'grid';
+@use 'typography';
+@use 'elements';
+@use 'utility';
+
 :root {
     --c-primary: #2d3142;
     --c-primary-accent: #4a5496;
@@ -48,14 +54,3 @@
         --spacing-#{$i}: #{$i * 0.25rem};
     }
 }
-
-* {
-    box-sizing: border-box;
-}
-
-@import 'vendor';
-@import 'breakpoints';
-@import 'grid';
-@import 'typography';
-@import 'elements';
-@import 'utility';

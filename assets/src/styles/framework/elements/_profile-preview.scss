@@ -1,13 +1,14 @@
+@use '../breakpoints';
+
 .profile-preview {
+    display: none !important;
     width: auto;
     max-width: 100%;
     background-color: var(--c-elevation-2);
     margin: var(--spacing-2);
     z-index: 999;
-}
 
-@media screen and (max-width: $breakpoint-md) {
-    .profile-preview {
-        display: none !important;
+    @include breakpoints.min-width-md {
+        display: block;
     }
 }

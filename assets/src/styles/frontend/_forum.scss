@@ -1,3 +1,5 @@
+@use '../framework/breakpoints';
+
 .forum-list {
     display: flex;
     flex-direction: column;
@@ -10,14 +12,14 @@
     gap: var(--spacing-2);
     display: none;
 
-    @include min-width-md {
+    @include breakpoints.min-width-md {
         display: flex;
     }
 }
 
 .forum-subforums {
     display: none;
-    @include min-width-sm {
+    @include breakpoints.min-width-sm {
         display: block;
     }
 }
@@ -82,7 +84,7 @@
     flex-direction: column;
     gap: var(--spacing-4);
 
-    @include min-width-md {
+    @include breakpoints.min-width-md {
         flex-direction: row;
         justify-content: space-between;
     }
@@ -99,7 +101,7 @@
     flex-direction: column;
     padding: 0;
 
-    @include min-width-md {
+    @include breakpoints.min-width-md {
         min-height: 120px;
         flex-direction: row;
     }
@@ -112,7 +114,7 @@
         padding: var(--spacing-4);
         padding-bottom: 0;
 
-        @include min-width-md {
+        @include breakpoints.min-width-md {
             width: calc(1 / 6) * 100%;
             border-right: var(--border);
             flex-direction: column;
@@ -126,7 +128,7 @@
             width: 32px;
             height: 32px;
 
-            @include min-width-md {
+            @include breakpoints.min-width-md {
                 width: 48px;
                 height: 48px;
                 margin-bottom: var(--spacing-2);
@@ -141,7 +143,7 @@
         position: relative;
         width: 100%;
 
-        @include min-width-md {
+        @include breakpoints.min-width-md {
             width: calc(5 / 6) * 100%;
             margin-top: var(--spacing-4);
         }
@@ -176,13 +178,13 @@
     max-height: 800px;
     overflow-y: scroll;
 
-    @include min-width-lg {
+    @include breakpoints.min-width-lg {
         width: 350px;
     }
 
     &.thread-selected {
         display: none;
-        @include min-width-lg {
+        @include breakpoints.min-width-lg {
             display: block;
         }
     }
@@ -224,7 +226,7 @@
     display: none;
     flex-grow: 1;
 
-    @include min-width-lg {
+    @include breakpoints.min-width-lg {
         display: block;
     }
 

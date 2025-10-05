@@ -1,5 +1,8 @@
+@use '../framework/elements';
+@use '../framework/mixins';
+
 .header {
-    @include box-shadow;
+    @include mixins.box-shadow;
     background-color: var(--c-elevation-1);
     border-bottom: 1px solid var(--c-border);
     margin-bottom: var(--spacing-6);

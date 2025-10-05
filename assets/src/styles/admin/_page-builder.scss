@@ -1,3 +1,5 @@
+@use '../framework/mixins';
+
 .page-editor {
     height: 100vh;
     display: flex;
@@ -17,7 +19,7 @@
             transition: 100ms ease-in-out;
 
             &:hover {
-                @include box-shadow;
+                @include mixins.box-shadow;
                 border-color: var(--c-primary-accent);
             }
         }
@@ -101,7 +103,7 @@
     cursor: grab;
 
     &:hover {
-        @include box-shadow;
+        @include mixins.box-shadow;
         border-color: var(--c-primary-accent);
         transition: 100ms ease-in-out;
     }

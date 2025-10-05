@@ -1,8 +1,7 @@
-@import '../framework';
+@use '../framework';
 
-@import 'layout';
-@import 'settings';
-
-@import 'page-builder';
-@import 'template-editor';
-@import 'widgets';
+@use 'layout';
+@use 'settings';
+@use 'page-builder';
+@use 'template-editor';
+@use 'widgets';

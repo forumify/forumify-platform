@@ -1,3 +1,6 @@
+@use '../mixins';
+@use '../typography';
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -51,7 +54,7 @@ tfoot {
 }
 
 .table-wrapper {
-    @include box-shadow;
+    @include mixins.box-shadow;
     position: relative;
 }
 

@@ -1,8 +1,10 @@
+@use '../framework/mixins';
+
 .template-editor {
     display: flex;
 
     .toolbar {
-        @include box-shadow;
+        @include mixins.box-shadow;
         position: absolute;
         top: var(--spacing-2);
         right: var(--spacing-2);

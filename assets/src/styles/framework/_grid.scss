@@ -1,5 +1,6 @@
 @use 'sass:math';
 @use 'sass:list';
+@use 'breakpoints';
 
 $columns: 12;
 
@@ -25,7 +26,7 @@ $columns: 12;
     }
 }
 
-@each $bp, $size in $breakpoints {
+@each $bp, $size in breakpoints.$breakpoints {
     @media (min-width: $size) {
         @for $i from 1 through $columns {
             .grid-#{$bp}-#{$i} {
@@ -47,7 +48,7 @@ $columns: 12;
     }
 }
 
-@each $bp, $size in $breakpoints {
+@each $bp, $size in breakpoints.$breakpoints {
     @media (min-width: $size) {
         @for $i from 1 through $columns {
             .col-#{$bp}-#{$i} {

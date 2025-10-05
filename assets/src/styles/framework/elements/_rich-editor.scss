@@ -1,3 +1,6 @@
+@use '../mixins';
+@use 'buttons';
+
 .rich-editor {
     .ql-container.ql-snow {
         border: 2px solid var(--border-color);
@@ -79,7 +82,7 @@
     }
 
     .ql-mention-list {
-        @include box-shadow;
+        @include mixins.box-shadow;
         min-width: 180px;
         z-index: 999;
         background-color: var(--c-elevation-2);
