@@ -1,4 +1,3 @@
-import { Application } from '@hotwired/stimulus';
 import '@phosphor-icons/web/regular';
 import '@phosphor-icons/web/fill';
 import '@symfony/ux-live-component';
@@ -16,12 +15,7 @@ import { Theme } from '../controllers/Theme';
 import { TimezoneInput } from '../controllers/TimezoneInput';
 import { Youtube } from '../controllers/Youtube';
 
-const app = Application.start();
-if (process.env.NODE_ENV === 'development') {
-  app.debug= true;
-}
-
-export default () => {
+export default (app) => {
   const register = (name, controller) => {
     app.register(`forumify--${name}`, controller);
   };
