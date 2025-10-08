@@ -11,6 +11,7 @@ use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -38,6 +39,7 @@ class UserType extends AbstractType
             ->add('username', TextType::class)
             ->add('displayName', TextType::class)
             ->add('email', TextType::class)
+            ->add('timezone', TimezoneType::class, ['autocomplete' => true])
             ->add('newAvatar', FileType::class, [
                 'mapped' => false,
                 'label' => 'Avatar',
