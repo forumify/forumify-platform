@@ -65,7 +65,10 @@ abstract class AttributeSerializer implements NormalizerInterface, DenormalizerI
                 $attrInstance = $attribute->newInstance();
                 $value = $property->getValue($data);
 
-                $result[$property->getName()] = $this->normalizeProperty($value, $attrInstance);
+                $data = $this->normalizeProperty($value, $attrInstance);
+                if ($data !== null) {
+                    $result[$property->getName()] = $data;
+                }
             }
         }
 

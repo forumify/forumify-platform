@@ -6,6 +6,7 @@
         {% embed '@Forumify/components/tabs.html.twig' %}
             {% block tabs %}
                 <button class="btn-link" type="button" data-tab-id="account-settings">{{ 'account_settings.title'|trans }}</button>
+                <button class="btn-link" type="button" data-tab-id="security-settings">{{ 'account_settings.security_settings'|trans }}</button>
                 <button class="btn-link" type="button" data-tab-id="notification-settings">{{ 'account_settings.notification_settings'|trans }}</button>
             {% endblock %}
             {% block tabpanels %}
@@ -14,17 +15,35 @@
                     {{ form_row(form.newAvatar) }}
                     {{ form_row(form.signature) }}
                     {{ form_row(form.timezone) }}
+                </div>
+                <div id="security-settings">
                     {{ form_row(form.newPassword) }}
+                    {% if linkedAccounts is not empty %}
+                        <h3>{{ 'account_settings.linked_accounts'|trans }}</h3>
+                        <ul>
+                            {% for account in linkedAccounts %}
+                                <li>
+                                    <p class="text-bold">{{ account.identityProvider.name }}</p>
+                                    <p class="flex items-center gap-1">
+                                        {{ account.externalIdentifier }}
+                                        <a class="btn-link btn-small btn-icon" href="{{ path('forumify_oauth_idp_unlink', { id: account.id }) }}">
+                                            <i class="ph ph-x"></i>
+                                        </a>
+                                    </p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
                 <div id="notification-settings">
                     {% set notifications = form.notificationSettings %}
                     <div class="mt-2 mb-2">
-                        <h4 class="mb-2">{{ 'user_notification_settings_type.auto_subscribe'|trans }}</h4>
+                        <h3 class="mb-2">{{ 'user_notification_settings_type.auto_subscribe'|trans }}</h3>
                         {{ form_row(notifications.autoSubscribeToOwnTopics) }}
                         {{ form_row(notifications.autoSubscribeToTopics) }}
                     </div>
                     <div>
-                        <h4 class="mb-2">{{ 'user_notification_settings_type.email_on'|trans }}</h4>
+                        <h3 class="mb-2">{{ 'user_notification_settings_type.email_on'|trans }}</h3>
                         {{ form_row(notifications.emailOnMessage) }}
                         {{ form_row(notifications.emailOnNotification) }}
                     </div>

@@ -98,8 +98,12 @@ notification:
         description: 'Congratulations on earning the "{badge}" badge.'
         view_profile: 'View Profile'
 account_settings:
-    title: 'Account Settings'
-    notification_settings: 'Notification Settings'
+    title: 'Account'
+    security_settings: 'Security'
+    notification_settings: 'Notifications'
+    linked_accounts: 'Linked Accounts'
+    unlink_warning: 'You are about to unlink {user} from your account. You will no longer be able to log in with {provider}.'
+    account_unlinked: 'External account removed.'
 user_notification_settings_type:
     label: 'Notification settings'
     auto_subscribe: 'Automatically subscribe to notifications for:'

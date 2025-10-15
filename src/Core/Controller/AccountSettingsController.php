@@ -8,6 +8,7 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Form\AccountSettingsType;
+use Forumify\OAuth\Repository\IdentityProviderUserRepository;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,7 @@ class AccountSettingsController extends AbstractController
         private readonly MediaService $mediaService,
         private readonly FilesystemOperator $avatarStorage,
         private readonly UserPasswordHasherInterface $passwordHasher,
+        private readonly IdentityProviderUserRepository $idpUserRepository,
     ) {
     }
 
@@ -52,8 +54,11 @@ class AccountSettingsController extends AbstractController
             return $this->redirectToRoute('forumify_core_settings');
         }
 
+        $linkedAccounts = $this->idpUserRepository->findBy(['user' => $this->getUser()]);
+
         return $this->render('@Forumify/frontend/settings/settings.html.twig', [
             'form' => $form->createView(),
+            'linkedAccounts' => $linkedAccounts,
         ]);
     }
 }
