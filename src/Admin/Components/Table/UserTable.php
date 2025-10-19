@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Components\Table;
 
+use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
@@ -48,6 +49,11 @@ class UserTable extends AbstractDoctrineTable
                 'sortable' => false,
                 'renderer' => [$this, 'renderActionColumn'],
             ]);
+    }
+
+    protected function getQuery(array $search): QueryBuilder
+    {
+        return parent::getQuery($search)->andWhere('e.oAuthClient IS NULL');
     }
 
     #[LiveAction]

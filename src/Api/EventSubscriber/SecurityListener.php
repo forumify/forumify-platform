@@ -25,9 +25,8 @@ class SecurityListener
 
     public function __invoke(RequestEvent $event): void
     {
-        $request = $event->getRequest();
-        $operation = $request->attributes->get('_api_operation');
-        if ($operation === null) {
+        $isApiRequest = $event->getRequest()->attributes->has('_api_operation');
+        if (!$isApiRequest) {
             return;
         }
 

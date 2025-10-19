@@ -24,18 +24,23 @@ class IdentityProviderUser
     #[ORM\JoinColumn(onDelete: 'CASCADE', nullable: false)]
     private IdentityProvider $identityProvider;
 
-    #[ORM\Column(length: 255, index: true)]
+    #[ORM\Column(length: 255, index: true, nullable: false)]
     private string $externalIdentifier = '';
+
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $externalUsername = '';
 
     public function __construct(
         User $user,
         IdentityProvider $idp,
         string $externalIdentifier,
+        string $externalUsername,
     ) {
         assert(!empty($externalIdentifier));
         $this->user = $user;
         $this->identityProvider = $idp;
         $this->externalIdentifier = $externalIdentifier;
+        $this->externalUsername = $externalUsername;
     }
 
     public function getUser(): User
@@ -66,5 +71,15 @@ class IdentityProviderUser
     public function setExternalIdentifier(string $externalIdentifier): void
     {
         $this->externalIdentifier = $externalIdentifier;
+    }
+
+    public function getExternalUsername(): string
+    {
+        return $this->externalUsername;
+    }
+
+    public function setExternalUsername(string $externalUsername): void
+    {
+        $this->externalUsername = $externalUsername;
     }
 }

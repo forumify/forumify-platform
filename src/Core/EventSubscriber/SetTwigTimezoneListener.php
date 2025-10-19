@@ -23,7 +23,7 @@ class SetTwigTimezoneListener
     public function __invoke(): void
     {
         $user = $this->security->getUser();
-        if (!($user instanceof User)) {
+        if (!$user instanceof User) {
             return;
         }
 

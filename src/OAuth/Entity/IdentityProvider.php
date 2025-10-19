@@ -9,11 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\OAuth\Repository\IdentityProviderRepository;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: IdentityProviderRepository::class)]
-#[UniqueEntity('type')]
 class IdentityProvider
 {
     use IdentifiableEntityTrait;

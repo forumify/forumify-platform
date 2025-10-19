@@ -11,10 +11,12 @@ use Forumify\Core\Service\CreateUserService;
 use Forumify\OAuth\Entity\IdentityProvider;
 use Forumify\OAuth\Entity\IdentityProviderUser;
 use Forumify\OAuth\Repository\IdentityProviderUserRepository;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\Service\Attribute\Required;
 
 abstract class AbstractIdp implements IdentityProviderInterface
 {
+    private Security $security;
     private UserRepository $userRepository;
     private CreateUserService $createUserService;
     private IdentityProviderUserRepository $idpUserRepository;
@@ -35,7 +37,7 @@ abstract class AbstractIdp implements IdentityProviderInterface
         }
 
         $user = $this->getUserForIdp($email, $username);
-        $idpUser = new IdentityProviderUser($user, $idp, $externalIdentifier);
+        $idpUser = new IdentityProviderUser($user, $idp, $externalIdentifier, $username);
         $this->idpUserRepository->save($idpUser);
 
         return $user;
@@ -43,6 +45,11 @@ abstract class AbstractIdp implements IdentityProviderInterface
 
     private function getUserForIdp(string $email, string $username): User
     {
+        $user = $this->security->getUser();
+        if ($user instanceof User) {
+            return $user;
+        }
+
         $user = $this->userRepository->findOneBy(['email' => $email]);
         if ($user !== null) {
             return $user;
@@ -70,6 +77,12 @@ abstract class AbstractIdp implements IdentityProviderInterface
         } while ($foundUser !== null);
 
         return $username;
+    }
+
+    #[Required]
+    public function setSecurity(Security $security): void
+    {
+        $this->security = $security;
     }
 
     #[Required]
