@@ -18,18 +18,28 @@
                 </div>
                 <div id="security-settings">
                     {{ form_row(form.newPassword) }}
-                    {% if linkedAccounts is not empty %}
+                    {% if linkedAccounts is not empty or availableIdps is not empty %}
                         <h3>{{ 'account_settings.linked_accounts'|trans }}</h3>
                         <ul>
                             {% for account in linkedAccounts %}
                                 <li>
                                     <p class="text-bold">{{ account.identityProvider.name }}</p>
                                     <p class="flex items-center gap-1">
-                                        {{ account.externalIdentifier }}
+                                        {% if account.identityProvider.type == 'google' %}
+                                            {{ account.externalIdentifier }}
+                                        {% else %}
+                                            {{ account.externalUsername }}
+                                        {% endif %}
                                         <a class="btn-link btn-small btn-icon" href="{{ path('forumify_oauth_idp_unlink', { id: account.id }) }}">
                                             <i class="ph ph-x"></i>
                                         </a>
                                     </p>
+                                </li>
+                            {% endfor %}
+                            {% for idp in availableIdps %}
+                                <li>
+                                    <p class="text-bold">{{ idp.name }}</p>
+                                    {{ idp|idp_button }}
                                 </li>
                             {% endfor %}
                         </ul>

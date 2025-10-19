@@ -8,6 +8,9 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Form\AccountSettingsType;
+use Forumify\OAuth\Entity\IdentityProvider;
+use Forumify\OAuth\Entity\IdentityProviderUser;
+use Forumify\OAuth\Repository\IdentityProviderRepository;
 use Forumify\OAuth\Repository\IdentityProviderUserRepository;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +28,7 @@ class AccountSettingsController extends AbstractController
         private readonly FilesystemOperator $avatarStorage,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly IdentityProviderUserRepository $idpUserRepository,
+        private readonly IdentityProviderRepository $idpRepository,
     ) {
     }
 
@@ -56,9 +60,16 @@ class AccountSettingsController extends AbstractController
 
         $linkedAccounts = $this->idpUserRepository->findBy(['user' => $this->getUser()]);
 
+        $usedIdps = array_map(fn (IdentityProviderUser $uidp) => $uidp->getIdentityProvider()->getId(), $linkedAccounts);
+        $availableIdps = array_filter(
+            $this->idpRepository->findAll(),
+            fn (IdentityProvider $idp) => !in_array($idp->getId(), $usedIdps),
+        );
+
         return $this->render('@Forumify/frontend/settings/settings.html.twig', [
             'form' => $form->createView(),
             'linkedAccounts' => $linkedAccounts,
+            'availableIdps' => $availableIdps,
         ]);
     }
 }

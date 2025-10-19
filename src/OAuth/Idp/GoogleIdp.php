@@ -44,21 +44,23 @@ class GoogleIdp extends AbstractIdp
         ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         return '
-            <script src="https://accounts.google.com/gsi/client" async></script>
-            <div
-                id="g_id_onload"
-                data-client_id="' . $clientId . '"
-                data-login_uri="' . $redirectUri . '"
-                data-auto_prompt="false">
-            </div>
-            <div class="g_id_signin" style="margin-top: -8px"
-                data-type="standard"
-                data-size="large"
-                data-shape="pill"
-                data-theme="outline"
-                data-text="sign_in_with"
-                data-logo_alignment="center"
-                data-width="368">
+            <div>
+                <script src="https://accounts.google.com/gsi/client" async></script>
+                <div
+                    id="g_id_onload"
+                    data-client_id="' . $clientId . '"
+                    data-login_uri="' . $redirectUri . '"
+                    data-auto_prompt="false">
+                </div>
+                <div class="g_id_signin"
+                    data-type="standard"
+                    data-size="large"
+                    data-shape="pill"
+                    data-theme="outline"
+                    data-text="sign_in_with"
+                    data-logo_alignment="center"
+                    data-width="368">
+                </div>
             </div>
         ';
     }
