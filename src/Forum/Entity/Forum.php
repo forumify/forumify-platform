@@ -226,7 +226,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
 
     public function getACLPermissions(): array
     {
-        $permissions = ['view', 'create_topic', 'create_comment'];
+        $permissions = ['view', 'create_topic', 'create_comment', 'moderate'];
         if ($this->getDisplaySettings()->isOnlyShowOwnTopics()) {
             $permissions[] = 'show_all_topics';
         }

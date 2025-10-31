@@ -9,20 +9,20 @@ use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Service\ReadMarkerServiceInterface;
 use Forumify\Forum\Entity\MessageThread;
 
+/**
+ * @implements ReadMarkerServiceInterface<MessageThread>
+ */
 class MessageThreadReadMarkerService implements ReadMarkerServiceInterface
 {
     public function __construct(private readonly ReadMarkerRepository $readMarkerRepository)
     {
     }
 
-    public function supports(mixed $subject): bool
+    public static function getEntityClass(): string
     {
-        return $subject instanceof MessageThread;
+        return MessageThread::class;
     }
 
-    /**
-     * @param MessageThread $subject
-     */
     public function read(User $user, mixed $subject): bool
     {
         return $this->readMarkerRepository->isRead($user, MessageThread::class, $subject->getId());

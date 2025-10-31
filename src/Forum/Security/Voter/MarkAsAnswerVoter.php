@@ -6,17 +6,17 @@ namespace Forumify\Forum\Security\Voter;
 
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Service\ACLService;
 use Forumify\Forum\Entity\Comment;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
  * @extends Voter<string, Comment>
  */
-class MarkAsReadVoter extends Voter
+class MarkAsAnswerVoter extends Voter
 {
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly ACLService $aclService)
     {
     }
 
@@ -33,10 +33,7 @@ class MarkAsReadVoter extends Voter
             return false;
         }
 
-        if ($this->security->isGranted(VoterAttribute::Moderator, $subject)) {
-            return true;
-        }
-
-        return $subject->getTopic()->getCreatedBy()?->getId() === $user->getId();
+        return $this->aclService->can('moderate', $subject->getTopic()->getForum())
+            || $subject->getTopic()->getCreatedBy()?->getId() === $user->getId();
     }
 }

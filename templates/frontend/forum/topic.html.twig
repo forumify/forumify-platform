@@ -36,7 +36,7 @@
                     entityId: topic.id,
                     subscriptionType: constant('Forumify\\Forum\\Notification\\CommentCreatedNotificationType::TYPE')
                 }) }}
-                {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::Moderator').value) %}
+                {% if can('moderate', topic.forum) %}
                     <div {{ stimulus_controller('forumify/menu', { placement: 'bottom-end' }) }}>
                         <a
                             class="btn-outlined btn-icon"

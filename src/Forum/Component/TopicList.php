@@ -41,7 +41,11 @@ class TopicList extends AbstractDoctrineList
             ->groupBy('t.id')
             ->setParameter('forum', $this->forum);
 
-        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
+        $canViewHidden = $this->security->isGranted(VoterAttribute::ACL->value, [
+            'entity' => $this->forum,
+            'permission' => 'moderate',
+        ]);
+
         if (!$canViewHidden) {
             $qb->andWhere('t.hidden = 0');
         }
@@ -78,7 +82,11 @@ class TopicList extends AbstractDoctrineList
             ->where('t.forum = :forum')
             ->setParameter('forum', $this->forum);
 
-        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
+        $canViewHidden = $this->security->isGranted(VoterAttribute::ACL->value, [
+            'entity' => $this->forum,
+            'permission' => 'moderate',
+        ]);
+
         if (!$canViewHidden) {
             $qb->andWhere('t.hidden = 0');
         }

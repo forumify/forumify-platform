@@ -26,9 +26,6 @@ class Role implements SortableEntityInterface
     #[ORM\Column(type: 'boolean')]
     private bool $administrator = false;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $moderator = false;
-
     #[ORM\Column(name: '`system`', type: 'boolean')]
     private bool $system = false;
 
@@ -87,16 +84,6 @@ class Role implements SortableEntityInterface
     public function setAdministrator(bool $administrator): void
     {
         $this->administrator = $administrator;
-    }
-
-    public function isModerator(): bool
-    {
-        return $this->moderator;
-    }
-
-    public function setModerator(bool $moderator): void
-    {
-        $this->moderator = $moderator;
     }
 
     public function isSystem(): bool

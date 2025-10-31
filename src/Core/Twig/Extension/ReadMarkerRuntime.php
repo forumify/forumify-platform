@@ -13,9 +13,11 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 class ReadMarkerRuntime implements RuntimeExtensionInterface
 {
+    /**
+     * @param iterable<ReadMarkerServiceInterface> $readMarkerCheckers
+     */
     public function __construct(
-        /** @var iterable<ReadMarkerServiceInterface> */
-        #[AutowireIterator('forumify.read_marker.service')]
+        #[AutowireIterator('forumify.read_marker.service', defaultIndexMethod: 'getEntityClass')]
         private readonly iterable $readMarkerCheckers,
         private readonly Security $security,
     ) {
@@ -23,18 +25,13 @@ class ReadMarkerRuntime implements RuntimeExtensionInterface
 
     public function read(mixed $subject, ?User $user = null): bool
     {
-        if ($user === null) {
-            /** @var User|null $loggedInUser */
-            $loggedInUser = $this->security->getUser();
-            $user = $loggedInUser;
-        }
-
+        $user ??= $this->security->getUser();
         if (!$user instanceof User) {
             return true;
         }
 
-        foreach ($this->readMarkerCheckers as $checker) {
-            if ($checker->supports($subject)) {
+        foreach ($this->readMarkerCheckers as $class => $checker) {
+            if (is_a($subject, $class)) {
                 return $checker->read($user, $subject);
             }
         }
