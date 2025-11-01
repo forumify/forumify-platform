@@ -9,7 +9,6 @@ use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\ACLService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -18,10 +17,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class TopicVoter extends Voter
 {
-    public function __construct(
-        private readonly Security $security,
-        private readonly ACLService $aclService,
-    ) {
+    public function __construct(private readonly ACLService $aclService)
+    {
     }
 
     protected function supports(string $attribute, mixed $subject): bool

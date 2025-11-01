@@ -19,14 +19,19 @@ class Notification
     #[ORM\Column(length: 255)]
     private string $type;
 
+    /** @var array<mixed> */
     #[ORM\Column(type: 'json')]
     private array $context;
 
     #[ORM\Column(type: 'boolean')]
     private bool $seen = false;
 
+    /** @var array<mixed> */
     private ?array $deserializedContext = null;
 
+    /**
+     * @param array<mixed> $context
+     */
     public function __construct(string $type, User $recipient, array $context = [])
     {
         $this->type = $type;
@@ -54,21 +59,33 @@ class Notification
         $this->type = $type;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getContext(): array
     {
         return $this->context;
     }
 
+    /**
+     * @param array<mixed> $context
+     */
     public function setContext(array $context): void
     {
         $this->context = $context;
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getDeserializedContext(): ?array
     {
         return $this->deserializedContext;
     }
 
+    /**
+     * @param array<mixed> $context
+     */
     public function setDeserializedContext(array $deserializedContext): void
     {
         $this->deserializedContext = $deserializedContext;

@@ -38,6 +38,9 @@ class ReadMarkerRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @param array<string|int> $subjectIds
+     */
     public function areAllRead(User $user, string $subject, array $subjectIds): bool
     {
         try {
