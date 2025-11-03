@@ -10,7 +10,7 @@
         "ext-iconv": "*",
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/doctrine-migrations-bundle": "^3.2",
-        "doctrine/orm": "^2.15",
+        "doctrine/orm": "2.20.6",
         "firebase/php-jwt": "^6.8",
         "forumify/forumify-theme": "^0.4",
         "guzzlehttp/guzzle": "^7.0",
