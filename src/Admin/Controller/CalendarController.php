@@ -10,6 +10,9 @@ use Forumify\Calendar\Entity\Calendar;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @extends AbstractCrudController<Calendar>
+ */
 #[Route('/calendars', 'calendars')]
 class CalendarController extends AbstractCrudController
 {
@@ -28,8 +31,13 @@ class CalendarController extends AbstractCrudController
         return 'Forumify\\CalendarTable';
     }
 
+    /**
+     * @param Calendar|null $data
+     * @return FormInterface<object|null>
+     */
     protected function getForm(?object $data): FormInterface
     {
+        /** @var FormInterface<object|null> */
         return $this->createForm(CalendarType::class, $data);
     }
 }

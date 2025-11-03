@@ -15,6 +15,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class BadgeType extends AbstractType
 {
     public function __construct(private readonly Packages $packages)

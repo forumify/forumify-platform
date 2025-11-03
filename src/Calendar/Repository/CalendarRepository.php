@@ -37,7 +37,7 @@ class CalendarRepository extends AbstractRepository
         $qb = $this->getManageableCalendarsQuery();
 
         try {
-            return $qb
+            return (int) $qb
                 ->select('COUNT(c)')
                 ->getQuery()
                 ->getSingleScalarResult()

@@ -6,6 +6,12 @@ namespace Forumify\Core\Component\List;
 
 class ListResult
 {
+    /**
+     * @param array<mixed> $data
+     * @param int $page
+     * @param int $size
+     * @param int $count
+     */
     public function __construct(
         private readonly array $data = [],
         private readonly int $page = 0,
@@ -14,6 +20,9 @@ class ListResult
     ) {
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getData(): array
     {
         return $this->data;

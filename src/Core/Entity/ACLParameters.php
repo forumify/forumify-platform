@@ -8,6 +8,12 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ACLParameters
 {
+    /**
+     * @param string $entity
+     * @param string $entityId
+     * @param string $returnPath
+     * @param array<mixed> $returnParameters
+     */
     public function __construct(
         public readonly string $entity,
         public readonly string $entityId,

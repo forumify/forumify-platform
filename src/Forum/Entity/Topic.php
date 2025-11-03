@@ -123,7 +123,9 @@ class Topic implements SubscribableInterface
             $first->setTopic($this);
             $this->getImages()->add($first);
         }
-        $first->setImage($image);
+        if (!empty($image)) {
+            $first->setImage($image);
+        }
     }
 
     public function getParent(): Forum

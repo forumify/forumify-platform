@@ -25,6 +25,10 @@ class ThemeCrudSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param PostSaveCrudEvent<Theme> $event
+     * @return void
+     */
     public function postThemeSave(PostSaveCrudEvent $event): void
     {
         /** @var Theme $theme */

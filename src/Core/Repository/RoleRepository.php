@@ -20,12 +20,12 @@ class RoleRepository extends AbstractRepository
     public function getHighestPosition(object $entity): int
     {
         try {
-            return $this
+            return (int) $this
                 ->createQueryBuilder('e')
                 ->select('MAX(e.position)')
                 ->where('e.system = 0')
                 ->getQuery()
-                ->getSingleScalarResult() ?? 0
+                ->getSingleScalarResult()
             ;
         } catch (Exception) {
             return 0;

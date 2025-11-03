@@ -10,6 +10,9 @@ use Forumify\Forum\Entity\Reaction;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @extends AbstractCrudController<Reaction>
+ */
 #[Route('/reactions', 'reactions')]
 class ReactionController extends AbstractCrudController
 {
@@ -28,8 +31,13 @@ class ReactionController extends AbstractCrudController
         return 'ReactionTable';
     }
 
+    /**
+     * @param Reaction|null $data
+     * @return FormInterface<object|null>
+     */
     protected function getForm(?object $data): FormInterface
     {
+        /** @var FormInterface<object|null> */
         return $this->createForm(ReactionType::class, $data, [
             'image_required' => $data === null,
         ]);

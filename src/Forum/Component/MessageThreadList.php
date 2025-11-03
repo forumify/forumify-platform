@@ -95,7 +95,7 @@ class MessageThreadList extends AbstractDoctrineList
     protected function getCount(): int
     {
         try {
-            return $this->messageThreadRepository
+            return (int) $this->messageThreadRepository
                 ->createQueryBuilder('mt')
                 ->select('COUNT(mt.id)')
                 ->join('mt.participants', 'p')

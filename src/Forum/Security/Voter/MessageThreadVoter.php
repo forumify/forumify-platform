@@ -31,6 +31,10 @@ class MessageThreadVoter extends Voter
             return false;
         }
 
+        if (!$subject instanceof MessageThread) {
+            return false;
+        }
+
         return match ($attribute) {
             VoterAttribute::MessageThreadCreate->value => $user->isEmailVerified() && !$user->isBanned(),
             VoterAttribute::MessageThreadView->value => $this->voteOnView($subject, $user),

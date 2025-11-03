@@ -24,6 +24,11 @@ class AutomationScheduler
     ) {
     }
 
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return void
+     */
     public function schedule(Automation $automation, ?array $payload): void
     {
         if (!$this->shouldSchedule($automation, $payload)) {
@@ -38,6 +43,11 @@ class AutomationScheduler
         $this->messageBus->dispatch($message, [new DelayStamp(2000)]);
     }
 
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return bool
+     */
     private function shouldSchedule(Automation $automation, ?array $payload): bool
     {
         /** @var array<string, ConditionInterface> $conditions */

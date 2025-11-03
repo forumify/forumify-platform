@@ -8,8 +8,14 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 class NotificationTypeCollection
 {
+    /**
+     * @var array<string, NotificationTypeInterface>
+     */
     private array $notificationTypes;
 
+    /**
+     * @param iterable<NotificationTypeInterface> $notifications
+     */
     public function __construct(
         #[AutowireIterator('forumify.notification.type')]
         iterable $notifications,

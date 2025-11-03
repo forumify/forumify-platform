@@ -32,6 +32,7 @@ class Role implements SortableEntityInterface
     #[ORM\Column(name: '`system`', type: 'boolean')]
     private bool $system = false;
 
+    /** @var array<int, string> */
     #[ORM\Column(type: 'simple_array', nullable: true)]
     private ?array $permissions = [];
 
@@ -44,9 +45,7 @@ class Role implements SortableEntityInterface
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $showOnUsername = false;
 
-    /**
-     * @var Collection<User>
-     */
+    /** @var Collection<int, User> */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
     private Collection $users;
 
@@ -105,23 +104,28 @@ class Role implements SortableEntityInterface
     }
 
     /**
-     * @return Collection<User>
+     * @return Collection<int, User>
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
+    /**
+     * @param Collection<int, User> $users
+     */
     public function setUsers(Collection $users): void
     {
         $this->users = $users;
     }
 
+    /** @return array<string|mixed> */
     public function getPermissions(): array
     {
         return $this->permissions ?? [];
     }
 
+    /** @param array<string|mixed> $permissions */
     public function setPermissions(array $permissions): void
     {
         $this->permissions = $permissions;

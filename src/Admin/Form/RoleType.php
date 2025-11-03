@@ -18,6 +18,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class RoleType extends AbstractType
 {
     public function __construct(private readonly PluginRepository $pluginRepository)
@@ -66,6 +69,9 @@ class RoleType extends AbstractType
         ;
     }
 
+    /**
+     * @return array<string, array<string, array<mixed>|string>>
+     */
     private function getAvailablePermissions(): array
     {
         $slugger = new AsciiSlugger();

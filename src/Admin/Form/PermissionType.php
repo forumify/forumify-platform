@@ -8,9 +8,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class PermissionType extends AbstractType implements DataMapperInterface
 {
     public function configureOptions(OptionsResolver $resolver): void
@@ -42,6 +46,9 @@ class PermissionType extends AbstractType implements DataMapperInterface
 
     /**
      * @inheritDoc
+     * @param list<string>|null $viewData
+     * @param Traversable<FormInterface<mixed>> $forms
+     * @return void
      */
     public function mapDataToForms(mixed $viewData, Traversable $forms): void
     {
@@ -54,10 +61,14 @@ class PermissionType extends AbstractType implements DataMapperInterface
             $split = explode('.', $value, 2);
 
             if (count($split) > 1) {
-                $data[$split[0]][] = $split[1];
-                continue;
+                $key = $split[0];
+                if (!isset($data[$key]) || !is_array($data[$key])) {
+                    $data[$key] = [];
+                }
+                $data[$key][] = $split[1];
+            } else {
+                $data[$split[0]] = true;
             }
-            $data[$split[0]] = true;
         }
 
         foreach ($forms as $form) {
@@ -68,6 +79,9 @@ class PermissionType extends AbstractType implements DataMapperInterface
 
     /**
      * @inheritDoc
+     * @param Traversable<FormInterface<mixed>> $forms
+     * @param-out list<string> $viewData
+     * @return void
      */
     public function mapFormsToData(Traversable $forms, &$viewData): void
     {

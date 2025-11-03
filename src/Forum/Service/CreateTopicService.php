@@ -39,7 +39,10 @@ class CreateTopicService
         $this->topicRepository->save($topic);
 
         $newComment = new NewComment();
-        $newComment->setContent($newTopic->getContent());
+        if ($newTopic->getContent() !== null) {
+            $newComment->setContent($newTopic->getContent());
+        }
+
         $newComment->setAuthor($newTopic->getAuthor());
         $comment = $this->commentService->createComment($topic, $newComment);
         $topic->setFirstComment($comment);
