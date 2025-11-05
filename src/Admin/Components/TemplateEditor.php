@@ -245,7 +245,6 @@ class TemplateEditor
 
         /** @var string $fileToCheck */
         $path = explode(DIRECTORY_SEPARATOR, $fileToCheck);
-
         $currentNamespace = array_shift($path);
         $path = Path::join(...$path);
         $fileKey = pathinfo($path, PATHINFO_FILENAME);

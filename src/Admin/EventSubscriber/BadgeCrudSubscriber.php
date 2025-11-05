@@ -28,22 +28,6 @@ class BadgeCrudSubscriber implements EventSubscriberInterface
      * @param PreSaveCrudEvent<Badge> $event
      * @return void
      */
-    public function preSaveReaction(PreSaveCrudEvent $event): void
-    {
-        $reaction = $event->getEntity();
-        $form = $event->getForm();
-
-        $newImage = $form->get('newImage')->getData();
-        if ($newImage instanceof UploadedFile) {
-            $image = $this->mediaService->saveToFilesystem($this->assetStorage, $newImage);
-            $reaction->setImage($image);
-        }
-    }
-
-    /**
-     * @param PreSaveCrudEvent<Badge> $event
-     * @return void
-     */
     public function preSaveBadge(PreSaveCrudEvent $event): void
     {
         $badge = $event->getEntity();
