@@ -8,6 +8,7 @@ use DateInterval;
 use DateTime;
 use DateTimeZone;
 use Forumify\Calendar\Entity\Calendar;
+use Forumify\Calendar\Entity\CalendarEvent;
 use Forumify\Calendar\Repository\CalendarRepository;
 use Forumify\Calendar\Service\CalendarService;
 use Forumify\Core\Entity\User;
@@ -57,6 +58,10 @@ class CalendarComponent
         return $firstDay;
     }
 
+    /**
+     * @param DateTime $date
+     * @return array<string,CalendarEvent>
+     */
     public function getEvents(DateTime $date): array
     {
         $events = $this->calendarService->getAllEvents($this->view, $this->selectedCalendar);

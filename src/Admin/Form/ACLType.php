@@ -15,7 +15,11 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Traversable;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class ACLType extends AbstractType implements DataMapperInterface
 {
     private AccessControlledEntityInterface $entity;
@@ -52,10 +56,12 @@ class ACLType extends AbstractType implements DataMapperInterface
 
     /**
      * @param array<ACL> $viewData
+     * @param Traversable<string, FormInterface<mixed>> $forms
+     * @return void
      */
-    public function mapDataToForms(mixed $viewData, \Traversable $forms): void
+    public function mapDataToForms(mixed $viewData, Traversable $forms): void
     {
-        /** @var FormInterface[] $fields */
+        /** @var array<string, FormInterface<mixed>> $fields */
         $fields = iterator_to_array($forms);
 
         foreach ($viewData as $acl) {
@@ -71,11 +77,13 @@ class ACLType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param array<ACL> $viewData
+     * @param Traversable<string, FormInterface<mixed>> $forms
+     * @param-out array<ACL> $viewData
+     * @return void
      */
-    public function mapFormsToData(\Traversable $forms, mixed &$viewData): void
+    public function mapFormsToData(Traversable $forms, mixed &$viewData): void
     {
-        /** @var FormInterface[] $fields */
+        /** @var array<string, FormInterface<mixed>> $fields */
         $fields = iterator_to_array($forms);
 
         $viewData = [];

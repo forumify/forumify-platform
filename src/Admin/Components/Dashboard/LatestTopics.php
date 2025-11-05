@@ -31,7 +31,7 @@ class LatestTopics extends AbstractDoctrineList
 
     protected function getCount(): int
     {
-        return $this->getQuery()
+        return (int) $this->getQuery()
             ->select('COUNT(t.id)')
             ->getQuery()
             ->getSingleScalarResult()

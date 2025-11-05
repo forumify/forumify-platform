@@ -16,6 +16,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use function Symfony\Component\String\u;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class MenuItemType extends AbstractType
 {
     /**
@@ -23,6 +26,9 @@ class MenuItemType extends AbstractType
      */
     private array $menuTypes = [];
 
+    /**
+     * @param iterable<MenuTypeInterface> $menuTypes
+     */
     public function __construct(
         #[AutowireIterator('forumify.menu_builder.type')]
         iterable $menuTypes,

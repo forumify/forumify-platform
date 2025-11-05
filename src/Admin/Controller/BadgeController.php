@@ -10,6 +10,9 @@ use Forumify\Forum\Entity\Badge;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @extends AbstractCrudController<Badge>
+ */
 #[Route('/badges', 'badges')]
 class BadgeController extends AbstractCrudController
 {
@@ -28,8 +31,13 @@ class BadgeController extends AbstractCrudController
         return 'BadgeTable';
     }
 
+    /**
+     * @param Badge|null $data
+     * @return FormInterface<object|null>
+     */
     protected function getForm(?object $data): FormInterface
     {
+        /** @var FormInterface<object|null> */
         return $this->createForm(BadgeType::class, $data, [
             'image_required' => $data === null,
         ]);

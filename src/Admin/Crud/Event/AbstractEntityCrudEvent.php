@@ -13,6 +13,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 abstract class AbstractEntityCrudEvent extends Event
 {
     /**
+     * @param FormInterface<TEntity> $form
      * @param TEntity $entity
      */
     public function __construct(
@@ -27,6 +28,9 @@ abstract class AbstractEntityCrudEvent extends Event
         return $this->new;
     }
 
+    /**
+     * @return FormInterface<TEntity>
+     */
     public function getForm(): FormInterface
     {
         return $this->form;

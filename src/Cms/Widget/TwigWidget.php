@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormInterface;
 
 class TwigWidget extends AbstractWidget
 {
+
     public function getName(): string
     {
         return 'content.twig';
@@ -33,6 +34,10 @@ class TwigWidget extends AbstractWidget
         return '@Forumify/frontend/cms/widgets/twig.html.twig';
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return FormInterface<array<string, mixed>|null>
+     */
     public function getSettingsForm(array $data = []): ?FormInterface
     {
         return $this->createForm($data)

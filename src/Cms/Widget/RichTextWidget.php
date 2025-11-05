@@ -31,6 +31,10 @@ class RichTextWidget extends AbstractWidget
         return '@Forumify/frontend/cms/widgets/rich_text.html.twig';
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return FormInterface<array<string, mixed>|null>
+     */
     public function getSettingsForm(array $data = []): ?FormInterface
     {
         return $this->createForm($data)

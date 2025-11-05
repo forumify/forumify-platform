@@ -24,6 +24,10 @@ class CoreRuntime implements RuntimeExtensionInterface
     {
         $date ??= new DateTime();
 
+        if ($date instanceof DateTimeImmutable) {
+            $date = DateTime::createFromImmutable($date);
+        }
+
         if ($alwaysAbsolute) {
             return $this->getAbsolute($date);
         }

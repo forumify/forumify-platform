@@ -27,6 +27,7 @@ class ACLController extends AbstractController
         $aclParameters = ACLParameters::fromRequest($request);
 
         $entityClass = $aclParameters->entity;
+        /** @var class-string<object> $entityClass */
         $entityId = $aclParameters->entityId;
         $entity = $entityManager->getRepository($entityClass)->find($entityId);
 

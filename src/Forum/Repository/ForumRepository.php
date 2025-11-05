@@ -54,7 +54,7 @@ class ForumRepository extends AbstractRepository
         }
 
         try {
-            return $qb->getQuery()->getSingleScalarResult() ?? 0;
+            return (int)$qb->getQuery()->getSingleScalarResult();
         } catch (Exception) {
             return 0;
         }

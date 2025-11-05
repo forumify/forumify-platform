@@ -9,9 +9,16 @@ use Forumify\Core\Form\CodeEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class MessageActionType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @param FormBuilderInterface<array<string, mixed>|null> $builder
+     * @param array<string, mixed> $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('recipients', CodeEditorType::class, [

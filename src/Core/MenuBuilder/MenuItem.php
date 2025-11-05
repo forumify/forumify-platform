@@ -6,6 +6,11 @@ namespace Forumify\Core\MenuBuilder;
 
 class MenuItem
 {
+    /**
+     * @param string $label
+     * @param string $location
+     * @param array<string, mixed> $options
+     */
     public function __construct(
         public readonly string $label,
         public readonly string $location,

@@ -7,6 +7,7 @@ namespace Forumify\Cms\Controller\Admin;
 use Forumify\Core\MenuBuilder\Menu;
 use Forumify\Core\MenuBuilder\MenuItem;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -16,7 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CmsController extends AbstractController
 {
     #[Route('', 'menu')]
-    public function __invoke(TranslatorInterface $t, UrlGeneratorInterface $u)
+    public function __invoke(TranslatorInterface $t, UrlGeneratorInterface $u): Response
     {
         $menu = new Menu($t->trans('admin.cms.title'), items: [
             new MenuItem($t->trans('admin.cms.pages.title'), $u->generate('forumify_admin_cms_page_list'), [

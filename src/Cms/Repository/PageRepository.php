@@ -7,8 +7,12 @@ namespace Forumify\Cms\Repository;
 use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Cms\Entity\Page;
 
+/**
+ * @extends AbstractRepository<Page>
+ */
 class PageRepository extends AbstractRepository
 {
+    /** @var array<string, Page|null> */
     private array $pageMemo = [];
 
     public static function getEntityClass(): string

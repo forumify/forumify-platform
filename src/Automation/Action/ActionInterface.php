@@ -10,5 +10,10 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('forumify.automation.action')]
 interface ActionInterface extends AutomationComponentInterface
 {
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return void
+     */
     public function run(Automation $automation, ?array $payload): void;
 }

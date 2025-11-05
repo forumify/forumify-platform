@@ -10,6 +10,9 @@ use Forumify\Core\Entity\Role;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @extends AbstractCrudController<Role>
+ */
 #[Route('/roles', 'roles')]
 class RoleController extends AbstractCrudController
 {
@@ -30,8 +33,13 @@ class RoleController extends AbstractCrudController
         return 'RoleTable';
     }
 
+    /**
+     * @param Role|null $data
+     * @return FormInterface<object|null>
+     */
     protected function getForm(?object $data): FormInterface
     {
+        /** @var FormInterface<object|null> */
         return $this->createForm(RoleType::class, $data);
     }
 }

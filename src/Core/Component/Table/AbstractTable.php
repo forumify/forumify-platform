@@ -59,8 +59,19 @@ abstract class AbstractTable
 
     abstract protected function buildTable(): void;
 
+    /**
+     * @param int $limit
+     * @param int $offset
+     * @param array<string, non-falsy-string> $search
+     * @param array<string, 'ASC'|'DESC'> $sort
+     * @return list<array<string, mixed>>
+    */
     abstract protected function getData(int $limit, int $offset, array $search, array $sort): array;
 
+    /**
+     * @param array<string, string> $search
+     * @return int
+     */
     abstract protected function getTotalCount(array $search): int;
 
     #[Required]
@@ -125,7 +136,10 @@ abstract class AbstractTable
      */
     protected function addColumn(string $name, array $column): static
     {
-        $this->columns[$name] = $this->columnConfigurationProcessor->process($column);
+        /** @var array{label: string|null, field: string|null, searchable: bool|null, sortable: bool|null, renderer: (callable(): mixed)|null, class: string|null} $processed */
+        $processed = $this->columnConfigurationProcessor->process($column);
+
+        $this->columns[$name] = $processed;
         return $this;
     }
 
@@ -141,6 +155,9 @@ abstract class AbstractTable
         return $this->columns;
     }
 
+    /**
+     * @return TableResult
+     */
     public function getResult(): TableResult
     {
         if ($this->result !== null) {
@@ -162,6 +179,10 @@ abstract class AbstractTable
         return $this->result;
     }
 
+    /**
+     * @param array<array<string, mixed>> $data
+     * @return array<array<string, mixed>>
+     */
     private function transformData(array $data): array
     {
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
@@ -186,6 +207,12 @@ abstract class AbstractTable
         return $rows;
     }
 
+    /**
+     * @param string $path
+     * @param array<string, int>|array<string, string> $pathArguments
+     * @param string $icon
+     * @return string
+     */
     protected function renderAction(string $path, array $pathArguments, string $icon): string
     {
         $url = $this->urlGenerator->generate($path, $pathArguments);

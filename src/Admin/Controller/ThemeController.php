@@ -12,6 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * @extends AbstractCrudController<Theme>
+ */
 #[Route('themes', 'themes')]
 class ThemeController extends AbstractCrudController
 {
@@ -33,8 +36,13 @@ class ThemeController extends AbstractCrudController
         return 'Forumify\\ThemeTable';
     }
 
+    /**
+     * @param Theme|null $data
+     * @return FormInterface<object|null>
+     */
     protected function getForm(?object $data): FormInterface
     {
+        /** @var FormInterface<object|null> */
         return $this->createForm(ThemeType::class, $data);
     }
 

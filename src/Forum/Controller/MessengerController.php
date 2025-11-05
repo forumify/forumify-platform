@@ -83,7 +83,7 @@ class MessengerController extends AbstractController
 
         $form = $this->createForm(MessageReplyType::class);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && !empty($form->getData())) {
             $this->messageService->replyToThread($thread, $form->getData());
         }
 

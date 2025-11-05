@@ -92,7 +92,7 @@ class AuthorizeController extends AbstractController
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, string|null>
      */
     private function getParams(Request $request): array
     {

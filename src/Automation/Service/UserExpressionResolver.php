@@ -16,6 +16,8 @@ class UserExpressionResolver
     }
 
     /**
+     * @param string $expr
+     * @param array<string, mixed>|null $payload
      * @return array<User>
      */
     public function resolve(string $expr, ?array $payload): array

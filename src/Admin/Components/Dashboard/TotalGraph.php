@@ -8,8 +8,14 @@ use Forumify\Core\Component\Graph\AbstractGraph;
 use Forumify\Core\Component\Graph\GraphDataPoint;
 use Forumify\Core\Repository\AbstractRepository;
 
+/**
+ * @template T of object
+ */
 abstract class TotalGraph extends AbstractGraph
 {
+    /**
+     * @param AbstractRepository<T> $repository
+     */
     public function __construct(
         private readonly AbstractRepository $repository,
     ) {
@@ -40,7 +46,7 @@ abstract class TotalGraph extends AbstractGraph
 
             $points[] = new GraphDataPoint(
                 $date->format('M'),
-                $count,
+                (int) $count,
             );
 
             $date->modify("last day of previous month");

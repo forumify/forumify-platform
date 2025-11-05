@@ -13,6 +13,10 @@ class HostnameEnvVarProcessor implements EnvVarProcessorInterface
         $env = $getEnv($name);
         $url = parse_url($env);
 
+        if (!$url) {
+            return false;
+        }
+
         $host = $url['host'];
         if (isset($url['port'])) {
             $host .= ':' . $url['port'];

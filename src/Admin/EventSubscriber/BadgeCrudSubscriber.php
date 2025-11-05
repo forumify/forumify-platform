@@ -24,6 +24,10 @@ class BadgeCrudSubscriber implements EventSubscriberInterface
         return [PreSaveCrudEvent::getName(Badge::class) => 'preSaveBadge'];
     }
 
+    /**
+     * @param PreSaveCrudEvent<Badge> $event
+     * @return void
+     */
     public function preSaveBadge(PreSaveCrudEvent $event): void
     {
         $badge = $event->getEntity();

@@ -7,6 +7,7 @@ namespace Forumify\Admin\Components\Table;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\Role;
+use Forumify\Core\Entity\SortableEntityInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -48,6 +49,7 @@ class RoleTable extends AbstractDoctrineTable
 
     protected function reorderItem(object $entity, string $direction): void
     {
+        /** @var Role&SortableEntityInterface $entity */
         $this->repository->reorder($entity, $direction, fn (QueryBuilder $qb) => $qb->andWhere('e.system = 0'));
     }
 

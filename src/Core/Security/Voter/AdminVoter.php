@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class AdminVoter extends Voter
 {
+    /** @var array<int,bool> */
     private array $memo = [];
 
     protected function supports(string $attribute, mixed $subject): bool

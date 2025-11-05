@@ -19,6 +19,9 @@ class ForumController extends AbstractController
     /** @var array<string, ForumTypeInterface> */
     private readonly array $forumTypes;
 
+    /**
+     * @param iterable<ForumTypeInterface> $forumTypes
+     */
     public function __construct(
         #[AutowireIterator('forumify.forum.type', defaultIndexMethod: 'getType')]
         iterable $forumTypes,

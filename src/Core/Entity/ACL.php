@@ -24,7 +24,7 @@ class ACL
     #[ORM\Column]
     private string $permission;
 
-    /** @var Collection<Role> */
+    /** @var Collection<int, Role> */
     #[ORM\ManyToMany(targetEntity: Role::class, cascade: ['persist'], fetch: 'EAGER')]
     #[ORM\JoinTable(
         'acl_role',
@@ -69,7 +69,7 @@ class ACL
     }
 
     /**
-     * @return Collection<Role>
+     * @return Collection<int, Role>
      */
     public function getRoles(): Collection
     {
@@ -77,7 +77,7 @@ class ACL
     }
 
     /**
-     * @param Collection<Role>|array<Role> $roles
+     * @param Collection<int, Role>|array<int, Role> $roles
      */
     public function setRoles(Collection|array $roles): void
     {

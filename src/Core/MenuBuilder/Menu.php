@@ -6,9 +6,17 @@ namespace Forumify\Core\MenuBuilder;
 
 class Menu
 {
+    /**
+     * @var array<Menu|MenuItem>
+     */
     private array $items = [];
     private bool $sorted = false;
 
+    /**
+     * @param string|null $label
+     * @param array<string> $options
+     * @param array<MenuItem> $items
+     */
     public function __construct(
         public readonly ?string $label = '',
         public readonly array $options = [],
@@ -28,6 +36,9 @@ class Menu
         return $this->addItem($item, $position + 1);
     }
 
+    /**
+     * @return array<Menu|MenuItem>
+     */
     public function getEntries(): array
     {
         if (!$this->sorted) {
@@ -44,7 +55,7 @@ class Menu
 
     public function sortByLabel(): void
     {
-        $labels = array_map(static fn (Menu|MenuItem $child) => ucfirst($child->label), $this->items);
+        $labels = array_map(static fn (Menu|MenuItem $child) => ucfirst((string) $child->label), $this->items);
         array_multisort($labels, SORT_ASC, $this->items);
         $this->sorted = true;
     }

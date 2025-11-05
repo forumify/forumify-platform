@@ -24,7 +24,11 @@ class ForumGroupDeleteService
 
     public function ungroupForums(ForumGroup $group): void
     {
-        $position = $this->forumRepository->getHighestPosition($group->getParentForum());
+        $parentForum = $group->getParentForum();
+        if ($parentForum === null) {
+            return;
+        }
+        $position = $this->forumRepository->getHighestPosition($parentForum);
         foreach ($group->getForums() as $forum) {
             $forum->setPosition(++$position);
             $forum->setGroup(null);

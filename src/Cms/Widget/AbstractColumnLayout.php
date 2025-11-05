@@ -35,6 +35,10 @@ abstract class AbstractColumnLayout extends AbstractWidget
         return '@Forumify/frontend/cms/widgets/columns.html.twig';
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return FormInterface<array<string, mixed>|null>
+     */
     public function getSettingsForm(array $data = []): ?FormInterface
     {
         $colCount = $this->getColumnCount();

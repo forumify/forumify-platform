@@ -15,6 +15,8 @@ use Symfony\Contracts\Cache\CacheInterface;
 class ThemeTemplateService
 {
     public const CACHE_KEY = 'forumify.theme.template_locations';
+
+    /** @var array<string>|null */
     private ?array $locations = null;
 
     public function __construct(

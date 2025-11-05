@@ -8,6 +8,9 @@ use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\TopicImage;
 
+/**
+ * @extends AbstractRepository<TopicImage>
+ */
 class TopicImageRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

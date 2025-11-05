@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class AccessControlListVoter extends Voter
 {
-    /** @var array<int, array<mixed>> */
+    /** @var array<int|string, array<mixed>> */
     private array $aclMemo = [];
 
     public function __construct(private readonly ACLRepository $aclRepository)

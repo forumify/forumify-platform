@@ -42,12 +42,22 @@ class ReadMarker
     {
     }
 
+    /**
+     * @param array{class: class-string, ids: array<string, mixed>} $itemData
+     * @return object
+     */
     public function hydrateItem(array $itemData): object
     {
         ['class' => $class, 'ids' => $ids] = $itemData;
-        return $this->em->getRepository($class)->findOneBy($ids);
+        /** @var object $hydratedItem */
+        $hydratedItem = $this->em->getRepository($class)->findOneBy($ids);
+        return $hydratedItem;
     }
 
+    /**
+     * @param object $item
+     * @return array<string, array<string, mixed>|class-string>
+     */
     public function dehydrateItem(object $item): array
     {
         $propertyAccessor = new PropertyAccessor();

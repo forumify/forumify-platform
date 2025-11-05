@@ -46,6 +46,10 @@ class ColumnConfigurationProcessor
         $this->processor = new Processor();
     }
 
+    /**
+     * @param array<string, mixed> $config
+     * @return array<string, mixed>
+     */
     public function process(array $config): array
     {
         return $this->processor->process($this->tree, [$config]);

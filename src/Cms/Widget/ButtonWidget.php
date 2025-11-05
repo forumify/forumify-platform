@@ -38,6 +38,10 @@ class ButtonWidget extends AbstractWidget
         return '@Forumify/frontend/cms/widgets/button.html.twig';
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return FormInterface<array<string, mixed>|null>
+     */
     public function getSettingsForm(array $data = []): ?FormInterface
     {
         $data['openInNewTab'] = (bool)($data['openInNewTab'] ?? false);

@@ -8,6 +8,9 @@ use Forumify\Core\Form\CodeEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class ExpressionLangConditionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void

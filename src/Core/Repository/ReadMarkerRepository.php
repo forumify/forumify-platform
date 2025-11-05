@@ -40,6 +40,12 @@ class ReadMarkerRepository extends AbstractRepository
         }
     }
 
+    /**
+     * @param User $user
+     * @param string $subject
+     * @param int[] $subjectIds
+     * @return bool
+     */
     public function areAllRead(User $user, string $subject, array $subjectIds): bool
     {
         try {
@@ -72,6 +78,11 @@ class ReadMarkerRepository extends AbstractRepository
         $this->save($marker, $flush);
     }
 
+    /**
+     * @param User $user.
+     * @param string $subject.
+     * @param int[] $subjectIds.
+     */
     public function markAllRead(User $user, string $subject, array $subjectIds): void
     {
         foreach ($subjectIds as $subjectId) {

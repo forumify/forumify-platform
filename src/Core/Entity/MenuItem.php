@@ -21,6 +21,7 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
     #[ORM\Column]
     private string $type;
 
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $payload = [];
 
@@ -29,7 +30,7 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
     private ?MenuItem $parent = null;
 
     /**
-     * @var Collection<MenuItem>
+     * @var Collection<int, MenuItem>
      */
     #[ORM\OneToMany('parent', MenuItem::class, cascade: ['persist'])]
     #[ORM\OrderBy(['position' => 'ASC'])]
@@ -60,6 +61,9 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
         $this->type = $type;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getPayload(): array
     {
         return $this->payload;
@@ -70,6 +74,9 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
         return $this->payload[$key] ?? null;
     }
 
+    /**
+     * @param array<string, mixed> $payload
+     */
     public function setPayload(array $payload): void
     {
         $this->payload = $payload;
@@ -86,13 +93,16 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
     }
 
     /**
-     * @return Collection<MenuItem>
+     * @return Collection<int, MenuItem>
      */
     public function getChildren(): Collection
     {
         return $this->children;
     }
 
+    /**
+     * @param Collection<int, MenuItem>|array<int, MenuItem> $children
+     */
     public function setChildren(Collection|array $children): void
     {
         $this->children = $children instanceof Collection

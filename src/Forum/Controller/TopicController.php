@@ -48,7 +48,7 @@ class TopicController extends AbstractController
             ]);
 
             $commentForm->handleRequest($request);
-            if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            if ($commentForm->isSubmitted() && $commentForm->isValid() && !empty($commentForm->getData())) {
                 $this->createCommentService->createComment($topic, $commentForm->getData());
                 return $this->redirectToRoute('forumify_forum_topic', [
                     'slug' => $topic->getSlug(),

@@ -73,6 +73,10 @@ abstract class AbstractRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @param array<object> $entities
+     * @param bool $flush
+     */
     public function saveAll(array $entities, bool $flush = true): void
     {
         foreach ($entities as $entity) {
@@ -99,6 +103,10 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param array<object> $entities
+     * @param bool $flush
+    */
     public function removeAll(array $entities, bool $flush = true): void
     {
         foreach ($entities as $entity) {
@@ -154,11 +162,11 @@ abstract class AbstractRepository extends ServiceEntityRepository
     public function getHighestPosition(object $entity): int
     {
         try {
-            return $this
+            return (int) $this
                 ->createQueryBuilder('e')
                 ->select('MAX(e.position)')
                 ->getQuery()
-                ->getSingleScalarResult() ?? 0
+                ->getSingleScalarResult()
             ;
         } catch (Exception) {
             return 0;

@@ -21,6 +21,7 @@ class MarketplaceService
 
     /**
      * @throws MarketplaceNotConnectedException|MarketplaceTokenException
+     * @return array<string, mixed>|null
      */
     public function getCustomer(): ?array
     {

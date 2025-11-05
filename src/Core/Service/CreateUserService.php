@@ -6,6 +6,7 @@ namespace Forumify\Core\Service;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Exception\UserAlreadyExistsException;
 use Forumify\Core\Form\DTO\NewUser;
@@ -53,6 +54,7 @@ class CreateUserService
     {
         $user = $this->createUser($newUser, false);
 
+        /** @var Role $adminRole */
         $adminRole = $this->roleRepository->findOneBy(['slug' => 'super-admin']);
         $user->setRoleEntities([$adminRole]);
 

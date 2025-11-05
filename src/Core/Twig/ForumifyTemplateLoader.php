@@ -20,7 +20,7 @@ use Twig\Source;
 class ForumifyTemplateLoader implements LoaderInterface
 {
     private readonly string $cacheDir;
-    /** @var array<string,string> */
+    /** @var array<string,string|null> */
     private array $cache = [];
     private Filesystem $fs;
 
@@ -40,7 +40,12 @@ class ForumifyTemplateLoader implements LoaderInterface
             return new Source('', $name, '');
         }
 
-        return new Source(file_get_contents($path), $name, $path);
+        $code = file_get_contents($path);
+        if ($code === false) {
+            return new Source('', $name, $path);
+        }
+
+        return new Source($code, $name, $path);
     }
 
     public function getCacheKey(string $name): string

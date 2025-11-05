@@ -10,5 +10,10 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('forumify.automation.condition')]
 interface ConditionInterface extends AutomationComponentInterface
 {
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return bool
+     */
     public function evaluate(Automation $automation, ?array $payload): bool;
 }
