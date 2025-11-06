@@ -1,7 +1,7 @@
 @use '../breakpoints';
 
 .profile-preview {
-    display: none !important;
+    display: none;
     width: auto;
     max-width: 100%;
     background-color: var(--c-elevation-2);
