@@ -12,7 +12,7 @@
         "api-platform/symfony": "^4.1",
         "doctrine/doctrine-bundle": "^2.15",
         "doctrine/doctrine-migrations-bundle": "^3.4",
-        "doctrine/orm": "^3.5",
+        "doctrine/orm": "3.5.2",
         "dragonmantank/cron-expression": "^3.3",
         "firebase/php-jwt": "^6.8",
         "forumify/forumify-theme": "^0.4",
