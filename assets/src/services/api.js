@@ -8,7 +8,7 @@ export const request = (url, options) => {
   const headers = {
     'Accept': 'application/ld+json',
     'Content-Type': 'application/json',
-    ...(options.headers || {})
+    ...(options.headers || {}),
   };
 
   const body = options.data ? JSON.stringify(options.data) : undefined;

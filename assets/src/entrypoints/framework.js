@@ -35,4 +35,4 @@ export default (app) => {
   register('youtube', Youtube);
 
   return register;
-}
+};

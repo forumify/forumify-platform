@@ -49,4 +49,4 @@ export const QuillEditor = (element) => {
   });
 
   return quill;
-}
+};
