@@ -84,7 +84,7 @@ class Notification
     }
 
     /**
-     * @param array<mixed> $context
+     * @param array<mixed> $deserializedContext
      */
     public function setDeserializedContext(array $deserializedContext): void
     {

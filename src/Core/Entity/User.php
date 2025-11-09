@@ -47,7 +47,7 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 32)]
     #[Groups(['MessageThread'])]
-    private string $displayName;
+    private string $displayName = '';
 
     /**
      * ISO 639-1 representation of the user's language
