@@ -95,7 +95,7 @@ class CalendarComponent
             $heightDiff = $event->getEnd() !== null
                 ? $event->getEnd()->diff($event->getStart(), true)
                 : new DateInterval('PT1H');
-            $height = floor(($heightDiff->h * 60 + $heightDiff->m) * self::MINUTE_HEIGHT);
+            $height = floor(($heightDiff->h * 60 + $heightDiff->i) * self::MINUTE_HEIGHT);
 
             $events[] = [
                 'top' => $top,
@@ -176,6 +176,13 @@ class CalendarComponent
         $this->eventMemo = [];
         foreach ($allEvents as $event) {
             $this->insertEventsWithRecurrence($event, $start, $end, $this->eventMemo);
+        }
+
+        foreach ($this->eventMemo as &$dayEvents) {
+            uasort($dayEvents, fn (
+                CalendarEvent $a,
+                CalendarEvent $b,
+            ) => $a->getStart()->getTimestamp() <=> $b->getStart()->getTimestamp());
         }
 
         return $this->eventMemo;
