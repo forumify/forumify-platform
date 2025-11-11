@@ -4,15 +4,15 @@
     </nav>
     {% if app.user is not null %}
         <div class="flex flex-row">
-            <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
-                <a class="btn-link header-menu pl-2" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+            <div {{ stimulus_controller('forumify/menu', { placement: 'bottom-end' }) }}>
+                <a class="btn-link header-menu pl-2" {{ stimulus_target('forumify/menu', 'openButton') }}>
                     {% include '@Forumify/components/avatar.html.twig' with {
                         user: app.user,
                         className: 'avatar-sm',
                     } only %}
                     <span class="ml-2">{{ app.user.displayName }}</span>
                 </a>
-                <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+                <div class="menu" {{ stimulus_target('forumify/menu', 'menu') }}>
                     {% include '@Forumify/frontend/blocks/header/fixed_menu.html.twig' %}
                 </div>
             </div>

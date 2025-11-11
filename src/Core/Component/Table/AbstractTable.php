@@ -59,9 +59,9 @@ abstract class AbstractTable
 
     abstract protected function buildTable(): void;
 
-    abstract protected function getData(int $limit, int $offset, array $search, array $sort): array;
+    abstract protected function getData(): array;
 
-    abstract protected function getTotalCount(array $search): int;
+    abstract protected function getTotalCount(): int;
 
     #[Required]
     public function setColumnConfigurationProcessor(ColumnConfigurationProcessor $processor): void
@@ -111,6 +111,7 @@ abstract class AbstractTable
                 $this->search[$name] = $this->search[$name] ?? '';
             }
         }
+        array_filter($this->search);
     }
 
     /**
@@ -147,22 +148,14 @@ abstract class AbstractTable
             return $this->result;
         }
 
-        $limit = $this->limit;
-        $offset = ($this->page - 1) * $limit;
-        $search = array_filter($this->search);
-        $sort = array_filter($this->sort);
-
-        $data = $this->getData($limit, $offset, $search, $sort);
-        $rows = $this->transformData($data);
-
         $this->result = new TableResult(
-            $rows,
-            $this->getTotalCount($search),
+            $this->transformData($this->getData()),
+            $this->getTotalCount(),
         );
         return $this->result;
     }
 
-    private function transformData(array $data): array
+    protected function transformData(array $data): array
     {
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
@@ -184,6 +177,23 @@ abstract class AbstractTable
         }
 
         return $rows;
+    }
+
+    /**
+     * Helper that sets defaults for action columns. The renderer callable should produce HTML for the actions.
+     * You can use the renderAction function to render individual action buttons in your callable.
+     *
+     * @param callable(mixed $id, mixed $row): string $renderer
+     */
+    protected function addActionColumn(callable $renderer, string $idColumn = 'id'): static
+    {
+        return $this->addColumn('actions', [
+            'label' => '',
+            'searchable' => false,
+            'sortable' => false,
+            'field' => $idColumn,
+            'renderer' => $renderer,
+        ]);
     }
 
     protected function renderAction(string $path, array $pathArguments, string $icon): string

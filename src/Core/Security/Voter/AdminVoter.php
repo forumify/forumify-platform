@@ -14,6 +14,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class AdminVoter extends Voter
 {
+    /** @var array<int, bool> */
     private array $memo = [];
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -29,11 +30,7 @@ class AdminVoter extends Voter
         }
 
         $userId = $user->getId();
-        if (isset($this->memo[$userId])) {
-            return $this->memo[$userId];
-        }
-
-        $this->memo[$userId] = $this->isAdmin($user);
+        $this->memo[$userId] ??= $this->isAdmin($user);
         return $this->memo[$userId];
     }
 

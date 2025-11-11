@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Forumify\OAuth\GrantType;
@@ -12,5 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 interface GrantTypeInterface
 {
     public function getGrantType(): string;
+
     public function respondToRequest(Request $request, OAuthClient $client): JsonResponse;
 }

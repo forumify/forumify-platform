@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,8 +16,12 @@ use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Entity\SortableEntityTrait;
 use Forumify\Forum\Repository\ForumRepository;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
+#[ApiResource(
+    extraProperties: ['acl' => ['permission' => 'view']],
+)]
 class Forum implements HierarchicalInterface, AccessControlledEntityInterface, SortableEntityInterface
 {
     public const TYPE_TEXT = 'text';
@@ -27,17 +32,21 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     use IdentifiableEntityTrait;
     use SortableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
+    #[Groups('Forum')]
     private string $title = '';
 
-    #[Gedmo\Slug(fields: ['title'])]
     #[ORM\Column(unique: true)]
+    #[Groups('Forum')]
+    #[Gedmo\Slug(fields: ['title'])]
     private string $slug;
 
     #[ORM\Column(options: ['default' => self::TYPE_TEXT])]
+    #[Groups('Forum')]
     private string $type = self::TYPE_TEXT;
 
     #[ORM\Column(type: 'text')]
+    #[Groups('Forum')]
     private string $content = '';
 
     #[ORM\ManyToOne(targetEntity: Forum::class, cascade: ['persist'], inversedBy: 'children')]
@@ -59,6 +68,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     private Collection $topics;
 
     #[ORM\ManyToOne(targetEntity: ForumGroup::class, inversedBy: 'forums')]
+    #[Groups('Forum')]
     private ?ForumGroup $group = null;
 
     /**
@@ -66,6 +76,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
      */
     #[ORM\OneToMany(mappedBy: 'parentForum', targetEntity: ForumGroup::class)]
     #[ORM\OrderBy(['position' => 'ASC'])]
+    #[Groups('Forum')]
     private Collection $groups;
 
     #[ORM\Embedded(class: ForumDisplaySettings::class, columnPrefix: 'display_settings_')]
@@ -215,7 +226,7 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
 
     public function getACLPermissions(): array
     {
-        $permissions = ['view', 'create_topic', 'create_comment'];
+        $permissions = ['view', 'create_topic', 'create_comment', 'moderate'];
         if ($this->getDisplaySettings()->isOnlyShowOwnTopics()) {
             $permissions[] = 'show_all_topics';
         }

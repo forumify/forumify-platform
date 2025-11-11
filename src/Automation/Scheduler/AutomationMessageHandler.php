@@ -15,7 +15,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 class AutomationMessageHandler
 {
     /**
-     * @param ActionInterface[] $actions
+     * @param iterable<ActionInterface> $actions
      */
     public function __construct(
         #[AutowireIterator('forumify.automation.action', defaultIndexMethod: 'getType')]

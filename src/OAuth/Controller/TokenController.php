@@ -37,19 +37,6 @@ class TokenController extends AbstractController
             }
         }
 
-        $client = $clientRepository->findOneBy([
-            'clientId' => $clientId,
-            'clientSecret' => $clientSecret,
-        ]);
-
-        if ($client === null) {
-            return $this->json([
-                'error' => 'invalid_client',
-                'error_description' => "Unable to find a client matching the provided client credentials.",
-                'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
         $grantType = null;
         $requestedGrantType = $request->request->get('grant_type');
         foreach ($grantTypes as $type) {
@@ -63,6 +50,19 @@ class TokenController extends AbstractController
             return $this->json([
                 'error' => 'unsupported_grant_type',
                 'error_description' => "\"{$requestedGrantType}\" is not a supported grant_type.",
+                'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $client = $clientRepository->findOneBy([
+            'clientId' => $clientId,
+            'clientSecret' => $clientSecret,
+        ]);
+
+        if ($client === null) {
+            return $this->json([
+                'error' => 'invalid_client',
+                'error_description' => "Unable to find a client matching the provided client credentials.",
                 'error_uri' => 'https://datatracker.ietf.org/doc/html/rfc6749#section-5',
             ], Response::HTTP_BAD_REQUEST);
         }

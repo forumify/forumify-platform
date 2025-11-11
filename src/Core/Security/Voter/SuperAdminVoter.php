@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class SuperAdminVoter extends Voter
 {
+    /** @var array<int, bool> */
     private array $memo = [];
 
     /** @inheritDoc */
@@ -33,11 +34,7 @@ class SuperAdminVoter extends Voter
         }
 
         $userId = $user->getId();
-        if (isset($this->memo[$userId])) {
-            return $this->memo[$userId];
-        }
-
-        $this->memo[$userId] = $this->isSuperAdmin($user);
+        $this->memo[$userId] ??= $this->isSuperAdmin($user);
         return $this->memo[$userId];
     }
 

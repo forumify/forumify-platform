@@ -1,5 +1,6 @@
 doctrine:
     orm:
+        enable_native_lazy_objects: true
         mappings:
             forumify:
                 is_bundle: false

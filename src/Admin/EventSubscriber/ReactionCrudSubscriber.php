@@ -32,9 +32,11 @@ class ReactionCrudSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
 
         $newImage = $form->get('newImage')->getData();
-        if ($newImage instanceof UploadedFile) {
-            $image = $this->mediaService->saveToFilesystem($this->assetStorage, $newImage);
-            $reaction->setImage($image);
+        if (!($newImage instanceof UploadedFile)) {
+            return;
         }
+
+        $image = $this->mediaService->saveToFilesystem($this->assetStorage, $newImage);
+        $reaction->setImage($image);
     }
 }

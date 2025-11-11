@@ -21,7 +21,7 @@ class ACLExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('can', [ACLRuntime::class, 'canAccess']),
+            new TwigFunction('can', [ACLRuntime::class, 'can']),
         ];
     }
 

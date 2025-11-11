@@ -22,7 +22,7 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
     ];
 
     private const ROUTE_PATH_BLACKLIST = [
-        '/^\/admin\//'
+        '/^\/admin\//',
     ];
 
     public function __construct(
@@ -45,11 +45,10 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
             ->add('parameters', TextareaType::class, [
                 'help' => 'admin.menu_builder.route.parameters_help',
                 'required' => false,
-                'empty_data' => '{}'
+                'empty_data' => '{}',
             ])
             ->setDataMapper($this);
     }
-
 
     private function isRouteChoice(Route $route, string $name): bool
     {
@@ -76,10 +75,12 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
     {
         $formRows = iterator_to_array($forms);
 
-        if (isset($viewData['route'])) {
-            $formRows['route']->setData($viewData['route']);
-            $formRows['parameters']->setData(json_encode($viewData['parameters'], JSON_PRETTY_PRINT));
+        if (!isset($viewData['route'])) {
+            return;
         }
+
+        $formRows['route']->setData($viewData['route']);
+        $formRows['parameters']->setData(json_encode($viewData['parameters'], JSON_PRETTY_PRINT));
     }
 
     /**

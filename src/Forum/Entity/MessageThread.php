@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Patch;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,21 +14,33 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Repository\MessageThreadRepository;
+use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MessageThreadRepository::class)]
+#[ApiResource(
+    operations: [
+        new Patch(
+            security: 'object.getParticipants().contains(user)'
+        ),
+    ],
+)]
 class MessageThread
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
-    #[ORM\Column]
-    private string $title;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(allowNull: false)]
+    #[Groups('MessageThread')]
+    private string $title = '';
 
     /**
      * @var Collection<int, User>
      */
     #[ORM\ManyToMany(targetEntity: User::class)]
+    #[Groups('MessageThread')]
     private Collection $participants;
 
     /**

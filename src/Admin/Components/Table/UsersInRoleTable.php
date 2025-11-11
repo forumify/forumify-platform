@@ -14,8 +14,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Twig\Environment;
 
-#[IsGranted('forumify.admin.roles.view')]
 #[AsLiveComponent('Forumify\\UsersInRoleTable', '@Forumify/components/table/table.html.twig')]
+#[IsGranted('forumify.admin.roles.view')]
 class UsersInRoleTable extends UserTable
 {
     #[LiveProp]

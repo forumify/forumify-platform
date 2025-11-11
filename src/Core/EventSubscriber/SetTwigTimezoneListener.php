@@ -23,9 +23,11 @@ class SetTwigTimezoneListener
     public function __invoke(): void
     {
         $user = $this->security->getUser();
-        if ($user instanceof User) {
-            $coreExt = $this->twig->getExtension(CoreExtension::class);
-            $coreExt->setTimezone($user->getTimezone());
+        if (!$user instanceof User) {
+            return;
         }
+
+        $coreExt = $this->twig->getExtension(CoreExtension::class);
+        $coreExt->setTimezone($user->getTimezone());
     }
 }

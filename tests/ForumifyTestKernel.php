@@ -33,6 +33,8 @@ class ForumifyTestKernel extends ForumifyKernel
             new \Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new \Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new \DAMA\DoctrineTestBundle\DAMADoctrineTestBundle(),
+            new \ApiPlatform\Symfony\Bundle\ApiPlatformBundle(),
+            new \Zenstruck\Foundry\ZenstruckFoundryBundle(),
         ];
     }
 }

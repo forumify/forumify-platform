@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Repository;
 
+use Doctrine\DBAL\LockMode;
 use Doctrine\Persistence\ManagerRegistry;
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Notification\ContextSerializer;
-use RuntimeException;
 
 /**
  * @extends AbstractRepository<Notification>
@@ -26,7 +26,7 @@ class NotificationRepository extends AbstractRepository
         return Notification::class;
     }
 
-    public function find($id, $lockMode = null, $lockVersion = null): ?Notification
+    public function find(mixed $id, LockMode|int|null $lockMode = null, int|null $lockVersion = null): ?Notification
     {
         /** @var Notification|null $notification */
         $notification = parent::find($id, $lockMode, $lockVersion);
@@ -38,7 +38,10 @@ class NotificationRepository extends AbstractRepository
         return $notification;
     }
 
-    public function findBy(array $criteria, ?array $orderBy = null, $limit = null, $offset = null): array
+    /**
+     * @return array<Notification>
+     */
+    public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
         /** @var array<Notification> $notifications */
         $notifications = parent::findBy($criteria, $orderBy, $limit, $offset);
@@ -57,10 +60,6 @@ class NotificationRepository extends AbstractRepository
 
     public function save(object $entity, bool $flush = true): void
     {
-        if (!$entity instanceof Notification) {
-            throw new RuntimeException(self::class . ' can only be used for ' . Notification::class);
-        }
-
         $serializedContext = $this->contextSerializer->serialize($entity->getContext());
         $entity->setContext($serializedContext);
         parent::save($entity, $flush);

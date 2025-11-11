@@ -14,14 +14,14 @@
         {% endif %}
     {% endblock %}
     {% if canManage or canGiveBadge or canGiveRole %}
-        <div {{ stimulus_controller('forumify/forumify-platform/menu', {
+        <div {{ stimulus_controller('forumify/menu', {
             placement: 'bottom-end',
             hideAdornment: true,
         }) }}>
-            <a class="btn-link btn-icon btn-small" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+            <a class="btn-link btn-icon btn-small" {{ stimulus_target('forumify/menu', 'openButton') }}>
                 <i class="ph ph-caret-down"></i>
             </a>
-            <div class='menu' {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+            <div class='menu' {{ stimulus_target('forumify/menu', 'menu') }}>
                 {% block actions_manage_badges %}
                     {% if canGiveBadge %}
                         <a class="btn-link" href="{{ path('forumify_admin_users_badges', { id: user.id }) }}">

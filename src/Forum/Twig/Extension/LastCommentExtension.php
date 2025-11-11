@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Twig\Extension;
 
-use Doctrine\ORM\NonUniqueResultException;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
-use Forumify\Forum\Repository\CommentRepository;
 use Forumify\Forum\Service\LastCommentService;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;

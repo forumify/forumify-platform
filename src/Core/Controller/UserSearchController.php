@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_USER')]
 #[Route('/users/search', 'user_search')]
+#[IsGranted('ROLE_USER')]
 class UserSearchController extends AbstractController
 {
     public function __construct(

@@ -1,9 +1,9 @@
-<div {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
-    <div class="tablist" role="tablist" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}>
+<div {{ stimulus_controller('forumify/tabs') }}>
+    <div class="tablist" role="tablist" {{ stimulus_target('forumify/tabs', 'tabs') }}>
         {% block tabs %}
         {% endblock %}
     </div>
-    <div class="d-none" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
+    <div class="d-none" {{ stimulus_target('forumify/tabs', 'tabPanels') }}>
         {% block tabpanels %}
         {% endblock %}
     </div>

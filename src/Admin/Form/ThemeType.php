@@ -36,7 +36,7 @@ class ThemeType extends AbstractType
             ])
             ->add('active', CheckboxType::class, [
                 'required' => false,
-                'help' => 'admin.theme.active_help'
+                'help' => 'admin.theme.active_help',
             ])
             ->add('themeConfig', ThemeConfigType::class, [
                 'label' => false,

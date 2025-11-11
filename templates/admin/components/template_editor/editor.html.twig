@@ -2,7 +2,7 @@
     {% set editorId = 'code-editor-' ~ location.key %}
     <div
         class="form-row code-editor code-editor-fullscreen"
-        {{ stimulus_controller('forumify/forumify-platform/code_editor', {
+        {{ stimulus_controller('forumify/code-editor', {
             editorId: editorId,
             language: 'twig',
             value: location.content ?? location.defaultContent,
@@ -15,7 +15,7 @@
             id="code-editor-{{ editorId }}"
             class="d-none"
             {% if not location.readonly %}
-                {{ stimulus_target('forumify/forumify-platform/template_editor', 'codeEditor') }}
+                {{ stimulus_target('forumify/template-editor', 'codeEditor') }}
             {% endif %}
         >{{ location.content ?? location.defaultContent }}</textarea>
     </div>
@@ -23,13 +23,13 @@
         <div class="toolbar">
             <button
                 class="btn-link btn-small"
-                {{ stimulus_action('forumify/forumify-platform/template_editor', 'save') }}
+                {{ stimulus_action('forumify/template-editor', 'save') }}
             >
                 <i class="ph ph-floppy-disk"></i> {{ 'admin.theme.template_editor.save'|trans }}
             </button>
             <button
                 class="btn-link btn-icon btn-small"
-                data-action="live#action forumify--forumify-platform--tabs#selectFirstTab"
+                data-action="live#action forumify--tabs#selectFirstTab"
                 data-live-action-param="deleteOpenFile"
             >
                 <i class="ph ph-trash"></i>

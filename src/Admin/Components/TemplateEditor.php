@@ -121,10 +121,12 @@ class TemplateEditor
             $currentNamespace,
             $path
         );
-        if (file_exists($realPath)) {
-            @unlink($realPath);
-            $this->twig->removeCache($this->openFile);
+        if (!file_exists($realPath)) {
+            return;
         }
+
+        @unlink($realPath);
+        $this->twig->removeCache($this->openFile);
     }
 
     /**

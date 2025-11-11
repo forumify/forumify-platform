@@ -55,7 +55,7 @@ class PageController extends AbstractCrudController
         return $this->createForm(PageType::class, $data);
     }
 
-    protected function redirectAfterSave(mixed $entity): Response
+    protected function redirectAfterSave(mixed $entity, bool $isNew): Response
     {
         return $this->redirectToRoute('forumify_admin_cms_page_edit', ['identifier' => $entity->getId()]);
     }

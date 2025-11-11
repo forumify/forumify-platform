@@ -107,9 +107,11 @@ class UserCrudSubscriber implements EventSubscriberInterface
         }
 
         $newAvatar = $form->get('newAvatar')->getData();
-        if ($newAvatar !== null) {
-            $avatar = $this->mediaService->saveToFilesystem($this->avatarStorage, $newAvatar);
-            $user->setAvatar($avatar);
+        if ($newAvatar === null) {
+            return;
         }
+
+        $avatar = $this->mediaService->saveToFilesystem($this->avatarStorage, $newAvatar);
+        $user->setAvatar($avatar);
     }
 }

@@ -31,14 +31,11 @@ class CommentRepository extends AbstractRepository
             ->join('c.topic', 't')
             ->join('t.forum', 'f')
             ->where('c.createdBy = :user')
+            ->andWhere('t.hidden = 0')
             ->setParameter('user', $user)
             ->setMaxResults(10)
             ->orderBy('c.createdAt', 'DESC')
         ;
-
-        if (!$this->security->isGranted(VoterAttribute::Moderator->value)) {
-            $qb->andWhere('t.hidden = 0');
-        }
 
         $loggedInUser = $this->security->getUser();
         if ($loggedInUser === null) {

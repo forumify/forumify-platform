@@ -7,7 +7,7 @@ namespace Forumify\Forum\Service;
 use DateTime;
 use Doctrine\ORM\NonUniqueResultException;
 use Forumify\Core\Entity\User;
-use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Service\ACLService;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
@@ -29,6 +29,7 @@ class LastCommentService
         private readonly CacheInterface $cache,
         private readonly Security $security,
         private readonly CommentRepository $commentRepository,
+        private readonly ACLService $aclService,
     ) {
     }
 
@@ -88,12 +89,12 @@ class LastCommentService
     private function refreshLastCommentCache(Forum $forum, string $userId): ?array
     {
         $lastComments = $forum->getChildren()
-            ->filter(fn (Forum $child) => $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $child, 'permission' => 'view']))
+            ->filter(fn (Forum $child) => $this->aclService->can('view', $child))
             ->map(fn (Forum $child) => $this->getLastCommentForForumTree($child, $userId));
 
         $onlyShowOwnTopics = $forum->getDisplaySettings()->isOnlyShowOwnTopics();
-        $canViewAll = !$onlyShowOwnTopics || $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $forum, 'permission' => 'show_all_topics']);
-        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value, $forum);
+        $canViewAll = !$onlyShowOwnTopics || $this->aclService->can('show_all_topics', $forum);
+        $canViewHidden = $this->aclService->can('moderate', $forum);
 
         $lastCommentEntity = $this->commentRepository->findLastCommentForForumAndUserId($forum, $userId, $canViewAll, $canViewHidden);
         $lastComment = $lastCommentEntity !== null

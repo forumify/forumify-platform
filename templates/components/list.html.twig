@@ -1,22 +1,47 @@
-<div {{ attributes.defaults(stimulus_controller('@forumify/forumify-platform/list', { lastPageFirst: this.lastPageFirst })) }}>
+<div {{ attributes.defaults(stimulus_controller('forumify/list', {
+    lastPageFirst: this.lastPageFirst,
+    infiniteScroll: this.infiniteScroll,
+})) }}>
     {% block container %}
         <div class="{{ class ?? 'card' }}">
             {% block pagination_top %}
-                {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-title' } %}
+                {% if not this.infiniteScroll %}
+                    {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-title' } %}
+                {% endif %}
             {% endblock %}
             {% block list %}
                 <ul class="card-body">
-                    {% for item in this.result.data %}
-                        {% block row %}
-                        {% endblock %}
+                    {% if this.infiniteScroll and this.page > 1 %}
+                        <li id="item--{{ this.page - 1 }}-{{ this.limit }}"></li>
+                    {% endif %}
+                    {% for item in this.result.rows %}
+                        <li id="item--{{ this.page }}-{{ loop.index }}"{% if this.infiniteScroll %} data-live-ignore{% endif %}>
+                            {% block row %}
+                            {% endblock %}
+                        </li>
                     {% else %}
                         {% block empty %}
                         {% endblock %}
                     {% endfor %}
+                    {% if this.infiniteScroll and this.result.totalCount > (this.page * this.limit) %}
+                        {% for i in 1..this.limit %}
+                            <li
+                                id="item--{{ this.page + 1 }}-{{ i }}"
+                                {% if loop.first %}
+                                    {{ stimulus_target('@forumify/list', 'firstItem') }}
+                                    data-action="appear->live#action"
+                                    data-live-action-param="setPage"
+                                    data-live-page-param="{{ this.page + 1 }}"
+                                {% endif %}
+                            ></li>
+                        {% endfor %}
+                    {% endif %}
                 </ul>
             {% endblock %}
             {% block pagination_bottom %}
-                {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-footer' } %}
+                {% if not this.infiniteScroll %}
+                    {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-footer' } %}
+                {% endif %}
             {% endblock %}
         </div>
     {% endblock %}

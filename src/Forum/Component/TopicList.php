@@ -8,6 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -25,7 +26,12 @@ class TopicList extends AbstractDoctrineList
     ) {
     }
 
-    protected function getQueryBuilder(): QueryBuilder
+    protected function getEntityClass(): string
+    {
+        return Topic::class;
+    }
+
+    protected function getQuery(): QueryBuilder
     {
         $qb = $this->getBaseQueryBuilder()
             ->addSelect('MAX(tc.createdAt) AS HIDDEN lastCommentDate')
@@ -35,7 +41,11 @@ class TopicList extends AbstractDoctrineList
             ->groupBy('t.id')
             ->setParameter('forum', $this->forum);
 
-        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
+        $canViewHidden = $this->security->isGranted(VoterAttribute::ACL->value, [
+            'entity' => $this->forum,
+            'permission' => 'moderate',
+        ]);
+
         if (!$canViewHidden) {
             $qb->andWhere('t.hidden = 0');
         }
@@ -44,7 +54,7 @@ class TopicList extends AbstractDoctrineList
         if ($canOnlyShowOwnSetting) {
             $canSeeAll = $this->security->isGranted(VoterAttribute::ACL->value, [
                 'entity' => $this->forum,
-                'permission' => 'show_all_topics'
+                'permission' => 'show_all_topics',
             ]);
             if (!$canSeeAll) {
                 $user = $this->security->getUser();
@@ -56,7 +66,7 @@ class TopicList extends AbstractDoctrineList
         return $qb;
     }
 
-    protected function getCount(): int
+    protected function getTotalCount(): int
     {
         return $this->getBaseQueryBuilder()
             ->select('COUNT(t)')
@@ -72,7 +82,11 @@ class TopicList extends AbstractDoctrineList
             ->where('t.forum = :forum')
             ->setParameter('forum', $this->forum);
 
-        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
+        $canViewHidden = $this->security->isGranted(VoterAttribute::ACL->value, [
+            'entity' => $this->forum,
+            'permission' => 'moderate',
+        ]);
+
         if (!$canViewHidden) {
             $qb->andWhere('t.hidden = 0');
         }
@@ -81,7 +95,7 @@ class TopicList extends AbstractDoctrineList
         if ($canOnlyShowOwnSetting) {
             $canSeeAll = $this->security->isGranted(VoterAttribute::ACL->value, [
                 'entity' => $this->forum,
-                'permission' => 'show_all_topics'
+                'permission' => 'show_all_topics',
             ]);
             if (!$canSeeAll) {
                 $user = $this->security->getUser();

@@ -32,7 +32,7 @@ class EmailVerificationController extends AbstractController
 
         if ($token === null) {
             return $this->render('@Forumify/frontend/auth/verify_email.html.twig', [
-                'user' => $user
+                'user' => $user,
             ]);
         }
 

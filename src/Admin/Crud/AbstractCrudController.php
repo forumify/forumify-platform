@@ -47,7 +47,7 @@ abstract class AbstractCrudController extends AbstractController
     protected ?string $permissionDelete = null;
 
     /**
-     * @return string The classname for the entity this controller will act on, for example Forum::class
+     * @return class-string<TEntity> The classname for the entity this controller will act on, for example Forum::class
      */
     abstract protected function getEntityClass(): string;
 
@@ -57,7 +57,8 @@ abstract class AbstractCrudController extends AbstractController
     abstract protected function getTableName(): string;
 
     /**
-     * @return FormInterface Gets the form to use.
+     * @param TEntity|null $data
+     * @return FormInterface<TEntity|null> Gets the form to use.
      *
      * You can use `$this->createForm(MyFormType::class, $data);` to re-use an existing form,
      * or `$this->createFormBuilder();` to build a one-off form.
@@ -140,7 +141,7 @@ abstract class AbstractCrudController extends AbstractController
             if ($isNew && $entity instanceof AccessControlledEntityInterface) {
                 return $this->redirectToRoute('forumify_admin_acl', (array)$entity->getACLParameters());
             }
-            return $this->redirectAfterSave($entity);
+            return $this->redirectAfterSave($entity, $isNew);
         }
 
         return $this->render($this->formTemplate, $this->templateParams([
@@ -174,7 +175,7 @@ abstract class AbstractCrudController extends AbstractController
     /**
      * @param TEntity $entity
      */
-    protected function redirectAfterSave(mixed $entity): Response
+    protected function redirectAfterSave(mixed $entity, bool $isNew): Response
     {
         return $this->redirectToRoute($this->getRoute('list'));
     }

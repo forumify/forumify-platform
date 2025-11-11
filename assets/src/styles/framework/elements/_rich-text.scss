@@ -1,0 +1,127 @@
+@use '../typography';
+
+.rich-text {
+    h1, h2, h3, h4, h5, h6 {
+        margin: var(--spacing-4) 0 var(--spacing-2);
+    }
+
+    h1 {
+        margin-bottom: var(--spacing-8);
+    }
+
+    h2 {
+        margin-bottom: var(--spacing-6)
+    }
+
+    p, ul, ol {
+        line-height: 1.4rem;
+    }
+
+    p {
+        margin-bottom: var(--spacing-2);
+        min-height: 16px;
+    }
+
+    ul {
+        list-style-type: disc;
+    }
+
+    ol {
+        list-style-type: decimal;
+    }
+
+    ul li {
+        list-style-type: disc;
+        margin-left: var(--spacing-6);
+    }
+
+    ol li {
+        list-style-type: decimal;
+        margin-left: var(--spacing-6);
+
+        &[data-list="bullet"] {
+            list-style-type: disc;
+        }
+
+        &[class*=ql-indent] {
+            margin-left: calc(13 * var(--spacing-6));
+        }
+
+        @for $i from 1 through 12 {
+            &.ql-indent-#{$i} {
+                margin-left: calc(#{$i + 1} * var(--spacing-6));
+            }
+        }
+    }
+
+    code {
+        font-size: 16px;
+    }
+
+    .ql-code-block-container,
+    pre {
+        font-family: "Monaco", "Menlo", "Ubuntu Mono", "Consolas", "Source Code Pro", "source-code-pro", monospace;
+        line-height: 1.2rem;
+        background-color: var(--c-elevation-0);
+        padding: var(--spacing-2);
+        border: var(--border);
+        border-radius: var(--border-radius);
+        overflow-x: auto;
+
+        code {
+            display: block;
+            width: 100%;
+        }
+    }
+
+    blockquote {
+        border-left: var(--border);
+        border-left-width: 5px;
+        margin: 0;
+        padding-left: var(--spacing-4);
+    }
+
+    .ql-size-huge {
+        @extend .text-huge;
+    }
+
+    .ql-size-large {
+        @extend .text-large;
+    }
+
+    .ql-size-small {
+        @extend .text-small;
+    }
+
+    .ql-align-center {
+        @extend .text-center;
+    }
+
+    .ql-align-right {
+        @extend .text-right;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    .mention {
+        color: var(--c-primary);
+        font-weight: 500;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--c-primary-accent);
+            transition: color ease-in-out 100ms;
+        }
+    }
+
+
+    > * {
+        margin-bottom: var(--spacing-2);
+    }
+
+    > *:first-child {
+        margin-top: 0;
+    }
+}

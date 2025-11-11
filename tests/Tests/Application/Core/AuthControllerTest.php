@@ -33,7 +33,7 @@ class AuthControllerTest extends WebTestCase
         $this->createUser('tester', 'tester@example.org', 'test12345');
 
         $client->request('GET', '/login');
-        $crawler = $client->submitForm('Login', [
+        $crawler = $client->submitForm('Log In', [
             '_username' => 'tester',
             '_password' => 'test12345',
         ]);
@@ -51,7 +51,7 @@ class AuthControllerTest extends WebTestCase
         $this->createUser('tester', 'tester@example.org', 'test12345');
 
         $client->request('GET', '/login');
-        $crawler = $client->submitForm('Login', [
+        $crawler = $client->submitForm('Log In', [
             '_username' => 'tester@example.org',
             '_password' => 'test12345',
         ]);
@@ -66,7 +66,7 @@ class AuthControllerTest extends WebTestCase
         $client->followRedirects();
         $client->request('GET', '/login');
 
-        $client->submitForm('Login', [
+        $client->submitForm('Log In', [
             '_username' => 'not-a-real-user',
             '_password' => 'not-a-real-password',
         ]);

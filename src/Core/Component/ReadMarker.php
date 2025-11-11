@@ -26,11 +26,11 @@ class ReadMarker
     #[LiveProp(hydrateWith: 'hydrateItem', dehydrateWith: 'dehydrateItem')]
     public object $item;
 
+    /**
+     * @param iterable<class-string, ReadMarkerServiceInterface<object>> $readMarkerServices
+     */
     public function __construct(
         private readonly EntityManagerInterface $em,
-        /**
-         * @var iterable<ReadMarkerServiceInterface>
-         */
         #[AutowireIterator('forumify.read_marker.service')]
         private readonly iterable $readMarkerServices,
         private readonly Security $security,
@@ -74,11 +74,12 @@ class ReadMarker
             throw new AccessDeniedException();
         }
 
-        foreach ($this->readMarkerServices as $readMarkerService) {
-            if ($readMarkerService->supports($this->item)) {
-                $readMarkerService->markAsRead($user, $this->item);
-                break;
+        foreach ($this->readMarkerServices as $class => $checker) {
+            if (!is_a($this->item, $class)) {
+                continue;
             }
+            $checker->markAsRead($user, $this->item);
+            break;
         }
 
         $this->emit('forumify.read_markers.updated');

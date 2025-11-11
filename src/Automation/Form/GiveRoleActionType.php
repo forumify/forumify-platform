@@ -18,7 +18,7 @@ class GiveRoleActionType extends AbstractType
             ->add('role', EntityType::class, [
                 'class' => Role::class,
                 'autocomplete' => true,
-                'choice_label' => 'title'
+                'choice_label' => 'title',
             ])
             ->add('recipient', CodeEditorType::class, [
                 'help' => 'admin.automations.action.role.recipient_help',

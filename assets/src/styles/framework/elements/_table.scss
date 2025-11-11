@@ -1,0 +1,69 @@
+@use '../mixins';
+@use '../typography';
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--c-elevation-1);
+    border-radius: var(--border-radius);
+}
+
+thead {
+    border-bottom: var(--border);
+
+    th {
+        padding: var(--spacing-2);
+    }
+}
+
+tbody {
+    tr {
+        background-color: rgba(0, 0, 0, 0);
+        transition: background-color ease-in 100ms;
+    }
+
+    tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.03);
+        transition: background-color ease-in 100ms;
+    }
+
+    tr:not(.disabled):hover {
+        background-color: rgba(0, 0, 0, 0.05);
+        transition: background-color ease-in 100ms;
+    }
+
+    td {
+        text-align: left;
+        padding: var(--spacing-1) var(--spacing-2);
+    }
+}
+
+tfoot {
+    tr {
+        td {
+            padding: var(--spacing-2);
+        }
+    }
+}
+
+.pagination-selected-page {
+    @extend .text-black;
+    padding: var(--spacing-1) var(--spacing-2);
+    background-color: var(--border-color);
+    border-radius: var(--button-border-radius);
+}
+
+.table-wrapper {
+    @include mixins.box-shadow;
+    position: relative;
+}
+
+.table-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, 0.2);
+}

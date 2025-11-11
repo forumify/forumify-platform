@@ -43,10 +43,6 @@ class RoleType extends AbstractType
                 'required' => false,
                 'help' => 'role_type.administrator',
             ])
-            ->add('moderator', CheckboxType::class, [
-                'required' => false,
-                'help' => 'role_type.moderator',
-            ])
             ->add('permissions', PermissionType::class, [
                 'permissions' => $this->getAvailablePermissions(),
                 'label' => 'Permissions',

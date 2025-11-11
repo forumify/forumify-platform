@@ -78,7 +78,7 @@ class MenuBuilder extends AbstractController
     protected function instantiateForm(): FormInterface
     {
         return $this->createForm(MenuItemType::class, $this->selectedItem, [
-            'parent' => $this->parent
+            'parent' => $this->parent,
         ]);
     }
 

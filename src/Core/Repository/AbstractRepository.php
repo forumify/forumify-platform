@@ -16,6 +16,7 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Event\EntityPostRemoveEvent;
 use Forumify\Core\Event\EntityPostSaveEvent;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -53,6 +54,9 @@ abstract class AbstractRepository extends ServiceEntityRepository
      */
     abstract public static function getEntityClass(): string;
 
+    /**
+     * @param T $entity
+     */
     public function save(object $entity, bool $flush = true): void
     {
         $em = $this->getEntityManager();
@@ -73,6 +77,9 @@ abstract class AbstractRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @param array<T> $entities
+     */
     public function saveAll(array $entities, bool $flush = true): void
     {
         foreach ($entities as $entity) {
@@ -84,6 +91,9 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param T $entity
+     */
     public function remove(object $entity, bool $flush = true): void
     {
         $em = $this->getEntityManager();
@@ -99,6 +109,9 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param array<T> $entities
+     */
     public function removeAll(array $entities, bool $flush = true): void
     {
         foreach ($entities as $entity) {
@@ -128,7 +141,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
         try {
             $toSwap = $qb->getQuery()->getSingleResult();
-        } catch (NoResultException|NonUniqueResultException) {
+        } catch (NoResultException | NonUniqueResultException) {
             return;
         }
 
@@ -153,19 +166,22 @@ abstract class AbstractRepository extends ServiceEntityRepository
      */
     public function getHighestPosition(object $entity): int
     {
+        if (!$entity instanceof SortableEntityInterface) {
+            return 0;
+        }
+
         try {
             return $this
                 ->createQueryBuilder('e')
                 ->select('MAX(e.position)')
                 ->getQuery()
-                ->getSingleScalarResult() ?? 0
-            ;
+                ->getSingleScalarResult() ?? 0;
         } catch (Exception) {
             return 0;
         }
     }
 
-    protected function addACLToQuery(
+    public function addACLToQuery(
         QueryBuilder $qb,
         string $permission,
         ?string $entity = null,
@@ -177,12 +193,18 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         $entity ??= $this->getEntityName();
-        $qb->innerJoin(ACL::class, 'acl', 'WITH', "acl.entity = :entity AND acl.entityId = $alias.$identifier AND acl.permission = :permission")
+        $qb
+            ->innerJoin(ACL::class, 'acl', 'WITH', "acl.entity = :entity AND acl.entityId = $alias.$identifier AND acl.permission = :permission")
             ->innerJoin('acl.roles', 'acl_role')
             ->setParameter('permission', $permission)
-            ->setParameter('entity', $entity);
+            ->setParameter('entity', $entity)
+        ;
 
         $user = $this->security->getUser();
+        if ($user instanceof OAuthClient) {
+            $user = $user->getUser();
+        }
+
         if ($user instanceof User) {
             $qb->leftJoin('acl_role.users', 'acl_role_users')
                 ->andWhere($qb->expr()->orX(

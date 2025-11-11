@@ -12,7 +12,9 @@
             forumify
         {% endblock %}
     </title>
-    <link rel="icon" type="image/svg+xml" href="{{ asset('bundles/forumify/images/forumify.svg') }}">
+    {% block favicon %}
+        <link rel="icon" type="image/svg+xml" href="{{ asset('bundles/forumify/images/forumify.svg') }}">
+    {% endblock %}
     {% block stylesheets %}
         {{ encore_entry_link_tags('admin') }}
         {{ theme_tags(false) }}
@@ -21,21 +23,23 @@
         {{ encore_entry_script_tags('admin') }}
     {% endblock %}
 </head>
-<body {{ stimulus_controller('forumify/forumify-platform/admin') }}>
+<body {{ stimulus_controller('forumify/admin') }}>
 <div class="flex">
     <nav class="navigation">
         {% block navigation %}
             <div class="flex items-center justify-between p-1 pl-2 pr-2 border-b">
-                <div class="flex items-center navigation-brand">
-                    <img class="logo" src="{{ asset('bundles/forumify/images/forumify.svg') }}" alt="logo">
-                    <span>forumify</span>
-                </div>
+                {% block navigation_brand %}
+                    <div class="flex items-center navigation-brand">
+                        <img class="logo" src="{{ asset('bundles/forumify/images/forumify.svg') }}" alt="logo">
+                        <span>forumify</span>
+                    </div>
+                {% endblock %}
                 <div class="nav-controls">
                     <a
                         class="btn-link btn-icon btn-small theme-selector"
                         aria-label="{{ 'toggle_theme'|trans }}"
                         href="{{ path('forumify_core_theme_toggle', { '_target_path': app.request.requestUri }) }}"
-                        {{ stimulus_controller('forumify/forumify-platform/theme') }}
+                        {{ stimulus_controller('forumify/theme') }}
                     >
                         <i class="ph ph-circle-half-tilt"></i>
                     </a>
@@ -43,7 +47,7 @@
                         type="button"
                         class="btn-link btn-icon btn-small menu-toggle"
                         aria-label="{{ 'admin.toggle_nav'|trans }}"
-                        {{ stimulus_action('forumify/forumify-platform/admin', 'toggleNavigation') }}
+                        {{ stimulus_action('forumify/admin', 'toggleNavigation') }}
                     >
                         <i class="ph ph-caret-line-left"></i>
                     </button>
