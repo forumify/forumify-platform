@@ -57,7 +57,8 @@ abstract class AbstractCrudController extends AbstractController
     abstract protected function getTableName(): string;
 
     /**
-     * @return FormInterface Gets the form to use.
+     * @param TEntity|null $data
+     * @return FormInterface<TEntity|null> Gets the form to use.
      *
      * You can use `$this->createForm(MyFormType::class, $data);` to re-use an existing form,
      * or `$this->createFormBuilder();` to build a one-off form.
