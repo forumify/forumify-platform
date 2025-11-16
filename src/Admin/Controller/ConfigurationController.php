@@ -48,6 +48,10 @@ class ConfigurationController extends AbstractController
         ]);
     }
 
+    /**
+     * @param FormInterface<mixed> $form
+     * @return void
+     */
     private function handleUnmappedFields(FormInterface $form): void
     {
         $settings = [];

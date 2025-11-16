@@ -16,6 +16,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+/**
+ * @extends AbstractCrudController<User>
+ */
 #[Route('/users', 'users')]
 class UserController extends AbstractCrudController
 {
@@ -38,9 +41,11 @@ class UserController extends AbstractCrudController
 
     /**
      * @param User|null $data
+     * @return FormInterface<object|null>
      */
     protected function getForm(?object $data): FormInterface
     {
+        /** @var FormInterface<object|null> */
         return $this->createForm(UserType::class, $data);
     }
 
@@ -63,6 +68,7 @@ class UserController extends AbstractCrudController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @phpstan-ignore-next-line */
             $this->save(false, $form);
 
             $this->addFlash('success', 'admin.user.manage_badges.success');
@@ -86,6 +92,7 @@ class UserController extends AbstractCrudController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @phpstan-ignore-next-line */
             $this->save(false, $form);
 
             $this->addFlash('success', 'admin.user.manage_roles.success');

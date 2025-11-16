@@ -6,6 +6,7 @@ namespace Forumify\Admin\Components;
 
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\Repository\ForumGroupRepository;
 use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -30,11 +31,17 @@ class ForumEditor
     ) {
     }
 
+    /**
+     * @return array<int, ForumGroup>
+     */
     public function getGroups(): array
     {
         return $this->forumGroupRepository->findByParent($this->forum);
     }
 
+    /**
+     * @return array<int, Forum>
+     */
     public function getUngroupedForums(): array
     {
         return $this->forumRepository->findUngroupedByParent($this->forum);

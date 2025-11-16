@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Cms\Twig\Extension;
 
+use Forumify\Cms\Entity\Resource;
+use Forumify\Cms\Entity\Snippet;
 use Forumify\Cms\Repository\ResourceRepository;
 use Forumify\Cms\Repository\SnippetRepository;
 use Forumify\Cms\Widget\WidgetInterface;
@@ -36,6 +38,7 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
 
     public function resource(string $slug): string
     {
+        /** @var Resource|null $resource */
         $resource = $this->resourceRepository->findOneBy(['slug' => $slug]);
         if ($resource === null) {
             return '';
@@ -46,6 +49,7 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
 
     public function snippet(string $slug): string
     {
+        /** @var Snippet|null $snippet */
         $snippet = $this->snippetRepository->findOneBy(['slug' => $slug]);
         if ($snippet === null) {
             return '';
@@ -61,6 +65,12 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
         return "<div class='rich-text'>$sanitized</div>";
     }
 
+    /**
+     * @param string $widget
+     * @param array<string, mixed> $settings
+     * @param array<string, mixed> $slots
+     * @return string
+     */
     public function widget(string $widget, array $settings = [], array $slots = []): string
     {
         $widget = $this->findWidget($widget);
@@ -76,10 +86,16 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
         ]);
     }
 
+    /**
+     * @param array{widget: string} $widget
+     * @return string
+     */
     public function widgetTemplate(array $widget): string
     {
         $widget = $this->findWidget($widget['widget']);
-        return $widget->getTemplate();
+        /** @var string $template */
+        $template = $widget?->getTemplate() ?? '';
+        return $template;
     }
 
     private function findWidget(string $name): ?WidgetInterface

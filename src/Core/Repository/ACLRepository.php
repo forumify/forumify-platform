@@ -19,6 +19,10 @@ class ACLRepository extends AbstractRepository
         return ACL::class;
     }
 
+    /**
+     * @param AccessControlledEntityInterface $entity
+     * @return array<ACL>
+     */
     public function findByEntity(AccessControlledEntityInterface $entity): array
     {
         $aclParameters = $entity->getACLParameters();

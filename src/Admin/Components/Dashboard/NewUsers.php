@@ -31,7 +31,7 @@ class NewUsers extends AbstractDoctrineList
 
     protected function getCount(): int
     {
-        return $this->getQuery()
+        return (int) $this->getQuery()
             ->select('COUNT(u.id)')
             ->getQuery()
             ->getSingleScalarResult()

@@ -14,6 +14,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Traversable;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class RoutePayloadType extends AbstractType implements DataMapperInterface
 {
     private const ROUTE_NAME_BLACKLIST = [
@@ -70,7 +73,7 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
 
     /**
      * @param array<string, mixed> $viewData
-     * @param Traversable<FormInterface> $forms
+     * @param Traversable<FormInterface<mixed>> $forms
      */
     public function mapDataToForms(mixed $viewData, Traversable $forms): void
     {
@@ -83,7 +86,7 @@ class RoutePayloadType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param Traversable<FormInterface> $forms
+     * @param Traversable<FormInterface<mixed>> $forms
      * @param array<string, mixed> $viewData
      */
     public function mapFormsToData(Traversable $forms, mixed &$viewData): void

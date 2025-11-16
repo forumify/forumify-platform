@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Components\Dashboard;
 
+use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
+/**
+ * @extends TotalGraph<Topic>
+ */
 #[AsTwigComponent('Forumify\\Admin\\TopicGraph', '@Forumify/admin/dashboard/components/tile.html.twig')]
 class TopicGraph extends TotalGraph
 {

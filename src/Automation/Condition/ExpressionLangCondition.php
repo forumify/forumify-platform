@@ -15,11 +15,19 @@ class ExpressionLangCondition implements ConditionInterface
         return 'Expression';
     }
 
+    /**
+     * @return string|null
+     */
     public function getPayloadFormType(): ?string
     {
         return ExpressionLangConditionType::class;
     }
 
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return bool
+     */
     public function evaluate(Automation $automation, ?array $payload): bool
     {
         $expression = $automation->getConditionArguments()['expression'] ?? null;

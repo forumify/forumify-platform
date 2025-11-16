@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Core\Controller;
 
 use Forumify\Core\Exception\UserAlreadyExistsException;
+use Forumify\Core\Form\DTO\NewUser;
 use Forumify\Core\Form\RegisterType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\CreateUserService;
@@ -76,7 +77,9 @@ class AuthController extends AbstractController
             }
 
             try {
-                $user = $createUserService->createUser($form->getData());
+                /** @var NewUser $newUserDTO */
+                $newUserDTO = $form->getData();
+                $user = $createUserService->createUser($newUserDTO);
                 $security->login($user, 'security.authenticator.form_login.main');
                 return $this->redirectToRoute('forumify_core_verify_email');
             } catch (UserAlreadyExistsException) {

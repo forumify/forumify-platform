@@ -66,6 +66,7 @@ class ContextSerializer
 
             if (is_string($v) && str_starts_with($v, 'entity::')) {
                 [$class, $id] = explode('__', str_replace('entity::', '', $v));
+                /** @var class-string<object> $class */
                 $repository = $this->entityManager->getRepository($class);
                 $newContext[$k] = $repository->find($id);
                 continue;

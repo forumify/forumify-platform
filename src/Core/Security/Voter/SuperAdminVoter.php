@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class SuperAdminVoter extends Voter
 {
+    /** @var array<int,bool> */
     private array $memo = [];
 
     /** @inheritDoc */

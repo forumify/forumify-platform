@@ -28,6 +28,11 @@ class HttpRequestAction implements ActionInterface
         return HttpRequestActionType::class;
     }
 
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return void
+     */
     public function run(Automation $automation, ?array $payload): void
     {
         $args = $automation->getActionArguments();
@@ -55,6 +60,10 @@ class HttpRequestAction implements ActionInterface
         ;
     }
 
+    /**
+     * @param string $headerData
+     * @return array<string, string>
+     */
     private function parseHeaders(string $headerData): array
     {
         $headerLines = explode("\n", $headerData);

@@ -11,6 +11,9 @@ use Forumify\Calendar\Repository\CalendarEventRepository;
 
 class CalendarService
 {
+    /**
+     * @var array<string, array<CalendarEvent>>|null
+     */
     private ?array $eventMemo = null;
 
     public function __construct(
@@ -19,16 +22,16 @@ class CalendarService
     }
 
     /**
-     * @return array<string, CalendarEvent[]>
+     * @return array<string, array<CalendarEvent>>
      */
     public function getAllEvents(\DateTime $date, ?Calendar $calendar): array
     {
         if ($this->eventMemo !== null) {
             return $this->eventMemo;
         }
+
         $allEvents = $this->calendarEventRepository->findByDateAndCalendar($date, $calendar);
         array_walk($allEvents, $this->setTimezone($date->getTimezone()));
-
 
         $start = clone $date;
         $start->modify('first day of previous month');
@@ -41,6 +44,7 @@ class CalendarService
             $this->processEvent($event, $start, $end);
         }
 
+        assert($this->eventMemo !== null);
         return $this->eventMemo;
     }
 

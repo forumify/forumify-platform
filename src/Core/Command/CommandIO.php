@@ -9,6 +9,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class CommandIO extends SymfonyStyle
 {
+    /**
+     * @param array<string>|string|ConstraintViolationListInterface $message
+     */
     public function error(array|string|ConstraintViolationListInterface $message): void
     {
         if ($message instanceof ConstraintViolationListInterface) {

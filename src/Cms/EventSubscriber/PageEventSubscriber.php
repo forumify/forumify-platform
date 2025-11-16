@@ -9,6 +9,7 @@ use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
 use Forumify\Cms\Entity\Page;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Twig\Cache\CacheInterface;
 use Twig\Environment;
 
 class PageEventSubscriber implements EventSubscriberInterface
@@ -49,7 +50,13 @@ class PageEventSubscriber implements EventSubscriberInterface
 
         $name = $page->getUrlKey();
         $cls = $this->twig->getTemplateClass($name);
-        $key = $this->twig->getCache(false)->generateKey($name, $cls);
+        $cache = $this->twig->getCache(false);
+
+        if (!$cache instanceof CacheInterface) {
+            return;
+        }
+
+        $key = $cache->generateKey($name, $cls);
 
         $fs = new Filesystem();
         if ($fs->exists($key)) {

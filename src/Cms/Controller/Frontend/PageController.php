@@ -26,11 +26,12 @@ class PageController extends AbstractController
     #[Route('/{urlKey?}', 'page', requirements: ['urlKey' => '.*'], priority: -250)]
     public function __invoke(?string $urlKey): Response
     {
+        if ($urlKey === null) {
+            return $this->forward(IndexController::class);
+        }
+
         $page = $this->pageRepository->findOneByUrlKey($urlKey);
         if ($page === null) {
-            if (empty($urlKey)) {
-                return $this->forward(IndexController::class);
-            }
             throw $this->createNotFoundException("Page with url '$urlKey' not found.");
         }
 
@@ -69,6 +70,13 @@ class PageController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param DateTime $lastModified
+     * @param callable(): (string|null) $getContent
+     * @param array<string, string> $headers
+     * @return Response
+     */
     private function ifModifiedSince(Request $request, DateTime $lastModified, callable $getContent, array $headers = []): Response
     {
         $response = new Response();

@@ -28,7 +28,7 @@ class TopicCreateController extends AbstractController
         $form = $this->createForm(TopicType::class, null, ['forum' => $forum]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && !empty($form->getData())) {
             $topic = $createTopicService->createTopic($forum, $form->getData());
             return $this->redirectToRoute('forumify_forum_topic', [
                 'slug' => $topic->getSlug(),

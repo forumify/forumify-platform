@@ -6,5 +6,10 @@ namespace Forumify\Core\Entity;
 interface SortableEntityInterface
 {
     public function getPosition(): int;
-    public function setPosition(int $position);
+
+    /**
+     * @param int $position
+     * @return void
+     */
+    public function setPosition(int $position): void;
 }

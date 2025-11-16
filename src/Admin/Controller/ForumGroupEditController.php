@@ -23,6 +23,7 @@ class ForumGroupEditController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var ForumGroup $group */
             $group = $form->getData();
             $forumGroupRepository->save($group);
 

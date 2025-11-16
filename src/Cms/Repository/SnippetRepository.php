@@ -7,6 +7,9 @@ namespace Forumify\Cms\Repository;
 use Forumify\Cms\Entity\Snippet;
 use Forumify\Core\Repository\AbstractRepository;
 
+/**
+ * @extends AbstractRepository<Snippet>
+ */
 class SnippetRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

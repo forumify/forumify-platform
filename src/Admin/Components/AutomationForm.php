@@ -53,6 +53,9 @@ class AutomationForm extends AbstractController
     #[LiveProp]
     public ?Automation $initialFormData = null;
 
+    /**
+     * @return FormInterface<Automation>
+     */
     protected function instantiateForm(): FormInterface
     {
         $automation = $this->initialFormData;
@@ -96,6 +99,9 @@ class AutomationForm extends AbstractController
         return $this->redirectToRoute('forumify_admin_automation_form', ['id' => $automation->getId()]);
     }
 
+    /**
+     * @param FormBuilderInterface<Automation> $builder
+     */
     private function addAutomationComponentFields(string $component, FormBuilderInterface $builder, bool $required): void
     {
         $thisIterable = "{$component}s";

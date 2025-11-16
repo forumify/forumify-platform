@@ -28,6 +28,11 @@ class WebhookAction implements ActionInterface
         return WebhookActionType::class;
     }
 
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return void
+     */
     public function run(Automation $automation, ?array $payload): void
     {
         $args = $automation->getActionArguments();
