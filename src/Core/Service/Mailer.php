@@ -29,9 +29,14 @@ class Mailer
     /**
      * @throws Exception|TransportExceptionInterface
      */
-    public function send(Email $email, ?User $recipient = null): void
+    public function send(Email $email, User $recipient): void
     {
         if ($this->isDemo) {
+            return;
+        }
+
+        $recipientEmail = $recipient->getEmail();
+        if (empty($recipientEmail)) {
             return;
         }
 
@@ -47,10 +52,8 @@ class Mailer
         $from = new Address($fromAddress, $fromName);
         $email->from($from);
 
-        if ($recipient !== null) {
-            $to = new Address($recipient->getEmail(), $recipient->getDisplayName());
-            $email->to($to);
-        }
+        $to = new Address($recipientEmail, $recipient->getDisplayName());
+        $email->to($to);
 
         $this->mailer->send($email);
     }

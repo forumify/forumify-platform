@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Admin\EventSubscriber;
 
 use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
-use Forumify\Calendar\Entity\CalendarEvent;
 use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Reaction;
 use League\Flysystem\FilesystemOperator;

@@ -11,6 +11,9 @@ use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Entity\User;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
+/**
+ * @extends AbstractDoctrineList<User>
+ */
 #[AsLiveComponent('Forumify\\Admin\\NewUsers', '@Forumify/admin/dashboard/components/users.html.twig')]
 class NewUsers extends AbstractDoctrineList
 {

@@ -52,6 +52,9 @@ abstract class AbstractList
         return $this->result;
     }
 
+    /**
+     * @return array<mixed>
+     */
     abstract protected function getData(): array;
 
     abstract protected function getTotalCount(): int;

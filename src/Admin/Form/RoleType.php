@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
- * @extends AbstractType<array<string, mixed>>
+ * @extends AbstractType<Role>
  */
 class RoleType extends AbstractType
 {

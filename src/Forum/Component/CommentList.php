@@ -11,6 +11,9 @@ use Forumify\Forum\Entity\Topic;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
+/**
+ * @extends AbstractDoctrineList<Comment>
+ */
 #[AsLiveComponent(name: 'CommentList', template: '@Forumify/frontend/components/comment_list.html.twig')]
 class CommentList extends AbstractDoctrineList
 {
@@ -40,7 +43,7 @@ class CommentList extends AbstractDoctrineList
 
     protected function getTotalCount(): int
     {
-        return parent::getQuery()
+        return (int)parent::getQuery()
             ->select('COUNT(e.id)')
             ->where('e.topic = :topic')
             ->setParameter('topic', $this->topic)

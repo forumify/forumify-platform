@@ -68,7 +68,7 @@ class DiscordIdp extends AbstractOAuthIdp
     private function getUserDataFromDiscord(string $token): array
     {
         try {
-            return $this->httpClient
+             $data = $this->httpClient
                 ->request('GET', 'https://discord.com/api/users/@me', [
                     'auth_bearer' => $token,
                 ])
@@ -76,5 +76,12 @@ class DiscordIdp extends AbstractOAuthIdp
         } catch (Throwable $ex) {
             throw new IdentityProviderException('Unable to get Discord user data.', previous: $ex);
         }
+
+        if (!isset($data['id'], $data['email'], $data['username'])) {
+            throw new IdentityProviderException('Discord returned malformed user data');
+        }
+
+        /** @var array{id: string, email: string, username: string} $data */
+        return $data;
     }
 }

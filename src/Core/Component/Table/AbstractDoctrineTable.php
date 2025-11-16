@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Core\Component\Table;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
@@ -24,7 +22,7 @@ abstract class AbstractDoctrineTable extends AbstractTable
     /** @var AbstractRepository<object> */
     protected AbstractRepository $repository;
 
-    /** @var list<string> */
+    /** @var array<string> */
     private array $identifiers = [];
 
     /** @var array<string, string> */

@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @extends AbstractType<array<string, mixed>>
+ * @extends AbstractType<User>
  */
 class UserType extends AbstractType
 {

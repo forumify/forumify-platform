@@ -11,6 +11,9 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @extends AbstractCrudController<OAuthClient>
+ */
 #[Route('/oauth-clients', 'oauth_clients')]
 class OAuthClientController extends AbstractCrudController
 {

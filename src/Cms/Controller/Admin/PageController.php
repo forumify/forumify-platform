@@ -30,9 +30,6 @@ class PageController extends AbstractCrudController
      * @param iterable<WidgetInterface> $widgets
      */
     public function __construct(
-        /**
-         * @var iterable<WidgetInterface>
-         */
         #[AutowireIterator('forumify.cms.widget')]
         private readonly iterable $widgets,
     ) {
@@ -53,13 +50,8 @@ class PageController extends AbstractCrudController
         return 'Forumify\\PageTable';
     }
 
-    /**
-     * @param Page|null $data
-     * @return FormInterface<object|null>
-     */
     protected function getForm(?object $data): FormInterface
     {
-        /** @var FormInterface<object|null> */
         return $this->createForm(PageType::class, $data);
     }
 
@@ -68,10 +60,6 @@ class PageController extends AbstractCrudController
         return $this->redirectToRoute('forumify_admin_cms_page_edit', ['identifier' => $entity->getId()]);
     }
 
-    /**
-     * @param array<string, mixed> $params
-     * @return array<string, mixed>
-     */
     protected function templateParams(array $params = []): array
     {
         $params = parent::templateParams($params);

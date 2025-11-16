@@ -24,6 +24,7 @@ use function Symfony\Component\String\u;
 
 /**
  * @template TEntity of object
+ * @phpstan-type TForm FormInterface<TEntity|null>
  */
 abstract class AbstractCrudController extends AbstractController
 {
@@ -65,7 +66,7 @@ abstract class AbstractCrudController extends AbstractController
      * or `$this->createFormBuilder();` to build a one-off form.
      *
      * @param TEntity|null $data
-     * @return FormInterface<TEntity|null> Gets the form to use.
+     * @return TForm Gets the form to use.
      */
     abstract protected function getForm(?object $data): FormInterface;
 
@@ -155,15 +156,14 @@ abstract class AbstractCrudController extends AbstractController
     }
 
     /**
-     * @param FormInterface<TEntity|null> $form
+     * @param TForm $form
      * @return TEntity
      */
     protected function save(bool $isNew, FormInterface $form): object
     {
         $entity = $form->getData();
-
-        if ($entity === null) {
-            throw new RuntimeException('Entity cannot be null');
+        if (!is_object($entity)) {
+            throw new RuntimeException('Return value of form must be an entity!');
         }
 
         $this->eventDispatcher->dispatch(
@@ -257,12 +257,8 @@ abstract class AbstractCrudController extends AbstractController
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher
     ): void {
-        /** @var class-string<TEntity> $entityClass */
         $entityClass = $this->getEntityClass();
-
-        /** @var AbstractRepository<TEntity>|object $repository */
         $repository = $em->getRepository($entityClass);
-
         if (!$repository instanceof AbstractRepository) {
             throw new RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
         }

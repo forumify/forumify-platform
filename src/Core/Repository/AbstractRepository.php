@@ -123,6 +123,9 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
     }
 
+    /**
+     * @param T&SortableEntityInterface $entity
+     */
     public function reorder(
         SortableEntityInterface $entity,
         string $direction,
@@ -140,12 +143,13 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         try {
+            /** @var T $toSwap */
             $toSwap = $qb->getQuery()->getSingleResult();
         } catch (NoResultException | NonUniqueResultException) {
             return;
         }
 
-        if (!$toSwap) {
+        if (!$toSwap instanceof SortableEntityInterface) {
             return;
         }
 
@@ -171,11 +175,11 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         try {
-            return (int) $this
+            return (int)$this
                 ->createQueryBuilder('e')
                 ->select('MAX(e.position)')
                 ->getQuery()
-                ->getSingleScalarResult() ?? 0;
+                ->getSingleScalarResult();
         } catch (Exception) {
             return 0;
         }

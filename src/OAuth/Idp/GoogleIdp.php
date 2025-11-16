@@ -89,7 +89,7 @@ class GoogleIdp extends AbstractIdp
         }
 
         $email = $decoded['email'];
-        $username = substr($email, 0, strpos($email, '@'));
+        $username = substr($email, 0, strpos($email, '@') ?: null);
         return $this->getOrCreateUser($idp, $email, $email, $username);
     }
 }

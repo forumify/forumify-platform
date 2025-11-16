@@ -12,6 +12,9 @@ use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
+/**
+ * @extends AbstractDoctrineList<Topic>
+ */
 #[AsLiveComponent('Forumify\\Admin\\LatestTopics', '@Forumify/admin/dashboard/components/topics.html.twig')]
 class LatestTopics extends AbstractDoctrineList
 {

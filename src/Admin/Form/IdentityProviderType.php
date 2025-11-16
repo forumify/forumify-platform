@@ -15,6 +15,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 use function Symfony\Component\String\u;
 
+/**
+ * @extends AbstractType<IdentityProvider>
+ */
 class IdentityProviderType extends AbstractType
 {
     /**

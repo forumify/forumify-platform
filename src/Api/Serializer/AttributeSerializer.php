@@ -24,7 +24,7 @@ abstract class AttributeSerializer implements NormalizerInterface, DenormalizerI
     public function setServices(
         #[AutowireDecorated]
         NormalizerInterface&DenormalizerInterface&SerializerAwareInterface $decorated,
-    ) {
+    ): void {
         $this->decorated = $decorated;
     }
 
@@ -53,7 +53,7 @@ abstract class AttributeSerializer implements NormalizerInterface, DenormalizerI
         array $context = [],
     ): array|string|int|float|bool|ArrayObject|null {
         $result = $this->decorated->normalize($data, $format, $context);
-        if (!is_object($data)) {
+        if (!is_object($data) || !is_array($result)) {
             return $result;
         }
 

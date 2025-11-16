@@ -8,7 +8,6 @@ use Forumify\OAuth\Entity\OAuthClient;
 use Gedmo\Tool\ActorProviderInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 #[AsDecorator('stof_doctrine_extensions.tool.actor_provider')]
 class BlameActorProvider implements ActorProviderInterface
@@ -19,7 +18,10 @@ class BlameActorProvider implements ActorProviderInterface
     ) {
     }
 
-    public function getActor(): ?UserInterface
+    /**
+     * @return object|string|null
+     */
+    public function getActor(): mixed
     {
         $user = $this->decorated->getActor();
         if ($user instanceof OAuthClient) {

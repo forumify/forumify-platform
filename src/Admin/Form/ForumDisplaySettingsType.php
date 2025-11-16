@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<array<string, mixed>>
+ * @extends AbstractType<ForumDisplaySettings>
  */
 class ForumDisplaySettingsType extends AbstractType
 {

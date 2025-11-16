@@ -21,6 +21,9 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
+/**
+ * @extends AbstractDoctrineList<MessageThread>
+ */
 #[AsLiveComponent(name: 'MessageThreadList', template: '@Forumify/frontend/components/messenger/thread_list.html.twig')]
 class MessageThreadList extends AbstractDoctrineList
 {

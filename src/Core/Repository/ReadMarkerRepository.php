@@ -39,7 +39,7 @@ class ReadMarkerRepository extends AbstractRepository
     }
 
     /**
-     * @param array<string|int> $subjectIds
+     * @param array<int> $subjectIds
      */
     public function areAllRead(User $user, string $subject, array $subjectIds): bool
     {
@@ -72,7 +72,7 @@ class ReadMarkerRepository extends AbstractRepository
     }
 
     /**
-     * @param array<string|int> $subjectIds
+     * @param array<int> $subjectIds
      */
     public function markAllRead(User $user, string $subject, array $subjectIds): void
     {

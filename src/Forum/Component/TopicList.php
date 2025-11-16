@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Component;
 
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Security\VoterAttribute;
@@ -16,6 +14,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
+/**
+ * @extends AbstractDoctrineList<Topic>
+ */
 #[AsLiveComponent(name: 'TopicList', template: '@Forumify/frontend/components/topic_list.html.twig')]
 class TopicList extends AbstractDoctrineList
 {

@@ -10,6 +10,9 @@ use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
+/**
+ * @extends AbstractDoctrineList<Topic>
+ */
 #[AsLiveComponent('Forumify\\Admin\\PopularTopics', '@Forumify/admin/dashboard/components/topics.html.twig')]
 class PopularTopics extends AbstractDoctrineList
 {

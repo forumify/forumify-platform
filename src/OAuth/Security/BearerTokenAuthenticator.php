@@ -51,7 +51,7 @@ class BearerTokenAuthenticator extends AbstractAuthenticator
 
         $userLoader = null;
         if ($decoded['client'] ?? false) {
-            $userLoader = function (string $identifier): UserInterface {
+            $userLoader = function (string $identifier): ?UserInterface {
                 return $this->clientRepository->findOneBy(['clientId' => $identifier]);
             };
         }

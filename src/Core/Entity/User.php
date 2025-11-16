@@ -166,10 +166,10 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
 
     public function getPassword(): string
     {
-        return $this->password;
+        return $this->password ?? '';
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(?string $password): void
     {
         $this->password = $password;
     }

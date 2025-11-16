@@ -16,7 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<array<string, mixed>>
+ * @extends AbstractType<Page>
  */
 class PageType extends AbstractType
 {

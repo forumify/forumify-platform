@@ -10,13 +10,24 @@ use Forumify\Core\Repository\AbstractRepository;
 use RuntimeException;
 use Symfony\Contracts\Service\Attribute\Required;
 
+/**
+ * @template T of object
+ */
 abstract class AbstractDoctrineList extends AbstractList
 {
+    /** @var AbstractRepository<T> */
     protected AbstractRepository $repository;
+    /** @var array<string> */
     private array $identifiers = [];
 
+    /**
+     * @return class-string<T>
+     */
     abstract protected function getEntityClass(): string;
 
+    /**
+     * @return array<T>
+     */
     protected function getData(): array
     {
         $limit = $this->limit;
@@ -32,7 +43,7 @@ abstract class AbstractDoctrineList extends AbstractList
     protected function getTotalCount(): int
     {
         $ids = implode(',', array_map(static fn (string $id) => "e.$id", $this->identifiers));
-        return $this->getQuery()
+        return (int)$this->getQuery()
             ->select("COUNT($ids)")
             ->getQuery()
             ->getSingleScalarResult();
