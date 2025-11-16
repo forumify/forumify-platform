@@ -24,14 +24,13 @@ class PageController extends AbstractController
     }
 
     #[Route('/{urlKey?}', 'page', requirements: ['urlKey' => '.*'], priority: -250)]
-    public function __invoke(?string $urlKey): Response
+    public function __invoke(string $urlKey = ''): Response
     {
-        if ($urlKey === null) {
-            return $this->forward(IndexController::class);
-        }
-
         $page = $this->pageRepository->findOneByUrlKey($urlKey);
         if ($page === null) {
+            if (empty($urlKey)) {
+                return $this->forward(IndexController::class);
+            }
             throw $this->createNotFoundException("Page with url '$urlKey' not found.");
         }
 
