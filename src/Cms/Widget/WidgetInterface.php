@@ -18,5 +18,9 @@ interface WidgetInterface
 
     public function getTemplate(): string;
 
+    /**
+     * @param array<string, mixed> $data
+     * @return FormInterface<array<string, mixed>>|null
+     */
     public function getSettingsForm(array $data = []): ?FormInterface;
 }

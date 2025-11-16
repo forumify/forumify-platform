@@ -64,7 +64,14 @@ class TemplateEditor
     #[LiveAction]
     public function overrideOpenFile(): void
     {
-        $path = explode(DIRECTORY_SEPARATOR, $this->openFile);
+        if ($this->openFile === null) {
+            return;
+        }
+
+        /** @var string $openFile */
+        $openFile = $this->openFile;
+
+        $path = explode(DIRECTORY_SEPARATOR, $openFile);
         $namespace = array_shift($path);
         if (str_starts_with($namespace, '@')) {
             $namespace = substr($namespace, 1);
@@ -90,7 +97,13 @@ class TemplateEditor
             return;
         }
 
-        $path = explode(DIRECTORY_SEPARATOR, $this->openFile);
+        if ($this->openFile === null) {
+            return;
+        }
+        /** @var string $openFile */
+        $openFile = $this->openFile;
+
+        $path = explode(DIRECTORY_SEPARATOR, $openFile);
         $namespace = array_shift($path);
         if (str_starts_with($namespace, '@')) {
             $namespace = substr($namespace, 1);
@@ -109,13 +122,26 @@ class TemplateEditor
     #[LiveAction]
     public function deleteOpenFile(): void
     {
-        $path = explode(DIRECTORY_SEPARATOR, $this->openFile);
+        if ($this->openFile === null) {
+            return;
+        }
+
+        /** @var string $openFile */
+        $openFile = $this->openFile;
+
+        $path = explode(DIRECTORY_SEPARATOR, $openFile);
         $currentNamespace = array_shift($path);
         if (str_starts_with($currentNamespace, '@')) {
             $currentNamespace = substr($currentNamespace, 1);
         }
 
-        $path = substr($this->openFile, strpos($this->openFile, DIRECTORY_SEPARATOR));
+        $pos = strpos($openFile, DIRECTORY_SEPARATOR);
+        if (!is_int($pos)) {
+            return;
+        }
+
+        $path = substr($openFile, $pos);
+
         $realPath = Path::join(
             $this->themeTemplateService->getThemeOverrideDir($this->theme),
             $currentNamespace,
@@ -198,9 +224,28 @@ class TemplateEditor
         return $files;
     }
 
+    /**
+     * @param string|null $fileToCheck
+     * @return array<int, array{
+     *     key: string,
+     *     namespace: string,
+     *     location: string,
+     *     content: string|null,
+     *     defaultContent: string,
+     *     readonly: bool
+     * }>
+     */
     public function getFileContents(?string $fileToCheck = null): array
     {
-        $fileToCheck ??= $this->openFile;
+        if ($fileToCheck === null) {
+            if ($this->openFile === null) {
+                return [];
+            }
+            $fileToCheck = $this->openFile;
+        }
+
+
+        /** @var string $fileToCheck */
         $path = explode(DIRECTORY_SEPARATOR, $fileToCheck);
         $currentNamespace = array_shift($path);
         $path = Path::join(...$path);
@@ -229,13 +274,15 @@ class TemplateEditor
 
             $contents[] = [
                 'key' => $this->slugger->slug($name . '-' . $fileKey)->toString(),
-                'namespace' => $name,
+                'namespace' => (string) $name,
                 'location' => $file,
-                'content' => $fileExists ? file_get_contents($file) : null,
+                'content' => $fileExists ? (file_get_contents($file) ?: null) : null,
                 'defaultContent' => $this->getOverrideDefaultContent($fileToCheck),
                 'readonly' => $name !== 'Local',
             ];
         }
+
+        /** @phpstan-ignore-next-line */
         return $contents;
     }
 

@@ -100,6 +100,11 @@ class UserCrudSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @param User $user
+     * @param FormInterface<mixed> $form
+     * @return void
+     */
     private function saveNewAvatar(User $user, FormInterface $form): void
     {
         if (!$form->has('newAvatar')) {

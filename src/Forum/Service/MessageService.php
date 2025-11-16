@@ -38,7 +38,8 @@ class MessageService
         if ($user !== null) {
             $thread->getParticipants()->add($user);
         } else {
-            $thread->setCreatedBy($thread->getParticipants()->first());
+            $participant = $thread->getParticipants()->first() ?: null;
+            $thread->setCreatedBy($participant);
         }
 
         $this->messageThreadRepository->save($thread);
@@ -58,7 +59,8 @@ class MessageService
         $message->setThread($thread);
 
         if ($this->security->getUser() === null) {
-            $message->setCreatedBy($thread->getParticipants()->first());
+            $participant = $thread->getParticipants()->first() ?: null;
+            $message->setCreatedBy($participant);
         }
 
         $this->messageRepository->save($message);

@@ -47,6 +47,11 @@ class CommentReactions
         }
 
         $reaction = $this->reactionRepository->find($reactionId);
+
+        if ($reaction === null) {
+            return;
+        }
+
         $commentReaction = $this->commentReactionRepository->findOneBy([
             'comment' => $this->comment,
             'reaction' => $reaction,

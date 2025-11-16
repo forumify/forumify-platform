@@ -171,7 +171,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
         }
 
         try {
-            return $this
+            return (int) $this
                 ->createQueryBuilder('e')
                 ->select('MAX(e.position)')
                 ->getQuery()

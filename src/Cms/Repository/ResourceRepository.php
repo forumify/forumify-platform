@@ -7,6 +7,9 @@ namespace Forumify\Cms\Repository;
 use Forumify\Cms\Entity\Resource;
 use Forumify\Core\Repository\AbstractRepository;
 
+/**
+ * @extends AbstractRepository<Resource>
+ */
 class ResourceRepository extends AbstractRepository
 {
     public static function getEntityClass(): string

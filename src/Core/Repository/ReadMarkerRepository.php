@@ -71,6 +71,9 @@ class ReadMarkerRepository extends AbstractRepository
         $this->save($marker, $flush);
     }
 
+    /**
+     * @param array<string|int> $subjectIds
+     */
     public function markAllRead(User $user, string $subject, array $subjectIds): void
     {
         foreach ($subjectIds as $subjectId) {

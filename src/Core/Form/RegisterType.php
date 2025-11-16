@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Form;
 
+use DateTimeZone;
 use Forumify\Core\Form\DTO\NewUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -50,9 +51,12 @@ class RegisterType extends AbstractType
             ]);
     }
 
+    /**
+     * @return array<string>
+     */
     private function getTimezones(): array
     {
-        $timezones = \DateTimeZone::listIdentifiers();
+        $timezones = DateTimeZone::listIdentifiers();
         return array_combine($timezones, $timezones);
     }
 }

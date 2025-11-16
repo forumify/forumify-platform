@@ -9,6 +9,7 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Tools\DsnParser;
 use Forumify\Plugin\Entity\Plugin;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 class ForumifyKernel extends Kernel
@@ -19,6 +20,10 @@ class ForumifyKernel extends Kernel
 
     private readonly string $projectDir;
 
+    /**
+     * @param array<mixed> $context
+     * @param string|null $projectDir
+     */
     public function __construct(array $context, ?string $projectDir = null)
     {
         parent::__construct($context['APP_ENV'], (bool)$context['APP_DEBUG']);
@@ -44,6 +49,7 @@ class ForumifyKernel extends Kernel
         }
 
         foreach ($plugins as $plugin) {
+            /** @var class-string<BundleInterface> $plugin */
             yield new $plugin();
         }
     }

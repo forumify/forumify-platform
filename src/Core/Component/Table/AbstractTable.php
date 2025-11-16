@@ -59,6 +59,9 @@ abstract class AbstractTable
 
     abstract protected function buildTable(): void;
 
+    /**
+     * @return array<mixed>
+     */
     abstract protected function getData(): array;
 
     abstract protected function getTotalCount(): int;
@@ -115,18 +118,14 @@ abstract class AbstractTable
     }
 
     /**
-     * @param array{
-     *     label?: string,
-     *     field?: string,
-     *     searchable?: bool,
-     *     sortable?: bool,
-     *     renderer?: callable,
-     *     class?: string,
-     * } $column
+     * @param array<mixed> $column
      */
     protected function addColumn(string $name, array $column): static
     {
-        $this->columns[$name] = $this->columnConfigurationProcessor->process($column);
+        /** @var ColumnDef $processed */
+        $processed = $this->columnConfigurationProcessor->process($column);
+
+        $this->columns[$name] = $processed;
         return $this;
     }
 
@@ -142,6 +141,9 @@ abstract class AbstractTable
         return $this->columns;
     }
 
+    /**
+     * @return TableResult
+     */
     public function getResult(): TableResult
     {
         if ($this->result !== null) {
@@ -155,6 +157,10 @@ abstract class AbstractTable
         return $this->result;
     }
 
+    /**
+     * @param array<array<string, mixed>> $data
+     * @return array<array<string, mixed>>
+     */
     protected function transformData(array $data): array
     {
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
@@ -196,6 +202,9 @@ abstract class AbstractTable
         ]);
     }
 
+    /**
+     * @param array<string, mixed> $pathArguments
+     */
     protected function renderAction(string $path, array $pathArguments, string $icon): string
     {
         $url = $this->urlGenerator->generate($path, $pathArguments);

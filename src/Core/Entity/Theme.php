@@ -17,6 +17,7 @@ class Theme
     #[ORM\Column(length: 255)]
     private string $name;
 
+    /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $themeConfig = [];
 
@@ -40,11 +41,17 @@ class Theme
         $this->name = $name;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getThemeConfig(): array
     {
         return $this->themeConfig;
     }
 
+    /**
+     * @param array<string, mixed> $themeConfig
+     */
     public function setThemeConfig(array $themeConfig): void
     {
         $this->themeConfig = $themeConfig;

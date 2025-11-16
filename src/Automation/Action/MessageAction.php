@@ -31,6 +31,11 @@ class MessageAction implements ActionInterface
         return MessageActionType::class;
     }
 
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return void
+     */
     public function run(Automation $automation, ?array $payload): void
     {
         [

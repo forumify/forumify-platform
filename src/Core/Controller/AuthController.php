@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Core\Controller;
 
 use Forumify\Core\Exception\UserAlreadyExistsException;
+use Forumify\Core\Form\DTO\NewUser;
 use Forumify\Core\Form\RegisterType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\CreateUserService;
@@ -12,6 +13,7 @@ use Forumify\Core\Service\RecaptchaService;
 use Forumify\OAuth\Repository\IdentityProviderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -67,6 +69,7 @@ class AuthController extends AbstractController
         }
 
         $error = null;
+        /** @var FormInterface<NewUser> $form */
         $form = $this->createForm(RegisterType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

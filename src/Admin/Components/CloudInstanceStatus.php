@@ -29,6 +29,9 @@ class CloudInstanceStatus
     ) {
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     public function getStatus(): ?array
     {
         // return $this->cache->get('forumify.cloud_instance.status', function (ItemInterface $item): ?array {
@@ -43,6 +46,9 @@ class CloudInstanceStatus
         $this->cache->delete('forumify.cloud_instance.status');
     }
 
+    /**
+     * @return array<string, mixed>|null
+     */
     private function getSubscriptionStatus(): ?array
     {
         try {

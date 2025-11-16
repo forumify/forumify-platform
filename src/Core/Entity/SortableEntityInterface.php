@@ -8,5 +8,5 @@ interface SortableEntityInterface
 {
     public function getPosition(): int;
 
-    public function setPosition(int $position);
+    public function setPosition(int $position): void;
 }

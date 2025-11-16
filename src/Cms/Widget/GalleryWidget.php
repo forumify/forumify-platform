@@ -54,6 +54,10 @@ class GalleryWidget extends AbstractWidget
         return '@Forumify/frontend/cms/widgets/gallery.html.twig';
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return FormInterface<array<string, mixed>|null>
+     */
     public function getSettingsForm(array $data = []): ?FormInterface
     {
         $data['forum'] = ($data['forum'] ?? false)

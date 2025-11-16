@@ -43,9 +43,9 @@ class CommentVoter extends Voter
         }
 
         return match ($attribute) {
-            VoterAttribute::CommentCreate->value => $this->voteOnCreate($user, $subject),
+            VoterAttribute::CommentCreate->value => $subject instanceof Topic && $this->voteOnCreate($user, $subject),
             VoterAttribute::CommentEdit->value,
-            VoterAttribute::CommentDelete->value => $this->voteOnEditOrDelete($user, $subject),
+            VoterAttribute::CommentDelete->value => $subject instanceof Comment && $this->voteOnEditOrDelete($user, $subject),
             default => false,
         };
     }

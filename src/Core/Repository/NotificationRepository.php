@@ -43,7 +43,7 @@ class NotificationRepository extends AbstractRepository
      */
     public function findBy(array $criteria, ?array $orderBy = null, ?int $limit = null, ?int $offset = null): array
     {
-        /** @var array<Notification> $notifications */
+        /** @var list<Notification> $notifications */
         $notifications = parent::findBy($criteria, $orderBy, $limit, $offset);
         foreach ($notifications as $notification) {
             $this->deserializeContext($notification);

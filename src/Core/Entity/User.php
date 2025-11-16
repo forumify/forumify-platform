@@ -25,6 +25,7 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
+    /** @var non-empty-string $username*/
     #[ORM\Column(length: 32, unique: true)]
     #[Groups(['MessageThread'])]
     private string $username;
@@ -113,6 +114,7 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
 
     public function setUsername(string $username): void
     {
+        // @phpstan-ignore-next-line
         $this->username = $username;
     }
 
@@ -126,9 +128,12 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
         $this->email = $email;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return $this->username ?: 'unknown';
     }
 
     public function getRoles(): array
@@ -277,7 +282,9 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
         if ($this->notificationSettings->isEmpty()) {
             $this->notificationSettings = new ArrayCollection([new UserNotificationSettings($this)]);
         }
-        return $this->notificationSettings->first();
+        /** @var UserNotificationSettings $settings */
+        $settings = $this->notificationSettings->first();
+        return $settings;
     }
 
     public function setNotificationSettings(UserNotificationSettings $notificationSettings): void

@@ -8,6 +8,7 @@ use Forumify\Cms\Entity\Snippet;
 use Forumify\Cms\Form\SnippetType;
 use Forumify\Cms\Repository\SnippetRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -60,9 +61,11 @@ class SnippetController extends AbstractController
 
     private function handleForm(Request $request, ?Snippet $snippet): Response
     {
+        /** @var FormInterface<Snippet> $form */
         $form = $this->createForm(SnippetType::class, $snippet);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Snippet $snippet */
             $snippet = $form->getData();
             $this->snippetRepository->save($snippet);
 

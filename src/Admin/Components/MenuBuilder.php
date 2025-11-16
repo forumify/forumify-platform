@@ -75,6 +75,9 @@ class MenuBuilder extends AbstractController
         $this->resetForm();
     }
 
+    /**
+     * @return FormInterface<array<string, mixed>|MenuItem|null>
+     */
     protected function instantiateForm(): FormInterface
     {
         return $this->createForm(MenuItemType::class, $this->selectedItem, [

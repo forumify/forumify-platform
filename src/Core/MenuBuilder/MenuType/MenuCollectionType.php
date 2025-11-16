@@ -16,12 +16,17 @@ class MenuCollectionType extends AbstractMenuType
      */
     private array $menuTypes;
 
+    /**
+     * @param iterable<MenuTypeInterface> $menuTypes
+     * @param Environment $twig
+     */
     public function __construct(
         #[AutowireIterator('forumify.menu_builder.type')]
         iterable $menuTypes,
         private readonly Environment $twig,
     ) {
         foreach ($menuTypes as $menuType) {
+            // @phpstan-ignore-next-line - Just in case
             if ($menuType instanceof MenuTypeInterface) {
                 $this->menuTypes[$menuType->getType()] = $menuType;
             }

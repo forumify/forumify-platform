@@ -23,6 +23,10 @@ class RoleCrudSubscriber implements EventSubscriberInterface
         ];
     }
 
+    /**
+     * @param PreSaveCrudEvent<Role> $event
+     * @return void
+     */
     public function preSaveRole(PreSaveCrudEvent $event): void
     {
         if (!$event->isNew()) {
@@ -32,7 +36,7 @@ class RoleCrudSubscriber implements EventSubscriberInterface
         /** @var Role $role */
         $role = $event->getEntity();
 
-        $maxPosition = $this->roleRepository->createQueryBuilder('r')
+        $maxPosition = (int) $this->roleRepository->createQueryBuilder('r')
             ->select('MAX(r.position)')
             ->where('r.system = 0')
             ->getQuery()

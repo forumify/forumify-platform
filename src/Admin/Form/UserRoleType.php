@@ -13,18 +13,21 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @extends AbstractType<array<string, mixed>>
+ */
 class UserRoleType extends AbstractType
 {
     public function __construct(private readonly Security $security)
     {
     }
 
-    public function getParent()
+    public function getParent(): string
     {
         return EntityType::class;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'class' => Role::class,
@@ -35,6 +38,10 @@ class UserRoleType extends AbstractType
         ]);
     }
 
+    /**
+     * @param EntityRepository<Role> $er
+     * @return QueryBuilder
+     */
     private function getQueryBuilder(EntityRepository $er): QueryBuilder
     {
         return $er
@@ -57,6 +64,10 @@ class UserRoleType extends AbstractType
         return "<div class='disabled'>$title</div>";
     }
 
+    /**
+     * @param Role $role
+     * @return array<string, string>
+    */
     private function getChoiceAttributes(Role $role): array
     {
         if ($this->security->isGranted(VoterAttribute::AssignRole->value, $role)) {

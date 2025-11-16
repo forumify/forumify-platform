@@ -9,6 +9,7 @@ use Forumify\Admin\Crud\Event\PostSaveCrudEvent;
 use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
 use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +27,9 @@ use function Symfony\Component\String\u;
  */
 abstract class AbstractCrudController extends AbstractController
 {
+    /**
+     * @var AbstractRepository<TEntity>
+     */
     protected AbstractRepository $repository;
     protected TranslatorInterface $translator;
     protected EventDispatcherInterface $eventDispatcher;
@@ -57,11 +61,11 @@ abstract class AbstractCrudController extends AbstractController
     abstract protected function getTableName(): string;
 
     /**
-     * @param TEntity|null $data
-     * @return FormInterface<TEntity|null> Gets the form to use.
-     *
      * You can use `$this->createForm(MyFormType::class, $data);` to re-use an existing form,
      * or `$this->createFormBuilder();` to build a one-off form.
+     *
+     * @param TEntity|null $data
+     * @return FormInterface<TEntity|null> Gets the form to use.
      */
     abstract protected function getForm(?object $data): FormInterface;
 
@@ -151,11 +155,16 @@ abstract class AbstractCrudController extends AbstractController
     }
 
     /**
+     * @param FormInterface<TEntity|null> $form
      * @return TEntity
      */
     protected function save(bool $isNew, FormInterface $form): object
     {
         $entity = $form->getData();
+
+        if ($entity === null) {
+            throw new RuntimeException('Entity cannot be null');
+        }
 
         $this->eventDispatcher->dispatch(
             new PreSaveCrudEvent($isNew, $form, $entity),
@@ -180,6 +189,10 @@ abstract class AbstractCrudController extends AbstractController
         return $this->redirectToRoute($this->getRoute('list'));
     }
 
+    /**
+     * @param array<string, mixed> $params
+     * @return array<string, mixed>
+     */
     protected function templateParams(array $params = []): array
     {
         return [
@@ -244,11 +257,17 @@ abstract class AbstractCrudController extends AbstractController
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher
     ): void {
-        $repository = $em->getRepository($this->getEntityClass());
+        /** @var class-string<TEntity> $entityClass */
+        $entityClass = $this->getEntityClass();
+
+        /** @var AbstractRepository<TEntity>|object $repository */
+        $repository = $em->getRepository($entityClass);
+
         if (!$repository instanceof AbstractRepository) {
-            throw new \RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
+            throw new RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
         }
 
+        /** @var AbstractRepository<TEntity> $repository */
         $this->repository = $repository;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;

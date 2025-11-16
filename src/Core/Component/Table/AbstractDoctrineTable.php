@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Forumify\Core\Component\Table;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
+use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
 use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -17,9 +20,14 @@ abstract class AbstractDoctrineTable extends AbstractTable
 {
     private EntityManagerInterface $entityManager;
     protected Security $security;
+
+    /** @var AbstractRepository<object> */
     protected AbstractRepository $repository;
 
+    /** @var list<string> */
     private array $identifiers = [];
+
+    /** @var array<string, string> */
     private array $aliases = [];
 
     protected ?string $permissionReorder = null;
@@ -50,12 +58,16 @@ abstract class AbstractDoctrineTable extends AbstractTable
         $search = array_filter($this->search);
 
         $ids = implode(',', array_map(static fn (string $id) => "e.$id", $this->identifiers));
-        return $this->getQuery($search)
+        return (int) $this->getQuery($search)
             ->select("COUNT($ids)")
             ->getQuery()
             ->getSingleScalarResult();
     }
 
+    /**
+     * @param array<string> $search
+     * @return QueryBuilder
+     */
     protected function getQuery(array $search): QueryBuilder
     {
         $qb = $this->repository->createQueryBuilder('e');
@@ -77,7 +89,9 @@ abstract class AbstractDoctrineTable extends AbstractTable
     public function setServices(EntityManagerInterface $em, Security $security): void
     {
         $this->entityManager = $em;
-        $repository = $em->getRepository($this->getEntityClass());
+        /** @var class-string<object> $entityClass */
+        $entityClass = $this->getEntityClass();
+        $repository = $em->getRepository($entityClass);
         if (!$repository instanceof AbstractRepository) {
             throw new RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
         }
@@ -92,7 +106,7 @@ abstract class AbstractDoctrineTable extends AbstractTable
         $this->security = $security;
     }
 
-    private function addJoins(QueryBuilder $qb): QueryBuilder
+    private function addJoins(QueryBuilder $qb): void
     {
         foreach ($this->getColumns() as $columnName => $column) {
             $field = $column['field'] ?? $columnName;
@@ -113,8 +127,6 @@ abstract class AbstractDoctrineTable extends AbstractTable
 
             throw new RuntimeException('Having properties nested deeper than 2 is not allowed.');
         }
-
-        return $qb;
     }
 
     private function addSearch(QueryBuilder $qb, string $column, string $value): QueryBuilder
@@ -187,6 +199,10 @@ abstract class AbstractDoctrineTable extends AbstractTable
             return;
         }
 
+        if (!$entity instanceof SortableEntityInterface) {
+            return;
+        }
+
         if (!$this->canReorder($entity)) {
             return;
         }
@@ -199,7 +215,7 @@ abstract class AbstractDoctrineTable extends AbstractTable
         return $this->permissionReorder === null || $this->security->isGranted($this->permissionReorder);
     }
 
-    protected function reorderItem(object $entity, string $direction): void
+    protected function reorderItem(SortableEntityInterface $entity, string $direction): void
     {
         $this->repository->reorder($entity, $direction);
     }

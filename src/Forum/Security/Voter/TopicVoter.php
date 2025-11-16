@@ -41,10 +41,10 @@ class TopicVoter extends Voter
         /** @var User|null $user */
         $user = $token->getUser();
         return match ($attribute) {
-            VoterAttribute::TopicView->value => $this->voteOnView($user, $subject),
-            VoterAttribute::TopicCreate->value => $this->voteOnCreate($user, $subject),
+            VoterAttribute::TopicView->value => $subject instanceof Topic && $this->voteOnView($user, $subject),
+            VoterAttribute::TopicCreate->value => $subject instanceof Forum && $this->voteOnCreate($user, $subject),
             VoterAttribute::TopicEdit->value,
-            VoterAttribute::TopicDelete->value => $this->voteOnEditOrDelete($user, $subject),
+            VoterAttribute::TopicDelete->value => $subject instanceof Topic && $this->voteOnEditOrDelete($user, $subject),
             default => false,
         };
     }

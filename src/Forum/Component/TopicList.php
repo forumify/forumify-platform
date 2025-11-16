@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Component;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Security\VoterAttribute;
@@ -68,7 +70,7 @@ class TopicList extends AbstractDoctrineList
 
     protected function getTotalCount(): int
     {
-        return $this->getBaseQueryBuilder()
+        return (int)$this->getBaseQueryBuilder()
             ->select('COUNT(t)')
             ->orderBy('t.id')
             ->getQuery()

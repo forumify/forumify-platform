@@ -97,7 +97,7 @@ class MessageThreadList extends AbstractDoctrineList
 
     protected function getTotalCount(): int
     {
-        return parent::getQuery()
+        return (int)parent::getQuery()
             ->select('COUNT(e.id)')
             ->join('e.participants', 'p')
             ->where('p = (:user)')

@@ -30,10 +30,13 @@ class TokenController extends AbstractController
 
         $authHeader = $request->headers->get('Authorization');
         if ($authHeader !== null && str_starts_with($authHeader, 'Basic')) {
-            $basicToken = substr($authHeader, strpos($authHeader, ' '));
-            $basicAuth = explode(':', base64_decode($basicToken));
-            if (count($basicAuth) === 2) {
-                [$clientId, $clientSecret] = $basicAuth;
+            $strPos = strpos($authHeader, ' ');
+            if ($strPos !== false) {
+                $basicToken = substr($authHeader, $strPos);
+                $basicAuth = explode(':', base64_decode($basicToken));
+                if (count($basicAuth) === 2) {
+                    [$clientId, $clientSecret] = $basicAuth;
+                }
             }
         }
 

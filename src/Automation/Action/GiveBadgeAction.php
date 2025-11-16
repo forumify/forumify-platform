@@ -28,6 +28,11 @@ class GiveBadgeAction implements ActionInterface
         return 'Give Badge';
     }
 
+    /**
+     * @param Automation $automation
+     * @param array<string, mixed>|null $payload
+     * @return void
+     */
     public function run(Automation $automation, ?array $payload): void
     {
         [

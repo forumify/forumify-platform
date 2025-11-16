@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Cms\Widget;
 
+use Forumify\Core\Entity\User;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -20,6 +21,10 @@ abstract class AbstractWidget implements WidgetInterface
         return null;
     }
 
+    /**
+     * @param array<string, mixed> $data
+     * @return FormBuilderInterface<array<string, mixed>>
+     */
     protected function createForm(array $data = []): FormBuilderInterface
     {
         return $this->formFactory->createBuilder(data: $data, options: [
@@ -33,6 +38,11 @@ abstract class AbstractWidget implements WidgetInterface
         $this->formFactory = $formFactory;
     }
 
+    /**
+     * @param string $template
+     * @param array<string, User> $context
+     * @return string
+     */
     protected function render(string $template, array $context = []): string
     {
         return $this->twig->render($template, $context);
