@@ -35,7 +35,7 @@ class UrlMenuType extends AbstractMenuType
         return $this->twig->render('@Forumify/frontend/menu/url.html.twig', [
             'url' => $url,
             'label' => $item->getName(),
-            'external' => $item->getPayloadValue('external')
+            'external' => $item->getPayloadValue('external'),
         ]);
     }
 

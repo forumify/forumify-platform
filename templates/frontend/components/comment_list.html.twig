@@ -1,7 +1,7 @@
 {% embed '@Forumify/components/list.html.twig' with { class: '' } %}
     {% block list %}
         <ul class="flex flex-col gap-4">
-            {% for item in this.result.data %}
+            {% for item in this.result.rows %}
                 {% block row %}
                     {% include '@Forumify/frontend/components/comment_list_comment.html.twig' %}
                 {% endblock %}

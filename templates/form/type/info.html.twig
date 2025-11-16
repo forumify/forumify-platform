@@ -1,0 +1,7 @@
+<div class="form-row rich-text p-2 border rounded">
+    <p class="text-large text-bold flex items-center gap-2">
+        <i class="ph-fill ph-question"></i>
+        {{ form_label(form) }}
+    </p>
+    {{ form.vars.help|default('')|trans(form.vars.help_translation_parameters|default({}))|raw }}
+</div>

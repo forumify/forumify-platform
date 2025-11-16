@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Forumify\Core\Entity;
@@ -8,14 +9,14 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 trait BlameableEntityTrait
 {
-    #[Gedmo\Blameable(on: 'create')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn('created_by', onDelete: 'SET NULL')]
+    #[Gedmo\Blameable(on: 'create')]
     private ?User $createdBy = null;
 
-    #[Gedmo\Blameable(on: 'update')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn('updated_by', onDelete: 'SET NULL')]
+    #[Gedmo\Blameable(on: 'update')]
     private ?User $updatedBy = null;
 
     public function getCreatedBy(): ?User

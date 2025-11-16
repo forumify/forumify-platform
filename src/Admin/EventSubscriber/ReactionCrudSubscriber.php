@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Admin\EventSubscriber;
 
 use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
-use Forumify\Calendar\Entity\CalendarEvent;
 use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Reaction;
 use League\Flysystem\FilesystemOperator;
@@ -37,9 +36,11 @@ class ReactionCrudSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
 
         $newImage = $form->get('newImage')->getData();
-        if ($newImage instanceof UploadedFile) {
-            $image = $this->mediaService->saveToFilesystem($this->assetStorage, $newImage);
-            $reaction->setImage($image);
+        if (!($newImage instanceof UploadedFile)) {
+            return;
         }
+
+        $image = $this->mediaService->saveToFilesystem($this->assetStorage, $newImage);
+        $reaction->setImage($image);
     }
 }

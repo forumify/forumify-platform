@@ -8,7 +8,7 @@ use DateTime;
 use Forumify\Core\Repository\UserRepository;
 use Symfony\Component\Scheduler\Attribute\AsPeriodicTask;
 
-#[AsPeriodicTask('6 hours')]
+#[AsPeriodicTask('6 hours', jitter: 120)]
 class RemoveUserTask
 {
     public function __construct(

@@ -1,19 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Forumify\Core\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Api\Serializer\Attribute\Asset;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Forum\Entity\Subscription;
+use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[ApiResource(operations: [])]
+class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
@@ -21,10 +27,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /** @var non-empty-string $username*/
     #[ORM\Column(length: 32, unique: true)]
+    #[Groups(['MessageThread'])]
     private string $username;
 
-    #[ORM\Column(length: 128, unique: true)]
-    private string $email;
+    #[ORM\Column(length: 128, unique: true, nullable: true)]
+    private ?string $email = null;
 
     /** @var Collection<int, Role> */
     #[ORM\ManyToMany(targetEntity: Role::class, inversedBy: 'users', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
@@ -36,22 +43,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $roles;
 
-    #[ORM\Column]
-    private string $password;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $password = null;
 
     #[ORM\Column(length: 32)]
-    private string $displayName;
+    #[Groups(['MessageThread'])]
+    private string $displayName = '';
 
     /**
      * ISO 639-1 representation of the user's language
      */
-    #[ORM\Column(length: 2)]
+    #[ORM\Column(length: 2, options: ['fixed' => true])]
     private string $language = 'en';
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $timezone = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['MessageThread'])]
+    #[Asset('forumify.avatar')]
     private ?string $avatar = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
@@ -86,6 +96,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $badges;
 
+    #[ORM\OneToOne(targetEntity: OAuthClient::class, inversedBy: 'user')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    private ?OAuthClient $oAuthClient = null;
+
     public function __construct()
     {
         $this->roles = new ArrayCollection();
@@ -104,12 +118,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }
@@ -152,10 +166,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPassword(): string
     {
-        return $this->password;
+        return $this->password ?? '';
     }
 
-    public function setPassword(string $password): void
+    public function setPassword(?string $password): void
     {
         $this->password = $password;
     }
@@ -294,5 +308,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->badges = $badges instanceof Collection
             ? $badges
             : new ArrayCollection($badges);
+    }
+
+    public function getOAuthClient(): ?OAuthClient
+    {
+        return $this->oAuthClient;
+    }
+
+    public function setOAuthClient(?OAuthClient $oAuthClient): void
+    {
+        $this->oAuthClient = $oAuthClient;
     }
 }

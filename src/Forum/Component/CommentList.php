@@ -6,42 +6,48 @@ namespace Forumify\Forum\Component;
 
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
+use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Topic;
-use Forumify\Forum\Repository\CommentRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
+/**
+ * @extends AbstractDoctrineList<Comment>
+ */
 #[AsLiveComponent(name: 'CommentList', template: '@Forumify/frontend/components/comment_list.html.twig')]
 class CommentList extends AbstractDoctrineList
 {
     #[LiveProp]
     public Topic $topic;
 
-    public function __construct(private readonly CommentRepository $commentRepository)
+    protected function getEntityClass(): string
     {
+        return Comment::class;
     }
 
-    protected function getQueryBuilder(): QueryBuilder
+    protected function getQuery(): QueryBuilder
     {
-        $qb = $this->commentRepository->createQueryBuilder('c');
-        $qb
-            ->innerJoin('c.topic', 't')
+        return parent::getQuery()
+            ->innerJoin('e.topic', 't')
             ->leftJoin('t.firstComment', 'tfc')
             ->leftJoin('t.answer', 'ta')
-            ->where('c.topic = :topic')
+            ->where('e.topic = :topic')
             ->orderBy('CASE
-                WHEN c.id = tfc.id THEN 0
-                WHEN c.id = ta.id THEN 1
+                WHEN e.id = tfc.id THEN 0
+                WHEN e.id = ta.id THEN 1
                 ELSE 2
                 END', 'ASC')
-            ->addOrderBy('c.createdAt', 'ASC')
+            ->addOrderBy('e.createdAt', 'ASC')
             ->setParameter('topic', $this->topic);
-
-        return $qb;
     }
 
-    protected function getCount(): int
+    protected function getTotalCount(): int
     {
-        return $this->commentRepository->count(['topic' => $this->topic]);
+        return (int)parent::getQuery()
+            ->select('COUNT(e.id)')
+            ->where('e.topic = :topic')
+            ->setParameter('topic', $this->topic)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

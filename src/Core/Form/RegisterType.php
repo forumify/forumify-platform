@@ -46,8 +46,8 @@ class RegisterType extends AbstractType
                 'placeholder' => 'Select a timezone',
                 'choices' => $this->getTimezones(),
                 'attr' => [
-                    'data-controller' => 'forumify--forumify-platform--client-timezone'
-                ]
+                    'data-controller' => 'forumify--timezone-input',
+                ],
             ]);
     }
 

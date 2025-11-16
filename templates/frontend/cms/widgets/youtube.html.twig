@@ -2,7 +2,7 @@
 {% if videoId is not null %}
     <div
         class="youtube-widget"
-        {{ stimulus_controller('forumify/forumify-platform/youtube', {
+        {{ stimulus_controller('forumify/youtube', {
             videoId: videoId,
         }) }}>
         <div class="play-button"></div>

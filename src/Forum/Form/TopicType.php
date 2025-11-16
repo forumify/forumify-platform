@@ -48,15 +48,17 @@ class TopicType extends AbstractType
                     'preview' => $imagePreview
                         ? $this->packages->getUrl($imagePreview, 'forumify.media')
                         : null,
-                ]
+                ],
             ]);
         }
 
-        if ($topicData === null) {
-            $template = $forum?->getTopicTemplate() ?? '';
-            $builder->add('content', RichTextEditorType::class, [
-                'data' => $template,
-            ]);
+        if ($topicData !== null) {
+            return;
         }
+
+        $template = $forum?->getTopicTemplate() ?? '';
+        $builder->add('content', RichTextEditorType::class, [
+            'data' => $template,
+        ]);
     }
 }

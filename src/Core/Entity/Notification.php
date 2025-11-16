@@ -16,21 +16,21 @@ class Notification
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private User $recipient;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $type;
 
-    /** @var array<string, mixed> */
+    /** @var array<mixed> */
     #[ORM\Column(type: 'json')]
     private array $context;
 
     #[ORM\Column(type: 'boolean')]
     private bool $seen = false;
 
-    /** @var array<string, mixed>|null */
+    /** @var array<mixed> */
     private ?array $deserializedContext = null;
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<mixed> $context
      */
     public function __construct(string $type, User $recipient, array $context = [])
     {
@@ -60,7 +60,7 @@ class Notification
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array<mixed>
      */
     public function getContext(): array
     {
@@ -68,7 +68,7 @@ class Notification
     }
 
     /**
-     * @param array<string, mixed> $context
+     * @param array<mixed> $context
      */
     public function setContext(array $context): void
     {
@@ -76,7 +76,7 @@ class Notification
     }
 
     /**
-     * @return array<string, mixed>|null
+     * @return array<mixed>
      */
     public function getDeserializedContext(): ?array
     {
@@ -84,7 +84,7 @@ class Notification
     }
 
     /**
-     * @param array<string, mixed> $deserializedContext
+     * @param array<mixed> $deserializedContext
      */
     public function setDeserializedContext(array $deserializedContext): void
     {

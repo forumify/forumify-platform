@@ -22,7 +22,7 @@ class ForumDeleteController extends AbstractController
     ) {
     }
 
-    #[Route('/forum/{slug}/delete', 'forum_delete')]
+    #[Route('/forum/{slug:forum}/delete', 'forum_delete')]
     public function __invoke(Request $request, Forum $forum): Response
     {
         if (!$request->get('confirmed')) {

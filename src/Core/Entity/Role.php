@@ -17,7 +17,7 @@ class Role implements SortableEntityInterface
     use SluggableEntityTrait;
     use SortableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $title;
 
     #[ORM\Column(type: 'text')]
@@ -25,9 +25,6 @@ class Role implements SortableEntityInterface
 
     #[ORM\Column(type: 'boolean')]
     private bool $administrator = false;
-
-    #[ORM\Column(type: 'boolean')]
-    private bool $moderator = false;
 
     #[ORM\Column(name: '`system`', type: 'boolean')]
     private bool $system = false;
@@ -39,7 +36,7 @@ class Role implements SortableEntityInterface
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
     private bool $showOnForum = false;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 7, nullable: true, options: ['fixed' => true])]
     private ?string $color = null;
 
     #[ORM\Column(type: 'boolean', options: ['default' => false])]
@@ -86,16 +83,6 @@ class Role implements SortableEntityInterface
     public function setAdministrator(bool $administrator): void
     {
         $this->administrator = $administrator;
-    }
-
-    public function isModerator(): bool
-    {
-        return $this->moderator;
-    }
-
-    public function setModerator(bool $moderator): void
-    {
-        $this->moderator = $moderator;
     }
 
     public function isSystem(): bool

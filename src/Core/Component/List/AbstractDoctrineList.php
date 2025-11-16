@@ -4,43 +4,68 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Component\List;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Forumify\Core\Repository\AbstractRepository;
+use RuntimeException;
+use Symfony\Contracts\Service\Attribute\Required;
 
+/**
+ * @template T of object
+ */
 abstract class AbstractDoctrineList extends AbstractList
 {
-    private ?ListResult $result = null;
+    /** @var AbstractRepository<T> */
+    protected AbstractRepository $repository;
+    /** @var array<string> */
+    private array $identifiers = [];
 
-    abstract protected function getQueryBuilder(): QueryBuilder;
+    /**
+     * @return class-string<T>
+     */
+    abstract protected function getEntityClass(): string;
 
-    abstract protected function getCount(): int;
-
-    public function getResult(): ListResult
+    /**
+     * @return array<T>
+     */
+    protected function getData(): array
     {
-        if ($this->result !== null) {
-            return $this->result;
-        }
+        $limit = $this->limit;
+        $offset = ($this->page - 1) * $limit;
 
-        $count = $this->getCount();
-        $hasPagination = $count > $this->size;
-        if ($hasPagination && !$this->pageSwitched && $this->lastPageFirst) {
-            $pages = array_keys(range(1, $count, $this->size));
-            $lastPage = array_pop($pages) + 1;
-            $this->page = $lastPage;
-        }
+        $qb = $this->getQuery()
+            ->setMaxResults($limit)
+            ->setFirstResult($offset);
 
-        $data = $this->getQueryBuilder()
-            ->setFirstResult(($this->page - 1) * $this->size)
-            ->setMaxResults($this->size)
+        return $qb->getQuery()->getResult();
+    }
+
+    protected function getTotalCount(): int
+    {
+        $ids = implode(',', array_map(static fn (string $id) => "e.$id", $this->identifiers));
+        return (int)$this->getQuery()
+            ->select("COUNT($ids)")
             ->getQuery()
-            ->getResult();
+            ->getSingleScalarResult();
+    }
 
-        $this->result = new ListResult(
-            $data,
-            $this->page,
-            $this->size,
-            $count,
-        );
+    protected function getQuery(): QueryBuilder
+    {
+        return $this->repository->createQueryBuilder('e');
+    }
 
-        return $this->result;
+    #[Required]
+    public function setServices(EntityManagerInterface $em): void
+    {
+        $repository = $em->getRepository($this->getEntityClass());
+        if (!$repository instanceof AbstractRepository) {
+            throw new RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
+        }
+        $this->repository = $repository;
+
+        $this->identifiers = $em->getClassMetadata($this->getEntityClass())->getIdentifier();
+        if (empty($this->identifiers)) {
+            throw new RuntimeException('Your entity must have at least 1 identifier (#[ORM\Id])');
+        }
     }
 }

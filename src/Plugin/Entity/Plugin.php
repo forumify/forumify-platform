@@ -18,16 +18,16 @@ class Plugin
 
     use IdentifiableEntityTrait;
 
-    #[ORM\Column(unique: true)]
+    #[ORM\Column(length: 255, unique: true)]
     private string $package;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $pluginClass;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $version;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $latestVersion;
 
     #[ORM\Column(type: 'boolean')]
@@ -36,7 +36,7 @@ class Plugin
     #[ORM\Column(options: ['default' => self::TYPE_PLUGIN])]
     private string $type;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $subscriptionVersion = null;
 
     private ?PluginInterface $plugin = null;

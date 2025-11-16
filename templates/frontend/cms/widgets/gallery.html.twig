@@ -4,18 +4,18 @@
 {% set hideControls = widget.settings.hideControls ?? false %}
 {% if forumId %}
     {% set images = repository('TopicImage').findByForum(forumId)|map(ti => asset(ti.image, 'forumify.media')) %}
-    <div class="gallery" {{ stimulus_controller('forumify/forumify-platform/gallery', {
+    <div class="gallery" {{ stimulus_controller('forumify/gallery', {
         images: images,
         autoscroll: autoscroll,
         autoscrollInterval, autoscrollInterval
     }) }}>
-        <img class="image" {{ stimulus_target('forumify/forumify-platform/gallery', 'image') }}>
+        <img class="image" {{ stimulus_target('forumify/gallery', 'image') }}>
         {% if not hideControls %}
             <div class="gallery-controls">
-                <a class="control" {{ stimulus_action('forumify/forumify-platform/gallery', 'previous') }}>
+                <a class="control" {{ stimulus_action('forumify/gallery', 'previous') }}>
                     <i class="ph ph-arrow-left"></i>
                 </a>
-                <a class="control" {{ stimulus_action('forumify/forumify-platform/gallery', 'next') }}>
+                <a class="control" {{ stimulus_action('forumify/gallery', 'next') }}>
                     <i class="ph ph-arrow-right"></i>
                 </a>
             </div>

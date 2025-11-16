@@ -1,0 +1,39 @@
+@use '../framework/mixins';
+@use '../framework/elements/buttons';
+
+.auth-container {
+    margin: 15vh auto auto;
+    max-width: 400px;
+}
+
+.auth-website-logo {
+    width: 128px;
+    height: 128px;
+    padding: var(--spacing-4);
+    border-radius: 15px;
+    margin: auto auto var(--spacing-12);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.btn-idp-discord {
+    @include buttons.btn-contained;
+
+    & {
+        color: white;
+        background-color: #5865f2;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    &:hover {
+        color: white;
+        background-color: #4654c0;
+    }
+}

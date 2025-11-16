@@ -36,13 +36,8 @@ class ThemeController extends AbstractCrudController
         return 'Forumify\\ThemeTable';
     }
 
-    /**
-     * @param Theme|null $data
-     * @return FormInterface<object|null>
-     */
     protected function getForm(?object $data): FormInterface
     {
-        /** @var FormInterface<object|null> */
         return $this->createForm(ThemeType::class, $data);
     }
 

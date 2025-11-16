@@ -21,7 +21,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * @extends AbstractType<array<string, mixed>>
+ * @extends AbstractType<Forum>
  */
 class ForumType extends AbstractType
 {
@@ -74,7 +74,7 @@ class ForumType extends AbstractType
             ])
             ->add('topicTemplate', RichTextEditorType::class, [
                 'required' => false,
-                'help' => 'admin.forum.topic_template_help'
+                'help' => 'admin.forum.topic_template_help',
             ]);
 
         if (!$options['is_new']) {

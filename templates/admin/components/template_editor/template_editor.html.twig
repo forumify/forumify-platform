@@ -1,5 +1,5 @@
 <div
-    {{ attributes.defaults(stimulus_controller('forumify/forumify-platform/template_editor')) }}
+    {{ attributes.defaults(stimulus_controller('forumify/template-editor')) }}
     class="template-editor"
     style="height: 100vh;"
 >
@@ -7,12 +7,12 @@
     <div class="h-100 flex-grow" id="{{ this.openFile }}">
         {% if this.openFile %}
             {% set fileContents = this.fileContents %}
-            <div class="page-editor" {{ stimulus_controller('forumify/forumify-platform/tabs') }}>
+            <div class="page-editor" {{ stimulus_controller('forumify/tabs') }}>
                 <div
                     class="tablist page-editor-tablist"
                     style="background-color: var(--c-elevation-1);"
                     role="tablist"
-                    {{ stimulus_target('forumify/forumify-platform/tabs', 'tabs') }}
+                    {{ stimulus_target('forumify/tabs', 'tabs') }}
                 >
                     {% for location in fileContents %}
                         {% if (location.namespace != 'Local' and location.content is not null) or (location.namespace == 'Local' and location.content is not null) %}
@@ -35,7 +35,7 @@
                         {% endif %}
                     {% endfor %}
                 </div>
-                <div class="d-none flex-grow" {{ stimulus_target('forumify/forumify-platform/tabs', 'tabPanels') }}>
+                <div class="d-none flex-grow" {{ stimulus_target('forumify/tabs', 'tabPanels') }}>
                     {% for location in fileContents %}
                         {% include '@Forumify/admin/components/template_editor/editor.html.twig' %}
                     {% endfor %}

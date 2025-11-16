@@ -1,7 +1,7 @@
 {% extends '@Forumify/components/list.html.twig' %}
 {% block list %}
     <ul>
-        {% for topic in this.result.data %}
+        {% for topic in this.result.rows %}
             <li class="flex flex-col topic-row justify-between{% if topic.hidden %} topic-hidden{% endif %}{% if not loop.last %} border-b{% endif %}">
                 <a class="topic-link" href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}"></a>
                 <div class="flex gap-4">

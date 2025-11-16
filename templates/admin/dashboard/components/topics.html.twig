@@ -2,10 +2,10 @@
 <div {{ attributes }}>
     <div class="card">
         <div class="card-title">
-            {{ this.title|trans({ count: this.result.count }) }}
+            {{ this.title|trans({ count: this.result.totalCount }) }}
         </div>
         <ul class="card-body">
-            {% for item in this.result.data %}
+            {% for item in this.result.rows %}
                 <li class="flex flex-col{% if not loop.last %} mb-3{% endif %}">
                     <div class="flex justify-between">
                         <a href="{{ path('forumify_forum_topic', { slug: item.slug }) }}" target="_blank">

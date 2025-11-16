@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Forumify\Core\Entity;
@@ -9,12 +10,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 trait TimestampableEntityTrait
 {
+    #[ORM\Column(type: 'datetime', nullable: true, index: true)]
     #[Gedmo\Timestampable(on: 'create')]
-    #[ORM\Column(type: 'datetime', nullable: true)]
     private DateTime $createdAt;
 
+    #[ORM\Column(type: 'datetime', nullable: true, index: true)]
     #[Gedmo\Timestampable(on: 'update')]
-    #[ORM\Column(type: 'datetime', nullable: true)]
     private ?DateTime $updatedAt = null;
 
     public function getCreatedAt(): DateTime

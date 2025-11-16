@@ -8,7 +8,6 @@ enum VoterAttribute: string
 {
     case SuperAdmin = 'SUPER_ADMIN';
     case Administrator = 'ADMINISTRATOR';
-    case Moderator = 'MODERATOR';
 
     case AssignRole = 'ASSIGN_ROLE';
     case UserDelete = 'USER_DELETE';

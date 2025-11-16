@@ -78,8 +78,9 @@ class GalleryWidget extends AbstractWidget
                 'choice_label' => 'title',
                 'query_builder' => fn (EntityRepository $er) => $er
                     ->createQueryBuilder('f')
-                    ->where('f.type IN (?0, ?1)')
-                    ->setParameters([Forum::TYPE_IMAGE, Forum::TYPE_MIXED]),
+                    ->where('f.type IN (:imageType, :mixedType)')
+                    ->setParameter('imageType', Forum::TYPE_IMAGE)
+                    ->setParameter('mixedType', Forum::TYPE_MIXED),
             ])
             ->add('autoscroll', CheckboxType::class, [
                 'required' => false,
@@ -91,7 +92,7 @@ class GalleryWidget extends AbstractWidget
             ])
             ->add('hideControls', CheckboxType::class, [
                 'required' => false,
-                'help' => 'admin.cms.widget.gallery.hide_controls_help'
+                'help' => 'admin.cms.widget.gallery.hide_controls_help',
             ])
             ->getForm()
         ;

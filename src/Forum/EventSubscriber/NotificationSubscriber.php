@@ -108,7 +108,7 @@ class NotificationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @return Subscription[]
+     * @return array<Subscription>
      */
     private function getSubscriptions(int $subjectId, string $type): array
     {

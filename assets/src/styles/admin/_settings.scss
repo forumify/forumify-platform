@@ -1,0 +1,29 @@
+.setting {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 150px;
+    height: auto;
+    overflow-x: hidden;
+
+    .setting-icon {
+        background: rgba(0, 0, 0, 0.1);
+        width: 50px;
+        height: 50px;
+        border-radius: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        i {
+            font-size: 24px;
+            margin: 0;
+        }
+    }
+
+    .setting-label {
+        text-align: center;
+    }
+}
+
+

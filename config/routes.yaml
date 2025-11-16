@@ -5,3 +5,8 @@ forumify:
 plugin_routes:
     resource: .
     type: forumify_plugin
+
+api_platform:
+    resource: .
+    type: api_platform
+    prefix: /api

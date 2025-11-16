@@ -6,15 +6,19 @@ namespace Forumify\Admin\Components\Dashboard;
 
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
+use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
+/**
+ * @extends AbstractDoctrineList<Topic>
+ */
 #[AsLiveComponent('Forumify\\Admin\\PopularTopics', '@Forumify/admin/dashboard/components/topics.html.twig')]
 class PopularTopics extends AbstractDoctrineList
 {
     public function __construct(private readonly TopicRepository $topicRepository)
     {
-        $this->size = 6;
+        $this->limit = 6;
     }
 
     public function getTitle(): string
@@ -22,19 +26,19 @@ class PopularTopics extends AbstractDoctrineList
         return 'admin.dashboard.popular_topics';
     }
 
-    protected function getQueryBuilder(): QueryBuilder
+    protected function getEntityClass(): string
     {
-        return $this->getQuery();
+        return Topic::class;
     }
 
-    protected function getCount(): int
+    protected function getTotalCount(): int
     {
-        return 0;
+        return $this->limit;
     }
 
-    private function getQuery(): QueryBuilder
+    protected function getQuery(): QueryBuilder
     {
-        $qb = $this->topicRepository
+        return $this->topicRepository
             ->getVisibleTopicsQuery()
             ->leftJoin('t.comments', 'c')
             ->leftJoin('c.reactions', 're')
@@ -43,7 +47,5 @@ class PopularTopics extends AbstractDoctrineList
             ->addGroupBy('t')
             ->addOrderBy('points', 'DESC')
         ;
-
-        return $qb;
     }
 }

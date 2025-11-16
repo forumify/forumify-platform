@@ -1,0 +1,8 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/confirm.html.twig' with {
+        warningText: 'account_settings.unlink_warning'|trans({ user: idpUser.externalIdentifier, provider: idpUser.identityProvider.name }),
+        confirmPath: path('forumify_oauth_idp_unlink', { id: idpUser.id, confirmed: 1 }),
+        cancelPath: path('forumify_core_settings')
+    } only %}
+{% endblock %}

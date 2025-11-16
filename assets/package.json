@@ -2,152 +2,36 @@
     "name": "@forumify/forumify-platform",
     "description": "Frontend assets for forumify",
     "version": "0.1.0",
-    "symfony": {
-        "controllers": {
-            "admin": {
-                "main": "dist/admin_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "chart": {
-                "main": "dist/chart_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "client_timezone": {
-                "main": "dist/client_timezone_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "code_editor": {
-                "main": "dist/code_editor_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "comment_edit": {
-                "main": "dist/comment_edit_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "file_upload": {
-                "main": "dist/file_upload_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "gallery": {
-                "main": "dist/gallery_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "list": {
-                "main": "dist/list_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "menu": {
-                "main": "dist/menu_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "modal": {
-                "main": "dist/modal_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "page_builder": {
-                "main": "dist/page_builder_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "plugin_manager": {
-                "main": "dist/plugin_manager_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "profile_preview": {
-                "main": "dist/profile_preview_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "rich_editor": {
-                "main": "dist/rich_editor_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "rich_text": {
-                "main": "dist/rich_text_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "tabs": {
-                "main": "dist/tabs_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "template_editor": {
-                "main": "dist/template_editor_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "theme": {
-                "main": "dist/theme_controller.js",
-                "fetch": "eager",
-                "enabled": true,
-                "autoimport": {}
-            },
-            "youtube": {
-                "main": "dist/youtube_controller.js",
-                "fetch": "lazy",
-                "enabled": true,
-                "autoimport": {}
-            }
-        },
-        "importmap": {
-            "@hotwired/stimulus": "^3.0.0",
-            "@melloware/coloris": "^0.24.0",
-            "@phosphor-icons/web": "^2.0.3",
-            "@popperjs/core": "^2.11.8",
-            "ace-builds": "^1.32.8",
-            "quill": "2.0.2"
-        }
+    "exports": {
+        "./admin.js": "./src/entrypoints/admin.js",
+        "./frontend.js": "./src/entrypoints/frontend.js"
     },
     "dependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "@melloware/coloris": "^0.24.0",
         "@phosphor-icons/web": "^2.0.3",
         "@popperjs/core": "^2.11.8",
+        "@symfony/ux-live-component": "^2.29.1",
         "ace-builds": "^1.32.8",
         "chart.js": "^4.4.7",
+        "core-js": "^3.23.0",
         "quill": "2.0.2",
-        "quill-mention": "^6.0.1"
+        "quill-mention": "^6.0.1",
+        "tom-select": "^2.2.2"
     },
     "devDependencies": {
         "@eslint/js": "^9.22.0",
-        "@hotwired/stimulus": "^3.0.0",
+        "@rollup/plugin-commonjs": "^28.0.6",
+        "@rollup/plugin-node-resolve": "^16.0.1",
         "@stylistic/eslint-plugin": "^4.2.0",
-        "@symfony/ux-live-component": "file:../vendor/symfony/ux-live-component/assets",
-        "core-js": "^3.34.0",
         "eslint": "^9.22.0",
-        "globals": "^16.0.0"
+        "globals": "^16.0.0",
+        "rollup": "^4.46.2",
+        "rollup-plugin-scss": "^4.0.1",
+        "sass": "^1.90.0"
     },
     "scripts": {
-        "lint": "eslint dist"
+        "lint": "eslint src",
+        "build": "",
+        "watch": ""
     }
 }

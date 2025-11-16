@@ -23,7 +23,7 @@ class TopicActionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /** @var Forum[] $forums */
+        /** @var array<Forum> $forums */
         $forums = $this->forumRepository->findAll();
 
         $forumChoices = [];

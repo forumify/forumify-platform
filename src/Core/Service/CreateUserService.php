@@ -72,10 +72,8 @@ class CreateUserService
             ->select('COUNT(u.id)')
             ->where('u.username = :username')
             ->orWhere('u.email = :email')
-            ->setParameters([
-                'username' => $newUser->getUsername(),
-                'email' => $newUser->getEmail(),
-            ])
+            ->setParameter('username', $newUser->getUsername())
+            ->setParameter('email', $newUser->getEmail())
             ->getQuery();
 
         try {

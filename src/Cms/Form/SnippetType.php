@@ -49,21 +49,23 @@ class SnippetType extends AbstractType
             'disabled' => $snippet !== null,
         ]);
 
-        if ($snippet !== null) {
-            $type = [
-                'html' => [
-                    'type' => CodeEditorType::class,
-                    'options' => [
-                        'language' => CodeEditorLanguage::Twig->value,
-                    ]
-                ],
-                'rich_text' => [
-                    'type' => RichTextEditorType::class,
-                    'options' => [],
-                ]
-            ][$snippet->getType()];
-
-            $builder->add('content', $type['type'], $type['options']);
+        if ($snippet === null) {
+            return;
         }
+
+        $type = [
+            'html' => [
+                'type' => CodeEditorType::class,
+                'options' => [
+                    'language' => CodeEditorLanguage::Twig->value,
+                ],
+            ],
+            'rich_text' => [
+                'type' => RichTextEditorType::class,
+                'options' => [],
+            ],
+        ][$snippet->getType()];
+
+        $builder->add('content', $type['type'], $type['options']);
     }
 }

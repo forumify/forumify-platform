@@ -43,11 +43,11 @@ abstract class AbstractColumnLayout extends AbstractWidget
     {
         $colCount = $this->getColumnCount();
 
-        $gaps = [0,1,2,3,4,5,6,7,8,9,10,11,12];
+        $gaps = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
         return $this->createForm($data)
             ->add('columnCount', HiddenType::class, [
-                'data' => $colCount
+                'data' => $colCount,
             ])
             ->add('responsive', CheckboxType::class, [
                 'required' => false,
@@ -55,10 +55,10 @@ abstract class AbstractColumnLayout extends AbstractWidget
             ])
             ->add('columns', ResponsiveColumnSizeType::class, [
                 'columns' => $colCount,
-                'help' => 'admin.cms.widget.responsive.column_help'
+                'help' => 'admin.cms.widget.responsive.column_help',
             ])
             ->add('gap', ChoiceType::class, [
-                'choices' => array_combine($gaps, $gaps)
+                'choices' => array_combine($gaps, $gaps),
             ])
             ->getForm()
         ;

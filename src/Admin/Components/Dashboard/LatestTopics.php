@@ -8,15 +8,24 @@ use DateInterval;
 use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
+use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
+/**
+ * @extends AbstractDoctrineList<Topic>
+ */
 #[AsLiveComponent('Forumify\\Admin\\LatestTopics', '@Forumify/admin/dashboard/components/topics.html.twig')]
 class LatestTopics extends AbstractDoctrineList
 {
     public function __construct(private readonly TopicRepository $topicRepository)
     {
-        $this->size = 5;
+        $this->limit = 5;
+    }
+
+    protected function getEntityClass(): string
+    {
+        return Topic::class;
     }
 
     public function getTitle(): string
@@ -24,12 +33,7 @@ class LatestTopics extends AbstractDoctrineList
         return 'admin.dashboard.latest_topics';
     }
 
-    protected function getQueryBuilder(): QueryBuilder
-    {
-        return $this->getQuery();
-    }
-
-    protected function getCount(): int
+    protected function getTotalCount(): int
     {
         return (int) $this->getQuery()
             ->select('COUNT(t.id)')
@@ -38,16 +42,14 @@ class LatestTopics extends AbstractDoctrineList
         ;
     }
 
-    private function getQuery(): QueryBuilder
+    protected function getQuery(): QueryBuilder
     {
         $min = (new DateTime())->sub(new DateInterval('P1M'));
-        $qb = $this->topicRepository
+        return $this->topicRepository
             ->getVisibleTopicsQuery()
             ->andWhere('t.createdAt > :min')
             ->setParameter('min', $min)
             ->orderBy('t.createdAt', 'desc')
         ;
-
-        return $qb;
     }
 }

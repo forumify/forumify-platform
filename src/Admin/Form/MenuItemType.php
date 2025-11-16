@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use function Symfony\Component\String\u;
 
 /**
- * @extends AbstractType<array<string, mixed>>
+ * @extends AbstractType<MenuItem>
  */
 class MenuItemType extends AbstractType
 {

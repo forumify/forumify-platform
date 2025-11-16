@@ -14,25 +14,25 @@ class Automation
 {
     use IdentifiableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $name;
 
     #[ORM\Column(type: 'boolean')]
     private bool $enabled = true;
 
-    #[ORM\Column('`trigger`')]
+    #[ORM\Column(name: '`trigger`', length: 255)]
     private string $trigger;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private mixed $triggerArguments = [];
 
-    #[ORM\Column('`condition`', nullable: true)]
+    #[ORM\Column(name: '`condition`', length: 255, nullable: true)]
     private ?string $condition;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private mixed $conditionArguments = [];
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $action;
 
     #[ORM\Column(type: 'json', nullable: true)]

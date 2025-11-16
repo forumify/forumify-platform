@@ -33,7 +33,7 @@ class HTMLSanitizer
         'tbody',
         'tr',
         'th',
-        'td'
+        'td',
     ];
 
     public function sanitize(string $html): string

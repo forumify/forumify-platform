@@ -60,19 +60,11 @@ abstract class AbstractTable
     abstract protected function buildTable(): void;
 
     /**
-     * @param int $limit
-     * @param int $offset
-     * @param array<string, non-falsy-string> $search
-     * @param array<string, 'ASC'|'DESC'> $sort
-     * @return list<array<string, mixed>>
-    */
-    abstract protected function getData(int $limit, int $offset, array $search, array $sort): array;
-
-    /**
-     * @param array<string, string> $search
-     * @return int
+     * @return array<mixed>
      */
-    abstract protected function getTotalCount(array $search): int;
+    abstract protected function getData(): array;
+
+    abstract protected function getTotalCount(): int;
 
     #[Required]
     public function setColumnConfigurationProcessor(ColumnConfigurationProcessor $processor): void
@@ -122,21 +114,15 @@ abstract class AbstractTable
                 $this->search[$name] = $this->search[$name] ?? '';
             }
         }
+        array_filter($this->search);
     }
 
     /**
-     * @param array{
-     *     label?: string,
-     *     field?: string,
-     *     searchable?: bool,
-     *     sortable?: bool,
-     *     renderer?: callable,
-     *     class?: string,
-     * } $column
+     * @param array<mixed> $column
      */
     protected function addColumn(string $name, array $column): static
     {
-        /** @var array{label: string|null, field: string|null, searchable: bool|null, sortable: bool|null, renderer: (callable(): mixed)|null, class: string|null} $processed */
+        /** @var ColumnDef $processed */
         $processed = $this->columnConfigurationProcessor->process($column);
 
         $this->columns[$name] = $processed;
@@ -164,17 +150,9 @@ abstract class AbstractTable
             return $this->result;
         }
 
-        $limit = $this->limit;
-        $offset = ($this->page - 1) * $limit;
-        $search = array_filter($this->search);
-        $sort = array_filter($this->sort);
-
-        $data = $this->getData($limit, $offset, $search, $sort);
-        $rows = $this->transformData($data);
-
         $this->result = new TableResult(
-            $rows,
-            $this->getTotalCount($search),
+            $this->transformData($this->getData()),
+            $this->getTotalCount(),
         );
         return $this->result;
     }
@@ -183,7 +161,7 @@ abstract class AbstractTable
      * @param array<array<string, mixed>> $data
      * @return array<array<string, mixed>>
      */
-    private function transformData(array $data): array
+    protected function transformData(array $data): array
     {
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
@@ -208,10 +186,24 @@ abstract class AbstractTable
     }
 
     /**
-     * @param string $path
-     * @param array<string, int>|array<string, string> $pathArguments
-     * @param string $icon
-     * @return string
+     * Helper that sets defaults for action columns. The renderer callable should produce HTML for the actions.
+     * You can use the renderAction function to render individual action buttons in your callable.
+     *
+     * @param callable(mixed $id, mixed $row): string $renderer
+     */
+    protected function addActionColumn(callable $renderer, string $idColumn = 'id'): static
+    {
+        return $this->addColumn('actions', [
+            'label' => '',
+            'searchable' => false,
+            'sortable' => false,
+            'field' => $idColumn,
+            'renderer' => $renderer,
+        ]);
+    }
+
+    /**
+     * @param array<string, mixed> $pathArguments
      */
     protected function renderAction(string $path, array $pathArguments, string $icon): string
     {

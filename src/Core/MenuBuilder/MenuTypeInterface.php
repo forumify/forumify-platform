@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Forumify\Core\MenuBuilder;
@@ -10,6 +11,8 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 interface MenuTypeInterface
 {
     public function getType(): string;
+
     public function buildItem(MenuItemEntity $item): string;
+
     public function getPayloadFormType(): ?string;
 }

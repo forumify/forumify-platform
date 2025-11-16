@@ -1,7 +1,7 @@
 {% extends '@Forumify/admin/base.html.twig' %}
 {% block title_page %}{{ 'admin.plugins.plugins'|trans }}{% endblock %}
 {% block body %}
-    <div {{ stimulus_controller('forumify/forumify-platform/plugin_manager', { token: ajaxAuthToken }) }}>
+    <div {{ stimulus_controller('forumify/plugin-manager', { token: ajaxAuthToken }) }}>
         <div class="flex justify-between items-center mb-4">
             <h2 class="mb-0">{{ 'admin.plugins.platform.title'|trans }}</h2>
             <div class="flex items-center gap-2">
@@ -10,7 +10,7 @@
                     <i class="ph ph-arrows-clockwise"></i>
                     {{ 'admin.plugins.refresh'|trans }}
                 </a>
-                <button class="btn-primary" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updateAll') }}>
+                <button class="btn-primary" {{ stimulus_action('forumify/plugin-manager', 'updateAll') }}>
                     <i class="ph ph-download"></i>
                     {{ 'admin.plugins.update_all'|trans }}
                 </button>
@@ -25,7 +25,7 @@
                         {% if platformVersions['latest-status'] == 'update-possible' %}
                             <span class="ml-2">
                                 {{ 'admin.plugins.update_available'|trans({ version: platformVersions.latest }) }}
-                                <button class="btn-link" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'updatePlatform', null, { version: platformVersions.latest }) }}>
+                                <button class="btn-link" {{ stimulus_action('forumify/plugin-manager', 'updatePlatform', null, { version: platformVersions.latest }) }}>
                                     <i class="ph ph-download"></i>
                                     {{ 'admin.plugins.update'|trans }}
                                 </button>
@@ -37,7 +37,7 @@
             <p>{{ 'admin.plugins.platform.description'|trans }}</p>
         </div>
         <h3>{{ 'admin.plugins.plugins'|trans }}</h3>
-        <div class="rich-text d-none" {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'log') }}>
+        <div class="rich-text d-none" {{ stimulus_target('forumify/plugin-manager', 'log') }}>
             <div class="alert-error d-none mb-4">
                 {{ 'admin.plugins.errors'|trans }}
             </div>
@@ -52,7 +52,7 @@
                 {% endblock %}
             {% endembed %}
         </div>
-        <div {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'pluginList') }}>
+        <div {{ stimulus_target('forumify/plugin-manager', 'pluginList') }}>
             {% embed '@Forumify/components/tabs.html.twig' %}
                 {% block tabs %}
                     <button type="button" class="btn-link" data-tab-id="tab-plugins">{{ 'admin.plugins.plugins'|trans }}</button>
@@ -98,7 +98,7 @@
         </div>
         <div
             class="flex flex-col items-center justify-start d-none"
-            {{ stimulus_target('forumify/forumify-platform/plugin_manager', 'progress') }}
+            {{ stimulus_target('forumify/plugin-manager', 'progress') }}
         >
             {% include '@Forumify/components/loader.html.twig' %}
             <p class="w-100"><span class="step"></span>...</p>
