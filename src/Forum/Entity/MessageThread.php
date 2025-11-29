@@ -6,8 +6,10 @@ namespace Forumify\Forum\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Patch;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
@@ -49,6 +51,9 @@ class MessageThread
     #[ORM\OneToMany(mappedBy: 'thread', targetEntity: Message::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $messages;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $lastMessageAt;
 
     public function __construct()
     {
@@ -96,5 +101,15 @@ class MessageThread
     public function setMessages(Collection $messages): void
     {
         $this->messages = $messages;
+    }
+
+    public function getLastMessageAt(): DateTimeImmutable
+    {
+        return $this->lastMessageAt;
+    }
+
+    public function setLastMessageAt(DateTimeImmutable $lastMessageAt): void
+    {
+        $this->lastMessageAt = $lastMessageAt;
     }
 }

@@ -46,10 +46,13 @@
                         <i class="ph ph-users"></i>
                     </div>
                 {% endif %}
-                <span class="thread-title">
-                    {{ item.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : item.title }}
-                    {% if not item|read %}<i class="dot ml-1"></i>{% endif %}
-                </span>
+                <div>
+                    <p class="thread-title">
+                        {{ item.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : item.title }}
+                        {% if not item|read %}<i class="dot ml-1"></i>{% endif %}
+                    </p>
+                    <p class="text-small text-light">{{ item.lastMessageAt|format_date }}</p>
+                </div>
             </div>
         </div>
     </a>

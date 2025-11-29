@@ -88,13 +88,9 @@ class MessageThreadList extends AbstractDoctrineList
     protected function getQuery(): QueryBuilder
     {
         return parent::getQuery()
-            ->select('e, MAX(m.createdAt) AS HIDDEN maxCreatedAt')
-            ->leftJoin('e.messages', 'm')
-            ->join('e.participants', 'p')
-            ->where('p = (:user)')
+            ->andWhere(':user MEMBER OF e.participants')
             ->setParameter('user', $this->getUser())
-            ->groupBy('e.id')
-            ->orderBy('maxCreatedAt', 'DESC')
+            ->addOrderBy('e.lastMessageAt', 'DESC')
         ;
     }
 
@@ -102,8 +98,7 @@ class MessageThreadList extends AbstractDoctrineList
     {
         return (int)parent::getQuery()
             ->select('COUNT(e.id)')
-            ->join('e.participants', 'p')
-            ->where('p = (:user)')
+            ->andWhere(':user MEMBER OF e.participants')
             ->setParameter('user', $this->getUser())
             ->getQuery()
             ->getSingleScalarResult()
