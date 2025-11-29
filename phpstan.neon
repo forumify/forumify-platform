@@ -11,4 +11,3 @@ parameters:
                 - '#Property .+ is never written, only read.#'
                 - '#Property .+ is never assigned .+ so it can be removed from the property type.#'
             path: src/**/Entity/*
-        - '#Call to method scalarNode\(\) on an unknown class Symfony\\Component\\Config\\Definition\\Builder\\NodeBuilder.#'

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\EventSubscriber;
 
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
@@ -21,8 +20,9 @@ class ThreadLastMessageAtSubscriber
     public function setThreadLastMessageAt(Message $message): void
     {
         $thread = $message->getThread();
-        $createdAt = $message->getCreatedAt() ?? new DateTime();
-        $thread->setLastMessageAt(DateTimeImmutable::createFromMutable($createdAt));
+        $thread->setLastMessageAt(DateTimeImmutable::createFromMutable(
+            $message->getCreatedAt(),
+        ));
 
         $this->messageThreadRepository->save($thread);
     }
