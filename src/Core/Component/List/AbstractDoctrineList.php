@@ -6,6 +6,8 @@ namespace Forumify\Core\Component\List;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Forumify\Core\Entity\AccessControlledEntityInterface;
+use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
 use RuntimeException;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -19,6 +21,9 @@ abstract class AbstractDoctrineList extends AbstractList
     protected AbstractRepository $repository;
     /** @var array<string> */
     private array $identifiers = [];
+
+    /** @var string|array{ permission: string, alias?: string, entity?: class-string }|null */
+    protected string|array|null $aclPermission = null;
 
     /**
      * @return class-string<T>
@@ -51,7 +56,21 @@ abstract class AbstractDoctrineList extends AbstractList
 
     protected function getQuery(): QueryBuilder
     {
-        return $this->repository->createQueryBuilder('e');
+        $qb = $this->repository->createQueryBuilder('e');
+
+        if (is_a($this->getEntityClass(), SortableEntityInterface::class, true)) {
+            $qb->addOrderBy('e.position', 'ASC');
+        }
+
+        $acl = is_string($this->aclPermission)
+            ? ['permission' => $this->aclPermission]
+            : $this->aclPermission;
+
+        if ($acl !== null) {
+            $this->repository->addACLToQuery($qb, $acl['permission'], $acl['entity'] ?? null, $acl['alias'] ?? 'e');
+        }
+
+        return $qb;
     }
 
     #[Required]
