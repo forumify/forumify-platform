@@ -6,7 +6,7 @@ namespace Forumify\Automation\Form;
 
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Form\CodeEditorType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Forumify\Core\Form\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 

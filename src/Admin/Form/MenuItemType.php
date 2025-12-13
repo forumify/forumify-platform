@@ -7,7 +7,7 @@ namespace Forumify\Admin\Form;
 use Doctrine\ORM\EntityRepository;
 use Forumify\Core\Entity\MenuItem;
 use Forumify\Core\MenuBuilder\MenuTypeInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Forumify\Core\Form\EntityType;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

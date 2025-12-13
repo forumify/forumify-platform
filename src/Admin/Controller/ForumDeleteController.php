@@ -25,7 +25,7 @@ class ForumDeleteController extends AbstractController
     #[Route('/forum/{slug:forum}/delete', 'forum_delete')]
     public function __invoke(Request $request, Forum $forum): Response
     {
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render('@Forumify/admin/forum/delete.html.twig', [
                 'forum' => $forum,
             ]);

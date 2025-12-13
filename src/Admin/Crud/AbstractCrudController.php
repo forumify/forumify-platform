@@ -117,7 +117,7 @@ abstract class AbstractCrudController extends AbstractController
             return $this->redirectToRoute($this->getRoute('list'));
         }
 
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render($this->deleteTemplate, $this->templateParams());
         }
 

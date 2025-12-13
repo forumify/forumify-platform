@@ -47,7 +47,7 @@ class SnippetController extends AbstractController
     #[IsGranted('forumify.admin.cms.snippets.manage')]
     public function delete(Snippet $snippet, Request $request): Response
     {
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render('@Forumify/admin/cms/snippet/delete.html.twig', [
                 'snippet' => $snippet,
             ]);

@@ -51,7 +51,7 @@ class IdentityProviderController extends AbstractController
     #[Route('/{id}/unlink', 'unlink')]
     public function unlink(IdentityProviderUser $idpUser, Request $request): Response
     {
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render('@Forumify/frontend/auth/unlink_idp.html.twig', [
                 'idpUser' => $idpUser,
             ]);

@@ -51,7 +51,7 @@ class ResourceController extends AbstractController
     #[IsGranted('forumify.admin.cms.resources.manage')]
     public function delete(Resource $resource, Request $request): Response
     {
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render('@Forumify/admin/cms/resource/delete.html.twig', [
                 'resource' => $resource,
             ]);

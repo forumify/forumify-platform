@@ -27,7 +27,7 @@ class ForumGroupDeleteController extends AbstractController
     ): Response {
         $parentSlug = $group->getParentForum()?->getSlug();
 
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render('@Forumify/admin/forum/group_delete.html.twig', [
                 'group' => $group,
                 'parentSlug' => $parentSlug,

@@ -6,7 +6,7 @@ namespace Forumify\Automation\Form;
 
 use Forumify\Core\Form\CodeEditorType;
 use Forumify\Forum\Entity\Badge;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Forumify\Core\Form\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 

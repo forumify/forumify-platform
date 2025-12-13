@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Forum\Controller;
 
 use Forumify\Core\Entity\User;
+use Forumify\Core\Form\EntityType;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\ACLService;
@@ -19,7 +20,6 @@ use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
 use Forumify\Forum\Service\LastCommentService;
 use League\Flysystem\FilesystemOperator;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -192,7 +192,7 @@ class TopicController extends AbstractController
     {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicDelete->value, $topic);
 
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render('@Forumify/frontend/forum/topic_delete.html.twig', [
                 'topic' => $topic,
             ]);

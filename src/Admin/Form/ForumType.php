@@ -6,12 +6,12 @@ namespace Forumify\Admin\Form;
 
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Form\RichTextEditorType;
+use Forumify\Core\Form\EntityType;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\ForumType\ForumTypeInterface;
 use Forumify\Forum\Repository\ForumGroupRepository;
 use Forumify\Forum\Repository\ForumRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -96,8 +96,7 @@ class ForumType extends AbstractType
         return function (ForumGroupRepository $repository) use ($parentId): QueryBuilder {
             $qb = $repository
                 ->createQueryBuilder('fg')
-                ->where('fg.parentForum IS NULL')
-                ->orderBy('fg.position', 'ASC');
+                ->where('fg.parentForum IS NULL');
 
             if ($parentId !== null) {
                 $qb->where('fg.parentForum = :parentId');

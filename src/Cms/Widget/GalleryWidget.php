@@ -7,7 +7,7 @@ namespace Forumify\Cms\Widget;
 use Doctrine\ORM\EntityRepository;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Repository\ForumRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Forumify\Core\Form\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormInterface;
