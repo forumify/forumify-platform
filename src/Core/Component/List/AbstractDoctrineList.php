@@ -6,7 +6,6 @@ namespace Forumify\Core\Component\List;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
 use RuntimeException;

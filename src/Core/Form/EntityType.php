@@ -14,19 +14,15 @@ class EntityType extends SymfonyEntityType
 {
     public function getLoader(ObjectManager $manager, object $queryBuilder, string $class): ORMQueryBuilderLoader
     {
-        if ($queryBuilder instanceof QueryBuilder) {
-            $this->addDefaultSort($queryBuilder, $class);
+        if (is_a($class, SortableEntityInterface::class, true)) {
+            $this->addDefaultSort($queryBuilder);
         }
 
         return parent::getLoader($manager, $queryBuilder, $class);
     }
 
-    private function addDefaultSort(QueryBuilder $queryBuilder, string $class): void
+    private function addDefaultSort(QueryBuilder $queryBuilder): void
     {
-        if (!is_a($class, SortableEntityInterface::class, true)) {
-            return;
-        }
-
         $rootAlias = $queryBuilder->getRootAliases();
         if (count($rootAlias) !== 1) {
             return;

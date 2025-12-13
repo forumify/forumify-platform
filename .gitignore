@@ -11,3 +11,4 @@ coverage/
 .phpunit.*
 .phpcs-cache
 var
+tests/config/reference.php

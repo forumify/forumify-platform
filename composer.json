@@ -24,6 +24,7 @@
         "stof/doctrine-extensions-bundle": "^v1.10",
         "symfony/asset": "7.4.*",
         "symfony/console": "7.4.*",
+        "symfony/config": "7.4.*",
         "symfony/doctrine-messenger": "7.4.*",
         "symfony/dotenv": "7.4.*",
         "symfony/expression-language": "7.4.*",
@@ -31,6 +32,7 @@
         "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
         "symfony/http-client": "7.4.*",
+        "symfony/http-foundation": "7.4.*",
         "symfony/intl": "7.4.*",
         "symfony/mailer": "7.4.*",
         "symfony/mime": "7.4.*",
@@ -40,6 +42,7 @@
         "symfony/runtime": "7.4.*",
         "symfony/scheduler": "7.4.*",
         "symfony/security-bundle": "7.4.*",
+        "symfony/security-core": "7.4.*",
         "symfony/serializer": "7.4.*",
         "symfony/stimulus-bundle": "^2.9",
         "symfony/string": "7.4.*",
@@ -98,7 +101,8 @@
             "symfony/flex": false,
             "symfony/runtime": true,
             "dealerdirect/phpcodesniffer-composer-installer": true
-        }
+        },
+        "lock": false
     },
     "extra": {
         "symfony": {
