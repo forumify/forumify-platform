@@ -8,8 +8,9 @@
 [![Total Downloads](https://poser.pugx.org/forumify/forumify-platform/downloads)](https://packagist.org/packages/forumify/forumify-platform)
 [![License](https://poser.pugx.org/forumify/forumify-platform/license)](https://packagist.org/packages/forumify/forumify-platform)
 [![PHP Version Require](https://poser.pugx.org/forumify/forumify-platform/require/php)](https://packagist.org/packages/forumify/forumify-platform)
+![Symfony](https://img.shields.io/badge/Symfony-7.4-black.svg)
 ![PHPStan](https://img.shields.io/badge/CodeStyle-PSR12-green.svg)
-![PHPStan](https://img.shields.io/badge/PHPStan-level%205-yellow.svg)
+![PHPStan](https://img.shields.io/badge/PHPStan-level%208-green.svg)
     
 </div>
 
@@ -17,7 +18,7 @@
 
 **A modern open-source forum experience**
 
-Forumify platform is a community platform that brings forums back to the modern era. Built on top of [Symfony](https://symfony.com/what-is-symfony), and using a simple barebones front-end, it's easy to get into for both community owners and developers alike.
+Forumify is a community platform that brings forums back to the modern era. Built on top of [Symfony](https://symfony.com/what-is-symfony), and using a simple barebones front-end, it's easy to get into for both community owners and developers alike.
 
 ## Project Overview
 
@@ -62,5 +63,11 @@ The following checks are performed when you create a pull request:
 
 You can avoid failing builds by running these tools locally:
 
-- PHPCS: `./vendor/bin/phpcs`
-- PHPStan: `./vendor/bin/phpstan analyze`
+On Linux/WSL/MacOS:
+
+- Quality checks: `make quality`
+- Tests: `make tests`
+
+On Windows:
+
+- See commands in `Makefile` and execute manually.
