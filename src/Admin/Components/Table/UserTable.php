@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Components\Table;
 
+use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
@@ -14,8 +15,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Twig\Environment;
 
-#[IsGranted('forumify.admin.users.view')]
 #[AsLiveComponent('UserTable', '@Forumify/components/table/table.html.twig')]
+#[IsGranted('forumify.admin.users.view')]
 class UserTable extends AbstractDoctrineTable
 {
     public function __construct(
@@ -39,7 +40,7 @@ class UserTable extends AbstractDoctrineTable
                 'label' => 'Display name',
             ])
             ->addColumn('email', [
-                'field' => 'email'
+                'field' => 'email',
             ])
             ->addColumn('actions', [
                 'label' => '',
@@ -48,6 +49,11 @@ class UserTable extends AbstractDoctrineTable
                 'sortable' => false,
                 'renderer' => [$this, 'renderActionColumn'],
             ]);
+    }
+
+    protected function getQuery(array $search): QueryBuilder
+    {
+        return parent::getQuery($search)->andWhere('e.oAuthClient IS NULL');
     }
 
     #[LiveAction]

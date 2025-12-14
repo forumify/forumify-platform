@@ -20,23 +20,42 @@ abstract class AbstractList
     public bool $lastPageFirst = false;
 
     #[LiveProp(writable: true)]
-    public int $size = 10;
+    public int $limit = 10;
 
     #[LiveProp]
-    public bool $pageSwitched = false;
+    public bool $infiniteScroll = false;
 
-    abstract public function getResult(): ListResult;
+    private ?ListResult $result = null;
 
     #[LiveAction]
     public function setPage(#[LiveArg] int $page): void
     {
-        $this->pageSwitched = true;
         $this->page = $page;
     }
 
     #[LiveAction]
-    public function setSize(#[LiveArg] int $size): void
+    public function setLimit(#[LiveArg] int $limit): void
     {
-        $this->size = $size;
+        $this->limit = $limit;
     }
+
+    public function getResult(): ListResult
+    {
+        if ($this->result !== null) {
+            return $this->result;
+        }
+
+        $this->result = new ListResult(
+            $this->getData(),
+            $this->getTotalCount(),
+        );
+        return $this->result;
+    }
+
+    /**
+     * @return array<mixed>
+     */
+    abstract protected function getData(): array;
+
+    abstract protected function getTotalCount(): int;
 }

@@ -18,14 +18,14 @@ class Resource
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $name;
 
+    #[ORM\Column(length: 255, unique: true)]
     #[Gedmo\Slug(fields: ['name'])]
-    #[ORM\Column(unique: true)]
     private string $slug;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $path;
 
     public function getName(): string

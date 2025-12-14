@@ -40,7 +40,7 @@ class AccountSettingsType extends AbstractType
 
         $builder
             ->add('displayName', TextType::class, [
-                'constraints' => [new Assert\Length(min: 4, max: 32, normalizer: 'trim')]
+                'constraints' => [new Assert\Length(min: 4, max: 32, normalizer: 'trim')],
             ])
             ->add('newAvatar', FileType::class, [
                 'required' => false,
@@ -67,7 +67,7 @@ class AccountSettingsType extends AbstractType
                 'required' => false,
                 'first_options' => ['label' => 'New password', 'required' => false],
                 'second_options' => ['label' => 'Repeat new password', 'required' => false],
-                'constraints' => [new Assert\Length(min: 8)]
+                'constraints' => [new Assert\Length(min: 8)],
             ])
             ->add('notificationSettings', UserNotificationSettingsType::class, [
                 'label' => false,

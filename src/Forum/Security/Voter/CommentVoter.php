@@ -6,9 +6,9 @@ namespace Forumify\Forum\Security\Voter;
 
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Service\ACLService;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Topic;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class CommentVoter extends Voter
 {
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly ACLService $aclService)
     {
     }
 
@@ -37,7 +37,8 @@ class CommentVoter extends Voter
             return false;
         }
 
-        if ($this->security->isGranted(VoterAttribute::Moderator->value, $subject)) {
+        $forum = ($subject instanceof Comment ? $subject->getTopic() : $subject)->getForum();
+        if ($this->aclService->can('moderate', $forum)) {
             return true;
         }
 
@@ -59,10 +60,7 @@ class CommentVoter extends Voter
             return false;
         }
 
-        return $this->security->isGranted(VoterAttribute::ACL->value, [
-            'permission' => 'create_comment',
-            'entity' => $topic->getForum(),
-        ]);
+        return $this->aclService->can('create_comment', $topic->getForum());
     }
 
     private function voteOnEditOrDelete(User $user, Comment $comment): bool

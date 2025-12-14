@@ -12,7 +12,12 @@
             <div class="flex gap-2 mb-2">
                 {% block profile_user_username %}
                     <div>
-                        <h2 class="mb-0">{{ user.displayName }}</h2>
+                        <h2 class="mb-0">
+                            {{ user.displayName }}
+                            {% if user.oAuthClient %}
+                                <span class="tag text-black text-regular ml-2">APP</span>
+                            {% endif %}
+                        </h2>
                         {% if not setting('forumify.hide_usernames') %}
                             <p class="text-small">@{{ user.username }}</p>
                         {% endif %}

@@ -20,7 +20,7 @@ use Twig\Error\SyntaxError;
  *     themeId?: int,
  *     pluginPackage?: string,
  *     lastModified?: string,
- *     stylesheets?: string[],
+ *     stylesheets?: array<string>,
  * }
  */
 class ThemeService

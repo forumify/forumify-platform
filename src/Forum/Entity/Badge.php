@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,8 +15,10 @@ use Forumify\Core\Entity\SortableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Repository\BadgeRepository;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(BadgeRepository::class)]
+#[ApiResource]
 class Badge implements SortableEntityInterface
 {
     use IdentifiableEntityTrait;
@@ -23,13 +26,16 @@ class Badge implements SortableEntityInterface
     use TimestampableEntityTrait;
     use SortableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
+    #[Groups('Badge')]
     private string $name;
 
     #[ORM\Column(type: 'text')]
+    #[Groups('Badge')]
     private string $description;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
+    #[Groups('Badge')]
     private string $image;
 
     /**

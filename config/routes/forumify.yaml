@@ -30,9 +30,3 @@ page_admin:
     type: attribute
     name_prefix: admin_cms_
     prefix: admin/cms/
-
-calendar:
-    resource: ../../src/Calendar/Controller
-    type: attribute
-    name_prefix: calendar_
-    prefix: calendar

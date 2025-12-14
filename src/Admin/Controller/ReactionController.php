@@ -31,13 +31,8 @@ class ReactionController extends AbstractCrudController
         return 'ReactionTable';
     }
 
-    /**
-     * @param Reaction|null $data
-     * @return FormInterface<object|null>
-     */
     protected function getForm(?object $data): FormInterface
     {
-        /** @var FormInterface<object|null> */
         return $this->createForm(ReactionType::class, $data, [
             'image_required' => $data === null,
         ]);

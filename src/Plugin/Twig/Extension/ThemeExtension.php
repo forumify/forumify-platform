@@ -53,13 +53,11 @@ class ThemeExtension extends AbstractExtension
             ''
         );
 
-        $tags .= "<script type='text/javascript'>
+        return $tags . "<script type='text/javascript'>
             let theme = '$preference';
             if (theme === 'system') {
                 theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default';
             }
         </script>";
-
-        return $tags;
     }
 }

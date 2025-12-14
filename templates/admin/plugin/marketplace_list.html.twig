@@ -24,7 +24,7 @@
                 </td>
                 {% if showInstallButton %}
                     <td class="text-right">
-                        <button class="btn-outlined" {{ stimulus_action('forumify/forumify-platform/plugin_manager', 'install', null, {
+                        <button class="btn-outlined" {{ stimulus_action('forumify/plugin-manager', 'install', null, {
                             package: plugin.package
                         }) }}>
                             {{ 'admin.plugins.install_plugin'|trans }}

@@ -5,25 +5,25 @@ declare(strict_types=1);
 namespace Forumify\Forum\Controller;
 
 use Forumify\Core\Entity\User;
+use Forumify\Core\Form\EntityType;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Service\ACLService;
 use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\NewCommentType;
 use Forumify\Forum\Form\TopicData;
 use Forumify\Forum\Form\TopicType;
+use Forumify\Forum\Repository\ForumRepository;
 use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
 use Forumify\Forum\Service\LastCommentService;
 use League\Flysystem\FilesystemOperator;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/topic', name: 'topic')]
 class TopicController extends AbstractController
@@ -33,10 +33,12 @@ class TopicController extends AbstractController
         private readonly TopicRepository $topicRepository,
         private readonly LastCommentService $lastCommentService,
         private readonly ReadMarkerRepository $readMarkerRepository,
+        private readonly ForumRepository $forumRepository,
+        private readonly ACLService $aclService,
     ) {
     }
 
-    #[Route('/{slug}', name: '')]
+    #[Route('/{slug:topic}', name: '')]
     public function __invoke(Topic $topic, Request $request): Response
     {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicView->value, $topic);
@@ -69,7 +71,7 @@ class TopicController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/edit', '_edit')]
+    #[Route('/{slug:topic}/edit', '_edit')]
     public function edit(
         Request $request,
         Topic $topic,
@@ -107,30 +109,39 @@ class TopicController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/pin', '_pin')]
-    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    #[Route('/{slug:topic}/pin', '_pin')]
     public function pin(Topic $topic): Response
     {
+        if (!$this->aclService->can('moderate', $topic->getForum())) {
+            throw $this->createAccessDeniedException();
+        }
+
         $topic->setPinned(!$topic->isPinned());
         $this->topicRepository->save($topic);
 
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
     }
 
-    #[Route('/{slug}/toggle-lock', '_lock')]
-    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    #[Route('/{slug:topic}/toggle-lock', '_lock')]
     public function lock(Topic $topic): Response
     {
+        if (!$this->aclService->can('moderate', $topic->getForum())) {
+            throw $this->createAccessDeniedException();
+        }
+
         $topic->setLocked(!$topic->isLocked());
         $this->topicRepository->save($topic);
 
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
     }
 
-    #[Route('/{slug}/toggle-visibility', '_hide')]
-    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    #[Route('/{slug:topic}/toggle-visibility', '_hide')]
     public function hide(Topic $topic): Response
     {
+        if (!$this->aclService->can('moderate', $topic->getForum())) {
+            throw $this->createAccessDeniedException();
+        }
+
         $topic->setHidden(!$topic->isHidden());
 
         $this->topicRepository->save($topic);
@@ -139,28 +150,34 @@ class TopicController extends AbstractController
         return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
     }
 
-    #[Route('/{slug}/move', '_move')]
-    #[IsGranted(VoterAttribute::Moderator->value, new Expression('args["topic"]'))]
+    #[Route('/{slug:topic}/move', '_move')]
     public function move(Topic $topic, Request $request): Response
     {
+        if (!$this->aclService->can('moderate', $topic->getForum())) {
+            throw $this->createAccessDeniedException();
+        }
+
         $form = $this->createFormBuilder($topic, ['data_class' => Topic::class])
             ->add('forum', EntityType::class, [
                 'class' => Forum::class,
                 'choice_label' => 'title',
                 'autocomplete' => true,
+                'query_builder' => function () {
+                    $qb = $this->forumRepository->createQueryBuilder('e');
+                    $this->forumRepository->addACLToQuery($qb, 'moderate');
+                    return $qb;
+                },
             ])
             ->getForm();
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $topic = $form->getData();
-            if ($this->isGranted(VoterAttribute::Moderator->value, $topic->getForum())) {
-                $this->topicRepository->save($topic);
-                $this->lastCommentService->clearCache();
+            $this->topicRepository->save($topic);
+            $this->lastCommentService->clearCache();
 
-                $this->addFlash('success', 'forum.topic.flashes.topic_moved');
-                return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
-            }
+            $this->addFlash('success', 'forum.topic.flashes.topic_moved');
+            return $this->redirectToRoute('forumify_forum_topic', ['slug' => $topic->getSlug()]);
         }
 
         return $this->render('@Forumify/form/simple_form_page.html.twig', [
@@ -170,12 +187,12 @@ class TopicController extends AbstractController
         ]);
     }
 
-    #[Route('/{slug}/delete', '_delete')]
+    #[Route('/{slug:topic}/delete', '_delete')]
     public function delete(Request $request, Topic $topic): Response
     {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicDelete->value, $topic);
 
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render('@Forumify/frontend/forum/topic_delete.html.twig', [
                 'topic' => $topic,
             ]);

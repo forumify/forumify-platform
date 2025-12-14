@@ -1,0 +1,56 @@
+@use 'vendor';
+@use 'grid';
+@use 'typography';
+@use 'elements';
+@use 'utility';
+
+:root {
+    --c-primary: #2d3142;
+    --c-primary-accent: #4a5496;
+    --c-primary-text: #ffffff;
+
+    --c-secondary: #4f5d75;
+    --c-secondary-text: #ffffff;
+
+    --c-call-to-action: #ef8354;
+    --c-call-to-action-accent: #d06335;
+    --c-call-to-action-text: #000000;
+
+    --c-text-primary: #1b1c1f;
+    --c-text-secondary: #666879;
+
+    --c-success: #E3FBE3;
+    --c-success-text: #0A470A;
+
+    --c-info: #E3EFFB;
+    --c-info-text: #12467B;
+
+    --c-warning: #FDF0E1;
+    --c-warning-text: #492B08;
+
+    --c-error: #fce4e4;
+    --c-error-text: #7d1212;
+
+    --c-elevation-0: #f9f9f9;
+    --c-elevation-1: #ffffff;
+    --c-elevation-2: #ececec;
+    --c-elevation-3: #e3e3e3;
+    --c-elevation-4: #dedede;
+    --c-elevation-5: #d5d5d5;
+
+    --c-hover: rgba(0, 0, 0, 0.03);
+
+    --border-style: solid;
+    --border-width: 1px;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --border: var(--border-style) var(--border-width) var(--border-color);
+
+    --border-radius: 8px;
+    --button-border-radius: 25px;
+
+    --font-size: 16px;
+
+    @for $i from 1 through 12 {
+        --spacing-#{$i}: #{$i * 0.25rem};
+    }
+}

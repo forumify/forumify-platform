@@ -5,7 +5,10 @@ assets/node_modules
 assets/package-lock.json
 
 public/styles
+public/build
 
 coverage/
 .phpunit.*
+.phpcs-cache
 var
+tests/config/reference.php

@@ -10,5 +10,6 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 interface ForumTypeInterface
 {
     public static function getType(): string;
+
     public function getTemplate(): string;
 }

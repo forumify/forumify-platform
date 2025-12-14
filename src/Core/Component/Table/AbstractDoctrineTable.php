@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Forumify\Core\Component\Table;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
@@ -24,7 +22,7 @@ abstract class AbstractDoctrineTable extends AbstractTable
     /** @var AbstractRepository<object> */
     protected AbstractRepository $repository;
 
-    /** @var list<string> */
+    /** @var array<string> */
     private array $identifiers = [];
 
     /** @var array<string, string> */
@@ -34,8 +32,14 @@ abstract class AbstractDoctrineTable extends AbstractTable
 
     abstract protected function getEntityClass(): string;
 
-    protected function getData(int $limit, int $offset, array $search, array $sort): array
+    protected function getData(): array
     {
+        $search = array_filter($this->search);
+        $sort = array_filter($this->sort);
+
+        $limit = $this->limit;
+        $offset = ($this->page - 1) * $limit;
+
         $qb = $this->getQuery($search)
             ->setMaxResults($limit)
             ->setFirstResult($offset);
@@ -47,13 +51,11 @@ abstract class AbstractDoctrineTable extends AbstractTable
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * @throws NonUniqueResultException
-     * @throws NoResultException
-     */
-    protected function getTotalCount(array $search): int
+    protected function getTotalCount(): int
     {
-        $ids = implode(',', array_map(static fn(string $id) => "e.$id", $this->identifiers));
+        $search = array_filter($this->search);
+
+        $ids = implode(',', array_map(static fn (string $id) => "e.$id", $this->identifiers));
         return (int) $this->getQuery($search)
             ->select("COUNT($ids)")
             ->getQuery()
@@ -76,6 +78,11 @@ abstract class AbstractDoctrineTable extends AbstractTable
         return $qb;
     }
 
+    protected function isGranted(string $permission, mixed $subject = null): bool
+    {
+        return $this->security->isGranted($permission, $subject);
+    }
+
     #[Required]
     public function setServices(EntityManagerInterface $em, Security $security): void
     {
@@ -86,12 +93,14 @@ abstract class AbstractDoctrineTable extends AbstractTable
         if (!$repository instanceof AbstractRepository) {
             throw new RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
         }
-        $this->repository = $repository;
 
-        $this->identifiers = $em->getClassMetadata($this->getEntityClass())->getIdentifier();
-        if (empty($this->identifiers)) {
+        $identifiers = $em->getClassMetadata($this->getEntityClass())->getIdentifierFieldNames();
+        if (empty($identifiers)) {
             throw new RuntimeException('Your entity must have at least 1 identifier (#[ORM\Id])');
         }
+
+        $this->repository = $repository;
+        $this->identifiers = $identifiers;
         $this->security = $security;
     }
 

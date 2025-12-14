@@ -10,8 +10,10 @@ use Forumify\Core\Form\RegisterType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\CreateUserService;
 use Forumify\Core\Service\RecaptchaService;
+use Forumify\OAuth\Repository\IdentityProviderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,19 +21,32 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class AuthController extends AbstractController
 {
+    public function __construct(
+        private readonly AuthenticationUtils $authenticationUtils,
+        private readonly IdentityProviderRepository $identityProviderRepository,
+        private readonly CreateUserService $createUserService,
+        private readonly Security $security,
+        private readonly SettingRepository $settingRepository,
+        private readonly RecaptchaService $recaptchaService
+    ) {
+    }
+
     #[Route('/login', name: 'login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function login(): Response
     {
         if ($this->getUser() !== null) {
             return $this->redirectToRoute('forumify_core_index');
         }
 
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $lastUsername = $authenticationUtils->getLastUsername();
+        $lastUsername = $this->authenticationUtils->getLastUsername();
+        $error = $this->authenticationUtils->getLastAuthenticationError();
+
+        $idps = $this->identityProviderRepository->findAll();
 
         return $this->render('@Forumify/frontend/auth/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
+            'idps' => $idps,
         ]);
     }
 
@@ -42,14 +57,9 @@ class AuthController extends AbstractController
     }
 
     #[Route('/register', name: 'register')]
-    public function register(
-        Request $request,
-        CreateUserService $createUserService,
-        Security $security,
-        SettingRepository $settingRepository,
-        RecaptchaService $recaptchaService,
-    ): Response {
-        if (!$settingRepository->get('forumify.enable_registrations')) {
+    public function register(Request $request): Response
+    {
+        if (!$this->settingRepository->get('forumify.enable_registrations')) {
             $this->addFlash('error', 'flashes.registration_disabled');
             return $this->redirectToRoute('forumify_core_index');
         }
@@ -59,6 +69,7 @@ class AuthController extends AbstractController
         }
 
         $error = null;
+        /** @var FormInterface<NewUser> $form */
         $form = $this->createForm(RegisterType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -67,20 +78,18 @@ class AuthController extends AbstractController
                 return $this->redirectToRoute('forumify_core_index');
             }
 
-            if ($settingRepository->get('forumify.recaptcha.enabled')) {
-                $score = $recaptchaService->verifyRequest($request);
+            if ($this->settingRepository->get('forumify.recaptcha.enabled')) {
+                $score = $this->recaptchaService->verifyRequest($request);
                 if ($score < 0.8) {
                     // most likely a bot
                     $this->addFlash('error', 'flashes.bot_detected');
-                    return $this->redirectToRoute('forumify_core_register');
+                    return $this->redirectToRoute('forumify_core_index');
                 }
             }
 
             try {
-                /** @var NewUser $newUserDTO */
-                $newUserDTO = $form->getData();
-                $user = $createUserService->createUser($newUserDTO);
-                $security->login($user, 'security.authenticator.form_login.main');
+                $user = $this->createUserService->createUser($form->getData());
+                $this->security->login($user, 'security.authenticator.form_login.main');
                 return $this->redirectToRoute('forumify_core_verify_email');
             } catch (UserAlreadyExistsException) {
                 $error = 'registration.validation_error.username_already_exists';

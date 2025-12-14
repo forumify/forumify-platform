@@ -16,7 +16,7 @@ class ReadMarker
     private User $user;
 
     #[ORM\Id]
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $subject;
 
     #[ORM\Id]

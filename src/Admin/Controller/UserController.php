@@ -39,13 +39,8 @@ class UserController extends AbstractCrudController
         return 'UserTable';
     }
 
-    /**
-     * @param User|null $data
-     * @return FormInterface<object|null>
-     */
     protected function getForm(?object $data): FormInterface
     {
-        /** @var FormInterface<object|null> */
         return $this->createForm(UserType::class, $data);
     }
 
@@ -64,11 +59,11 @@ class UserController extends AbstractCrudController
     #[IsGranted('forumify.admin.users.manage_badges')]
     public function manageBadges(User $user, Request $request): Response
     {
+        /** @var FormInterface<User|null> $form */
         $form = $this->createForm(UserManageBadgesType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @phpstan-ignore-next-line */
             $this->save(false, $form);
 
             $this->addFlash('success', 'admin.user.manage_badges.success');
@@ -88,11 +83,11 @@ class UserController extends AbstractCrudController
     #[IsGranted('forumify.admin.users.manage_roles')]
     public function manageRoles(User $user, Request $request): Response
     {
+        /** @var FormInterface<User|null> $form */
         $form = $this->createForm(UserManageRolesType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @phpstan-ignore-next-line */
             $this->save(false, $form);
 
             $this->addFlash('success', 'admin.user.manage_roles.success');

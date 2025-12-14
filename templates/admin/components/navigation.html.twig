@@ -8,14 +8,14 @@
             {{ menuItem.label }}
         </a>
     {% else %}
-        <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'right-start' }) }}>
-            <a class="btn-link navigation-row" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+        <div {{ stimulus_controller('forumify/menu', { placement: 'right-start' }) }}>
+            <a class="btn-link navigation-row" {{ stimulus_target('forumify/menu', 'openButton') }}>
                 {% if menuItem.options.icon is defined %}
                     <i class="{{ menuItem.options.icon }}"></i>
                 {% endif %}
                 {{ menuItem.label }}
             </a>
-            <div class="menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+            <div class="menu" {{ stimulus_target('forumify/menu', 'menu') }}>
                 {% include '@Forumify/admin/components/navigation.html.twig' with {
                     menu: menuItem
                 } only %}

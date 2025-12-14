@@ -51,7 +51,7 @@ class ActivatePluginCommand extends Command
         $io->success("$package activated.");
 
         $this->getApplication()?->doRun(new ArrayInput([
-            'command' => 'forumify:plugins:list'
+            'command' => 'forumify:plugins:list',
         ]), $output);
 
         return self::SUCCESS;

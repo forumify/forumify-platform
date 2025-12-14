@@ -1,0 +1,62 @@
+{% extends '@Forumify/components/list.html.twig' %}
+{% block container %}
+    <div class="messenger" {{ stimulus_controller('forumify/messenger') }}>
+        <div class="thread-list {% if this.selectedThread is not null %}thread-selected{% endif %}">
+            {{ parent() }}
+        </div>
+        <div class="thread {% if this.selectedThread is not null %}thread-selected{% endif %}">
+            {% if this.selectedThread is not null %}
+                {% include '@Forumify/frontend/components/messenger/thread.html.twig' with { thread: this.selectedThread } %}
+            {% else %}
+                <div class="no-thread-selected">
+                    {{ 'select_message_thread'|trans }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+{% block pagination_top %}
+    <div class="card-title flex justify-between items-center">
+        <span>{{ 'messenger.inbox'|trans }}</span>
+        <a
+            class="btn-primary btn-icon"
+            aria-label="{{ 'messenger.new_message'|trans }}"
+            href="{{ path('forumify_forum_messenger_thread_create') }}"
+        >
+            <i class="ph ph-paper-plane-tilt"></i>
+        </a>
+    </div>
+    {{ parent() }}
+{% endblock %}
+{% block row %}
+    <a
+        class="btn-link thread-row {% if this.selectedThreadId == item.id and false %}thread-active{% endif %}"
+        {{ live_action('setSelectedThread', { threadId: item.id }) }}
+    >
+        <div class="thread-row-inner">
+            {% set otherParticipants = item.participants|filter(u => u.id != app.user.id) %}
+            <div class="flex items-center gap-2">
+                {% if otherParticipants|length == 1 %}
+                    {% include '@Forumify/components/avatar.html.twig' with {
+                        user: otherParticipants|first,
+                        className: 'avatar-sm'
+                    } only %}
+                {% else %}
+                    <div class="thread-icon">
+                        <i class="ph ph-users"></i>
+                    </div>
+                {% endif %}
+                <div>
+                    <p class="thread-title">
+                        {{ item.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : item.title }}
+                        {% if not item|read %}<i class="dot ml-1"></i>{% endif %}
+                    </p>
+                    <p class="text-small text-light">{{ item.lastMessageAt|format_date }}</p>
+                </div>
+            </div>
+        </div>
+    </a>
+{% endblock %}
+{% block empty %}
+    <span class="p-4">{{ 'no_messages'|trans }}</span>
+{% endblock %}

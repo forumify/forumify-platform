@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Component;
 
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Entity\ReadMarker;
@@ -23,7 +21,10 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(name: 'MessageThreadList', template: '@Forumify/frontend/components/message_thread_list.html.twig')]
+/**
+ * @extends AbstractDoctrineList<MessageThread>
+ */
+#[AsLiveComponent(name: 'MessageThreadList', template: '@Forumify/frontend/components/messenger/thread_list.html.twig')]
 class MessageThreadList extends AbstractDoctrineList
 {
     use DefaultActionTrait;
@@ -79,33 +80,29 @@ class MessageThreadList extends AbstractDoctrineList
         return $this->selectedThread;
     }
 
-    protected function getQueryBuilder(): QueryBuilder
+    protected function getEntityClass(): string
     {
-        return $this->messageThreadRepository
-            ->createQueryBuilder('mt')
-            ->select('mt, MAX(m.createdAt) AS HIDDEN maxCreatedAt')
-            ->leftJoin('mt.messages', 'm')
-            ->join('mt.participants', 'p')
-            ->where('p = (:user)')
-            ->setParameter('user', $this->getUser())
-            ->groupBy('mt.id')
-            ->orderBy('maxCreatedAt', 'DESC');
+        return MessageThread::class;
     }
 
-    protected function getCount(): int
+    protected function getQuery(): QueryBuilder
     {
-        try {
-            return (int) $this->messageThreadRepository
-                ->createQueryBuilder('mt')
-                ->select('COUNT(mt.id)')
-                ->join('mt.participants', 'p')
-                ->where('p = (:user)')
-                ->setParameter('user', $this->getUser())
-                ->getQuery()
-                ->getSingleScalarResult();
-        } catch (NoResultException|NonUniqueResultException) {
-            return 0;
-        }
+        return parent::getQuery()
+            ->andWhere(':user MEMBER OF e.participants')
+            ->setParameter('user', $this->getUser())
+            ->addOrderBy('e.lastMessageAt', 'DESC')
+        ;
+    }
+
+    protected function getTotalCount(): int
+    {
+        return (int)parent::getQuery()
+            ->select('COUNT(e.id)')
+            ->andWhere(':user MEMBER OF e.participants')
+            ->setParameter('user', $this->getUser())
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
     }
 
     private function getUser(): User

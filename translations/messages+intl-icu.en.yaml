@@ -98,8 +98,12 @@ notification:
         description: 'Congratulations on earning the "{badge}" badge.'
         view_profile: 'View Profile'
 account_settings:
-    title: 'Account Settings'
-    notification_settings: 'Notification Settings'
+    title: 'Account'
+    security_settings: 'Security'
+    notification_settings: 'Notifications'
+    linked_accounts: 'Linked Accounts'
+    unlink_warning: 'You are about to unlink {user} from your account. You will no longer be able to log in with {provider}.'
+    account_unlinked: 'External account removed.'
 user_notification_settings_type:
     label: 'Notification settings'
     auto_subscribe: 'Automatically subscribe to notifications for:'
@@ -112,7 +116,7 @@ inbox: 'Inbox'
 select_message_thread: 'Select a thread from your inbox, or create a new message.'
 create_message_thread: 'Send message'
 message:
-    edited: 'Edited on {date}'
+    edited: 'Edited {date}'
 messenger:
     new_message: 'Send new message'
     inbox: 'Inbox'
@@ -125,9 +129,14 @@ email: 'Email'
 username_and_email: 'Username or Email'
 password: 'Password'
 remember_me: 'Remember me'
-login: 'Login'
 logout: 'Logout'
-no_account: 'No account yet? Register'
+login:
+    login: 'Log In'
+    no_account: 'Don''t have an account?'
+    register: 'Register'
+    idp:
+        unknown_type: 'This identity provider does not exist.'
+        discord: 'Sign in with Discord'
 registration:
     register: 'Register'
     validation_error:
@@ -200,8 +209,7 @@ roles: 'Roles'
 role: 'Role'
 create_role: 'Create role'
 role_type:
-    administrator: 'Administrators are granted access to the admin panel. Administrators are not automatically moderators, and access to resources still needs to be configured separately.'
-    moderator: 'Moderators gain certain perks on the frontend, such as being able to edit and delete resources that they have access to. They do not have access to the admin panel.'
+    administrator: 'This option only grants access to the admin panel, access to view and administrate components needs to be configured in "permissions".'
     show_on_forum: 'Display this role below the user''s name on comments and on their profile.'
     color: 'When either show on forum or show on username is enabled, the role and/or username will be displayed in this color. Set to black (RGB 0, 0, 0) to use the standard text color.'
     show_on_username: 'Display the role''s color on the username'
@@ -272,6 +280,10 @@ admin:
         crud:
             single: 'calendar'
             plural: 'calendars'
+    o_auth_client:
+        crud:
+            single: 'api client'
+            plural: 'api clients'
     crud:
         edit: 'Editing {single}'
         create: 'New {single}'
@@ -357,8 +369,25 @@ admin:
         index_help: 'The default path to use as frontend index. For example if you want to display a forum, you can use "forum/example-forum". Leave blank if plan to use a CMS page with an empty url key.'
         enable_auto_updates: 'Enable automatic updates'
         enable_auto_updates_help: 'Automatically keep forumify up to date with security patches. For major releases, you need to manually update in Settings -> Plugins.'
+        recaptcha_info: 'Google reCAPTCHA'
+        recaptcha_help: >
+            <p>Google reCAPTCHA is a free service that can detect bots and AI that are trying to access your website and blocks their access.</p>
+            <p>forumify adds some basic bot detection measures, reCAPTCHA can offer a second line of defence against malicious users.</p>
+            <p>Warning, misconfiguration can lead to users being unable to register or reset their password!</p>
+            <p>Setup instructions:</p>
+            <ol>
+                <li>Open the <a href="https://console.cloud.google.com/security/recaptcha">reCAPTCHA dashboard on Google Cloud Platform</a>.</li>
+                <li>(If you never used Google Cloud before) Create a new project for your website.</li>
+                <li>Press the <strong><i class="ph ph-plus"></i> Create Key</strong> button to add a new key.</li>
+                <li>Set up your key with a <strong>display name</strong> application type <strong>Web</strong>.</li>
+                <li>Click <strong>Add a domain</strong>, and enter your domain "example.org".</li>
+                <li>At the bottom of the page, click <strong>Create key</strong>.
+                <li>Copy the <strong>Site key</strong> located behind your key name, and paste it in this form.</li>
+                <li>In the big "Integrating with a third party?" box, click the <strong>Integrate with a third-party service or plugin</strong>.</li>
+                <li>Copy the <strong>legacy secret key</strong> and paste it in this form.</li>
+                <li>Go to your website's registration or forgot password form, and confirm the reCAPTCHA logo is showing in the bottom right without errors.</li>
+            </ol>
         recaptcha_enabled: 'Enable Google reCAPTCHA'
-        recaptcha_enabled_help: 'Protect your forum against spammers. Configure your site on the <a href="https://www.google.com/recaptcha/admin" target="_blank">reCAPTCHA admin console</a>.'
         recaptcha_site_key: 'reCAPTCHA site key'
         recaptcha_site_secret: 'reCAPTCHA site secret'
         mailer_from: 'Email from'
@@ -501,6 +530,50 @@ admin:
         manage_roles:
             title: 'Roles for {username}'
             success: 'Roles saved.'
+    identity_provider:
+        crud:
+            single: 'identity provider'
+            plural: 'identity providers'
+        type_placeholder: 'Select a type'
+        type_help: 'If you need to change the type, delete this identity provider and create a new one instead.'
+        redirect_uri: 'Redirect URI'
+        redirect_uri_help: 'OAuth2 identity providers require you to register your "Redirect URI" with the provider. This link must be registered in the provider.'
+        discord:
+            instructions: >
+                <ol>
+                    <li>Create a new <strong>Application</strong> in the <a href="https://discord.com/developers/applications" target="_blank">Discord Developer Center</a>.</li>
+                    <li>After creating your Application, navigate to <strong>OAuth2</strong> in the left sidebar.</li>
+                    <li>From the <i>Client information</i> section, copy the <strong>Client ID</strong> and <strong>Client Secret</strong> into this form.</li>
+                    <li>Next, in the <i>Redirects</i> section, click the <strong>Add Redirect</strong> button and enter the following url: <pre><code>{redirectUrl}</code></pre></li>
+                    <li>Make sure you <i>Save Changes</i> on Discord, and save this form.</li>
+                </ol>
+        google:
+            instructions: 'Instructions'
+            instructions_help: >
+                <strong>Create a new application with Google Cloud.</strong>
+                <ol>
+                    <li>Go to <a href="https://console.cloud.google.com/auth/overview" target="_blank">Google Auth</a>.</li>
+                    <li>(if you never used Google Cloud before, you will be asked to create a project)</li>
+                    <li>Create a new application, fill in the <strong>Name</strong> and <strong>Support email</strong>.</li>
+                    <li>In Audience, select <strong>External</strong>.</li>
+                    <li>Finally, add your contact information.</li>
+                </ol>
+                <strong>Create a client for your application.</strong>
+                <ol>
+                    <li>Open <strong>Clients</strong> in the left sidebar and <strong>Create a client</strong>.</li>
+                    <li>For the <strong>Type</strong> select <strong>Web Application</strong>.</li>
+                    <li>Add a new <strong>Allowed Origin</strong> and enter the following url: <pre><code>{originUrl}</code></pre></li>
+                    <li>Add a new <strong>Redirect URI</strong> and enter the following url: <pre><code>{redirectUrl}</code></pre></li>
+                    <li>Press <strong>Create</strong> and store the <strong>Client ID</strong> and <strong>Client Secret</strong> in this form.</li>
+                </ol>
+                <strong>Testing Mode.</strong>
+                <p>After creating a client with Google, it will default to testing mode, where you can verify your login is working as expected. To leave test mode, perform the following steps:</p>
+                <ol>
+                    <li>Go to <strong>Audience</strong>.</li>
+                    <li>Under <i>Test users</i>, add emails that are allowed to log in during test mode.</li>
+                    <li>Verify that your website's login is working with one of these test emails.</li>
+                    <li>Finally, press the <strong>Publish app</strong> button to leave test mode.</li>
+                </ol>
     marketplace:
         connect:
             title: 'Connect a forumify.net account'
@@ -559,6 +632,8 @@ calendar:
     title: 'Calendar'
     all_calendars: 'All Calendars'
     event:
+        edit: 'Edit Event'
+        until: 'until'
         create: 'Create Event'
         created: 'Event created.'
         created_by: 'Event by'

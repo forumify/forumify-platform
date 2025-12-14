@@ -6,9 +6,9 @@ namespace Forumify\Forum\Security\Voter;
 
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Core\Service\ACLService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -17,7 +17,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class TopicVoter extends Voter
 {
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly ACLService $aclService)
     {
     }
 
@@ -27,13 +27,14 @@ class TopicVoter extends Voter
             VoterAttribute::TopicView->value,
             VoterAttribute::TopicCreate->value,
             VoterAttribute::TopicEdit->value,
-            VoterAttribute::TopicDelete->value
+            VoterAttribute::TopicDelete->value,
         ], true);
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        if ($this->security->isGranted(VoterAttribute::Moderator->value, $subject)) {
+        $forum = $subject instanceof Topic ? $subject->getForum() : $subject;
+        if ($this->aclService->can('moderate', $forum)) {
             return true;
         }
 
@@ -55,12 +56,7 @@ class TopicVoter extends Voter
         }
 
         $forum = $topic->getForum();
-        $canViewForum = $this->security->isGranted(VoterAttribute::ACL->value, [
-            'permission' => 'view',
-            'entity' => $forum,
-        ]);
-
-        if (!$canViewForum) {
+        if (!$this->aclService->can('view', $forum)) {
             return false;
         }
 
@@ -71,10 +67,7 @@ class TopicVoter extends Voter
             return true;
         }
 
-        return $this->security->isGranted(VoterAttribute::ACL->value, [
-            'permission' => 'show_all_topics',
-            'entity' => $forum,
-        ]);
+        return $this->aclService->can('show_all_topics', $forum);
     }
 
     private function voteOnCreate(?User $user, Forum $forum): bool
@@ -83,15 +76,12 @@ class TopicVoter extends Voter
             return false;
         }
 
-        return $this->security->isGranted(VoterAttribute::ACL->value, [
-            'permission' => 'create_topic',
-            'entity' => $forum,
-        ]);
+        return $this->aclService->can('create_topic', $forum);
     }
 
     private function voteOnEditOrDelete(?User $user, Topic $topic): bool
     {
-        if ($user === null) {
+        if ($user === null || $user->isBanned()) {
             return false;
         }
 

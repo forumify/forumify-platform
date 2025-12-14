@@ -55,7 +55,7 @@ class ResourceWidget extends AbstractWidget
         /** @var Resource $resource */
         foreach ($this->resourceRepository->findAll() as $resource) {
             $url = $this->urlGenerator->generate('forumify_admin_cms_page_builder_resource', [
-                'slug' => $resource->getSlug()
+                'slug' => $resource->getSlug(),
             ]);
 
             $resources[$resource->getName()] = $url;

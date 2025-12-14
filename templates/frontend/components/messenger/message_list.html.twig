@@ -1,0 +1,62 @@
+{% extends '@Forumify/components/list.html.twig' %}
+{% block container %}
+    <div class="w-100 message-list" data-loading="hide">
+        {% block list %}
+            {{ parent() }}
+        {% endblock %}
+        {{ form_start(this.replyForm) }}
+        {{ form_widget(this.replyForm) }}
+        <div class="flex justify-center">
+            <button type="submit" class="btn-primary">
+                <i class="ph ph-paper-plane-tilt"></i>
+                {{ 'messenger.reply'|trans }}
+            </button>
+        </div>
+        {{ form_end(this.replyForm) }}
+    </div>
+{% endblock %}
+{% block row %}
+    <div class="message" {{ stimulus_controller('forumify/comment-editor', {
+        updateUrl: path('forumify_forum_messenger_message_edit', { id: item.id })
+    }) }}>
+        {% include '@Forumify/components/avatar.html.twig' with {
+            user: item.createdBy,
+        } only %}
+        <div class="flex-grow">
+            <div>
+                {% include '@Forumify/components/username.html.twig' with { user: item.createdBy } only %}
+                <span class="text-small ml-2">
+                    {{ item.createdAt|format_date }}
+                    {% if item.updatedAt != item.createdAt and item.updatedBy is not null %}
+                        <span class="text-light text-extra-small hide-phone ml-1">
+                        {{ 'message.edited'|trans({ date: item.updatedAt|format_date }) }}
+                    </span>
+                    {% endif %}
+                </span>
+            </div>
+            {% set canEdit = item.createdBy is not null and item.createdBy.userIdentifier == app.user.userIdentifier %}
+            <div class="message-toolbar">
+                {% if canEdit %}
+                    <button class="btn-link btn-small btn-icon" {{ stimulus_action('forumify/comment-editor', 'toggleEdit') }}>
+                        <i class="ph ph-pencil"></i>
+                    </button>
+                {% endif %}
+            </div>
+            <div class="mb-4">
+                {{ item.content|rich }}
+            </div>
+            {% if canEdit %}
+                <div class="d-none rich-editor" {{ stimulus_target('forumify/comment-editor', 'editorContainer') }}>
+                    <div class="flex justify-center items-center gap-2 mt-2">
+                        <button type="button" class="btn-outlined" {{ stimulus_action('forumify/comment-editor', 'discardEdit') }}>
+                            {{ 'cancel'|trans }}
+                        </button>
+                        <button type="button" class="btn-primary" {{ stimulus_action('forumify/comment-editor', 'save') }}>
+                            {{ 'save'|trans }}
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

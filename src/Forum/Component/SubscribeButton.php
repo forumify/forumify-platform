@@ -8,7 +8,6 @@ use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\Subscription;
 use Forumify\Forum\Repository\SubscriptionRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;

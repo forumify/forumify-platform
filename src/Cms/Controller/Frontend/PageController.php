@@ -51,7 +51,7 @@ class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/page/{slug}/css', 'page_css')]
+    #[Route('/page/{slug:page}/css', 'page_css')]
     public function css(Page $page, Request $request): Response
     {
         $lastModified = $page->getUpdatedAt() ?? $page->getCreatedAt();
@@ -60,7 +60,7 @@ class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/page/{slug}/javascript', 'page_js')]
+    #[Route('/page/{slug:page}/javascript', 'page_js')]
     public function javascript(Page $page, Request $request): Response
     {
         $lastModified = $page->getUpdatedAt() ?? $page->getCreatedAt();

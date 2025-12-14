@@ -15,15 +15,15 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route('/automation', 'automation_')]
 class AutomationController extends AbstractController
 {
-    #[IsGranted('forumify.admin.settings.automations.view')]
     #[Route('s', 'list')]
+    #[IsGranted('forumify.admin.settings.automations.view')]
     public function list(): Response
     {
         return $this->render('@Forumify/admin/automation/list.html.twig');
     }
 
-    #[IsGranted('forumify.admin.settings.automations.manage')]
     #[Route('/{id?<\d+>}', 'form')]
+    #[IsGranted('forumify.admin.settings.automations.manage')]
     public function form(?Automation $automation = null): Response
     {
         return $this->render('@Forumify/admin/automation/automation.html.twig', [
@@ -31,14 +31,14 @@ class AutomationController extends AbstractController
         ]);
     }
 
-    #[IsGranted('forumify.admin.settings.automations.manage')]
     #[Route('/{id<\d+>}/delete', 'delete')]
+    #[IsGranted('forumify.admin.settings.automations.manage')]
     public function delete(
         AutomationRepository $automationRepository,
         Automation $automation,
         Request $request,
     ): Response {
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render('@Forumify/admin/automation/delete.html.twig', [
                 'automation' => $automation,
             ]);

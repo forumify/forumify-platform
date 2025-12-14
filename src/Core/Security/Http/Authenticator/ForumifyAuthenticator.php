@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Forumify\Core\Security\Http\Authenticator;
 
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;

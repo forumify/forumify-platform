@@ -13,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @extends AbstractType<array<string, mixed>>
+ * @extends AbstractType<Reaction>
  */
 class ReactionType extends AbstractType
 {

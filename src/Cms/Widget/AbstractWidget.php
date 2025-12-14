@@ -28,7 +28,7 @@ abstract class AbstractWidget implements WidgetInterface
     protected function createForm(array $data = []): FormBuilderInterface
     {
         return $this->formFactory->createBuilder(data: $data, options: [
-            'csrf_protection' => false
+            'csrf_protection' => false,
         ]);
     }
 

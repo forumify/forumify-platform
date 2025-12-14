@@ -1,0 +1,76 @@
+{% set otherParticipants = thread.participants|filter(u => u.id != app.user.id) %}
+<div class="mb-4 hide-desktop">
+    <button type="button" class="btn-icon btn-link" {{ live_action('setSelectedThread') }}>
+        <i class="ph ph-arrow-left"></i>
+    </button>
+</div>
+<div class="card mb-4" {{ stimulus_target('forumify/messenger', 'thread') }}>
+    <div class="card-title flex flex-col text-bold gap-2 p-2">
+        <div class="flex items-center gap-2">
+            <div class="thread-icon">
+                <i class="ph ph-chats"></i>
+            </div>
+            {% set threadTitle = thread.title is empty ? otherParticipants|map(u => u.displayName)|join(', ') : thread.title %}
+            <span class="thread-title">
+                {{ threadTitle }}
+            </span>
+            <span class="thread-title-edit d-none">
+                <input
+                    type="text"
+                    value="{{ threadTitle }}"
+                    {{ stimulus_target('forumify/messenger', 'titleInput') }}
+                    {{ stimulus_action('forumify/messenger', 'toggleTitleEdit', 'keydown.esc') }}
+                >
+            </span>
+            <button
+                class="btn-link btn-icon btn-small"
+                {{ stimulus_target('forumify/messenger', 'titleEditBtn') }}
+                {{ stimulus_action('forumify/messenger', 'toggleTitleEdit') }}
+            >
+                <i class="ph ph-pencil-simple-line"></i>
+            </button>
+            <button
+                class="btn-link btn-icon btn-small d-none"
+                {{ stimulus_target('forumify/messenger', 'titleEditConfirmBtn') }}
+                {{ stimulus_action('forumify/messenger', 'confirmTitleEdit', null, { thread: thread.id }) }}
+            >
+                <i class="ph ph-check"></i>
+            </button>
+        </div>
+        <ul class="flex flex-wrap items-center">
+            {% for participant in otherParticipants %}
+                <li class="flex items-center border-r pr-2 mr-2 gap-2">
+                    <a class="flex items-center gap-2" href="{{ path('forumify_forum_profile', { username: participant.username }) }}">
+                        {% include '@Forumify/components/avatar.html.twig' with {
+                            user: participant,
+                            className: 'avatar-sm'
+                        } only %}
+                        {{ participant.displayName }}
+                    </a>
+                    {% if not thread|read(participant) %}<i class="dot ml-1"></i>{% endif %}
+                    <a
+                        href="{{ path('forumify_forum_messenger_remove_participant', { id: thread.id, participantId: participant.id }) }}"
+                        class="btn-link btn-icon btn-small"
+                        aria-label="{{ 'messenger.remove_participant'|trans }}"
+                        title="{{ 'messenger.remove_participant'|trans }}"
+                    >
+                        <i class="ph ph-minus-circle"></i>
+                    </a>
+                </li>
+            {% endfor %}
+            <li>
+                <a
+                    href="{{ path('forumify_forum_messenger_add_participant', { id: thread.id }) }}"
+                    class="btn-link btn-icon btn-small"
+                    aria-label="{{ 'messenger.add_participant'|trans }}"
+                    title="{{ 'messenger.add_participant'|trans }}"
+                >
+                    <i class="ph ph-plus-circle"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body p-2">
+        {{ component('MessageList', { lastPageFirst: true, threadId: thread.id }) }}
+    </div>
+</div>

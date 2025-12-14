@@ -7,12 +7,14 @@ namespace Forumify\Plugin\Application\Service;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Tools\DsnParser;
 use Forumify\Plugin\Application\Exception\PluginException;
 use Forumify\Plugin\Application\Exception\PluginNotFoundException;
 use JsonException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
+// phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
 class PluginService
 {
     private readonly Connection $connection;
@@ -25,9 +27,14 @@ class PluginService
      */
     public function __construct(array $context)
     {
-        $this->connection = DriverManager::getConnection([
-            'url' => $context['DATABASE_URL'],
-        ]);
+        $dbUrl = $context['DATABASE_URL'];
+        if (str_starts_with($dbUrl, 'mysql://')) {
+            $dbUrl = 'pdo-' . $dbUrl;
+        }
+
+        $dsnParser = new DsnParser();
+        $connectionParams = $dsnParser->parse($dbUrl);
+        $this->connection = DriverManager::getConnection($connectionParams);
 
         $this->rootDir = dirname($context['DOCUMENT_ROOT']);
         $this->frameworkCacheClearer = new FrameworkCacheClearer($this->rootDir);
@@ -60,6 +67,7 @@ class PluginService
      */
     private function verifyPackage(string $package): void
     {
+
         $isDemo = (bool)($_SERVER['FORUMIFY_DEMO'] ?? false);
         $isCloudInstance = (bool)($_SERVER['FORUMIFY_HOSTED_INSTANCE'] ?? false);
         if (!$isDemo && !$isCloudInstance) {
@@ -71,7 +79,7 @@ class PluginService
             throw new PluginException("Unable to check if $package can be installed on cloud/demo instances.");
         }
 
-        /** @var array<string, string[]> $allowedPlugins */
+        /** @var array<string, array<string>> $allowedPlugins */
         $allowedPlugins = json_decode($allowedPluginsJson, true, 512, JSON_THROW_ON_ERROR);
         $pluginAvailability = $allowedPlugins[$package] ?? null;
         if ($pluginAvailability === null) {
@@ -212,7 +220,7 @@ class PluginService
             'bin/console',
             'doctrine:migrations:migrate',
             '--allow-no-migration',
-            '--no-interaction'
+            '--no-interaction',
         ]);
     }
 

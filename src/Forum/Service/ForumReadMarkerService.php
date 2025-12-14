@@ -12,6 +12,9 @@ use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @implements ReadMarkerServiceInterface<Forum>
+ */
 class ForumReadMarkerService implements ReadMarkerServiceInterface
 {
     public function __construct(
@@ -20,24 +23,21 @@ class ForumReadMarkerService implements ReadMarkerServiceInterface
     ) {
     }
 
-    public function supports(mixed $subject): bool
+    public static function getEntityClass(): string
     {
-        return $subject instanceof Forum;
+        return Forum::class;
     }
 
-    /**
-     * @param Forum $subject
-     */
     public function read(User $user, mixed $subject): bool
     {
-        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
+        $canViewHidden = $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $subject, 'permission' => 'moderate']);
         $topicIds = $this->getTopicIds($user, $subject, $canViewHidden);
         return $this->readMarkerRepository->areAllRead($user, Topic::class, $topicIds);
     }
 
     public function markAsRead(User $user, mixed $subject): void
     {
-        $canViewHidden = $this->security->isGranted(VoterAttribute::Moderator->value);
+        $canViewHidden = $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $subject, 'permission' => 'moderate']);
         $topicIds = $this->getTopicIds($user, $subject, $canViewHidden);
         $this->readMarkerRepository->markAllRead($user, Topic::class, $topicIds);
     }

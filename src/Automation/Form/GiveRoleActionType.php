@@ -6,7 +6,7 @@ namespace Forumify\Automation\Form;
 
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Form\CodeEditorType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Forumify\Core\Form\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -21,7 +21,7 @@ class GiveRoleActionType extends AbstractType
             ->add('role', EntityType::class, [
                 'class' => Role::class,
                 'autocomplete' => true,
-                'choice_label' => 'title'
+                'choice_label' => 'title',
             ])
             ->add('recipient', CodeEditorType::class, [
                 'help' => 'admin.automations.action.role.recipient_help',

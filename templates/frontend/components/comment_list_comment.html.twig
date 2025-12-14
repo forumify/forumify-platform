@@ -1,6 +1,6 @@
 {% block comment_list_comment %}
     {% set isAnswer = topic.answer is not null and topic.answer.id == item.id %}
-    <li class="comment box{% if isAnswer %} answer{% endif %}" {{ stimulus_controller('forumify/forumify-platform/comment_edit', {
+    <li class="comment box{% if isAnswer %} answer{% endif %}" {{ stimulus_controller('forumify/comment-editor', {
         updateUrl: path('forumify_forum_comment_edit', { id: item.id })
     }) }}>
         {% block comment_list_comment_author %}
@@ -62,7 +62,7 @@
                                         <a
                                             class="btn-link btn-small btn-icon text-secondary"
                                             aria-label="{{ 'forum.comment.edit'|trans }}"
-                                            {{ stimulus_action('forumify/forumify-platform/comment_edit', 'toggleEdit') }}
+                                            {{ stimulus_action('forumify/comment-editor', 'toggleEdit') }}
                                         >
                                             <i class="ph ph-pencil"></i>
                                         </a>
@@ -85,12 +85,12 @@
                     {% endblock %}
                     {% block comment_list_comment_comment_edit %}
                         {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
-                            <div class="d-none rich-editor" {{ stimulus_target('forumify/forumify-platform/comment_edit', 'editorContainer') }}>
+                            <div class="d-none rich-editor" {{ stimulus_target('forumify/comment-editor', 'editorContainer') }}>
                                 <div class="flex justify-center items-center gap-2 mt-2">
-                                    <button type="button" class="btn-outlined" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'discardEdit') }}>
+                                    <button type="button" class="btn-outlined" {{ stimulus_action('forumify/comment-editor', 'discardEdit') }}>
                                         {{ 'cancel'|trans }}
                                     </button>
-                                    <button type="button" class="btn-primary" {{ stimulus_action('forumify/forumify-platform/comment_edit', 'save') }}>
+                                    <button type="button" class="btn-primary" {{ stimulus_action('forumify/comment-editor', 'save') }}>
                                         {{ 'save'|trans }}
                                     </button>
                                 </div>

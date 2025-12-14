@@ -1,0 +1,15 @@
+@use '../framework/mixins';
+
+.template-editor {
+    display: flex;
+
+    .toolbar {
+        @include mixins.box-shadow;
+        position: absolute;
+        top: var(--spacing-2);
+        right: var(--spacing-2);
+        padding: var(--spacing-2);
+        background-color: var(--c-elevation-2);
+        border-radius: var(--border-radius);
+    }
+}

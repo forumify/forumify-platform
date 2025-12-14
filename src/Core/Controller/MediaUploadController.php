@@ -27,8 +27,8 @@ class MediaUploadController extends AbstractController
     ) {
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/media/upload', 'media_upload', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
     public function upload(Request $request): JsonResponse
     {
         /** @var UploadedFile|null $file */

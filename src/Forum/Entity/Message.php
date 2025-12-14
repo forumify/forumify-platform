@@ -8,8 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
+use Forumify\Forum\Repository\MessageRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: MessageRepository::class)]
 class Message
 {
     use IdentifiableEntityTrait;

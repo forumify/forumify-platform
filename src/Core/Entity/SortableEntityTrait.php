@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 trait SortableEntityTrait
 {
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: 'integer', index: true)]
     private int $position = 0;
 
     public function getPosition(): int

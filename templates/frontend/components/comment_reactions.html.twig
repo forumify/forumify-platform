@@ -10,15 +10,15 @@
             {{ reaction.count }}
         </a>
     {% endfor %}
-    <div {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}>
+    <div {{ stimulus_controller('forumify/menu', { placement: 'bottom-end' }) }}>
         <a
             class="btn-small btn-outlined btn-icon"
             aria-label="{{ 'forum.comment.reactions'|trans }}"
-            {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}
+            {{ stimulus_target('forumify/menu', 'openButton') }}
         >
             <i class="ph ph-smiley"></i>
         </a>
-        <div class="reactions-menu" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+        <div class="reactions-menu" {{ stimulus_target('forumify/menu', 'menu') }}>
             <input type="text" placeholder="{{ 'search'|trans }}" data-model="reactionSearch">
             <div class="flex flex-wrap gap-2 mt-2">
                 {% for reaction in this.reactions %}

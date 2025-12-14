@@ -1,11 +1,11 @@
 <div
     class="flex-grow flex justify-end items-center hide-desktop hide-tablet"
-    {{ stimulus_controller('forumify/forumify-platform/menu', { placement: 'bottom-end' }) }}
+    {{ stimulus_controller('forumify/menu', { placement: 'bottom-end' }) }}
 >
-    <button type="button" class="btn-link" {{ stimulus_target('forumify/forumify-platform/menu', 'openButton') }}>
+    <button type="button" class="btn-link" {{ stimulus_target('forumify/menu', 'openButton') }}>
         <i class="ph ph-list"></i>
     </button>
-    <div class="menu text-small" {{ stimulus_target('forumify/forumify-platform/menu', 'menu') }}>
+    <div class="menu text-small" {{ stimulus_target('forumify/menu', 'menu') }}>
         {% if app.user is not null %}
             <div class="flex flex-col justify-center items-center p-4">
                 {% include '@Forumify/components/avatar.html.twig' with {

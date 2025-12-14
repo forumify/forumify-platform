@@ -14,7 +14,7 @@ class ErrorController extends AbstractController
     {
         $exception = $request->attributes->get('exception');
         return $this->render('@Forumify/frontend/error.html.twig', [
-            'exception' => $exception
+            'exception' => $exception,
         ]);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Forumify\Core\Repository;
 
 use Doctrine\Persistence\ManagerRegistry;

@@ -18,7 +18,7 @@ class Subscription
     #[ORM\JoinColumn('user', onDelete: 'CASCADE')]
     private User $user;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(length: 255)]
     private string $type;
 
     #[ORM\Column(type: 'integer')]

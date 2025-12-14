@@ -19,7 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
- * @extends AbstractType<array<string, mixed>>
+ * @extends AbstractType<Role>
  */
 class RoleType extends AbstractType
 {
@@ -45,10 +45,6 @@ class RoleType extends AbstractType
             ->add('administrator', CheckboxType::class, [
                 'required' => false,
                 'help' => 'role_type.administrator',
-            ])
-            ->add('moderator', CheckboxType::class, [
-                'required' => false,
-                'help' => 'role_type.moderator',
             ])
             ->add('permissions', PermissionType::class, [
                 'permissions' => $this->getAvailablePermissions(),

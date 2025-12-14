@@ -33,13 +33,8 @@ class RoleController extends AbstractCrudController
         return 'RoleTable';
     }
 
-    /**
-     * @param Role|null $data
-     * @return FormInterface<object|null>
-     */
     protected function getForm(?object $data): FormInterface
     {
-        /** @var FormInterface<object|null> */
         return $this->createForm(RoleType::class, $data);
     }
 }

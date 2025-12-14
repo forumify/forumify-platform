@@ -11,9 +11,13 @@ use Symfony\Component\Form\FormInterface;
 interface WidgetInterface
 {
     public function getName(): string;
+
     public function getCategory(): string;
+
     public function getPreview(): string;
+
     public function getTemplate(): string;
+
     /**
      * @param array<string, mixed> $data
      * @return FormInterface<array<string, mixed>>|null

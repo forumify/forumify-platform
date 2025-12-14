@@ -24,6 +24,7 @@ use function Symfony\Component\String\u;
 
 /**
  * @template TEntity of object
+ * @phpstan-type TForm FormInterface<TEntity|null>
  */
 abstract class AbstractCrudController extends AbstractController
 {
@@ -51,7 +52,7 @@ abstract class AbstractCrudController extends AbstractController
     protected ?string $permissionDelete = null;
 
     /**
-     * @return string The classname for the entity this controller will act on, for example Forum::class
+     * @return class-string<TEntity> The classname for the entity this controller will act on, for example Forum::class
      */
     abstract protected function getEntityClass(): string;
 
@@ -64,9 +65,8 @@ abstract class AbstractCrudController extends AbstractController
      * You can use `$this->createForm(MyFormType::class, $data);` to re-use an existing form,
      * or `$this->createFormBuilder();` to build a one-off form.
      *
-     * @template TData of object|null
-     * @param TData $data
-     * @return FormInterface<TData> Gets the form to use
+     * @param TEntity|null $data
+     * @return TForm Gets the form to use.
      */
     abstract protected function getForm(?object $data): FormInterface;
 
@@ -117,7 +117,7 @@ abstract class AbstractCrudController extends AbstractController
             return $this->redirectToRoute($this->getRoute('list'));
         }
 
-        if (!$request->get('confirmed')) {
+        if (!$request->query->get('confirmed')) {
             return $this->render($this->deleteTemplate, $this->templateParams());
         }
 
@@ -146,7 +146,7 @@ abstract class AbstractCrudController extends AbstractController
             if ($isNew && $entity instanceof AccessControlledEntityInterface) {
                 return $this->redirectToRoute('forumify_admin_acl', (array)$entity->getACLParameters());
             }
-            return $this->redirectAfterSave($entity);
+            return $this->redirectAfterSave($entity, $isNew);
         }
 
         return $this->render($this->formTemplate, $this->templateParams([
@@ -156,15 +156,14 @@ abstract class AbstractCrudController extends AbstractController
     }
 
     /**
-     * @param FormInterface<TEntity|null> $form
+     * @param TForm $form
      * @return TEntity
      */
     protected function save(bool $isNew, FormInterface $form): object
     {
         $entity = $form->getData();
-
-        if ($entity === null) {
-            throw new RuntimeException('Entity cannot be null');
+        if (!is_object($entity)) {
+            throw new RuntimeException('Return value of form must be an entity!');
         }
 
         $this->eventDispatcher->dispatch(
@@ -185,7 +184,7 @@ abstract class AbstractCrudController extends AbstractController
     /**
      * @param TEntity $entity
      */
-    protected function redirectAfterSave(mixed $entity): Response
+    protected function redirectAfterSave(mixed $entity, bool $isNew): Response
     {
         return $this->redirectToRoute($this->getRoute('list'));
     }
@@ -258,12 +257,8 @@ abstract class AbstractCrudController extends AbstractController
         TranslatorInterface $translator,
         EventDispatcherInterface $eventDispatcher
     ): void {
-        /** @var class-string<TEntity> $entityClass */
         $entityClass = $this->getEntityClass();
-
-        /** @var AbstractRepository<TEntity>|object $repository */
         $repository = $em->getRepository($entityClass);
-
         if (!$repository instanceof AbstractRepository) {
             throw new RuntimeException('Your entity must have a repository that extends ' . AbstractRepository::class);
         }

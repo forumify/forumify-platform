@@ -76,7 +76,7 @@ class MenuBuilder extends AbstractController
     }
 
     /**
-     * @return FormInterface<array<string, mixed>|MenuItem|null>
+     * @return FormInterface<MenuItem|null>
      */
     protected function instantiateForm(): FormInterface
     {

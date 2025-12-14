@@ -95,8 +95,8 @@ class ForgotPasswordController extends AbstractController
                 'second_options' => ['label' => 'Repeat password', 'attr' => ['autocomplete' => 'new-password']],
                 'constraints' => [
                     new Assert\NotBlank(),
-                    new Assert\Length(min: 8)
-                ]
+                    new Assert\Length(min: 8),
+                ],
             ])
             ->getForm();
 

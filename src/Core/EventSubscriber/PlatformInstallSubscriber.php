@@ -8,6 +8,7 @@ use Forumify\Core\Form\RegisterType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\CreateUserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -20,6 +21,7 @@ class PlatformInstallSubscriber extends AbstractController
     public function __construct(
         private readonly SettingRepository $settingRepository,
         private readonly CreateUserService $createUserService,
+        private readonly Security $security,
     ) {
     }
 
@@ -58,7 +60,10 @@ class PlatformInstallSubscriber extends AbstractController
             self::INSTALLED_SETTING => true,
             'forumify.title' => $data['forumName'],
         ]);
-        $this->createUserService->createAdmin($data['adminUser']);
+
+        $user = $this->createUserService->createAdmin($data['adminUser']);
+        $this->security->login($user, 'security.authenticator.form_login.main');
+
         $event->setResponse($this->redirectToRoute('forumify_core_index'));
     }
 }

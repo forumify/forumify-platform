@@ -21,7 +21,7 @@ use Forumify\Forum\Notification\MessageUserAddedNotificationType;
 use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Forumify\Forum\Service\MessageService;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Forumify\Core\Form\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

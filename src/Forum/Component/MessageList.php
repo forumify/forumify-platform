@@ -7,9 +7,9 @@ namespace Forumify\Forum\Component;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReplyType;
-use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -21,7 +21,10 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(name: 'MessageList', template: '@Forumify/frontend/components/message_list.html.twig')]
+/**
+ * @extends AbstractDoctrineList<Message>
+ */
+#[AsLiveComponent(name: 'MessageList', template: '@Forumify/frontend/components/messenger/message_list.html.twig')]
 class MessageList extends AbstractDoctrineList
 {
     use DefaultActionTrait;
@@ -34,25 +37,23 @@ class MessageList extends AbstractDoctrineList
 
     public function __construct(
         private readonly MessageThreadRepository $messageThreadRepository,
-        private readonly MessageRepository $messageRepository,
         private readonly FormFactoryInterface $formFactory,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Security $security,
     ) {
     }
 
-    protected function getQueryBuilder(): QueryBuilder
+    protected function getEntityClass(): string
     {
-        return $this->messageRepository
-            ->createQueryBuilder('m')
-            ->where('m.thread = :thread')
-            ->orderBy('m.createdAt', 'ASC')
-            ->setParameter('thread', $this->getThread());
+        return Message::class;
     }
 
-    protected function getCount(): int
+    protected function getQuery(): QueryBuilder
     {
-        return $this->messageRepository->count(['thread' => $this->getThread()]);
+        return parent::getQuery()
+            ->where('e.thread = :thread')
+            ->orderBy('e.createdAt', 'ASC')
+            ->setParameter('thread', $this->getThread());
     }
 
     public function getThread(): ?MessageThread

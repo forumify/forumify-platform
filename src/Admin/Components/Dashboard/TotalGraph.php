@@ -61,6 +61,7 @@ abstract class TotalGraph extends AbstractGraph
     }
 
     abstract public function getTitle(): string;
+
     abstract public function getIcon(): string;
 
     public function getGraphHeight(): int

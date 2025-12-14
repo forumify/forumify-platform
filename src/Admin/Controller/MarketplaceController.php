@@ -8,7 +8,6 @@ use Exception;
 use Forumify\Admin\Exception\MarketplaceNotConnectedException;
 use Forumify\Admin\Service\MarketplaceConnectService;
 use Forumify\Admin\Service\MarketplaceService;
-use Forumify\Core\Repository\PluginRepository;
 use Forumify\Plugin\Service\PluginService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,8 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('forumify.admin.settings.plugins.manage')]
 #[Route('/marketplace', 'marketplace')]
+#[IsGranted('forumify.admin.settings.plugins.manage')]
 class MarketplaceController extends AbstractController
 {
     #[Route('', '')]

@@ -15,24 +15,24 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
     use IdentifiableEntityTrait;
     use SortableEntityTrait;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $name;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255)]
     private string $type;
 
     /** @var array<string, mixed> */
     #[ORM\Column(type: 'json')]
     private array $payload = [];
 
-    #[ORM\ManyToOne(MenuItem::class, inversedBy: 'children')]
+    #[ORM\ManyToOne(targetEntity: MenuItem::class, inversedBy: 'children')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?MenuItem $parent = null;
 
     /**
      * @var Collection<int, MenuItem>
      */
-    #[ORM\OneToMany('parent', MenuItem::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: MenuItem::class, cascade: ['persist'])]
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $children;
 
@@ -117,7 +117,7 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
 
     public function getACLParameters(): ACLParameters
     {
-        $parentId =  $this->getParent()?->getId();
+        $parentId = $this->getParent()?->getId();
 
         return new ACLParameters(
             self::class,

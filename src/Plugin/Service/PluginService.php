@@ -103,7 +103,7 @@ class PluginService
     public function getLatestVersions(): array
     {
         if ($this->latestVersions !== null) {
-            return  $this->latestVersions;
+            return $this->latestVersions;
         }
 
         $this->latestVersions = ApplicationPluginService::getLatestVersions($this->rootDir);

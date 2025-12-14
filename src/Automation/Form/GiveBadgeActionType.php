@@ -6,7 +6,7 @@ namespace Forumify\Automation\Form;
 
 use Forumify\Core\Form\CodeEditorType;
 use Forumify\Forum\Entity\Badge;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Forumify\Core\Form\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -21,7 +21,7 @@ class GiveBadgeActionType extends AbstractType
             ->add('badge', EntityType::class, [
                 'class' => Badge::class,
                 'autocomplete' => true,
-                'choice_label' => 'name'
+                'choice_label' => 'name',
             ])
             ->add('recipient', CodeEditorType::class, [
                 'help' => 'admin.automations.action.badge.recipient_help',

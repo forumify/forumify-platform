@@ -1,0 +1,132 @@
+@use '../framework/mixins';
+
+.page-editor {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll;
+
+    .form-row {
+        margin-bottom: 0;
+    }
+
+    .widget-slot {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing-2);
+
+        &>*:not(.dropzone) {
+            transition: 100ms ease-in-out;
+
+            &:hover {
+                @include mixins.box-shadow;
+                border-color: var(--c-primary-accent);
+            }
+        }
+
+        .dropzone {
+            border: 3px dashed var(--border-color);
+            border-radius: 8px;
+            height: 40px;
+            transition: 100ms ease-in-out;
+            margin-top: var(--spacing-2);
+
+            &.dragover {
+                border-color: var(--c-primary-accent);
+            }
+        }
+    }
+
+    .settings-form {
+        cursor: default;
+    }
+
+    .header {
+        display: none;
+        border-radius: 0;
+        margin-bottom: var(--spacing-6);
+        padding: var(--spacing-3) var(--spacing-8);
+    }
+
+    .preview {
+        .widget.card {
+            cursor: default;
+            background-color: rgba(0, 0, 0, 0);
+            box-shadow: none;
+            border: none;
+
+            &:hover {
+                box-shadow: none;
+                border: none;
+            }
+
+            > .card-body {
+                padding: 0;
+                min-height: 0;
+            }
+
+            > .card-title {
+                display: none;
+            }
+        }
+
+
+
+        .dropzone {
+            display: none;
+        }
+
+        .widget-slot {
+            gap: 0;
+        }
+
+        .header {
+            display: flex;
+        }
+    }
+}
+
+.page-editor-tablist {
+    gap: 0;
+    border-bottom: var(--border);
+    background-color: var(--c-elevation-1);
+    margin-bottom: 0;
+    button {
+        border-radius: 0;
+    }
+}
+
+.widget {
+    border: var(--border);
+    border-width: 2px;
+    transition: 100ms ease-in-out;
+    cursor: grab;
+
+    &:hover {
+        @include mixins.box-shadow;
+        border-color: var(--c-primary-accent);
+        transition: 100ms ease-in-out;
+    }
+}
+
+#widgets {
+    .widget {
+        min-height: 100px;
+        & > .card-body {
+            height: 100px;
+            overflow-y: hidden;
+        }
+
+        .card-body {
+            padding: var(--spacing-2);
+        }
+
+        [class^="col-"]:not(:last-child) {
+            border-right: var(--border);
+        }
+    }
+
+    .widget-options {
+        display: none;
+    }
+}
