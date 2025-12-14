@@ -12,16 +12,15 @@ use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Event\CommentCreatedEvent;
 use Forumify\Forum\Event\MessageCreatedEvent;
 use Forumify\Forum\Notification\MentionNotificationType;
-use Forumify\Forum\Security\UserToken;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class MentionSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly NotificationService $notificationService,
-        private readonly AccessDecisionManagerInterface $accessDecisionManager,
+        private readonly Security $security,
     ) {
     }
 
@@ -38,31 +37,25 @@ class MentionSubscriber implements EventSubscriberInterface
         $comment = $event->getComment();
         $recipients = $this->getUsersToMention($comment->getContent());
 
+        $notifications = [];
         foreach ($recipients as $recipient) {
+            // do not send notification to self
             if ($recipient->getId() === $comment->getCreatedBy()?->getId()) {
                 continue;
             }
 
-            // TODO: Symfony 7.3 adds $security->isGrantedForUser that does exactly this.
-            $canViewTopic = $this->accessDecisionManager->decide(
-                new UserToken($recipient),
-                [VoterAttribute::ACL->value],
-                [
-                    'permission' => 'view',
-                    'entity' => $comment->getTopic()->getForum(),
-                ],
-            );
-
+            $canViewTopic = $this->security->isGrantedForUser($recipient, VoterAttribute::TopicView->value, $comment->getTopic());
             if (!$canViewTopic) {
                 continue;
             }
 
-            $this->notificationService->sendNotification(new Notification(
+            $notifications[] = new Notification(
                 MentionNotificationType::TYPE,
                 $recipient,
                 ['subject' => $comment],
-            ));
+            );
         }
+        $this->notificationService->sendNotification($notifications);
     }
 
     public function onMessageCreated(MessageCreatedEvent $event): void
@@ -75,6 +68,7 @@ class MentionSubscriber implements EventSubscriberInterface
             ->map(fn (User $user) => $user->getId())
             ->toArray();
 
+        $notifications = [];
         foreach ($recipients as $recipient) {
             $recipientId = $recipient->getId();
             // do not send notification to self
@@ -87,12 +81,13 @@ class MentionSubscriber implements EventSubscriberInterface
                 continue;
             }
 
-            $this->notificationService->sendNotification(new Notification(
+            $notifications[] = new Notification(
                 MentionNotificationType::TYPE,
                 $recipient,
                 ['subject' => $message],
-            ));
+            );
         }
+        $this->notificationService->sendNotification($notifications);
     }
 
     /**

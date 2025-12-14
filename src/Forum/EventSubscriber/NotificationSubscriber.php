@@ -15,10 +15,8 @@ use Forumify\Forum\Notification\CommentCreatedNotificationType;
 use Forumify\Forum\Notification\MessageReplyNotificationType;
 use Forumify\Forum\Notification\TopicCreatedNotificationType;
 use Forumify\Forum\Repository\SubscriptionRepository;
-use Forumify\Forum\Security\UserToken;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 class NotificationSubscriber implements EventSubscriberInterface
 {
@@ -26,7 +24,6 @@ class NotificationSubscriber implements EventSubscriberInterface
         private readonly SubscriptionRepository $subscriptionRepository,
         private readonly NotificationService $notificationService,
         private readonly Security $security,
-        private readonly AccessDecisionManagerInterface $accessDecisionManager,
     ) {
     }
 
@@ -45,32 +42,25 @@ class NotificationSubscriber implements EventSubscriberInterface
         $comment = $createdEvent->getComment();
         $subscriptions = $this->getSubscriptions($comment->getTopic()->getId(), CommentCreatedNotificationType::TYPE);
 
+        $notifications = [];
         foreach ($subscriptions as $subscription) {
             $subscriber = $subscription->getUser();
             if ($subscriber->getUserIdentifier() === $selfIdentifier) {
                 continue;
             }
 
-            // TODO: Symfony 7.3 adds $security->isGrantedForUser that does exactly this.
-            $canViewComment = $this->accessDecisionManager->decide(
-                new UserToken($subscriber),
-                [VoterAttribute::ACL->value],
-                [
-                    'permission' => 'view',
-                    'entity' => $comment->getTopic()->getForum(),
-                ],
-            );
-
+            $canViewComment = $this->security->isGrantedForUser($subscriber, VoterAttribute::TopicView->value, $comment->getTopic());
             if (!$canViewComment) {
                 continue;
             }
 
-            $this->notificationService->sendNotification(new Notification(
+            $notifications[] = new Notification(
                 CommentCreatedNotificationType::TYPE,
                 $subscriber,
                 ['comment' => $comment]
-            ));
+            );
         }
+        $this->notificationService->sendNotification($notifications);
     }
 
     public function sendNotificationsForTopic(TopicCreatedEvent $createdEvent): void
@@ -79,32 +69,25 @@ class NotificationSubscriber implements EventSubscriberInterface
         $topic = $createdEvent->getTopic();
         $subscriptions = $this->getSubscriptions($topic->getForum()->getId(), TopicCreatedNotificationType::TYPE);
 
+        $notifications = [];
         foreach ($subscriptions as $subscription) {
             $subscriber = $subscription->getUser();
             if ($subscriber->getUserIdentifier() === $selfIdentifier) {
                 continue;
             }
 
-            // TODO: Symfony 7.3 adds $security->isGrantedForUser that does exactly this.
-            $canViewTopic = $this->accessDecisionManager->decide(
-                new UserToken($subscriber),
-                [VoterAttribute::ACL->value],
-                [
-                    'permission' => 'view',
-                    'entity' => $topic->getForum(),
-                ],
-            );
-
+            $canViewTopic = $this->security->isGrantedForUser($subscriber, VoterAttribute::TopicView->value, $topic);
             if (!$canViewTopic) {
                 continue;
             }
 
-            $this->notificationService->sendNotification(new Notification(
+            $notifications[] = new Notification(
                 TopicCreatedNotificationType::TYPE,
                 $subscriber,
                 ['topic' => $topic]
-            ));
+            );
         }
+        $this->notificationService->sendNotification($notifications);
     }
 
     /**
@@ -121,16 +104,18 @@ class NotificationSubscriber implements EventSubscriberInterface
         $sender = $this->security->getUser();
         $participants = $message->getThread()->getParticipants();
 
+        $notifications = [];
         foreach ($participants as $participant) {
             if ($sender?->getUserIdentifier() === $participant->getUserIdentifier()) {
                 continue;
             }
 
-            $this->notificationService->sendNotification(new Notification(
+            $notifications[] = new Notification(
                 MessageReplyNotificationType::TYPE,
                 $participant,
                 ['message' => $message]
-            ));
+            );
         }
+        $this->notificationService->sendNotification($notifications);
     }
 }

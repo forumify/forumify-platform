@@ -70,16 +70,14 @@ class UserCrudSubscriber implements EventSubscriberInterface
     public function postSaveUser(PostSaveCrudEvent $event): void
     {
         $user = $event->getEntity();
-        $preSaveBadgeIds = array_map(fn (Badge $badge) => $badge->getId(), $this->preSaveBadges[$user->getId()]);
-        foreach ($user->getBadges() as $badge) {
-            if (!in_array($badge->getId(), $preSaveBadgeIds, true)) {
-                $this->notificationService->sendNotification(new Notification(
-                    NewBadgeNotificationType::TYPE,
-                    $user,
-                    ['badge' => $badge],
-                ));
-            }
-        }
+        $preSaveBadgeIds = array_map(fn (Badge $b) => $b->getId(), $this->preSaveBadges[$user->getId()]);
+
+        $notifications = $user->getBadges()
+            ->filter((fn (Badge $b) => !in_array($b->getId(), $preSaveBadgeIds, true)))
+            ->map(fn (Badge $b) => new Notification(NewBadgeNotificationType::TYPE, $user, ['badge' => $b]))
+            ->toArray();
+
+        $this->notificationService->sendNotification($notifications);
     }
 
     private function keepDisabledRoles(User $user): void

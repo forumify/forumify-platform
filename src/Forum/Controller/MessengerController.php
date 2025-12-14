@@ -119,22 +119,14 @@ class MessengerController extends AbstractController
         }
 
         $newParticipants = $form->get('participants')->getData();
-        $participants = $thread->getParticipants();
+        $notifications = [];
         foreach ($newParticipants as $newParticipant) {
-            $participants->add($newParticipant);
+            $thread->addParticipant($newParticipant);
+            $notifications[] = MessageUserAddedNotificationType::createNotification($newParticipant, $thread, $this->getUser());
         }
-        $this->messageThreadRepository->save($thread);
 
-        foreach ($newParticipants as $newParticipant) {
-            $notificationService->sendNotification(new Notification(
-                MessageUserAddedNotificationType::TYPE,
-                $newParticipant,
-                [
-                    'user' => $this->getUser(),
-                    'messageThread' => $thread,
-                ]
-            ));
-        }
+        $this->messageThreadRepository->save($thread);
+        $notificationService->sendNotification($notifications);
 
         $this->addFlash('success', 'flashes.messenger_participants_added');
         return $this->redirectToRoute('forumify_forum_messenger_thread', ['id' => $thread->getId()]);

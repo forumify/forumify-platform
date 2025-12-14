@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Notification;
 
+use Exception;
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Repository\NotificationRepository;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -22,33 +23,53 @@ class NotificationMessageHandler
     ) {
     }
 
-    /**
-     * @throws NotificationHandlerException
-     */
     public function __invoke(NotificationMessage $message): void
     {
+        $notificationIds = is_array($message->notificationId)
+            ? $message->notificationId
+            : [$message->notificationId];
+
+        $retryLater = [];
+        foreach ($notificationIds as $id) {
+            $this->sendNotification($id, $message->ignoreIsOnline, $retryLater);
+        }
+
+        if (!empty($retryLater)) {
+            // Users are online but have not seen the notification yet, retry later.
+            $this->messageBus->dispatch(new NotificationMessage($retryLater, true), [
+                new DelayStamp(600_000),
+            ]);
+        }
+    }
+
+    /**
+     * @param array<int> $retryLater
+     * @param-out array<int> $retryLater
+     */
+    private function sendNotification(int $notificationId, bool $ignoreIsOnline, array &$retryLater): void
+    {
         /** @var Notification|null $notification */
-        $notification = $this->notificationRepository->find($message->notificationId);
+        $notification = $this->notificationRepository->find($notificationId);
         if ($notification === null || $notification->isSeen()) {
             return;
         }
 
         $notificationType = $this->notificationTypeCollection->getNotificationType($notification->getType());
         if ($notificationType === null) {
-            throw new NotificationHandlerException("Unable to handle notification of type '{$notification->getType()}'.");
+            return;
         }
 
-        if (!$message->ignoreIsOnline && $notification->getRecipient()->isOnline()) {
-            // The user is online, delay the notification by 10 minutes, if they haven't seen it by then, send it.
-            $this->messageBus->dispatch(new NotificationMessage($notification->getId(), true), [
-                new DelayStamp(600_000),
-            ]);
+        if (!$ignoreIsOnline && $notification->getRecipient()->isOnline()) {
+            $retryLater[] = $notification->getId();
             return;
         }
 
         $language = $notification->getRecipient()->getLanguage();
         $this->localeSwitcher->runWithLocale($language, function () use ($notificationType, $notification) {
-            $notificationType->handleNotification($notification);
+            try {
+                $notificationType->handleNotification($notification);
+            } catch (Exception) {
+            }
         });
     }
 }

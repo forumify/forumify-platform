@@ -30,6 +30,14 @@ class MessageUserAddedNotificationType extends AbstractEmailNotificationType
         return self::TYPE;
     }
 
+    public static function createNotification(User $addedUser, MessageThread $thread, User $addedBy): Notification
+    {
+        return new Notification(self::TYPE, $addedUser, [
+            'messageThread' => $thread,
+            'user' => $addedBy,
+        ]);
+    }
+
     public function getTitle(Notification $notification): string
     {
         return $this->translator->trans('notification.message_user_added');

@@ -16,9 +16,18 @@ class NotificationService
     ) {
     }
 
-    public function sendNotification(Notification $notification): void
+    /**
+     * @param Notification|array<Notification>
+     */
+    public function sendNotification(Notification|array $notifications): void
     {
-        $this->notificationRepository->save($notification);
-        $this->messageBus->dispatch(new NotificationMessage($notification->getId()));
+        if (!is_array($notifications)) {
+            $notifications = [$notifications];
+        }
+
+        $this->notificationRepository->saveAll($notifications);
+        $this->messageBus->dispatch(new NotificationMessage(
+            array_map(fn (Notification $n) => $n->getId(), $notifications),
+        ));
     }
 }

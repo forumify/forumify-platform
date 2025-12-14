@@ -87,6 +87,11 @@ class MessageThread
         $this->participants = $participants;
     }
 
+    public function addParticipant(User $user): void
+    {
+        $this->participants->add($user);
+    }
+
     /**
      * @return Collection<int, Message>
      */
