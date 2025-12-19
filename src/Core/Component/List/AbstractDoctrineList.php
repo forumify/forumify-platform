@@ -46,7 +46,10 @@ abstract class AbstractDoctrineList extends AbstractList
 
     protected function getTotalCount(): int
     {
-        $ids = implode(',', array_map(static fn (string $id) => "e.$id", $this->identifiers));
+        $qb = $this->getQuery();
+        $rootAlias = $qb->getRootAliases()[0];
+
+        $ids = implode(',', array_map(static fn (string $id) => "$rootAlias.$id", $this->identifiers));
         return (int)$this->getQuery()
             ->select("COUNT($ids)")
             ->getQuery()

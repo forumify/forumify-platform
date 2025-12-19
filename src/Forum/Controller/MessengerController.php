@@ -6,7 +6,6 @@ namespace Forumify\Forum\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
-use Forumify\Core\Entity\Notification;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Repository\UserRepository;
@@ -96,6 +95,11 @@ class MessengerController extends AbstractController
         MessageThread $thread,
         NotificationService $notificationService
     ): Response {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
         $form = $this->createFormBuilder()
             ->add('participants', EntityType::class, [
                 'multiple' => true,
@@ -122,7 +126,7 @@ class MessengerController extends AbstractController
         $notifications = [];
         foreach ($newParticipants as $newParticipant) {
             $thread->addParticipant($newParticipant);
-            $notifications[] = MessageUserAddedNotificationType::createNotification($newParticipant, $thread, $this->getUser());
+            $notifications[] = MessageUserAddedNotificationType::createNotification($newParticipant, $thread, $user);
         }
 
         $this->messageThreadRepository->save($thread);

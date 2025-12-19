@@ -17,7 +17,7 @@ class NotificationService
     }
 
     /**
-     * @param Notification|array<Notification>
+     * @param Notification|array<Notification> $notifications
      */
     public function sendNotification(Notification|array $notifications): void
     {
