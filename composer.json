@@ -15,7 +15,7 @@
         "doctrine/orm": "3.5.2",
         "dragonmantank/cron-expression": "^3.3",
         "firebase/php-jwt": "^6.8",
-        "forumify/forumify-theme": "^0.4",
+        "forumify/forumify-theme": "^1.0",
         "guzzlehttp/guzzle": "^7.0",
         "league/flysystem-bundle": "^3.1",
         "league/html-to-markdown": "^5.1",
