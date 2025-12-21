@@ -30,7 +30,7 @@ class GoogleIdpType extends AbstractIdpType
                 'help' => 'admin.identity_provider.google.instructions_help',
                 'help_translation_parameters' => [
                     'originUrl' => $origin,
-                    'redirectUrl' => $redirect,
+                    'redirectUrl' => str_replace('http://', 'https://', $redirect),
                 ],
             ])
             ->add('clientId', TextType::class)

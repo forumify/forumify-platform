@@ -26,7 +26,7 @@ class DiscordIdpType extends AbstractIdpType
             ->add('instructions', InfoType::class, [
                 'help' => 'admin.identity_provider.discord.instructions',
                 'help_translation_parameters' => [
-                    'redirectUrl' => $redirect,
+                    'redirectUrl' => str_replace('http://', 'https://', $redirect),
                 ],
             ])
             ->add('clientId', TextType::class)
