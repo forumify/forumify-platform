@@ -59,6 +59,7 @@ class MessageThread
     {
         $this->participants = new ArrayCollection();
         $this->messages = new ArrayCollection();
+        $this->lastMessageAt = new DateTimeImmutable();
     }
 
     public function getTitle(): string
