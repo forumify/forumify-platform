@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Twig\Extension;
 
+use Exception;
 use Forumify\Core\MenuBuilder\MenuTypeInterface;
 use Forumify\Core\Repository\MenuItemRepository;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -65,7 +66,10 @@ class MenuRuntime implements RuntimeExtensionInterface
                 continue;
             }
 
-            $menuHtml .= $menuType->buildItem($root);
+            try {
+                $menuHtml .= $menuType->buildItem($root);
+            } catch (Exception) {
+            }
         }
 
         return $menuHtml;
