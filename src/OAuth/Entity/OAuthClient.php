@@ -12,7 +12,6 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 use Forumify\OAuth\Repository\OAuthClientRepository;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OAuthClientRepository::class)]
 class OAuthClient implements AuthorizableInterface
@@ -20,11 +19,9 @@ class OAuthClient implements AuthorizableInterface
     use IdentifiableEntityTrait;
 
     #[ORM\Column(length: 255, unique: true)]
-    #[Assert\NotBlank(allowNull: false)]
     private string $clientId = '';
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(allowNull: false)]
     private string $clientSecret = '';
 
     /**
@@ -40,6 +37,12 @@ class OAuthClient implements AuthorizableInterface
     {
         $this->user = new User();
         $this->user->setOAuthClient($this);
+        $this->user->setEmailVerified(true);
+    }
+
+    public function getUserId(): int
+    {
+        return $this->user->getId();
     }
 
     public function getName(): string

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Security\Voter;
 
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\Role;
-use Forumify\Core\Entity\User;
 
 trait LowestUserRoleTrait
 {
     /** @var array<int, int> */
     private array $lowestPosMemo = [];
 
-    private function getLowestRolePos(User $user): int
+    private function getLowestRolePos(AuthorizableInterface $user): int
     {
-        $id = $user->getId();
+        $id = $user->getUserId();
         if (isset($this->lowestPosMemo[$id])) {
             return $this->lowestPosMemo[$id];
         }

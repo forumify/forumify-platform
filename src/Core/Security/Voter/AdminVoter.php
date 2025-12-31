@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Security\Voter;
 
-use Forumify\Core\Entity\User;
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -25,16 +25,16 @@ class AdminVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (!$user instanceof User) {
+        if (!$user instanceof AuthorizableInterface) {
             return false;
         }
 
-        $userId = $user->getId();
+        $userId = $user->getUserId();
         $this->memo[$userId] ??= $this->isAdmin($user);
         return $this->memo[$userId];
     }
 
-    private function isAdmin(User $user): bool
+    private function isAdmin(AuthorizableInterface $user): bool
     {
         foreach ($user->getRoleEntities() as $role) {
             if ($role->isAdministrator()) {

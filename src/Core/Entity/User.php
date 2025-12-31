@@ -25,6 +25,11 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
 
+    public function getUserId(): int
+    {
+        return $this->getId();
+    }
+
     /** @var non-empty-string $username*/
     #[ORM\Column(length: 32, unique: true)]
     #[Groups(['MessageThread'])]

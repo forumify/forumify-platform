@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Security\Voter;
 
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\Role;
-use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -25,7 +25,7 @@ class AssignRoleVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (!$user instanceof User) {
+        if (!$user instanceof AuthorizableInterface) {
             return false;
         }
 

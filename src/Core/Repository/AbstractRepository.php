@@ -11,12 +11,11 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Forumify\Core\Entity\ACL;
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\SortableEntityInterface;
-use Forumify\Core\Entity\User;
 use Forumify\Core\Event\EntityPostRemoveEvent;
 use Forumify\Core\Event\EntityPostSaveEvent;
 use Forumify\Core\Security\VoterAttribute;
-use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Service\Attribute\Required;
@@ -205,17 +204,13 @@ abstract class AbstractRepository extends ServiceEntityRepository
         ;
 
         $user = $this->security->getUser();
-        if ($user instanceof OAuthClient) {
-            $user = $user->getUser();
-        }
-
-        if ($user instanceof User) {
+        if ($user instanceof AuthorizableInterface) {
             $qb->leftJoin('acl_role.users', 'acl_role_users')
                 ->andWhere($qb->expr()->orX(
                     'acl_role_users.id = :userId',
                     'acl_role.slug = :userRole'
                 ))
-                ->setParameter('userId', $user->getId())
+                ->setParameter('userId', $user->getUserId())
                 ->setParameter('userRole', 'user');
         } else {
             $qb->andWhere('acl_role.slug = :guestRole')
