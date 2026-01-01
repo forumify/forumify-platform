@@ -17,7 +17,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('forumify.admin.forums.manage')]
 class ForumController extends AbstractController
 {
-    #[Route('/forum/{slug?}', 'forum')]
+    #[Route('/forum/{slug:forum?}', 'forum')]
     public function __invoke(
         Request $request,
         ForumRepository $forumRepository,
