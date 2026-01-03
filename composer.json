@@ -25,7 +25,7 @@
         "symfony/asset": "7.4.*",
         "symfony/console": "7.4.*",
         "symfony/config": "7.4.*",
-        "symfony/doctrine-messenger": "7.4.*",
+        "symfony/doctrine-messenger": "^7.4.3",
         "symfony/dotenv": "7.4.*",
         "symfony/expression-language": "7.4.*",
         "symfony/flex": "^2",
