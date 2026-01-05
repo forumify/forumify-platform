@@ -31,7 +31,7 @@ class ReadMarker
      */
     public function __construct(
         private readonly EntityManagerInterface $em,
-        #[AutowireIterator('forumify.read_marker.service')]
+        #[AutowireIterator('forumify.read_marker.service', defaultIndexMethod: 'getEntityClass')]
         private readonly iterable $readMarkerServices,
         private readonly Security $security,
     ) {
