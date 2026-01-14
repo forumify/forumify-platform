@@ -6,6 +6,7 @@ namespace Forumify\Core\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use DateTime;
+use Deprecated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -229,6 +230,7 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
         $this->signature = $signature;
     }
 
+    #[Deprecated()]
     public function eraseCredentials(): void
     {
     }
