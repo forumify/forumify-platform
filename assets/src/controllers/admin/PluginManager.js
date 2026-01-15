@@ -20,6 +20,7 @@ export class PluginManager extends Controller {
     migrations: 'Running database migrations',
     npmUpdate: 'Updating frontend dependencies',
     npmBuild: 'Building frontend assets',
+    clearAppCache: 'Clearing application caches',
   };
 
   inProgress = false;
@@ -34,26 +35,21 @@ export class PluginManager extends Controller {
   updateAll() {
     this.run([
       ['composerUpdate'],
-      ['clearFrameworkCache'],
-      ['composerPostInstall'],
-      ['migrations'],
-      ['npmUpdate'],
-      ['npmBuild'],
+      ...this.postInstall(),
     ]);
   }
 
   updatePlatform() {
-    this.updatePackage({ params: { package: 'forumify/forumify-platform' } });
+    this.run([
+      ['composerUpdate', { package: 'forumify/forumify-platform' }],
+      ...this.postInstall(),
+    ]);
   }
 
   updatePackage({ params }) {
     this.run([
       ['composerUpdate', { package: params.package }],
-      ['clearFrameworkCache'],
-      ['composerPostInstall'],
-      ['migrations'],
-      ['npmUpdate'],
-      ['npmBuild'],
+      ...this.postInstall(),
     ]);
   }
 
@@ -63,38 +59,40 @@ export class PluginManager extends Controller {
     const pkg = event.params.package || event.target.querySelector('#plugin-package').value;
     this.run([
       ['composerRequire', { package: pkg }],
-      ['clearFrameworkCache'],
-      ['composerPostInstall'],
-      ['npmUpdate'],
-      ['npmBuild'],
+      ...this.postInstall(),
     ]);
   }
 
   uninstall({ params }) {
     this.run([
       ['composerRemove', { package: params.package }],
-      ['clearFrameworkCache'],
-      ['composerPostInstall'],
-      ['npmUpdate'],
-      ['npmBuild'],
+      ...this.postInstall(),
     ]);
   }
 
   activate({ params }) {
     this.run([
       ['setActive', { pluginId: params.plugin, active: true }],
-      ['clearFrameworkCache'],
-      ['composerPostInstall'],
-      ['migrations'],
+      ...this.postInstall(),
     ]);
   }
 
   deactivate({ params }) {
     this.run([
       ['setActive', { pluginId: params.plugin, active: false }],
+      ...this.postInstall(),
+    ]);
+  }
+
+  postInstall() {
+    return [
       ['clearFrameworkCache'],
       ['composerPostInstall'],
-    ]);
+      ['migrations'],
+      ['npmUpdate'],
+      ['npmBuild'],
+      ['clearAppCache'],
+    ];
   }
 
   async run(commands) {

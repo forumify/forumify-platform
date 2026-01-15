@@ -213,6 +213,16 @@ class PluginService
         }
     }
 
+    public function clearAppCache(): string
+    {
+        return $this->run([
+            'php',
+            'bin/console',
+            'cache:clear',
+            '--no-interaction',
+        ]);
+    }
+
     public function migrations(): string
     {
         return $this->run([

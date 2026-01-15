@@ -39,5 +39,6 @@ class AutoUpdateTask
         $pluginService->migrations();
         $pluginService->npmUpdate();
         $pluginService->npmBuild();
+        $pluginService->clearAppCache();
     }
 }
