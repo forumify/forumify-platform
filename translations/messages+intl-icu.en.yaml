@@ -439,6 +439,13 @@ admin:
             show_last_comment_by: 'Show or hide the last comment author on this forum in the forum list.'
             only_show_own_topics: 'Only show the user''s own topics in this forum. This setting enables the "show all topics" permission to ignore this setting.'
         topic_template_help: 'The template that is shown when the user is creating a new topic.'
+        tags: 'Tags'
+    forum_tag:
+        crud:
+            single: 'forum tag'
+            plural: 'forum tags'
+            create: 'New Tag'
+            allow_in_subforum_help: 'When checked, this tag can be used in this forum, and all children of this forum. Disable to only allow this tag to be used in "{forum}".'
     menu_builder:
         title: 'Menu Builder'
         create_collection_item: 'Add Item'

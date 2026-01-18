@@ -1,0 +1,19 @@
+{% extends '@Forumify/admin/crud/form.html.twig' %}
+{% block body %}
+    {% embed '@Forumify/admin/components/simple_form.html.twig' %}
+        {% block form_actions %}
+            <div class="flex justify-center items-center gap-2">
+                <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+                {% if forum is null %}
+                    <a href="{{ path('forumify_admin_forum_tags_list') }}" class="btn-outlined">
+                        {{ 'cancel'|trans }}
+                    </a>
+                {% else %}
+                    <a href="{{ path('forumify_admin_forum', { slug: forum.slug }) }}#tab-tags" class="btn-outlined">
+                        {{ 'cancel'|trans }}
+                    </a>
+                {% endif %}
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}

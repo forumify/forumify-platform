@@ -13,9 +13,12 @@
             </a>
         {% else %}
             <h4>{{ 'index'|trans }}</h4>
+            <a class="btn-link" href="{{ path('forumify_admin_forum_tags_list') }}">
+                <i class="ph ph-tag"></i>
+                {{ 'admin.forum_tag.crud.plural'|trans|title }}
+            </a>
         {% endif %}
     </div>
-
     {% if form is not null %}
         <div class="box mb-6">
             {{ form_start(form) }}
@@ -23,6 +26,7 @@
                 {% block tabs %}
                     <button type="button" class="btn-link" data-tab-id="general">{{ 'admin.forum.general'|trans }}</button>
                     <button type="button" class="btn-link" data-tab-id="display-settings">{{ 'admin.forum.display_settings'|trans }}</button>
+                    <button type="button" class="btn-link" data-tab-id="tags">{{ 'admin.forum.tags'|trans }}</button>
                 {% endblock %}
                 {% block tabpanels %}
                     <div id="general">
@@ -36,6 +40,16 @@
                     <div id="display-settings">
                         {{ form_widget(form.displaySettings) }}
                     </div>
+                    <div id="tags">
+                        {{ component('ForumTagTable', { forum: forum }) }}
+                        <a
+                            class="btn-outlined btn-small mt-2 mb-6"
+                            href="{{ path('forumify_admin_forum_tags_create', { forum: forum.slug }) }}"
+                        >
+                            <i class="ph ph-plus"></i>
+                            {{ 'admin.forum_tag.crud.create'|trans }}
+                        </a>
+                    </div>
                 {% endblock %}
             {% endembed %}
             <div class="flex justify-center gap-4">
@@ -47,9 +61,7 @@
             {{ form_end(form) }}
         </div>
     {% endif %}
-
     {{ component('ForumEditor', { forum: forum }) }}
-
     <div class="box mt-4">
         <a href="{{ path('forumify_admin_forum_group_create', { parent: forum ? forum.id : null }) }}">
             <i class="ph ph-plus"></i>

@@ -9,12 +9,14 @@
         {% block form_widget %}
             {{ form_widget(form) }}
         {% endblock %}
-        <div class="flex justify-center items-center gap-2">
-            <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
-            {% if cancelPath is defined %}
-                <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
-            {% endif %}
-        </div>
+        {% block form_actions %}
+            <div class="flex justify-center items-center gap-2">
+                <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
+                {% if cancelPath is defined %}
+                    <a href="{{ cancelPath }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+                {% endif %}
+            </div>
+        {% endblock %}
         {{ form_end(form) }}
     {% endblock %}
 </div>

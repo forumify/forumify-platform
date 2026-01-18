@@ -12,7 +12,7 @@ thead {
     border-bottom: var(--border);
 
     th {
-        padding: var(--spacing-2);
+        padding: var(--spacing-1) var(--spacing-2);
     }
 }
 
@@ -56,6 +56,14 @@ tfoot {
 .table-wrapper {
     @include mixins.box-shadow;
     position: relative;
+}
+
+.box .table-wrapper {
+    box-shadow: none;
+}
+
+.card .table-wrapper {
+    box-shadow: none;
 }
 
 .table-loader {

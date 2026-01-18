@@ -18,7 +18,7 @@ export class Tabs extends Controller {
       tabPanel.role = 'tabpanel';
     }
 
-    this.selectFirstTab();
+    this.selectInitialTab();
     this.tabPanelsTarget.classList.remove('d-none');
   }
 
@@ -44,7 +44,17 @@ export class Tabs extends Controller {
     selectedTabBody.classList.remove('d-none');
   }
 
-  selectFirstTab() {
+  selectInitialTab() {
+    const urlHash = (new URLSearchParams(window.location)).get('hash');
+    if (urlHash && urlHash.startsWith('#tab-')) {
+      const tabIdToSelect = urlHash.slice('#tab-'.length);
+      const tabToSelect = this.tabsTarget.querySelector(`[data-tab-id="${tabIdToSelect}"]`);
+      if (tabToSelect) {
+        this.handleTabClicked(tabToSelect);
+        return;
+      }
+    }
+
     this.handleTabClicked(this.tabsTarget.firstElementChild);
   }
 }

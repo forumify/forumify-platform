@@ -15,6 +15,7 @@ use ApiPlatform\State\CreateProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
@@ -86,10 +87,22 @@ class Topic implements SubscribableInterface
     #[Groups('Topic')]
     private int $views = 0;
 
+    /**
+     * @var Collection<int, ForumTag>
+     */
+    #[ORM\ManyToMany(targetEntity: ForumTag::class, inversedBy: 'topics')]
+    #[ORM\JoinTable(
+        name: 'topic_tag',
+        joinColumns: new JoinColumn(onDelete: 'CASCADE'),
+        inverseJoinColumns: new JoinColumn(onDelete: 'CASCADE'),
+    )]
+    public Collection $tags;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     public function __toString(): string
