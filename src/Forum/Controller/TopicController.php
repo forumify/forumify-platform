@@ -83,6 +83,7 @@ class TopicController extends AbstractController
         $topicData = new TopicData();
         $topicData->setTitle($topic->getTitle());
         $topicData->setExistingImage($topic->getImage());
+        $topicData->setTags($topic->tags);
 
         $form = $this->createForm(TopicType::class, $topicData, ['forum' => $topic->getForum()]);
 
@@ -97,6 +98,7 @@ class TopicController extends AbstractController
                 $topic->setImage($newImage);
             }
 
+            $topic->tags = $topicData->getTags();
             $this->topicRepository->save($topic);
 
             $this->addFlash('success', 'flashes.topic_saved');

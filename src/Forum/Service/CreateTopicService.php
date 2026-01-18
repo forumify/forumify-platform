@@ -48,6 +48,9 @@ class CreateTopicService
         $topic->setFirstComment($comment);
         $topic->setComments([$comment]);
 
+        $topic->tags = $newTopic->getTags();
+        // TODO: add default tags
+
         $this->eventDispatcher->dispatch(new TopicCreatedEvent($topic));
         return $topic;
     }

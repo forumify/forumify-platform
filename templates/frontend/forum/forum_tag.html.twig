@@ -1,6 +1,7 @@
-<span class="p-2 text-black {{ class|default('text-extra-small') }}" style="
-    border-radius: 100px;
+<span class="tag {{ class|default('text-small') }}" style="
     background-color: {{ tag.color }};
-    color: {{ tag.color|fg_color }}">
-    {{ tag.title }}
+    color: {{ tag.color|fg_color }};
+    text-transform: uppercase;
+">
+    {{ tag.title|upper }}
 </span>
