@@ -93,7 +93,7 @@ class ForumTagTable extends AbstractTable
         $this->addActionColumn($this->renderActionColumn(...));
     }
 
-    private function renderTag($_, ForumTag $tag): string
+    private function renderTag(string $_, ForumTag $tag): string
     {
         return $this->twig->render('@Forumify/frontend/forum/forum_tag.html.twig', [
             'tag' => $tag,

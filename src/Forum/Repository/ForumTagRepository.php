@@ -18,6 +18,9 @@ class ForumTagRepository extends AbstractRepository
         return ForumTag::class;
     }
 
+    /**
+     * @return array<ForumTag>
+     */
     public function findByForum(?Forum $forum, ?bool $default = null): array
     {
         $forumTags = $forum === null ? [] : $this->findByForumRecursive($forum, $default);
@@ -31,6 +34,9 @@ class ForumTagRepository extends AbstractRepository
         return array_merge($forumTags, $globalTags);
     }
 
+    /**
+     * @return array<ForumTag>
+     */
     private function findByForumRecursive(Forum $forum, ?bool $default, bool $onlyInSubforums = false): array
     {
         $criteria = ['forum' => $forum];

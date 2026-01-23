@@ -14,7 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatableMessage;
 
 /**
- * @extends AbstractType<ForumTag>
+ * @extends AbstractType<ForumTag|null>
  */
 class ForumTagType extends AbstractType
 {

@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\ForumTag;
-use Forumify\Forum\Entity\TopicTag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -88,7 +87,7 @@ class TopicData
     }
 
     /**
-     * @return Collection<int, TopicTag>
+     * @return Collection<int, ForumTag>
      */
     public function getTags(): Collection
     {
@@ -96,7 +95,7 @@ class TopicData
     }
 
     /**
-     * @param Collection<int, TopicTag> $tags
+     * @param Collection<int, ForumTag> $tags
      */
     public function setTags(Collection $tags): void
     {
