@@ -106,7 +106,6 @@ class ForumTagTable extends AbstractTable
         if ($forum = $tag->forum) {
             $routeParams['slug'] = $forum->getSlug();
         }
-        $url = $this->urlGenerator->generate('forumify_admin_forum', $routeParams);
 
         $forumTitle ??= 'All';
         if ($this->forum !== null) {
@@ -117,7 +116,11 @@ class ForumTagTable extends AbstractTable
             }
         }
 
-        return "$forumTitle <a href='$url#tab-tags' target='blank'><i class='ph ph-arrow-square-out'></i></a>";
+        $url = $tag->forum !== null
+            ? $this->urlGenerator->generate('forumify_admin_forum', ['slug' => $tag->forum->getSlug()]) . '#tab-tags'
+            : $this->urlGenerator->generate('forumify_admin_forum_tags_list');
+
+        return "$forumTitle <a href='$url' target='blank'><i class='ph ph-arrow-square-out'></i></a>";
     }
 
     private function renderActionColumn(int $id, ForumTag $tag): string

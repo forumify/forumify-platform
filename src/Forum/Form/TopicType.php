@@ -45,17 +45,20 @@ class TopicType extends AbstractType
         $forum = $options['forum'];
         $forumType = $forum?->getType();
 
-        $builder
-            ->add('title', TextType::class)
-            ->add('tags', EntityType::class, [
+        $builder->add('title', TextType::class);
+
+
+        $selectableTags = $this->forumTagRepository->findByForum($forum);
+        if (!empty($selectableTags)) {
+            $builder->add('tags', EntityType::class, [
                 'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
                 'class' => ForumTag::class,
-                'choices' => $this->forumTagRepository->findByForum($forum),
+                'choices' => $selectableTags,
                 'choice_label' => 'title',
-            ])
-        ;
+            ]);
+        }
 
         if (in_array($forumType, [Forum::TYPE_IMAGE, Forum::TYPE_MIXED], true)) {
             $builder->add('image', FileType::class, [
