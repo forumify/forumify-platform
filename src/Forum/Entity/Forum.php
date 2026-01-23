@@ -85,11 +85,18 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $topicTemplate = null;
 
+    /**
+     * @var Collection<int, ForumTag>
+     */
+    #[ORM\OneToMany(targetEntity: ForumTag::class, mappedBy: 'forum', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    public Collection $tags;
+
     public function __construct()
     {
         $this->children = new ArrayCollection();
         $this->topics = new ArrayCollection();
         $this->displaySettings = new ForumDisplaySettings();
+        $this->tags = new ArrayCollection();
     }
 
     public function __toString(): string
