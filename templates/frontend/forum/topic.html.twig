@@ -15,7 +15,7 @@
     {{ component('Breadcrumbs', { entity: topic }) }}
     <div class="topic">
         <div class="box topic-header">
-            <div class="flex flex-row items-start">
+            <div class="flex flex-row items-start flex-grow">
                 {% include '@Forumify/components/avatar.html.twig' with {
                     user: topic.createdBy,
                     className: 'hide-phone'
@@ -29,6 +29,15 @@
                         {{ 'created_by'|trans({ author: author })|raw }},
                         {{ topic.createdAt|format_date }}
                     </div>
+                    {% if not topic.tags.empty %}
+                        <div class="mt-1 flex flex-wrap gap-1">
+                            {% for tag in topic.tags %}
+                                {% include '@Forumify/frontend/forum/forum_tag.html.twig' with {
+                                    tag: tag,
+                                } only %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="flex gap-2">

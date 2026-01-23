@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Form;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Forumify\Core\Entity\User;
+use Forumify\Forum\Entity\ForumTag;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,6 +25,16 @@ class TopicData
     private ?string $existingImage = null;
 
     private ?User $author = null;
+
+    /**
+     * @var Collection<int, ForumTag>
+     */
+    private Collection $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     public function getTitle(): string
     {
@@ -71,5 +84,21 @@ class TopicData
     public function setAuthor(?User $author): void
     {
         $this->author = $author;
+    }
+
+    /**
+     * @return Collection<int, ForumTag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @param Collection<int, ForumTag> $tags
+     */
+    public function setTags(Collection $tags): void
+    {
+        $this->tags = $tags;
     }
 }

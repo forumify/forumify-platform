@@ -31,6 +31,15 @@
                                 </span>
                             </div>
                         {% endif %}
+                        {% if not topic.tags.empty %}
+                            <div class="mt-1 mb-2 flex flex-wrap gap-1">
+                                {% for tag in topic.tags %}
+                                    {% include '@Forumify/frontend/forum/forum_tag.html.twig' with {
+                                        tag: tag,
+                                    } only %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
                     </div>
                     {% set lastComment = topic|last_comment %}
                     {% if lastComment is not null %}

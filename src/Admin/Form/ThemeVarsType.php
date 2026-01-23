@@ -12,6 +12,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\FormTypeInterface;
 
 /**
  * @extends AbstractType<array<string, mixed>>
@@ -50,6 +51,9 @@ class ThemeVarsType extends AbstractType
         }
     }
 
+    /**
+     * @return class-string<FormTypeInterface<*>>
+     */
     private function getFormType(ThemeVarType $type): string
     {
         return match ($type) {

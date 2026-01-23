@@ -6,6 +6,7 @@ namespace Forumify\OAuth\Idp;
 
 use Forumify\OAuth\Entity\IdentityProvider;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,7 +17,7 @@ interface IdentityProviderInterface
     public static function getType(): string;
 
     /**
-     * @return class-string
+     * @return class-string<FormTypeInterface<*>>
      */
     public static function getDataType(): string;
 

@@ -33,11 +33,11 @@ class TopicCreateControllerTest extends WebTestCase
         $client->request('GET', "/forum/{$forum->getId()}/topic/create");
         $client->submitForm('Post', [
             'topic[title]' => 'Test Topic',
-            'topic[content]' => '<h1 id="test-topic">test</h1>'
+            'topic[content]' => '<h1 id="test-topic">test</h1>',
         ]);
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorExists('#test-topic', 'test');
+        self::assertSelectorTextContains('#test-topic', 'test');
     }
 
     public function testCannotCreateTopicWhenNotVerified(): void

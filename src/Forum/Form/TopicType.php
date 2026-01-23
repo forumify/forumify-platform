@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Form;
 
+use Forumify\Core\Form\EntityType;
 use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\ForumTag;
+use Forumify\Forum\Repository\ForumTagRepository;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -18,8 +21,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class TopicType extends AbstractType
 {
-    public function __construct(private readonly Packages $packages)
-    {
+    public function __construct(
+        private readonly Packages $packages,
+        private readonly ForumTagRepository $forumTagRepository,
+    ) {
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -41,6 +46,20 @@ class TopicType extends AbstractType
         $forumType = $forum?->getType();
 
         $builder->add('title', TextType::class);
+
+
+        $selectableTags = $this->forumTagRepository->findByForum($forum);
+        if (!empty($selectableTags)) {
+            $builder->add('tags', EntityType::class, [
+                'required' => false,
+                'multiple' => true,
+                'autocomplete' => true,
+                'class' => ForumTag::class,
+                'choices' => $selectableTags,
+                'choice_label' => 'title',
+            ]);
+        }
+
         if (in_array($forumType, [Forum::TYPE_IMAGE, Forum::TYPE_MIXED], true)) {
             $builder->add('image', FileType::class, [
                 'required' => $forumType === Forum::TYPE_IMAGE,

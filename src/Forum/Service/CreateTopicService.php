@@ -10,6 +10,7 @@ use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Event\TopicCreatedEvent;
 use Forumify\Forum\Form\NewComment;
 use Forumify\Forum\Form\TopicData;
+use Forumify\Forum\Repository\ForumTagRepository;
 use Forumify\Forum\Repository\TopicRepository;
 use League\Flysystem\FilesystemOperator;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -22,6 +23,7 @@ class CreateTopicService
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly FilesystemOperator $mediaStorage,
         private readonly MediaService $mediaService,
+        private readonly ForumTagRepository $forumTagRepository,
     ) {
     }
 
@@ -34,6 +36,14 @@ class CreateTopicService
         if ($newTopic->getImage() !== null) {
             $image = $this->mediaService->saveToFilesystem($this->mediaStorage, $newTopic->getImage());
             $topic->setImage($image);
+        }
+
+        $topic->tags = $newTopic->getTags();
+        $defaultTags = $this->forumTagRepository->findByForum($forum, true);
+        foreach ($defaultTags as $defaultTag) {
+            if (!$topic->tags->contains($defaultTag)) {
+                $topic->tags->add($defaultTag);
+            }
         }
 
         $this->topicRepository->save($topic);
