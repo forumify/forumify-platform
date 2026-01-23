@@ -42,5 +42,10 @@ class ForumTagType extends AbstractType
                 ]),
             ]);
         }
+
+        $builder->add('default', CheckboxType::class, [
+            'required' => false,
+            'help' => 'This tag will automatically be added to all new topics. If the tag is allowed in subforums, those topics will also be tagged automatically.',
+        ]);
     }
 }

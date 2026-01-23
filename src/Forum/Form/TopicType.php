@@ -48,6 +48,7 @@ class TopicType extends AbstractType
         $builder
             ->add('title', TextType::class)
             ->add('tags', EntityType::class, [
+                'required' => false,
                 'multiple' => true,
                 'autocomplete' => true,
                 'class' => ForumTag::class,
@@ -55,7 +56,6 @@ class TopicType extends AbstractType
                 'choice_label' => 'title',
             ])
         ;
-
 
         if (in_array($forumType, [Forum::TYPE_IMAGE, Forum::TYPE_MIXED], true)) {
             $builder->add('image', FileType::class, [

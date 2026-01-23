@@ -82,6 +82,12 @@ class ForumTagTable extends AbstractTable
                 'renderer' => fn(bool $allow, ForumTag $tag) => $tag->forum === null
                     ? ''
                     : ($allow ? 'Yes' : 'No'),
+            ])
+            ->addColumn('default', [
+                'field' => 'default',
+                'searchable' => false,
+                'sortable' => false,
+                'renderer' => fn(bool $default) => $default ? 'Yes' : 'No',
             ]);
 
         $this->addActionColumn($this->renderActionColumn(...));

@@ -34,8 +34,11 @@ class ForumTag
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     public ?Forum $forum = null;
 
-    #[ORM\Column(type: Types::BOOLEAN)]
+    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => true])]
     public bool $allowInSubforums = true;
+
+    #[ORM\Column('`default`', type: Types::BOOLEAN, options: ['default' => false])]
+    public bool $default = false;
 
     /**
      * @var Collection<int, Topic>
