@@ -29,6 +29,10 @@ class ActivatePluginCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $this->getApplication()?->doRun(new ArrayInput([
+            'command' => 'forumify:plugins:refresh',
+        ]), $output);
+
         $io = new CommandIO($input, $output);
         $io->title('Activating Plugin');
 
