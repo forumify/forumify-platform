@@ -9,7 +9,7 @@ use Forumify\Core\Repository\ThemeRepository;
 use Forumify\Plugin\Entity\Plugin;
 
 #[ORM\Entity(repositoryClass: ThemeRepository::class)]
-class Theme
+class Theme implements AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use TimestampableEntityTrait;
@@ -85,5 +85,15 @@ class Theme
     public function setPlugin(Plugin $plugin): void
     {
         $this->plugin = $plugin;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getName();
     }
 }

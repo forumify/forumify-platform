@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\ACLParameters;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\HierarchicalInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SortableEntityInterface;
@@ -22,7 +23,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     extraProperties: ['acl' => ['permission' => 'view']],
 )]
-class Forum implements HierarchicalInterface, AccessControlledEntityInterface, SortableEntityInterface
+class Forum implements
+    AccessControlledEntityInterface,
+    AuditableEntityInterface,
+    HierarchicalInterface,
+    SortableEntityInterface
 {
     public const TYPE_TEXT = 'text';
     public const TYPE_IMAGE = 'image';
@@ -248,5 +253,15 @@ class Forum implements HierarchicalInterface, AccessControlledEntityInterface, S
             'forumify_admin_forum',
             ['slug' => $this->getSlug()],
         );
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getTitle();
     }
 }

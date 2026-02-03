@@ -20,16 +20,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(operations: [])]
-class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
+class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
-
-    public function getUserId(): int
-    {
-        return $this->getId();
-    }
 
     /** @var non-empty-string $username*/
     #[ORM\Column(length: 32, unique: true)]
@@ -50,6 +45,7 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     private Collection $roles;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[SensitiveField]
     private ?string $password = null;
 
     #[ORM\Column(length: 32)]
@@ -80,6 +76,7 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     private bool $banned = false;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[AuditExcludedField]
     private ?DateTime $lastActivity = null;
 
     /** @var Collection<int, Subscription> */
@@ -111,6 +108,11 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
         $this->roles = new ArrayCollection();
         $this->notificationSettings = new ArrayCollection([new UserNotificationSettings($this)]);
         $this->badges = new ArrayCollection();
+    }
+
+    public function getUserId(): int
+    {
+        return $this->getId();
     }
 
     public function getUsername(): string
@@ -325,5 +327,15 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface
     public function setOAuthClient(?OAuthClient $oAuthClient): void
     {
         $this->oAuthClient = $oAuthClient;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getUserIdentifier();
     }
 }

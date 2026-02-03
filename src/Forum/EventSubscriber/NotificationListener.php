@@ -4,21 +4,25 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\EventSubscriber;
 
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Events;
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\Forum\Entity\Comment;
+use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\Subscription;
-use Forumify\Forum\Event\CommentCreatedEvent;
-use Forumify\Forum\Event\MessageCreatedEvent;
-use Forumify\Forum\Event\TopicCreatedEvent;
+use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Notification\CommentCreatedNotificationType;
 use Forumify\Forum\Notification\MessageReplyNotificationType;
 use Forumify\Forum\Notification\TopicCreatedNotificationType;
 use Forumify\Forum\Repository\SubscriptionRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class NotificationSubscriber implements EventSubscriberInterface
+#[AsEntityListener(event: Events::postPersist, method: 'sendNotificationsForComment', entity: Comment::class)]
+#[AsEntityListener(event: Events::postPersist, method: 'sendNotificationsForTopic', entity: Topic::class)]
+#[AsEntityListener(event: Events::postPersist, method: 'sendNotificationsForMessage', entity: Message::class)]
+class NotificationListener
 {
     public function __construct(
         private readonly SubscriptionRepository $subscriptionRepository,
@@ -27,19 +31,9 @@ class NotificationSubscriber implements EventSubscriberInterface
     ) {
     }
 
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            CommentCreatedEvent::class => 'sendNotificationsForComment',
-            TopicCreatedEvent::class => 'sendNotificationsForTopic',
-            MessageCreatedEvent::class => 'sendNotificationsForMessage',
-        ];
-    }
-
-    public function sendNotificationsForComment(CommentCreatedEvent $createdEvent): void
+    public function sendNotificationsForComment(Comment $comment): void
     {
         $selfIdentifier = $this->security->getUser()?->getUserIdentifier();
-        $comment = $createdEvent->getComment();
         $subscriptions = $this->getSubscriptions($comment->getTopic()->getId(), CommentCreatedNotificationType::TYPE);
 
         $notifications = [];
@@ -63,10 +57,9 @@ class NotificationSubscriber implements EventSubscriberInterface
         $this->notificationService->sendNotification($notifications);
     }
 
-    public function sendNotificationsForTopic(TopicCreatedEvent $createdEvent): void
+    public function sendNotificationsForTopic(Topic $topic): void
     {
         $selfIdentifier = $this->security->getUser()?->getUserIdentifier();
-        $topic = $createdEvent->getTopic();
         $subscriptions = $this->getSubscriptions($topic->getForum()->getId(), TopicCreatedNotificationType::TYPE);
 
         $notifications = [];
@@ -98,9 +91,8 @@ class NotificationSubscriber implements EventSubscriberInterface
         return $this->subscriptionRepository->findBy(['subjectId' => $subjectId, 'type' => $type]);
     }
 
-    public function sendNotificationsForMessage(MessageCreatedEvent $event): void
+    public function sendNotificationsForMessage(Message $message): void
     {
-        $message = $event->getMessage();
         $sender = $this->security->getUser();
         $participants = $message->getThread()->getParticipants();
 

@@ -7,14 +7,16 @@ namespace Forumify\OAuth\Entity;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\Role;
+use Forumify\Core\Entity\SensitiveField;
 use Forumify\Core\Entity\User;
 use Forumify\OAuth\Repository\OAuthClientRepository;
 
 #[ORM\Entity(repositoryClass: OAuthClientRepository::class)]
-class OAuthClient implements AuthorizableInterface
+class OAuthClient implements AuthorizableInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
 
@@ -22,6 +24,7 @@ class OAuthClient implements AuthorizableInterface
     private string $clientId = '';
 
     #[ORM\Column(length: 255)]
+    #[SensitiveField]
     private string $clientSecret = '';
 
     /**
@@ -143,5 +146,15 @@ class OAuthClient implements AuthorizableInterface
     public function setUser(User $User): void
     {
         $this->user = $User;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getClientId();
     }
 }

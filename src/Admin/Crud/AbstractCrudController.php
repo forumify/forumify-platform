@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Forumify\Admin\Crud\Event\PostSaveCrudEvent;
 use Forumify\Admin\Crud\Event\PreSaveCrudEvent;
 use Forumify\Core\Entity\AccessControlledEntityInterface;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

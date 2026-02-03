@@ -7,6 +7,7 @@ namespace Forumify\Forum\Controller;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Form\TopicType;
+use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateTopicService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,20 +17,24 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TopicCreateController extends AbstractController
 {
+    public function __construct(
+        private readonly CreateTopicService $createTopicService,
+        private readonly TopicRepository $topicRepository,
+    ) {
+    }
+
     #[Route('/forum/{id}/topic/create', name: 'topic_create', requirements: ['forumId' => '\d+'])]
     #[IsGranted('ROLE_USER')]
-    public function __invoke(
-        Forum $forum,
-        Request $request,
-        CreateTopicService $createTopicService,
-    ): Response {
+    public function __invoke(Forum $forum, Request $request): Response
+    {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicCreate->value, $forum);
 
         $form = $this->createForm(TopicType::class, null, ['forum' => $forum]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && !empty($form->getData())) {
-            $topic = $createTopicService->createTopic($forum, $form->getData());
+            $topic = $this->createTopicService->createTopic($forum, $form->getData());
+            $this->topicRepository->save($topic);
             return $this->redirectToRoute('forumify_forum_topic', [
                 'slug' => $topic->getSlug(),
             ]);

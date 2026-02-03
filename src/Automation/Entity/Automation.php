@@ -6,11 +6,12 @@ namespace Forumify\Automation\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Automation\Repository\AutomationRepository;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 
 #[ORM\Entity(repositoryClass: AutomationRepository::class)]
 #[ORM\Index(name: 'trigger_idx', fields: ['trigger'])]
-class Automation
+class Automation implements AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
 
@@ -116,5 +117,15 @@ class Automation
     public function setActionArguments(mixed $actionArguments): void
     {
         $this->actionArguments = $actionArguments;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getName();
     }
 }

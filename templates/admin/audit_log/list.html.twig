@@ -1,0 +1,6 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block title %}{{ 'admin.audit_logs.title'|trans }}{% endblock %}
+{% block body %}
+    <h1>{{ 'admin.audit_logs.title'|trans }}</h1>
+    {{ component('AuditLogTable') }}
+{% endblock %}

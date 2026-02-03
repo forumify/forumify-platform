@@ -1,0 +1,55 @@
+{% embed '@Forumify/components/modal.html.twig' %}
+    {% block modalOpenButton %}
+        <button class="btn-link btn-small btn-icon"><i class="ph ph-list"></i></button>
+    {% endblock %}
+    {% block modalContent %}
+        <div class="box text-left">
+            <p class="text-bold">Log #</p>
+            <p>{{ log.uid }}</p>
+            <p class="text-bold mt-2">Date</p>
+            <p>{{ log.uid.dateTime|format_date(true) }}</p>
+            {% if log.user %}
+                <p class="text-bold mt-2">User</p>
+                <p class="flex items-center">
+                    {% include '@Forumify/components/avatar.html.twig' with { user: log.user, className: 'avatar-xs' } %}
+                    {% include '@Forumify/components/username.html.twig' with { user: log.user, hideOnline: true } %}
+                </p>
+            {% endif %}
+            <p class="text-bold mt-2">Action</p>
+            <p>{{ log.action }}</p>
+            {% if log.targetEntityClass %}
+                <p class="text-bold mt-2">Entity</p>
+                <p>{{ log.targetEntityClass }}</p>
+            {% endif %}
+            {% if log.targetEntityId %}
+                <p class="text-bold mt-2">Entity Identifier</p>
+                <p>{{ log.targetEntityId }}</p>
+            {% endif %}
+            {% if log.targetName %}
+                <p class="text-bold mt-2">Entity Name</p>
+                <p>{{ log.targetName }}</p>
+            {% endif %}
+            {% if log.changeset is not empty %}
+                <h3 class="mt-4">{{ 'admin.audit_logs.changeset'|trans }}</h3>
+                <table style="margin: 0 calc(var(--spacing-2) * -1)">
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>From</th>
+                            <th>To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for field, changes in log.changeset %}
+                        <tr>
+                            <td>{{ field }}</td>
+                            <td>{{ changes|first }}</td>
+                            <td>{{ changes|last }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    {% endblock %}
+{% endembed %}

@@ -6,13 +6,14 @@ namespace Forumify\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Cms\Repository\SnippetRepository;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: SnippetRepository::class)]
-class Snippet
+class Snippet implements AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
@@ -64,5 +65,15 @@ class Snippet
     public function setContent(string $content): void
     {
         $this->content = $content;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getName();
     }
 }

@@ -12,11 +12,12 @@ use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Cms\Repository\PageRepository;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: PageRepository::class)]
 #[UniqueEntity('urlKey')]
-class Page implements AccessControlledEntityInterface
+class Page implements AccessControlledEntityInterface, AuditableEntityInterface
 {
     public const TYPE_TWIG = 'twig';
     public const TYPE_BUILDER = 'builder';
@@ -143,5 +144,15 @@ class Page implements AccessControlledEntityInterface
             'forumify_admin_cms_page_edit',
             ['identifier' => $this->getId()]
         );
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getTitle();
     }
 }

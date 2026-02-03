@@ -81,6 +81,10 @@ abstract class AbstractRepository extends ServiceEntityRepository
      */
     public function saveAll(array $entities, bool $flush = true): void
     {
+        if (empty($entities)) {
+            return;
+        }
+
         foreach ($entities as $entity) {
             $this->save($entity, false);
         }
@@ -113,6 +117,10 @@ abstract class AbstractRepository extends ServiceEntityRepository
      */
     public function removeAll(array $entities, bool $flush = true): void
     {
+        if (empty($entities)) {
+            return;
+        }
+
         foreach ($entities as $entity) {
             $this->remove($entity, false);
         }

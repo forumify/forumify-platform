@@ -272,6 +272,13 @@ forum:
             }
 admin:
     toggle_nav: 'Toggle Navigation'
+    audit_logs:
+        title: 'Audit Logs'
+        action:
+            create: 'created'
+            update: 'updated'
+            delete: 'deleted'
+        changeset: 'Changes'
     badge:
         crud:
             single: 'badge'

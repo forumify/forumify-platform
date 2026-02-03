@@ -1,0 +1,20 @@
+{% extends '@Forumify/components/list.html.twig' %}
+{% block row %}
+    <div class="flex justify-between items-center">
+        <div class="flex gap-2 items-center">
+            {% if item.user %}
+                {% include '@Forumify/components/avatar.html.twig' with { user: item.user, className: 'avatar-xs' } only %}
+                {% include '@Forumify/components/username.html.twig' with { user: item.user, hideOnline: true } only %}
+            {% else %}
+                <span class="text-italic">Unknown</span>
+            {% endif %}
+            {{ ('admin.audit_logs.action.' ~ item.action)|trans }}
+            {{ item.targetEntityClass|u.afterLast("\\").lower }}
+            {{ item.targetName }}
+            {{ item.uid.dateTime|format_date|lower }}
+        </div>
+        <div>
+            {% include '@Forumify/components/audit_log/details.html.twig' with { log: item } %}
+        </div>
+    </div>
+{% endblock %}

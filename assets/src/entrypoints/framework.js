@@ -8,6 +8,7 @@ import { Gallery } from '../controllers/Gallery';
 import { List } from '../controllers/List';
 import { Menu } from '../controllers/Menu';
 import { Modal } from '../controllers/Modal';
+import { ProfilePreview } from '../controllers/ProfilePreview';
 import { RichText } from '../controllers/RichText';
 import { RichTextEditor } from '../controllers/RichTextEditor';
 import { Tabs } from '../controllers/Tabs';
@@ -27,6 +28,7 @@ export default (app) => {
   register('list', List);
   register('menu', Menu);
   register('modal', Modal);
+  register('profile-preview', ProfilePreview);
   register('rich-text', RichText);
   register('rich-text-editor', RichTextEditor);
   register('tabs', Tabs);

@@ -12,11 +12,13 @@ trait BlameableEntityTrait
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn('created_by', onDelete: 'SET NULL')]
     #[Gedmo\Blameable(on: 'create')]
+    #[AuditExcludedField]
     private ?User $createdBy = null;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn('updated_by', onDelete: 'SET NULL')]
     #[Gedmo\Blameable(on: 'update')]
+    #[AuditExcludedField]
     private ?User $updatedBy = null;
 
     public function getCreatedBy(): ?User

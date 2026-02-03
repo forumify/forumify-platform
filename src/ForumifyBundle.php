@@ -48,6 +48,9 @@ class ForumifyBundle extends AbstractForumifyBundle
                         'view',
                         'manage',
                     ],
+                    'audit_logs' => [
+                        'view',
+                    ],
                     'calendars' => [
                         'view',
                         'manage',

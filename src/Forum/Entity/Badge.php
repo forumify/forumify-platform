@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SortableEntityInterface;
@@ -19,7 +20,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(BadgeRepository::class)]
 #[ApiResource]
-class Badge implements SortableEntityInterface
+class Badge implements SortableEntityInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
@@ -106,5 +107,15 @@ class Badge implements SortableEntityInterface
     public function setShowOnForum(bool $showOnForum): void
     {
         $this->showOnForum = $showOnForum;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getName();
     }
 }

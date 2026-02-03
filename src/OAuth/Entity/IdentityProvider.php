@@ -6,13 +6,14 @@ namespace Forumify\OAuth\Entity;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\OAuth\Repository\IdentityProviderRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: IdentityProviderRepository::class)]
-class IdentityProvider
+class IdentityProvider implements AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
 
@@ -74,5 +75,15 @@ class IdentityProvider
     public function setData(?array $data): void
     {
         $this->data = $data;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getName();
     }
 }
