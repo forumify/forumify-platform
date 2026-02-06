@@ -76,7 +76,7 @@
         "squizlabs/php_codesniffer": "^3.11",
         "dg/bypass-finals": "^1.9",
         "slevomat/coding-standard": "^8.15",
-        "zenstruck/foundry": "^2.7"
+        "zenstruck/foundry": "2.8.7"
     },
     "autoload": {
         "psr-4": {
