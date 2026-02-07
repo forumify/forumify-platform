@@ -114,8 +114,9 @@ class MessageThread
         return $this->lastMessageAt;
     }
 
-    public function setLastMessageAt(DateTimeImmutable $lastMessageAt): void
+    public function addMessage(Message $message): void
     {
-        $this->lastMessageAt = $lastMessageAt;
+        $this->messages->add($message);
+        $this->lastMessageAt = DateTimeImmutable::createFromMutable($message->getCreatedAt());
     }
 }

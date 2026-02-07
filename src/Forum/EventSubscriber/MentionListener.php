@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\EventSubscriber;
 
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Events;
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Security\VoterAttribute;
-use Forumify\Forum\Event\CommentCreatedEvent;
-use Forumify\Forum\Event\MessageCreatedEvent;
+use Forumify\Forum\Entity\Comment;
+use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Notification\MentionNotificationType;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class MentionSubscriber implements EventSubscriberInterface
+#[AsEntityListener(event: Events::postPersist, method: 'onCommentCreated', entity: Comment::class)]
+#[AsEntityListener(event: Events::postPersist, method: 'onMessageCreated', entity: Message::class)]
+class MentionListener
 {
     public function __construct(
         private readonly UserRepository $userRepository,
@@ -24,17 +27,8 @@ class MentionSubscriber implements EventSubscriberInterface
     ) {
     }
 
-    public static function getSubscribedEvents(): array
+    public function onCommentCreated(Comment $comment): void
     {
-        return [
-            CommentCreatedEvent::class => 'onCommentCreated',
-            MessageCreatedEvent::class => 'onMessageCreated',
-        ];
-    }
-
-    public function onCommentCreated(CommentCreatedEvent $event): void
-    {
-        $comment = $event->getComment();
         $recipients = $this->getUsersToMention($comment->getContent());
 
         $notifications = [];
@@ -58,9 +52,8 @@ class MentionSubscriber implements EventSubscriberInterface
         $this->notificationService->sendNotification($notifications);
     }
 
-    public function onMessageCreated(MessageCreatedEvent $event): void
+    public function onMessageCreated(Message $message): void
     {
-        $message = $event->getMessage();
         $recipients = $this->getUsersToMention($message->getContent());
 
         $messageThreadParticipantIds = $message->getThread()

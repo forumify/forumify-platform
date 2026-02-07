@@ -12,10 +12,12 @@ trait TimestampableEntityTrait
 {
     #[ORM\Column(type: 'datetime', nullable: true, index: true)]
     #[Gedmo\Timestampable(on: 'create')]
+    #[AuditExcludedField]
     private DateTime $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true, index: true)]
     #[Gedmo\Timestampable(on: 'update')]
+    #[AuditExcludedField]
     private ?DateTime $updatedAt = null;
 
     public function getCreatedAt(): DateTime

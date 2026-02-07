@@ -17,6 +17,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\ACLParameters;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Entity\SortableEntityTrait;
@@ -32,7 +33,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
 )]
 #[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
-class ForumGroup implements AccessControlledEntityInterface, SortableEntityInterface
+class ForumGroup implements AccessControlledEntityInterface, SortableEntityInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use SortableEntityTrait;
@@ -112,5 +113,15 @@ class ForumGroup implements AccessControlledEntityInterface, SortableEntityInter
             'forumify_admin_forum',
             $returnParameters,
         );
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getTitle();
     }
 }

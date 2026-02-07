@@ -15,6 +15,7 @@ use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\NewCommentType;
 use Forumify\Forum\Form\TopicData;
 use Forumify\Forum\Form\TopicType;
+use Forumify\Forum\Repository\CommentRepository;
 use Forumify\Forum\Repository\ForumRepository;
 use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
@@ -35,6 +36,7 @@ class TopicController extends AbstractController
         private readonly ReadMarkerRepository $readMarkerRepository,
         private readonly ForumRepository $forumRepository,
         private readonly ACLService $aclService,
+        private readonly CommentRepository $commentRepository,
     ) {
     }
 
@@ -51,7 +53,8 @@ class TopicController extends AbstractController
 
             $commentForm->handleRequest($request);
             if ($commentForm->isSubmitted() && $commentForm->isValid() && !empty($commentForm->getData())) {
-                $this->createCommentService->createComment($topic, $commentForm->getData());
+                $comment = $this->createCommentService->createComment($topic, $commentForm->getData());
+                $this->commentRepository->save($comment);
                 return $this->redirectToRoute('forumify_forum_topic', [
                     'slug' => $topic->getSlug(),
                     'lastPageFirst' => true,

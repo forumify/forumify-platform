@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\MenuItemRepository;
 
 #[ORM\Entity(repositoryClass: MenuItemRepository::class)]
-class MenuItem implements AccessControlledEntityInterface, SortableEntityInterface
+class MenuItem implements AccessControlledEntityInterface, SortableEntityInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use SortableEntityTrait;
@@ -125,5 +125,15 @@ class MenuItem implements AccessControlledEntityInterface, SortableEntityInterfa
             'forumify_admin_menu_builder',
             $parentId !== null ? ['id' => $parentId] : []
         );
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getName();
     }
 }

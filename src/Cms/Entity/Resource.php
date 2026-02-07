@@ -6,13 +6,14 @@ namespace Forumify\Cms\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Cms\Repository\ResourceRepository;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ResourceRepository::class)]
-class Resource
+class Resource implements AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
@@ -51,5 +52,15 @@ class Resource
     public function setPath(string $path): void
     {
         $this->path = $path;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getName();
     }
 }

@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Forumify\Plugin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Repository\PluginRepository;
 use Forumify\Plugin\PluginInterface;
 use RuntimeException;
 
 #[ORM\Entity(repositoryClass: PluginRepository::class)]
-class Plugin
+class Plugin implements AuditableEntityInterface
 {
     public const TYPE_PLUGIN = 'plugin';
     public const TYPE_THEME = 'theme';
@@ -125,5 +126,19 @@ class Plugin
 
         $this->plugin = $object;
         return $this->plugin;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        try {
+            return $this->getPlugin()->getPluginMetadata()->name;
+        } catch (RuntimeException) {
+            return $this->getPackage();
+        }
     }
 }

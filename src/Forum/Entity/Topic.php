@@ -16,6 +16,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Forumify\Core\Entity\AuditableEntityInterface;
+use Forumify\Core\Entity\AuditExcludedField;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
@@ -32,7 +34,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
 )]
 #[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
-class Topic implements SubscribableInterface
+class Topic implements SubscribableInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use BlameableEntityTrait;
@@ -63,7 +65,7 @@ class Topic implements SubscribableInterface
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
     private Collection $comments;
 
-    #[ORM\ManyToOne(targetEntity: Comment::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Comment::class, cascade: ['persist', 'remove'], fetch: 'EAGER')]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Comment $firstComment = null;
 
@@ -85,6 +87,7 @@ class Topic implements SubscribableInterface
 
     #[ORM\Column(type: 'integer', options: ['unsigned' => true, 'default' => 0])]
     #[Groups('Topic')]
+    #[AuditExcludedField]
     private int $views = 0;
 
     /**
@@ -251,5 +254,15 @@ class Topic implements SubscribableInterface
     public function setAnswer(?Comment $answer): void
     {
         $this->answer = $answer;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getTitle();
     }
 }

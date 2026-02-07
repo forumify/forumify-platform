@@ -28,7 +28,7 @@ class CoreRuntime implements RuntimeExtensionInterface
         return $this->isDemo;
     }
 
-    public function formatDate(DateTime|DateTimeImmutable|null $date, ?bool $alwaysAbsolute = false): string
+    public function formatDate(DateTime|DateTimeImmutable|null $date, bool $alwaysAbsolute = false): string
     {
         $date ??= new DateTime();
 

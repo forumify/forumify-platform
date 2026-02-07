@@ -15,7 +15,7 @@
                                 <div class="flex justify-start items-center">
                                     {% set label = col.label ?? colName|capitalize %}
                                     {% if col.sortable %}
-                                        {{ label }}
+                                        {{ label|trans }}
                                         {% set sort = this.sort[colName] ?? null %}
                                         <a
                                             class="ml-1 btn-link btn-small btn-icon"

@@ -7,20 +7,17 @@ namespace Forumify\Forum\Service;
 use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
-use Forumify\Forum\Event\TopicCreatedEvent;
 use Forumify\Forum\Form\NewComment;
 use Forumify\Forum\Form\TopicData;
 use Forumify\Forum\Repository\ForumTagRepository;
 use Forumify\Forum\Repository\TopicRepository;
 use League\Flysystem\FilesystemOperator;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class CreateTopicService
 {
     public function __construct(
         private readonly TopicRepository $topicRepository,
         private readonly CreateCommentService $commentService,
-        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly FilesystemOperator $mediaStorage,
         private readonly MediaService $mediaService,
         private readonly ForumTagRepository $forumTagRepository,
@@ -46,7 +43,7 @@ class CreateTopicService
             }
         }
 
-        $this->topicRepository->save($topic);
+        $this->topicRepository->save($topic, false);
 
         $newComment = new NewComment();
         if ($newTopic->getContent() !== null) {
@@ -58,7 +55,6 @@ class CreateTopicService
         $topic->setFirstComment($comment);
         $topic->setComments([$comment]);
 
-        $this->eventDispatcher->dispatch(new TopicCreatedEvent($topic));
         return $topic;
     }
 }

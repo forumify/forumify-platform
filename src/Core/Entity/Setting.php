@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\SettingRepository;
 
 #[ORM\Entity(repositoryClass: SettingRepository::class)]
-class Setting
+class Setting implements AuditableEntityInterface
 {
     #[ORM\Id]
     #[ORM\Column(name: '`key`', length: 255)]
@@ -35,5 +35,15 @@ class Setting
     public function setValue(mixed $value): void
     {
         $this->value = $value;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return $this->getKey();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getKey();
     }
 }

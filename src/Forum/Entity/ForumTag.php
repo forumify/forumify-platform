@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
@@ -16,7 +17,7 @@ use Forumify\Forum\Repository\ForumTagRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ForumTagRepository::class)]
-class ForumTag
+class ForumTag implements AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use TimestampableEntityTrait;
@@ -30,7 +31,7 @@ class ForumTag
     #[ORM\Column(length: 7, options: ['fixed' => true])]
     public string $color = '#ef8354';
 
-    #[ORM\ManyToOne(targetEntity: Forum::class)]
+    #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'tags')]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     public ?Forum $forum = null;
 
@@ -49,5 +50,15 @@ class ForumTag
     public function __construct()
     {
         $this->topics = new ArrayCollection();
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->title;
     }
 }

@@ -11,7 +11,7 @@ use Forumify\Core\Repository\RoleRepository;
 use function Symfony\Component\String\u;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
-class Role implements SortableEntityInterface
+class Role implements SortableEntityInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
     use SluggableEntityTrait;
@@ -146,5 +146,15 @@ class Role implements SortableEntityInterface
     public function setShowOnUsername(bool $showOnUsername): void
     {
         $this->showOnUsername = $showOnUsername;
+    }
+
+    public function getIdentifierForAudit(): string
+    {
+        return (string)$this->getId();
+    }
+
+    public function getNameForAudit(): string
+    {
+        return $this->getTitle();
     }
 }

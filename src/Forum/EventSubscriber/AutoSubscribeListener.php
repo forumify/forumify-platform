@@ -4,29 +4,24 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\EventSubscriber;
 
-use Forumify\Forum\Event\CommentCreatedEvent;
-use Forumify\Forum\Event\TopicCreatedEvent;
+use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
+use Doctrine\ORM\Events;
+use Forumify\Forum\Entity\Comment;
+use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Notification\CommentCreatedNotificationType;
 use Forumify\Forum\Service\SubscriptionService;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class AutoSubscribeSubscriber implements EventSubscriberInterface
+#[AsEntityListener(event: Events::postPersist, method: 'subscribeOnTopicCreated', entity: Topic::class)]
+#[AsEntityListener(event: Events::postPersist, method: 'subscribeOnCommentCreated', entity: Comment::class)]
+class AutoSubscribeListener
 {
     public function __construct(private readonly SubscriptionService $subService)
     {
     }
 
-    public static function getSubscribedEvents(): array
+    public function subscribeOnTopicCreated(Topic $topic): void
     {
-        return [
-            TopicCreatedEvent::class => 'subscribeOnTopicCreated',
-            CommentCreatedEvent::class => 'subscribeOnCommentCreated',
-        ];
-    }
-
-    public function subscribeOnTopicCreated(TopicCreatedEvent $createdEvent): void
-    {
-        $user = $createdEvent->getTopic()->getCreatedBy();
+        $user = $topic->getCreatedBy();
         if ($user === null || !$user->getNotificationSettings()->isAutoSubscribeToOwnTopics()) {
             return;
         }
@@ -34,13 +29,12 @@ class AutoSubscribeSubscriber implements EventSubscriberInterface
         $this->subService->subscribe(
             $user,
             CommentCreatedNotificationType::TYPE,
-            $createdEvent->getTopic()->getId()
+            $topic->getId()
         );
     }
 
-    public function subscribeOnCommentCreated(CommentCreatedEvent $createdEvent): void
+    public function subscribeOnCommentCreated(Comment $comment): void
     {
-        $comment = $createdEvent->getComment();
         if ($comment->getTopic()->getComments()->isEmpty()) {
             // first comment is already handled by subscribeOnTopicCreated
             return;

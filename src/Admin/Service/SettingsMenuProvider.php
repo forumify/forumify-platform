@@ -14,6 +14,10 @@ class SettingsMenuProvider implements SettingsMenuProviderInterface
     public function provide(UrlGeneratorInterface $u, TranslatorInterface $t): Menu
     {
         return new Menu($t->trans('settings'), items: [
+            new MenuItem($t->trans('admin.audit_logs.title'), $u->generate('forumify_admin_audit_logs_list'), [
+                'icon' => 'ph ph-detective',
+                'permission' => 'forumify.admin.settings.audit_logs.view',
+            ]),
             new MenuItem($t->trans('roles'), $u->generate('forumify_admin_roles_list'), [
                 'icon' => 'ph ph-lock-key',
                 'permission' => 'forumify.admin.settings.roles.view',
