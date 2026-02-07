@@ -274,6 +274,9 @@ admin:
     toggle_nav: 'Toggle Navigation'
     audit_logs:
         title: 'Audit Logs'
+        retention_warning: 'Audit logs are only retained for 1 year. Any changes older than that are no longer visible here.'
+        no_logs_for_entity: 'No audit logs found for this entity.'
+        view_all: 'Click here to see older audit logs for this entity.'
         action:
             create: 'created'
             update: 'updated'

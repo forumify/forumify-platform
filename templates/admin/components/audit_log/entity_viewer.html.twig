@@ -1,0 +1,18 @@
+<div {{ attributes }}>
+    <button class="btn-link btn-icon" {{ live_action('open') }}>
+        <i class="ph ph-detective"></i>
+    </button>
+    {% if open %}
+        <div class="modal open" data-action="click->live#action" data-live-action-param="close">
+            <div class="modal-body">
+                <button type="button" class="btn-link btn-small btn-icon" {{ live_action('close') }}>
+                    <i class="ph ph-x"></i>
+                </button>
+                <div class="card">
+                    <div class="card-title">{{ 'admin.audit_logs.title'|trans }}</div>
+                    {{ component('AuditLogEntityList', { class: this.class, identifier: this.identifier }) }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

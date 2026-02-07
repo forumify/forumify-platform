@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Twig\Extension;
 
+use Forumify\Core\Entity\AuditableEntityInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -24,6 +25,7 @@ class CoreExtension extends AbstractExtension
             new TwigFilter('short_number', $this->shortNumber(...)),
             new TwigFilter('format_date', [CoreRuntime::class, 'formatDate']),
             new TwigFilter('fg_color', $this->foregroundColor(...)),
+            new TwigFilter('audit_log_entity', $this->auditLogEntity(...)),
         ];
     }
 
@@ -78,5 +80,20 @@ class CoreExtension extends AbstractExtension
         $l = ($max + $min) / 2;
 
         return $l < 0.4 ? 'white' : 'black';
+    }
+
+    /**
+     * @return null|array{class: class-string, identifier: string}
+     */
+    public function auditLogEntity(?object $object): ?array
+    {
+        if (!$object instanceof AuditableEntityInterface) {
+            return null;
+        }
+
+        return [
+            'class' => get_class($object),
+            'identifier' => $object->getIdentifierForAudit(),
+        ];
     }
 }

@@ -66,7 +66,7 @@ class AuditLogTable extends AbstractDoctrineTable
     private function renderUsername(?string $username): string
     {
         if (empty($username)) {
-            return 'Guest';
+            return 'System';
         }
 
         $profileUrl = $this->urlGenerator->generate('forumify_forum_profile', ['username' => $username]);

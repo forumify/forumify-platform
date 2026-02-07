@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Controller;
 
-use Forumify\Core\Entity\AuditLog;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,13 +17,5 @@ class AuditLogController extends AbstractController
     public function list(): Response
     {
         return $this->render('@Forumify/admin/audit_log/list.html.twig');
-    }
-
-    #[Route('{uid:log}', 'view')]
-    public function view(AuditLog $log): Response
-    {
-        return $this->render('@Forumify/admin/audit_log/view.html.twig', [
-            'log' => $log,
-        ]);
     }
 }

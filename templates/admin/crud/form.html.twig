@@ -5,7 +5,19 @@
     {{ title }}
 {% endblock %}
 {% block body %}
+    <div class="mb-4 flex flex-wrap items-center justify-between">
+        <h1 class="mb-0">{{ title }}</h1>
+        <div>
+            {% block form_actions %}
+                {% set auditLogParams = data|audit_log_entity %}
+                {% if auditLogParams is not empty %}
+                    {{ component('AuditLogEntityViewer', auditLogParams) }}
+                {% endif %}
+            {% endblock %}
+        </div>
+    </div>
     {% include '@Forumify/admin/components/simple_form.html.twig' with {
-        cancelPath: path(route ~ '_list')
+        cancelPath: path(route ~ '_list'),
+        title: null,
     } %}
 {% endblock %}

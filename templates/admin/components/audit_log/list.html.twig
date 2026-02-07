@@ -14,7 +14,7 @@
             {{ item.uid.dateTime|format_date|lower }}
         </div>
         <div>
-            {% include '@Forumify/components/audit_log/details.html.twig' with { log: item } %}
+            {% include '@Forumify/admin/components/audit_log/details.html.twig' with { log: item } %}
         </div>
     </div>
 {% endblock %}
