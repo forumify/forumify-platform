@@ -6,22 +6,18 @@ namespace Forumify\Forum\Service;
 
 use DateTime;
 use Forumify\Core\Entity\User;
-use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReply;
 use Forumify\Forum\Form\NewMessageThread;
-use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class MessageService
 {
     public function __construct(
-        private readonly MessageRepository $messageRepository,
         private readonly MessageThreadRepository $messageThreadRepository,
         private readonly Security $security,
-        private readonly ReadMarkerRepository $readMarkerRepository,
     ) {
     }
 
@@ -40,8 +36,6 @@ class MessageService
             $thread->setCreatedBy($participant);
         }
 
-        $this->messageThreadRepository->save($thread);
-
         $reply = new MessageReply();
         $reply->setContent($newThread->getMessage());
 
@@ -58,7 +52,6 @@ class MessageService
         $thread->addMessage($message);
 
         $this->messageThreadRepository->save($thread);
-        $this->readMarkerRepository->unread(MessageThread::class, $thread->getId());
     }
 
     private function createMessage(MessageThread $thread, MessageReply $reply): Message

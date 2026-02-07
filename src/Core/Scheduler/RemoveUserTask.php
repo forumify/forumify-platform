@@ -21,15 +21,15 @@ class RemoveUserTask
 
     public function __invoke(): int
     {
-        $unverifiedUsers = $this->userRepository->createQueryBuilder('u')
+        $this->userRepository->createQueryBuilder('u')
+            ->delete()
             ->where('u.emailVerified = 0')
             ->andWhere('u.email IS NOT NULL')
             ->andWhere('u.createdAt < :threshold')
             ->setParameter('threshold', new DateTime('-2 days'))
             ->getQuery()
-            ->getResult();
-
-        $this->userRepository->removeAll($unverifiedUsers);
+            ->execute()
+        ;
 
         return Command::SUCCESS;
     }

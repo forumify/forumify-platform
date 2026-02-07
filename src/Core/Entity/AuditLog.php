@@ -29,15 +29,16 @@ class AuditLog
     public string $action;
 
     /** @var class-string */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     public ?string $targetEntityClass = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     public ?string $targetEntityId = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     public ?string $targetName = null;
 
+    /** @var array<string, array{0: string, 1: string}> */
     #[ORM\Column(type: Types::JSON, nullable: true)]
     public ?array $changeset = null;
 }

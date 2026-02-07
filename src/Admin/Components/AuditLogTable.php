@@ -7,6 +7,7 @@ namespace Forumify\Admin\Components;
 use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Core\Entity\AuditLog;
 use Forumify\Core\Twig\Extension\CoreRuntime;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Uid\Ulid;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -21,6 +22,7 @@ class AuditLogTable extends AbstractDoctrineTable
     public function __construct(
         private readonly CoreRuntime $coreRuntime,
         private readonly Environment $twig,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {
         $this->sort = ['uid' => 'DESC'];
     }
@@ -41,7 +43,8 @@ class AuditLogTable extends AbstractDoctrineTable
                 'class' => 'w-15',
             ])
             ->addColumn('user', [
-                'field' => 'user?.displayName',
+                'field' => 'user?.username',
+                'renderer' => $this->renderUsername(...),
             ])
             ->addColumn('action', [
                 'field' => 'action',
@@ -60,7 +63,17 @@ class AuditLogTable extends AbstractDoctrineTable
         ;
     }
 
-    private function renderActions($uid, AuditLog $log): string
+    private function renderUsername(?string $username): string
+    {
+        if (empty($username)) {
+            return 'Guest';
+        }
+
+        $profileUrl = $this->urlGenerator->generate('forumify_forum_profile', ['username' => $username]);
+        return "<a href='$profileUrl' target='_blank'>$username</a>";
+    }
+
+    private function renderActions(Ulid $_, AuditLog $log): string
     {
         return $this->twig->render('@Forumify/admin/components/audit_log/details.html.twig', [
             'log' => $log,

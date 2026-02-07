@@ -17,7 +17,6 @@ use Forumify\Core\Entity\AuditExcludedField;
 use Forumify\Core\Entity\AuditLog;
 use Forumify\Core\Entity\SensitiveField;
 use Forumify\Core\Entity\User;
-use Forumify\Core\Notification\ContextSerializer;
 use Forumify\OAuth\Entity\OAuthClient;
 use JsonSerializable;
 use ReflectionAttribute;
@@ -41,7 +40,6 @@ class AuditableEntityListener
     private array $markedFields = [];
 
     public function __construct(
-        private readonly ContextSerializer $contextSerializer,
         private readonly EntityManagerInterface $em,
         private readonly AuditableWriteListener $writeListener,
         private readonly Security $security,
@@ -140,7 +138,6 @@ class AuditableEntityListener
     }
 
     /**
-     * @param array<string, array{0: mixed, 1: mixed}>
      * @return array<string, array{0: string, 1: string}>
      */
     private function getChangeset(PreUpdateEventArgs $args): array
@@ -151,7 +148,7 @@ class AuditableEntityListener
 
         $changeset = [];
         foreach ($args->getEntityChangeSet() as $k => $changes) {
-            if (!is_array($changes) || count($changes) !== 2) {
+            if (!is_array($changes)) {
                 continue;
             }
 
@@ -207,7 +204,7 @@ class AuditableEntityListener
     }
 
     /**
-     * @return array<string>
+     * @return array<string, bool>
      */
     private function getMarkedFields(object $entity, string $attribute): array
     {
