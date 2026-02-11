@@ -8,6 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Entity\Role;
 use Forumify\Core\Entity\User;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -21,9 +22,9 @@ class UsersInRoleTable extends UserTable
     #[LiveProp]
     public int $roleId;
 
-    public function __construct(Environment $twig)
+    public function __construct(Environment $twig, TranslatorInterface $translator)
     {
-        parent::__construct($twig);
+        parent::__construct($twig, $translator);
     }
 
     #[LiveAction]

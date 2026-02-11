@@ -535,6 +535,7 @@ admin:
         crud:
             single: 'user'
             plural: 'users'
+        email_unverified: 'This email has not been verified yet.'
         actions:
             edit: 'Edit'
             ban: 'Ban'

@@ -10,6 +10,7 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -21,6 +22,7 @@ class UserTable extends AbstractDoctrineTable
 {
     public function __construct(
         private readonly Environment $twig,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -41,13 +43,14 @@ class UserTable extends AbstractDoctrineTable
             ])
             ->addColumn('email', [
                 'field' => 'email',
+                'renderer' => $this->renderEmail(...),
             ])
             ->addColumn('actions', [
                 'label' => '',
                 'field' => 'id',
                 'searchable' => false,
                 'sortable' => false,
-                'renderer' => [$this, 'renderActionColumn'],
+                'renderer' => $this->renderActionColumn(...),
             ]);
     }
 
@@ -74,6 +77,15 @@ class UserTable extends AbstractDoctrineTable
         $user->setRoleEntities([]);
 
         $this->repository->save($user);
+    }
+
+    private function renderEmail(string $email, User $user): string
+    {
+        if (!$user->isEmailVerified()) {
+            $warning = $this->translator->trans('admin.user.email_unverified');
+            $email .= " <i class='ph ph-warning' title='$warning'></i> ";
+        }
+        return $email;
     }
 
     protected function renderActionColumn(int $id, User $user): string
