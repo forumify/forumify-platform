@@ -11,6 +11,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -109,6 +110,14 @@ class ConfigurationType extends AbstractType
             ->add('forumify__recaptcha__site_secret', TextType::class, [
                 'label' => 'admin.configuration.recaptcha_site_secret',
                 'required' => false,
+            ])
+            ->add('forumify__recaptcha__min_score', NumberType::class, [
+                'label' => 'admin.configuration.recaptcha_min_score',
+                'help' => 'admin.configuration.recaptcha_min_score_help',
+                'required' => false,
+                'constraints' => [
+                    new Assert\Range(max: 1.0, min: 0.0),
+                ],
             ]);
 
         if (!$this->isHostedInstance) {

@@ -400,6 +400,8 @@ admin:
         recaptcha_enabled: 'Enable Google reCAPTCHA'
         recaptcha_site_key: 'reCAPTCHA site key'
         recaptcha_site_secret: 'reCAPTCHA site secret'
+        recaptcha_min_score: 'reCAPTCHA minimum score'
+        recaptcha_min_score_help: 'Default: 0.8. Google reCAPTCHA returns a score between 0 and 1, where 0 is most likely a bot, and 1 is most likely human. A high value might cause many false positives, while a low value might allow too many bots to come through.'
         mailer_from: 'Email from'
         mailer_from_help: 'Email address that the platform will use to send emails from.'
     dashboard:

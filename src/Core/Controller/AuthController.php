@@ -73,18 +73,14 @@ class AuthController extends AbstractController
         $form = $this->createForm(RegisterType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $trapChecked = $request->get('terms-of-service');
+            $trapChecked = $request->request->get('terms-of-service');
             if ($trapChecked) {
                 return $this->redirectToRoute('forumify_core_index');
             }
 
-            if ($this->settingRepository->get('forumify.recaptcha.enabled')) {
-                $score = $this->recaptchaService->verifyRequest($request);
-                if ($score < 0.8) {
-                    // most likely a bot
-                    $this->addFlash('error', 'flashes.bot_detected');
-                    return $this->redirectToRoute('forumify_core_index');
-                }
+            if ($this->recaptchaService->isBot($request)) {
+                $this->addFlash('error', 'flashes.bot_detected');
+                return $this->redirectToRoute('forumify_core_index');
             }
 
             try {
