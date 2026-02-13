@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Controller;
 
-use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\AccountService;
 use Forumify\Core\Service\RecaptchaService;
@@ -24,7 +23,6 @@ class ForgotPasswordController extends AbstractController
         private readonly UserRepository $userRepository,
         private readonly AccountService $accountService,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly SettingRepository $settingRepository,
         private readonly RecaptchaService $recaptchaService,
     ) {
     }
@@ -51,18 +49,14 @@ class ForgotPasswordController extends AbstractController
             ]);
         }
 
-        $trapChecked = $request->get('human');
+        $trapChecked = $request->request->get('human');
         if ($trapChecked) {
             return $this->redirectToRoute('forumify_core_index');
         }
 
-        if ($this->settingRepository->get('forumify.recaptcha.enabled')) {
-            $score = $this->recaptchaService->verifyRequest($request);
-            if ($score < 0.8) {
-                // most likely a bot
-                $this->addFlash('error', 'flashes.bot_detected');
-                return $this->redirectToRoute('forumify_core_index');
-            }
+        if ($this->recaptchaService->isBot($request)) {
+            $this->addFlash('error', 'flashes.bot_detected');
+            return $this->redirectToRoute('forumify_core_index');
         }
 
         $query = $form->get('query')->getData();

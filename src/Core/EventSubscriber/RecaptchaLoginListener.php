@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Forumify\Core\EventSubscriber;
 
-use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\RecaptchaService;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,7 +20,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class RecaptchaLoginListener
 {
     public function __construct(
-        private readonly SettingRepository $settingRepository,
         private readonly RecaptchaService $recaptchaService,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
@@ -38,12 +36,7 @@ class RecaptchaLoginListener
             return;
         }
 
-        if (!$this->settingRepository->get('forumify.recaptcha.enabled')) {
-            return;
-        }
-
-        $score = $this->recaptchaService->verifyRequest($request);
-        if ($score >= 0.8) {
+        if (!$this->recaptchaService->isBot($request)) {
             return;
         }
 
