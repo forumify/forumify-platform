@@ -30,4 +30,12 @@ class NotificationTypeCollection
     {
         return $this->notificationTypes[$type] ?? null;
     }
+
+    /**
+     * @return array<NotificationTypeInterface>
+     */
+    public function getNotificationTypes(): array
+    {
+        return $this->notificationTypes;
+    }
 }

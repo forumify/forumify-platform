@@ -7,6 +7,7 @@ namespace Forumify\Core\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
+#[ORM\Index(fields: ['recipient', 'type', 'seen'])]
 class Notification
 {
     use IdentifiableEntityTrait;

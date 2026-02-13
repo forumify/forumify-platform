@@ -23,7 +23,7 @@ class Notifications extends AbstractController
 
     public function __construct(
         private readonly NotificationRepository $notificationRepository,
-        private readonly NotificationTypeCollection $notificationTypeCollection
+        private readonly NotificationTypeCollection $notificationTypeCollection,
     ) {
     }
 
@@ -46,8 +46,13 @@ class Notifications extends AbstractController
             return $this->notifications;
         }
 
+        $existingTypes = [];
+        foreach ($this->notificationTypeCollection->getNotificationTypes() as $type) {
+            $existingTypes[] = $type->getType();
+        }
+
         $this->notifications = $this->notificationRepository->findBy(
-            ['recipient' => $this->getUser()],
+            ['recipient' => $this->getUser(), 'type' => $existingTypes],
             ['seen' => 'ASC', 'createdAt' => 'DESC'],
             10
         );
