@@ -242,6 +242,15 @@ forum:
         edit: 'Edit Comment'
         delete: 'Delete Comment'
     topic:
+        sort_mode:
+            default: 'Default'
+            popularity: 'Popularity'
+            alphabetical: 'Alphabetical'
+            created_at: 'Created At'
+            comments: 'Most Comments'
+            views: 'Most Views'
+            reactions: 'Most Reactions'
+            unsolved: 'Unsolved'
         actions:
             manage: 'Manage Topic'
             edit: 'Edit'

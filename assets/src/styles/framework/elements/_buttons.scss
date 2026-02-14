@@ -118,6 +118,10 @@
 .menu .btn-link {
     width: 100%;
     border-radius: 0;
+
+    &.active {
+        background-color: var(--c-hover);
+    }
 }
 
 .btn-small {

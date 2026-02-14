@@ -7,7 +7,6 @@ namespace Forumify\Forum\Controller;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Form\TopicType;
-use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateTopicService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +18,6 @@ class TopicCreateController extends AbstractController
 {
     public function __construct(
         private readonly CreateTopicService $createTopicService,
-        private readonly TopicRepository $topicRepository,
     ) {
     }
 
@@ -34,7 +32,6 @@ class TopicCreateController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid() && !empty($form->getData())) {
             $topic = $this->createTopicService->createTopic($forum, $form->getData());
-            $this->topicRepository->save($topic);
             return $this->redirectToRoute('forumify_forum_topic', [
                 'slug' => $topic->getSlug(),
             ]);

@@ -38,7 +38,7 @@ class SubscribeButton
     public string $unsubscribeLabel = 'unsubscribe';
 
     #[LiveProp]
-    public string $buttonClass = 'btn-outlined';
+    public string $buttonClass = 'btn-outlined btn-icon';
 
     public function __construct(
         private readonly SubscriptionRepository $subscriptionRepository,
