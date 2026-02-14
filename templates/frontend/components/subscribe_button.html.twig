@@ -4,7 +4,7 @@
             {% if this.subscribeIcon is not empty %}
                 <i class="{{ this.subscribeIcon }}"></i>
             {% endif %}
-            {{ this.subscribeLabel|trans }}
+            <span class="hide-phone ml-2">{{ this.subscribeLabel|trans }}
         </a>
     {% else %}
         {% set subscription = this.subscription %}
@@ -13,12 +13,12 @@
                 {% if this.subscribeIcon is not empty %}
                     <i class="{{ this.subscribeIcon }}"></i>
                 {% endif %}
-                {{ this.subscribeLabel|trans }}
+                <span class="hide-phone ml-2">{{ this.subscribeLabel|trans }}
             {% else %}
                 {% if this.unsubscribeIcon is not empty %}
                     <i class="{{ this.unsubscribeIcon }}"></i>
                 {% endif %}
-                {{ this.unsubscribeLabel|trans }}
+                <span class="hide-phone ml-2">{{ this.unsubscribeLabel|trans }}
             {% endif %}
         </button>
     {% endif %}

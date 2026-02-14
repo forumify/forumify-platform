@@ -1,4 +1,40 @@
 {% extends '@Forumify/components/list.html.twig' %}
+{% block container %}
+    <div class="flex justify-end gap-2 mt-6 mb-4 flex-wrap">
+        <div {{ stimulus_controller('forumify/menu', {
+            placement: 'bottom-end',
+            hideAdornment: true,
+        }) }}>
+            <a class='btn-outlined btn-icon' {{ stimulus_target('forumify/menu', 'openButton') }}>
+                <i class="ph ph-funnel-simple"></i>
+            </a>
+            <div class='menu' {{ stimulus_target('forumify/menu', 'menu') }}>
+                {% for mode in this.sortModes %}
+                    <a
+                        class="btn-link{% if this.sortMode == mode.mode %} active{% endif %}"
+                        data-action="live#action forumify--menu#close"
+                        data-live-action-param="sort"
+                        data-live-mode-param="{{ mode.mode }}"
+                    >
+                        <i class="ph ph-{{ mode.icon }}"></i>
+                        {{ ('forum.topic.sort_mode.' ~ mode.mode)|trans }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        {{ component('SubscribeButton', {
+            entityId: forum.id,
+            subscriptionType: constant('Forumify\\Forum\\Notification\\TopicCreatedNotificationType::TYPE')
+        }) }}
+        {% if can('create_topic', forum) %}
+            <a class="btn-primary btn-icon" href="{{ path('forumify_forum_topic_create', { id: forum.id }) }}">
+                <i class="ph ph-chats"></i>
+                <span class="hide-phone ml-2">{{ 'create_topic'|trans }}</span>
+            </a>
+        {% endif %}
+    </div>
+    {{ parent() }}
+{% endblock %}
 {% block list %}
     <ul>
         {% for topic in this.result.rows %}

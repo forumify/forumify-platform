@@ -55,6 +55,7 @@ class CreateTopicService
         $topic->setFirstComment($comment);
         $topic->setComments([$comment]);
 
+        $this->topicRepository->save($topic);
         return $topic;
     }
 }
