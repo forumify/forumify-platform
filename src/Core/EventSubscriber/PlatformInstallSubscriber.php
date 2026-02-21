@@ -12,6 +12,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Throwable;
 
 #[AsEventListener('kernel.request')]
 class PlatformInstallSubscriber extends AbstractController
@@ -33,9 +34,8 @@ class PlatformInstallSubscriber extends AbstractController
         }
 
         $request = $event->getRequest();
-        if ($request->get('skipInstall')) {
-            $this->settingRepository->set(self::INSTALLED_SETTING, true);
-            $event->setResponse($this->redirectToRoute('forumify_core_index'));
+        $route = $request->attributes->get('_route');
+        if (str_starts_with($route, '_profiler') || str_starts_with($route, '_wdt')) {
             return;
         }
 
@@ -49,20 +49,25 @@ class PlatformInstallSubscriber extends AbstractController
             $response = $this->render('@Forumify/form/simple_form_page.html.twig', [
                 'title' => 'install',
                 'form' => $form->createView(),
-                'cancelPath' => $this->generateUrl('forumify_core_index', ['skipInstall' => 1]),
             ]);
             $event->setResponse($response);
             return;
         }
 
         $data = $form->getData();
+        try {
+            $user = $this->createUserService->createAdmin($data['adminUser']);
+            $this->security->login($user, 'security.authenticator.form_login.main');
+        } catch (Throwable) {
+            $this->addFlash('error', 'Unable to create initial user.');
+            $event->setResponse($this->redirectToRoute('forumify_core_index'));
+            return;
+        }
+
         $this->settingRepository->setBulk([
             self::INSTALLED_SETTING => true,
             'forumify.title' => $data['forumName'],
         ]);
-
-        $user = $this->createUserService->createAdmin($data['adminUser']);
-        $this->security->login($user, 'security.authenticator.form_login.main');
 
         $event->setResponse($this->redirectToRoute('forumify_core_index'));
     }
