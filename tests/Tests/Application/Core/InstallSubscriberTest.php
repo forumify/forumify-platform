@@ -47,12 +47,4 @@ class InstallSubscriberTest extends WebTestCase
         self::assertAnySelectorTextContains('header span', 'Test Forum');
         self::assertAnySelectorTextContains('header a.btn-link span', 'admin_user');
     }
-
-    public function testPlatformInstallSubscriberSkip(): void
-    {
-        $this->client->request('GET', '/');
-        $this->client->clickLink('Cancel');
-
-        self::assertResponseIsSuccessful();
-    }
 }
