@@ -2,7 +2,7 @@
     {% set unseenCount = this.unseenCount %}
     <div {{ stimulus_controller('forumify/menu', { hideAdornment: true, placement: 'bottom-end' }) }}>
         <a
-            class="btn-link btn-icon{% if unseenCount == 0 %} btn-icon{% endif %}"
+            class="btn-link btn-icon"
             data-action="live#action"
             data-live-action-param="markAsRead"
             aria-label="{{ 'view_notifications'|trans }}"
@@ -56,3 +56,8 @@
         </ul>
     </div>
 </div>
+{% macro placeholder(props) %}
+    <a class="btn-link btn-icon" href="">
+        <i class="ph ph-bell"></i>
+    </a>
+{% endmacro %}

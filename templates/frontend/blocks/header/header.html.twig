@@ -12,7 +12,7 @@
                     {% include '@Forumify/frontend/blocks/header/menu_large.html.twig' %}
                     {% include '@Forumify/frontend/blocks/header/menu_mobile.html.twig' %}
                     {% if app.user is not null %}
-                        {{ component('Notifications') }}
+                        {{ component('Notifications', { loading: 'defer' }) }}
                     {% endif %}
                     <a
                         class="btn-link btn-icon hide-phone"

@@ -174,18 +174,15 @@
 }
 
 .thread-list {
-    width: 100%;
     max-height: 800px;
     overflow-y: scroll;
-
-    @include breakpoints.min-width-lg {
-        width: 350px;
-    }
+    width: 350px;
+    flex-shrink: 0;
 
     &.thread-selected {
         display: none;
         @include breakpoints.min-width-lg {
-            display: block;
+            display: inline-block;
         }
     }
 
@@ -224,14 +221,14 @@
 
 .thread {
     display: none;
-    flex-grow: 1;
+    flex: 1;
 
     @include breakpoints.min-width-lg {
-        display: block;
+        display: inline-block;
     }
 
     &.thread-selected {
-        display: block;
+        display: inline-block;
     }
 }
 
