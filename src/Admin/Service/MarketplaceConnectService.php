@@ -12,6 +12,7 @@ use Forumify\Core\Service\HttpClientFactory;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use JsonException;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -24,15 +25,17 @@ class MarketplaceConnectService
         private readonly string $forumifyUrl,
         private readonly HttpClientFactory $httpClientFactory,
         private readonly UrlGeneratorInterface $urlGenerator,
+        #[Autowire('%env(FORUMIFY_CLIENT_ID)%')]
+        private readonly string $clientId,
+        #[Autowire('%env(FORUMIFY_CLIENT_SECRET)%')]
+        private readonly string $clientSecret,
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 
     public function isConnected(): bool
     {
-        $clientId = $this->settingRepository->get('forumify.client_id');
-        $clientSecret = $this->settingRepository->get('forumify.client_secret');
-
-        return !empty($clientId) && !empty($clientSecret);
+        return !empty($this->getCredentials());
     }
 
     /**
@@ -58,6 +61,9 @@ class MarketplaceConnectService
 
             $tokens = json_decode($accessTokenResponse, true, 512, JSON_THROW_ON_ERROR);
         } catch (GuzzleException $ex) {
+            $this->logger?->error('Unable to fetch access token: ' . $ex->getMessage(), [
+                'exception' => $ex,
+            ]);
             throw new RuntimeException('Unable to fetch access token', previous: $ex);
         }
 
@@ -73,6 +79,9 @@ class MarketplaceConnectService
 
             $client = json_decode($registerClientResponse, true, 512, JSON_THROW_ON_ERROR);
         } catch (GuzzleException|JsonException $ex) {
+            $this->logger?->error('Unable to register client: ' . $ex->getMessage(), [
+                'exception' => $ex,
+            ]);
             throw new RuntimeException('Unable to register client', previous: $ex);
         }
 
@@ -99,17 +108,14 @@ class MarketplaceConnectService
      */
     public function getAuthenticatedClient(): Client
     {
-        $clientId = $this->settingRepository->get('forumify.client_id');
-        $clientSecret = $this->settingRepository->get('forumify.client_secret');
-        if (empty($clientId) || empty($clientSecret)) {
+        $credentials = $this->getCredentials();
+        if (empty($credentials)) {
             throw new MarketplaceNotConnectedException();
         }
 
-
-        $authHeader = 'Basic ' . base64_encode("$clientId:$clientSecret");
         $client = $this->httpClientFactory->getClient([
             'headers' => [
-                'Authorization' => $authHeader,
+                'Authorization' => "Basic $credentials",
             ],
         ]);
 
@@ -132,5 +138,16 @@ class MarketplaceConnectService
                 'Authorization' => 'Bearer ' . $token['access_token'],
             ],
         ]);
+    }
+
+    private function getCredentials(): ?string
+    {
+        $clientId = $this->settingRepository->get('forumify.client_id') ?? $this->clientId;
+        $clientSecret = $this->settingRepository->get('forumify.client_secret') ?? $this->clientSecret;
+        if (empty($clientId) || empty($clientSecret)) {
+            return null;
+        }
+
+        return base64_encode("$clientId:$clientSecret");
     }
 }
