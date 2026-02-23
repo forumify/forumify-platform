@@ -43,34 +43,38 @@
     {%- endif -%}
 {%- endblock form_errors -%}
 
-{% block checkbox_row %}
+{%- block checkbox_row -%}
     {%- set widget_attr = {} -%}
     {%- if help is not empty -%}
         {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
     {%- endif -%}
-    <div{% with {attr: row_attr|merge({ class: (row_attr.class|default('') ~ ' form-row') })} %}{{ block('attributes') }}{% endwith %}>
+    <div{%- with {attr: row_attr|merge({ class: (row_attr.class|default('') ~ ' form-row') })} -%}{{ block('attributes') }}{% endwith %}>
         {{- form_widget(form, widget_attr) }}
         {{ form_label(form) -}}
         {{- form_errors(form) -}}
         {{- form_help(form) -}}
     </div>
-{% endblock %}
+{%- endblock -%}
 
-{% block rich_text_editor_row %}
-    {% include '@Forumify/form/type/rich_editor.html.twig' %}
-{% endblock %}
+{%- block rich_text_editor_row -%}
+    {%- include '@Forumify/form/type/rich_editor.html.twig' -%}
+{%- endblock -%}
 
-{% block code_editor_row %}
-    {% include '@Forumify/form/type/code_editor.html.twig' %}
-{% endblock %}
+{%- block code_editor_row -%}
+    {%- include '@Forumify/form/type/code_editor.html.twig' -%}
+{%- endblock -%}
 
-{% block info_row %}
-    {% include '@Forumify/form/type/info.html.twig' %}
-{% endblock %}
+{%- block info_row -%}
+    {%- include '@Forumify/form/type/info.html.twig' -%}
+{%- endblock -%}
 
-{% block pre_row %}
-    {% include '@Forumify/form/type/pre.html.twig' %}
-{% endblock %}
+{%- block pre_row -%}
+    {%- include '@Forumify/form/type/pre.html.twig' -%}
+{%- endblock -%}
+
+{%- block upload_row -%}
+    {%- include '@Forumify/form/type/upload.html.twig' -%}
+{%- endblock -%}
 
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}

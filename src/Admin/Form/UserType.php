@@ -7,6 +7,7 @@ namespace Forumify\Admin\Form;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Core\Form\EntityType;
+use Forumify\Core\Form\UploadType;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -43,6 +44,11 @@ class UserType extends AbstractType
             ->add('displayName', TextType::class)
             ->add('email', TextType::class)
             ->add('timezone', TimezoneType::class, ['autocomplete' => true])
+            ->add('avatar', UploadType::class, [
+                'asset_package' => 'forumify.avatar',
+                'filesystem' => 'avatar.storage',
+                'required' => false,
+            ])
             ->add('newAvatar', FileType::class, [
                 'mapped' => false,
                 'label' => 'Avatar',

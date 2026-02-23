@@ -232,7 +232,7 @@ error:
 plugin:
     homepage: 'Homepage'
 file_upload:
-    drop_text: 'Drop files here or click to open dialog.'
+    drop_text: 'Drop files here or click to browse.'
 forum:
     comment:
         mark_answer: 'Mark as answer'

@@ -1,15 +1,15 @@
 .file-upload {
-    border: dashed 6px var(--border-color);
-    border-radius: 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
     width: 100%;
-    background-color: var(--c-elevation-0);
+    background-color: var(--c-elevation-1);
     cursor: pointer;
     transition: border-color 200ms;
     position: relative;
 
     &.drag,
     &:hover {
-        border: dashed 6px var(--c-primary-accent);
+        border-color: var(--c-primary-accent);
         transition: border-color 200ms;
     }
 
@@ -26,11 +26,14 @@
         font-size: 25px;
     }
 
+    /** DEPRECATED, Remove in 2.0 */
     .preview {
         width: 80px;
         height: 80px;
-        background-color: var(--c-elevation-1);
+        background-color: var(--c-elevation-0);
+        border: var(--border);
         border-radius: 8px;
+        position: relative;
 
         img {
             width: 100%;
