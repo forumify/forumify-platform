@@ -1,0 +1,25 @@
+<div class="form-row" {{ stimulus_controller('forumify/file-upload') }}>
+    {{- form_label(form) -}}
+    <div class="file-upload p-4 flex gap-4"  draggable="true">
+        <div class="flex items-center gap-4">
+            <i class="ph ph-upload"></i>
+            {{ 'file_upload.drop_text'|trans }}
+        </div>
+        <div class="dropzone" draggable="true"></div>
+        <input class="d-none" type="file" id="{{ id }}" name="{{ full_name }}">
+    </div>
+    <ul>
+        {% for file in files %}
+            <li class="flex items-center gap-2 p-2">
+                <img height="30" width="auto" src="{{ file.preview }}">
+                <div class="flex-grow">{{ file.name }}</div>
+                <div>
+                    <a class="btn-link btn-icon btn-small" href="{{ file.preview }}" download><i class="ph ph-download"></i></a>
+                    <button class="btn-link btn-icon btn-small" type="button"><i class="ph ph-x"></i></button>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+    {{- form_errors(form) -}}
+    {{- form_help(form) -}}
+</div>
