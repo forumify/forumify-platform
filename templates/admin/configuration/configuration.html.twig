@@ -27,11 +27,31 @@
                     {{ form_row(form.forumify__hide_usernames) }}
                 </div>
                 <div id="spam-protection">
-                    {{ form_row(form.forumify__recaptcha__info) }}
-                    {{ form_row(form.forumify__recaptcha__enabled) }}
-                    {{ form_row(form.forumify__recaptcha__site_key) }}
-                    {{ form_row(form.forumify__recaptcha__site_secret) }}
-                    {{ form_row(form.forumify__recaptcha__min_score) }}
+                    {% embed '@Forumify/components/tabs.html.twig' %}
+                        {% block tabs %}
+                            <button type="button" class="btn-link" data-tab-id="recaptcha">
+                                {{ 'admin.configuration.recaptcha_info'|trans }}
+                            </button>
+                            <button type="button" class="btn-link" data-tab-id="turnstile">
+                                {{ 'admin.configuration.turnstile.info'|trans }}
+                            </button>
+                        {% endblock %}
+                        {% block tabpanels %}
+                            <div id ="recaptcha">
+                                {{ form_row(form.forumify__recaptcha__info) }}
+                                {{ form_row(form.forumify__recaptcha__enabled) }}
+                                {{ form_row(form.forumify__recaptcha__site_key) }}
+                                {{ form_row(form.forumify__recaptcha__site_secret) }}
+                                {{ form_row(form.forumify__recaptcha__min_score) }}
+                            </div>
+                            <div id ="turnstile">
+                                {{ form_row(form.forumify__cf_turnstile__info) }}
+                                {{ form_row(form.forumify__cf_turnstile__enabled) }}
+                                {{ form_row(form.forumify__cf_turnstile__site_key) }}
+                                {{ form_row(form.forumify__cf_turnstile__site_secret) }}
+                            </div>
+                        {% endblock %}
+                    {% endembed %}
                 </div>
                 {% if form.forumify__mailer__from is defined %}
                     <div id="emails">
@@ -40,7 +60,7 @@
                 {% endif %}
             {% endblock %}
         {% endembed %}
-        <div class="flex justify-center items-center gap-2">
+        <div class="text-center mt-6">
             <button type="submit" class="btn-primary">{{ 'save'|trans }}</button>
         </div>
         {{ form_end(form) }}
