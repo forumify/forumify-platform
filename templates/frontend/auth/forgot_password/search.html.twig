@@ -9,31 +9,15 @@
         <label for="human">I am human</label>
     </div>
     <div class="flex justify-center gap-2">
-        {% if setting('forumify.recaptcha.enabled') %}
-            <button
-                class="btn-primary g-recaptcha"
-                data-sitekey="{{ setting('forumify.recaptcha.site_key') }}"
-                data-callback="onSendPasswordForget"
-                data-action="password_reset"
-            >
-                <i class="ph ph-magnifying-glass"></i>{{ 'forgot_password.search'|trans }}
-            </button>
-        {% else %}
+        {% apply spam_protection_submit %}
             <button class="btn-primary" type="submit">
                 <i class="ph ph-magnifying-glass"></i>{{ 'forgot_password.search'|trans }}
             </button>
-        {% endif %}
+        {% endapply %}
     </div>
     {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {% if setting('forumify.recaptcha.enabled') %}
-        <script src="https://www.google.com/recaptcha/api.js"></script>
-        <script type="text/javascript">
-            function onSendPasswordForget() {
-                document.getElementById('forgot-password-form').submit();
-            }
-        </script>
-    {% endif %}
+    {{ spam_protection_javascripts('forgot-password-form') }}
 {% endblock %}

@@ -9,7 +9,7 @@ use Forumify\Core\Form\DTO\NewUser;
 use Forumify\Core\Form\RegisterType;
 use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Service\CreateUserService;
-use Forumify\Core\Service\RecaptchaService;
+use Forumify\Core\Service\SpamProtectionService;
 use Forumify\OAuth\Repository\IdentityProviderRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -27,7 +27,7 @@ class AuthController extends AbstractController
         private readonly CreateUserService $createUserService,
         private readonly Security $security,
         private readonly SettingRepository $settingRepository,
-        private readonly RecaptchaService $recaptchaService
+        private readonly SpamProtectionService $spamProtectionService,
     ) {
     }
 
@@ -78,7 +78,7 @@ class AuthController extends AbstractController
                 return $this->redirectToRoute('forumify_core_index');
             }
 
-            if ($this->recaptchaService->isBot($request)) {
+            if ($this->spamProtectionService->isBot()) {
                 $this->addFlash('error', 'flashes.bot_detected');
                 return $this->redirectToRoute('forumify_core_index');
             }

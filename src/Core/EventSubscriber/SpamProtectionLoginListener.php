@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\EventSubscriber;
 
-use Forumify\Core\Service\RecaptchaService;
+use Forumify\Core\Service\SpamProtectionService;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
@@ -17,10 +17,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * So this listener is required to apply recaptcha to the login route
  */
 #[AsEventListener(KernelEvents::REQUEST, priority: 10)]
-class RecaptchaLoginListener
+class SpamProtectionLoginListener
 {
     public function __construct(
-        private readonly RecaptchaService $recaptchaService,
+        private readonly SpamProtectionService $spamProtectionService,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
     }
@@ -36,7 +36,7 @@ class RecaptchaLoginListener
             return;
         }
 
-        if (!$this->recaptchaService->isBot($request)) {
+        if (!$this->spamProtectionService->isBot()) {
             return;
         }
 

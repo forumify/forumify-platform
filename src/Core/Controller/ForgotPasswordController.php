@@ -6,7 +6,7 @@ namespace Forumify\Core\Controller;
 
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Service\AccountService;
-use Forumify\Core\Service\RecaptchaService;
+use Forumify\Core\Service\SpamProtectionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -23,7 +23,7 @@ class ForgotPasswordController extends AbstractController
         private readonly UserRepository $userRepository,
         private readonly AccountService $accountService,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly RecaptchaService $recaptchaService,
+        private readonly SpamProtectionService $spamProtectionService,
     ) {
     }
 
@@ -54,7 +54,7 @@ class ForgotPasswordController extends AbstractController
             return $this->redirectToRoute('forumify_core_index');
         }
 
-        if ($this->recaptchaService->isBot($request)) {
+        if ($this->spamProtectionService->isBot()) {
             $this->addFlash('error', 'flashes.bot_detected');
             return $this->redirectToRoute('forumify_core_index');
         }

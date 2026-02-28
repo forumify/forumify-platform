@@ -390,12 +390,10 @@ admin:
         enable_auto_updates_help: 'Automatically keep forumify up to date with security patches. For major releases, you need to manually update in Settings -> Plugins.'
         recaptcha_info: 'Google reCAPTCHA'
         recaptcha_help: >
-            <p>Google reCAPTCHA is a free service that can detect bots and AI that are trying to access your website and blocks their access.</p>
-            <p>forumify adds some basic bot detection measures, reCAPTCHA can offer a second line of defence against malicious users.</p>
-            <p>Warning, misconfiguration can lead to users being unable to register or reset their password!</p>
+            <p>Adds Google's reCAPTCHA V3 invisible bot detection service to login and registration pages.</p>
             <p>Setup instructions:</p>
             <ol>
-                <li>Open the <a href="https://console.cloud.google.com/security/recaptcha">reCAPTCHA dashboard on Google Cloud Platform</a>.</li>
+                <li>Open the <a href="https://console.cloud.google.com/security/recaptcha" target="_blank">reCAPTCHA dashboard on Google Cloud Platform</a>.</li>
                 <li>(If you never used Google Cloud before) Create a new project for your website.</li>
                 <li>Press the <strong><i class="ph ph-plus"></i> Create Key</strong> button to add a new key.</li>
                 <li>Set up your key with a <strong>display name</strong> application type <strong>Web</strong>.</li>
@@ -407,11 +405,27 @@ admin:
                 <li>Go to your website's registration or forgot password form, and confirm the reCAPTCHA logo is showing in the bottom right without errors.</li>
             </ol>
         recaptcha_enabled: 'Enable Google reCAPTCHA'
-        recaptcha_site_key: 'reCAPTCHA site key'
-        recaptcha_site_secret: 'reCAPTCHA site secret'
-        recaptcha_min_score: 'reCAPTCHA minimum score'
+        recaptcha_site_key: 'Site key'
+        recaptcha_site_secret: 'Site secret'
+        recaptcha_min_score: 'Minimum score'
         recaptcha_min_score_help: 'Default: 0.8. Google reCAPTCHA returns a score between 0 and 1, where 0 is most likely a bot, and 1 is most likely human. A high value might cause many false positives, while a low value might allow too many bots to come through.'
         mailer_from: 'Email from'
+        turnstile:
+            info: 'Cloudflare Turnstile'
+            help: >
+                <p>Adds Cloudflare's turnstile service to login and registration pages.</p>
+                <p>Setup instructions:</p>
+                <ol>
+                    <li>Open the <a href="https://dash.cloudflare.com/" target="_blank">Cloudflare Dashboard</a>.</li>
+                    <li>In the menu, under <i>Protect & Connect</i>, open "Application Security" -> "Turnstile"</li>
+                    <li>Press the <strong><i class="ph ph-plus"></i> Add Widget</strong> button to create a new turnstile widget.</li>
+                    <li>Give it a name, and add the hostname of your website, e.g.: "example.org"</li>
+                    <li>Select your widget mode, recommended to just leave it on "Managed"</li>
+                    <li>Press <strong>Create</strong> and copy the <strong>site key and site secret</strong> in the fields below.</li>
+                </ol>
+            enabled: Enabled
+            site_key: Site key
+            site_secret: Site secret
         mailer_from_help: 'Email address that the platform will use to send emails from.'
     dashboard:
         greeting: 'Welcome, {user}!'

@@ -118,7 +118,24 @@ class ConfigurationType extends AbstractType
                 'constraints' => [
                     new Assert\Range(max: 1.0, min: 0.0),
                 ],
-            ]);
+            ])
+            ->add('forumify__cf_turnstile__info', InfoType::class, [
+                'label' => 'admin.configuration.turnstile.info',
+                'help' => 'admin.configuration.turnstile.help',
+            ])
+            ->add('forumify__cf_turnstile__enabled', CheckboxType::class, [
+                'label' => 'admin.configuration.turnstile.enabled',
+                'required' => false,
+            ])
+            ->add('forumify__cf_turnstile__site_key', TextType::class, [
+                'label' => 'admin.configuration.turnstile.site_key',
+                'required' => false,
+            ])
+            ->add('forumify__cf_turnstile__site_secret', TextType::class, [
+                'label' => 'admin.configuration.turnstile.site_secret',
+                'required' => false,
+            ])
+        ;
 
         if (!$this->isHostedInstance) {
             $builder

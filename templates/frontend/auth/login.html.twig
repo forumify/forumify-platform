@@ -51,20 +51,11 @@
         {% block actions %}
             <div class="mt-8 mb-8 flex flex-col items-stretch gap-2 w-100">
                 {% block actions_login %}
-                    {% if setting('forumify.recaptcha.enabled') %}
-                        <button
-                            class="btn-primary g-recaptcha"
-                            data-sitekey="{{ setting('forumify.recaptcha.site_key') }}"
-                            data-callback="onLogin"
-                            data-action="login"
-                        >
+                    {% apply spam_protection_submit %}
+                        <button class="btn-primary" type="submit" data-action="login">
                             <i class="ph ph-sign-in"></i>{{ 'login.login'|trans }}
                         </button>
-                    {% else %}
-                        <button class="btn-primary" type="submit">
-                            <i class="ph ph-sign-in"></i>{{ 'login.login'|trans }}
-                        </button>
-                    {% endif %}
+                    {% endapply %}
                 {% endblock %}
                 {% block actions_idp %}
                     {% for idp in idps %}{{ idp|idp_button }}{% endfor %}
@@ -83,12 +74,5 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {% if setting('forumify.recaptcha.enabled') %}
-        <script src="https://www.google.com/recaptcha/api.js"></script>
-        <script type="text/javascript">
-            function onLogin() {
-                document.getElementById('login-form').submit();
-            }
-        </script>
-    {% endif %}
+    {{ spam_protection_javascripts('login-form') }}
 {% endblock %}

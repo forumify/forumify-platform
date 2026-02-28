@@ -13,32 +13,16 @@
     </div>
     <div class="flex justify-center">
         {% block actions %}
-            {% if setting('forumify.recaptcha.enabled') %}
-                <button
-                    class="btn-primary g-recaptcha"
-                    data-sitekey="{{ setting('forumify.recaptcha.site_key') }}"
-                    data-callback='onRegister'
-                    data-action='signup'
-                >
-                    <i class="ph ph-sign-in"></i>{{ 'registration.register'|trans }}
-                </button>
-            {% else %}
+            {% apply spam_protection_submit %}
                 <button class="btn-primary" type="submit">
                     <i class="ph ph-sign-in"></i>{{ 'registration.register'|trans }}
                 </button>
-            {% endif %}
+            {% endapply %}
         {% endblock %}
     </div>
     {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {% if setting('forumify.recaptcha.enabled') %}
-        <script src="https://www.google.com/recaptcha/api.js"></script>
-        <script type="text/javascript">
-            function onRegister() {
-                document.getElementById('registration-form').submit();
-            }
-        </script>
-    {% endif %}
+    {{ spam_protection_javascripts('registration-form') }}
 {% endblock %}
