@@ -70,7 +70,6 @@ class ThemeRefreshedListener
             $this->filesystem->remove($targetDir);
         }
 
-        $this->filesystem->mkdir($targetDir);
-        $this->filesystem->mirror($originDir, $targetDir);
+        $this->filesystem->symlink($originDir, $targetDir, true);
     }
 }

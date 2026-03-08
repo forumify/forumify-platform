@@ -51,10 +51,17 @@
                         </div>
                     {% endif %}
                     <div class="flex-grow">
-                        <h4 class="mb-0 flex flex-row items-center gap-1 text-subtitle">
+                        <h4 class="mb-1 flex flex-row items-center gap-2 text-subtitle">
                             {% if topic.pinned %}<i class="ph ph-push-pin"></i>{% endif %}
                             {% if topic.locked %}<i class="ph ph-lock"></i>{% endif %}
                             {% if topic.hidden %}<i class="ph ph-eye-slash"></i>{% endif %}
+                            {% if not topic.tags.empty %}
+                                {% for tag in topic.tags %}
+                                    {% include '@Forumify/frontend/forum/forum_tag.html.twig' with {
+                                        tag: tag,
+                                    } only %}
+                                {% endfor %}
+                            {% endif %}
                             {{ topic.title }}
                             {{ component('ReadMarker', { item: topic }) }}
                         </h4>
@@ -65,15 +72,6 @@
                                     {% include '@Forumify/components/username.html.twig' with { user: topic.createdBy, className: 'topic-author' } only %}
                                     {{ topic.createdAt|format_date }}
                                 </span>
-                            </div>
-                        {% endif %}
-                        {% if not topic.tags.empty %}
-                            <div class="mt-1 mb-2 flex flex-wrap gap-1">
-                                {% for tag in topic.tags %}
-                                    {% include '@Forumify/frontend/forum/forum_tag.html.twig' with {
-                                        tag: tag,
-                                    } only %}
-                                {% endfor %}
                             </div>
                         {% endif %}
                     </div>
