@@ -1,0 +1,13 @@
+.accordion-header {
+    display: block;
+    width: 100%;
+
+    .accordion-caret {
+        display: inline-block;
+        transition: transform 0.2s ease;
+    }
+
+    &.active .accordion-caret {
+        transform: rotate(180deg);
+    }
+}

@@ -15,6 +15,7 @@ import { Tabs } from '../controllers/Tabs';
 import { Theme } from '../controllers/Theme';
 import { TimezoneInput } from '../controllers/TimezoneInput';
 import { Youtube } from '../controllers/Youtube';
+import { Accordion } from '../controllers/Accordion';
 
 export default (app) => {
   const register = (name, controller) => {
@@ -35,6 +36,7 @@ export default (app) => {
   register('theme', Theme);
   register('timezone-input', TimezoneInput);
   register('youtube', Youtube);
+  register('accordion', Accordion);
 
   return register;
 };
