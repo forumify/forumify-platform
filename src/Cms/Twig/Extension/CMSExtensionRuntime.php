@@ -99,7 +99,7 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * @param array{widget: string} $widget
+     * @param array{widget: string, settings?: array<string, mixed>} $widget
      * @return array<string, mixed>
      */
     public function widgetContext(array $widget): array

@@ -1,9 +1,11 @@
+/* global theme:readonly */
 import { Controller } from '@hotwired/stimulus';
 
 export class DiscordWidget extends Controller {
   static values = {
     serverId: String,
   };
+
   static targets = ['iframe'];
 
   openModal() {

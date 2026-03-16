@@ -124,6 +124,9 @@ class TopicListWidget extends AbstractWidget
         ;
     }
 
+    /**
+     * @param array<string, mixed> $settings
+     */
     private function normalizeSettings(array &$settings): void
     {
         $displaySettingKeys = [

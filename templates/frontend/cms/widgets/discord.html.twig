@@ -1,4 +1,4 @@
-{% if widget.settings.serverId %}
+{% if widget.settings.serverId|default(false) %}
     <div {{ stimulus_controller('forumify/discord-widget', {
         serverId: widget.settings.serverId,
     }) }}>
