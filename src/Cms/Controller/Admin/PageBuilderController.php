@@ -33,6 +33,10 @@ class PageBuilderController extends AbstractController
     public function settings(Request $request): Response
     {
         $widgetName = $request->query->get('widget');
+        if (empty($widgetName)) {
+            return new Response();
+        }
+
         $data = $request->toArray();
 
         $widget = $this->findWidget($widgetName);

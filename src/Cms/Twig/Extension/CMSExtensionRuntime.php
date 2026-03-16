@@ -98,6 +98,10 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
         return $template;
     }
 
+    /**
+     * @param array{widget: string} $widget
+     * @return array<string, mixed>
+     */
     public function widgetContext(array $widget): array
     {
         $widgetObj = $this->findWidget($widget['widget']);
