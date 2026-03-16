@@ -364,6 +364,10 @@ admin:
                 topic_list: 'Topic List'
             responsive:
                 column_help: 'The sum of all columns must be equal to 12'
+            social:
+                discord: 'Discord Server Preview'
+                discord_server_id_help: 'To get your Server ID, go to "Server Settings" -> "Engagement" -> "Server Widget", and click "Enable Server Widget". Then copy the "Server ID" field that appears. Make sure to save your settings after making changes.'
+                discord_server_name_help: 'Optional, if left blank an icon button will be used instead of a regular button.'
             button:
                 href_help: 'Where the button has to go, for example "/forum", or a full URL like "https://google.com".'
             gallery:
