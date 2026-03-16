@@ -359,6 +359,8 @@ admin:
             forum:
                 gallery: 'Gallery'
                 online_users: 'Online Users'
+                topic: 'Topic Content'
+                topic_forum_help: 'Grabs the last topic from this forum, and display its contents. Security and forum display settings are ignored.'
                 topic_list: 'Topic List'
             responsive:
                 column_help: 'The sum of all columns must be equal to 12'

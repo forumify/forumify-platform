@@ -19,6 +19,8 @@ interface WidgetInterface
     public function getTemplate(): string;
 
     /**
+     * Allows the widget to add extra data to the "widget" variable passed into the template.
+     *
      * @param array<string, mixed> $settings
      * @return array<string, mixed>
      */
