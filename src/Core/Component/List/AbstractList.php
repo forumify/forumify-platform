@@ -25,6 +25,9 @@ abstract class AbstractList
     #[LiveProp]
     public bool $infiniteScroll = false;
 
+    #[LiveProp]
+    public bool $disablePagination = false;
+
     private ?ListResult $result = null;
 
     #[LiveAction]
@@ -45,9 +48,13 @@ abstract class AbstractList
             return $this->result;
         }
 
+        $totalCount = $this->disablePagination
+            ? $this->limit
+            : $this->getTotalCount();
+
         $this->result = new ListResult(
             $this->getData(),
-            $this->getTotalCount(),
+            $totalCount,
         );
         return $this->result;
     }

@@ -32,7 +32,7 @@ class PageBuilderController extends AbstractController
     #[Route('/settings', 'settings', methods: ['POST'])]
     public function settings(Request $request): Response
     {
-        $widgetName = $request->get('widget');
+        $widgetName = $request->query->get('widget');
         $data = $request->toArray();
 
         $widget = $this->findWidget($widgetName);

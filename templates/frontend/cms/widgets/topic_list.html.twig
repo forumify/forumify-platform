@@ -1,0 +1,19 @@
+{% if widget.forum is not null %}
+    <div>
+        <h3>{{ widget.forum.title }}</h3>
+        {{ component('TopicList', {
+            forum: widget.forum,
+            limit: widget.settings.topicCount ?? 6,
+            sortMode: widget.settings.sortMode ?? 'created_at',
+            showControls: false,
+            disablePagination: true,
+        }) }}
+        <a
+            class="btn-link mt-2"
+            href="{{ path('forumify_forum_forum', { slug: widget.forum.slug }) }}"
+        >
+            <i class="ph ph-arrow-right"></i>
+            {{ 'forum.topic.view_all'|trans }}
+        </a>
+    </div>
+{% endif %}

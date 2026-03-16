@@ -23,6 +23,7 @@ class CMSExtension extends AbstractExtension
     {
         return [
             new TwigFilter('widget_template', [CMSExtensionRuntime::class, 'widgetTemplate']),
+            new TwigFilter('widget_context', [CMSExtensionRuntime::class, 'widgetContext']),
         ];
     }
 }

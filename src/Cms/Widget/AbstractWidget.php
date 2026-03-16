@@ -21,6 +21,11 @@ abstract class AbstractWidget implements WidgetInterface
         return null;
     }
 
+    public function getTemplateContext(array $settings): array
+    {
+        return [];
+    }
+
     /**
      * @param array<string, mixed> $data
      * @return FormBuilderInterface<array<string, mixed>>

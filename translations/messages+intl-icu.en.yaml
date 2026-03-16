@@ -279,6 +279,7 @@ forum:
                 =1    {1 view}
                 other {# views}
             }
+        view_all: View All
 admin:
     toggle_nav: 'Toggle Navigation'
     audit_logs:
@@ -358,6 +359,7 @@ admin:
             forum:
                 gallery: 'Gallery'
                 online_users: 'Online Users'
+                topic_list: 'Topic List'
             responsive:
                 column_help: 'The sum of all columns must be equal to 12'
             button:

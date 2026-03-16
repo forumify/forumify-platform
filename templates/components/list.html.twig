@@ -5,7 +5,7 @@
     {% block container %}
         <div class="{{ class ?? 'card' }}">
             {% block pagination_top %}
-                {% if not this.infiniteScroll %}
+                {% if not this.disablePagination and not this.infiniteScroll %}
                     {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-title' } %}
                 {% endif %}
             {% endblock %}
@@ -39,7 +39,7 @@
                 </ul>
             {% endblock %}
             {% block pagination_bottom %}
-                {% if not this.infiniteScroll %}
+                {% if not this.disablePagination and not this.infiniteScroll %}
                     {% include '@Forumify/components/components/pagination.html.twig' with { class: 'card-footer' } %}
                 {% endif %}
             {% endblock %}
