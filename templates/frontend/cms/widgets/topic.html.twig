@@ -1,0 +1,3 @@
+{% if widget.topic is not null %}
+    <div class="rich-text">{{ widget.topic.firstComment.content|default('')|raw }}</div>
+{% endif %}

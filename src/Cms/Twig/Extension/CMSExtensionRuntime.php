@@ -98,6 +98,23 @@ class CMSExtensionRuntime implements RuntimeExtensionInterface
         return $template;
     }
 
+    /**
+     * @param array{widget: string, settings?: array<string, mixed>} $widget
+     * @return array<string, mixed>
+     */
+    public function widgetContext(array $widget): array
+    {
+        $widgetObj = $this->findWidget($widget['widget']);
+        if ($widgetObj !== null) {
+            $widget = array_merge(
+                $widget,
+                $widgetObj->getTemplateContext($widget['settings'] ?? []),
+            );
+        }
+
+        return $widget;
+    }
+
     private function findWidget(string $name): ?WidgetInterface
     {
         if ($this->widgetMemo !== null) {

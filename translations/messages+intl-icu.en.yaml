@@ -279,6 +279,7 @@ forum:
                 =1    {1 view}
                 other {# views}
             }
+        view_all: View All
 admin:
     toggle_nav: 'Toggle Navigation'
     audit_logs:
@@ -358,8 +359,18 @@ admin:
             forum:
                 gallery: 'Gallery'
                 online_users: 'Online Users'
+                topic: 'Topic Content'
+                topic_forum_help: 'Grabs the last topic from this forum, and display its contents. Security and forum display settings are ignored.'
+                topic_list: 'Topic List'
             responsive:
                 column_help: 'The sum of all columns must be equal to 12'
+            social:
+                discord: 'Discord Server Preview'
+                discord_server_id_help: 'To get your Server ID, go to "Server Settings" -> "Engagement" -> "Server Widget", and click "Enable Server Widget". Then copy the "Server ID" field that appears. It may take a few minutes before the widget starts working if you''re enabling it for the first time.'
+                discord_server_name_help: 'Optional, if left blank an icon button will be used instead of a regular button.'
+                teamspeak: 'TeamSpeak Server Preview'
+                teamspeak_tsviewer_help: 'Uses <a href="https://www.tsviewer.com/" target="_blank">TSViewer</a> to show your TS channels. Register your TS server and copy the ID from the url: tsviewer.com/index.php?page=ts_viewer&ID=<strong>1123149</strong> <- this number at the end.'
+                teamspeak_server_name_help: 'Optional, if left blank an icon button will be used instead of a regular button.'
             button:
                 href_help: 'Where the button has to go, for example "/forum", or a full URL like "https://google.com".'
             gallery:

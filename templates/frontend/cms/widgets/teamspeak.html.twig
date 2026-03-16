@@ -1,0 +1,32 @@
+{% set tsviewerId = widget.settings.tsviewerId|default('') %}
+{% set serverName = widget.settings.serverName|default('') %}
+{% if tsviewerId %}
+    <div {{ stimulus_controller('forumify/teamspeak-widget', {
+        tsviewerId: tsviewerId,
+    }) }}>
+        {% embed '@Forumify/components/modal.html.twig' %}
+            {% block modalOpenButton %}
+                <button
+                    type="button"
+                    class="btn-outlined"
+                    style="color: #1C80BE; background-color: white;"
+                    {{ stimulus_action('forumify/teamspeak-widget', 'openModal') }}
+
+                >
+                    <img
+                        src="{{ asset('bundles/forumify/images/teamspeak.svg') }}"
+                        width="20"
+                        height="20"
+                        {% if serverName %}class="mr-2"{% endif %}
+                    >
+                    {{ serverName }}
+                </button>
+            {% endblock %}
+            {% block modalContent %}
+                <div class="box" {{ stimulus_target('forumify/teamspeak-widget', 'container') }}>
+                    <div id="ts3viewer_{{ tsviewerId }}"></div>
+                </div>
+            {% endblock %}
+        {% endembed %}
+    </div>
+{% endif %}

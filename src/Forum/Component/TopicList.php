@@ -27,6 +27,9 @@ class TopicList extends AbstractDoctrineList
     #[LiveProp]
     public string $sortMode = 'default';
 
+    #[LiveProp]
+    public bool $showControls = true;
+
     public function __construct(
         private readonly Security $security,
     ) {
@@ -47,6 +50,14 @@ class TopicList extends AbstractDoctrineList
      * @return array<array{mode: string, icon: string}>
      */
     public function getSortModes(): array
+    {
+        return static::getAvailableSortModes($this->forum);
+    }
+
+    /**
+     * @return array<array{mode: string, icon: string}>
+     */
+    public static function getAvailableSortModes(?Forum $forum = null): array
     {
         $sortModes = [
             [
@@ -79,7 +90,7 @@ class TopicList extends AbstractDoctrineList
             ],
         ];
 
-        if ($this->forum->getType() === Forum::TYPE_SUPPORT) {
+        if ($forum?->getType() === Forum::TYPE_SUPPORT) {
             $sortModes[] = [
                 'mode' => 'unsolved',
                 'icon' => 'question',
