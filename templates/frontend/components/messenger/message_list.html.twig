@@ -1,9 +1,7 @@
 {% extends '@Forumify/components/list.html.twig' %}
 {% block container %}
-    <div class="w-100 message-list" data-loading="hide">
-        {% block list %}
-            {{ parent() }}
-        {% endblock %}
+    {{ parent() }}
+    <div class="box mt-4">
         {{ form_start(this.replyForm) }}
         {{ form_widget(this.replyForm) }}
         <div class="flex justify-center">
