@@ -61,14 +61,15 @@
                     <span class="text-bold">{{ this.topicCount }}</span> {{ 'profile.topics'|trans }}
                     <span class="text-bold ml-4">{{ this.commentCount }}</span> {{ 'profile.comments'|trans }}
                 </p>
-                <p class="mb-4">
+                <p class="mb-2">
                     <span class="text-bold">{{ this.followerCount }}</span> {{ 'profile.followers'|trans }}
                     <span class="text-bold ml-4">{{ this.followingCount }}</span> {{ 'profile.following'|trans }}
                 </p>
+                <p class="mb-4"><span class="text-bold">{{ user|user_reputation }}</span> {{ 'profile.reputation'|trans }}</p>
             {% endblock %}
             {% block profile_user_timestamps %}
                 <p class="text-small">{{ 'profile.registered'|trans({ date: user.createdAt|date('d M Y') })  }}</p>
-                <p class="text-small">{{ 'profile.last_seen'|trans({ date: user.lastActivity is not null ? user.lastActivity|format_date : 'never' })   }}</p>
+                <p class="text-small">{{ 'profile.last_seen'|trans({ date: user.lastActivity is not null ? user.lastActivity|format_date : 'never' }) }}</p>
             {% endblock %}
         </div>
     {% endblock %}

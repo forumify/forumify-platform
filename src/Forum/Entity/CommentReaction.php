@@ -7,8 +7,9 @@ namespace Forumify\Forum\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\User;
+use Forumify\Forum\Repository\CommentReactionRepository;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: CommentReactionRepository::class)]
 class CommentReaction
 {
     use IdentifiableEntityTrait;

@@ -7,6 +7,7 @@ namespace Forumify\Admin\Form;
 use Forumify\Forum\Entity\Reaction;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -31,7 +32,7 @@ class ReactionType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $imagePreview = empty($options['data']) ? null : $options['data']->getImage();
+        $imagePreview = empty($options['data']) ? null : $options['data']->image;
 
         $builder
             ->add('name')
@@ -50,6 +51,14 @@ class ReactionType extends AbstractType
                         maxSize: '10M',
                     ),
                 ],
-            ]);
+            ])
+            ->add('reputation', ChoiceType::class, [
+                'choices' => [
+                    'Neutral' => 0,
+                    'Positive' => 1,
+                    'Negative' => -1,
+                ],
+            ])
+        ;
     }
 }
