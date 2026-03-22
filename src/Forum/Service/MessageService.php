@@ -6,23 +6,30 @@ namespace Forumify\Forum\Service;
 
 use DateTime;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Service\SimpleRateLimiter;
 use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReply;
 use Forumify\Forum\Form\NewMessageThread;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 
 class MessageService
 {
     public function __construct(
         private readonly MessageThreadRepository $messageThreadRepository,
         private readonly Security $security,
+        private readonly SimpleRateLimiter $rateLimiter,
+        RateLimiterFactoryInterface $forumifyMessageLimiter,
     ) {
+        $rateLimiter->setLimiter($forumifyMessageLimiter);
     }
 
     public function createThread(NewMessageThread $newThread): MessageThread
     {
+        $this->rateLimiter->limit();
+
         $thread = new MessageThread();
         $thread->setTitle($newThread->getTitle());
         $thread->setParticipants($newThread->getParticipants());
@@ -48,6 +55,8 @@ class MessageService
 
     public function replyToThread(MessageThread $thread, MessageReply $reply): void
     {
+        $this->rateLimiter->limit();
+
         $message = $this->createMessage($thread, $reply);
         $thread->addMessage($message);
 

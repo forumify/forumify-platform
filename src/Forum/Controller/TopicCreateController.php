@@ -11,8 +11,10 @@ use Forumify\Forum\Service\CreateTopicService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\Exception\RateLimitExceededException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Translation\TranslatableMessage;
 
 class TopicCreateController extends AbstractController
 {
@@ -31,10 +33,16 @@ class TopicCreateController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && !empty($form->getData())) {
-            $topic = $this->createTopicService->createTopic($forum, $form->getData());
-            return $this->redirectToRoute('forumify_forum_topic', [
-                'slug' => $topic->getSlug(),
-            ]);
+            try {
+                $topic = $this->createTopicService->createTopic($forum, $form->getData());
+                return $this->redirectToRoute('forumify_forum_topic', [
+                    'slug' => $topic->getSlug(),
+                ]);
+            } catch (RateLimitExceededException $ex) {
+                $this->addFlash('error', new TranslatableMessage('rate_limited', [
+                    'retryafter' => $ex->getRetryAfter()->getTimestamp() - time(),
+                ]));
+            }
         }
 
         return $this->render('@Forumify/frontend/forum/topic_create.html.twig', [

@@ -24,7 +24,9 @@ use Forumify\Core\Form\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\Exception\RateLimitExceededException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Translation\TranslatableMessage;
 
 #[Route('/messenger', 'messenger')]
 class MessengerController extends AbstractController
@@ -48,8 +50,8 @@ class MessengerController extends AbstractController
         $this->denyAccessUnlessGranted(VoterAttribute::MessageThreadCreate->value);
 
         $data = new NewMessageThread();
-        if ($request->get('recipient')) {
-            $recipient = $this->userRepository->find($request->get('recipient'));
+        if ($recipientId = $request->query->get('recipient')) {
+            $recipient = $this->userRepository->find($recipientId);
             if ($recipient !== null) {
                 $data->setParticipants(new ArrayCollection([$recipient]));
             }
@@ -58,8 +60,14 @@ class MessengerController extends AbstractController
         $form = $this->createForm(NewMessageThreadType::class, $data);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $thread = $this->messageService->createThread($form->getData());
-            return $this->redirectToRoute('forumify_forum_messenger_thread', ['id' => $thread->getId()]);
+            try {
+                $thread = $this->messageService->createThread($form->getData());
+                return $this->redirectToRoute('forumify_forum_messenger_thread', ['id' => $thread->getId()]);
+            } catch (RateLimitExceededException $ex) {
+                $this->addFlash('error', new TranslatableMessage('rate_limited', [
+                    'retryafter' => $ex->getRetryAfter()->getTimestamp() - time(),
+                ]));
+            }
         }
 
         return $this->render('@Forumify/frontend/forum/message_thread_create.html.twig', [
@@ -83,7 +91,13 @@ class MessengerController extends AbstractController
         $form = $this->createForm(MessageReplyType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid() && !empty($form->getData())) {
-            $this->messageService->replyToThread($thread, $form->getData());
+            try {
+                $this->messageService->replyToThread($thread, $form->getData());
+            } catch (RateLimitExceededException $ex) {
+                $this->addFlash('error', new TranslatableMessage('rate_limited', [
+                    'retryafter' => $ex->getRetryAfter()->getTimestamp() - time(),
+                ]));
+            }
         }
 
         return $this->redirectToRoute('forumify_forum_messenger_thread', ['id' => $thread->getId()]);

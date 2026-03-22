@@ -1,0 +1,22 @@
+framework:
+    rate_limiter:
+        forumify.message:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '10 seconds'
+        forumify.comment:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '10 seconds'
+
+when@test:
+    framework:
+        rate_limiter:
+            forumify.message:
+                policy: 'fixed_window'
+                limit: 999999
+                interval: '1 seconds'
+            forumify.comment:
+                policy: 'fixed_window'
+                limit: 999999
+                interval: '1 seconds'

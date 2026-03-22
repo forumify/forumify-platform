@@ -78,6 +78,7 @@ toggle_theme: 'Toggle Theme'
 view_notifications: 'Notifications'
 no_notifications: 'No notifications'
 mark_read: 'Mark as read'
+rate_limited: 'You are doing that too often, try again after {retryafter} seconds.'
 notification:
     comment_created: '{author} posted a new comment in "{topic}"'
     comment_title: 'New comment in {topic}'
