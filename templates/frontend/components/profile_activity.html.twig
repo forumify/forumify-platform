@@ -6,7 +6,7 @@
             </div>
             <ul class="card-body p-0">
                 {% for comment in comments %}
-                    {% set firstComment = comment == comment.topic.firstComment %}
+                    {% set firstComment = comment.id == comment.topic.firstComment.id %}
                     <li class="p-2 pr-4 pl-4 flex flex-col gap-2{% if not loop.last %} border-b{% endif %}">
                         <div class="flex items-center gap-1">
                             {% set icon = firstComment ? 'ph-chat' : 'ph-arrow-bend-up-left' %}

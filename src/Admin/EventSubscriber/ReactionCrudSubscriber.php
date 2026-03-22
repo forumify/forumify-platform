@@ -40,7 +40,6 @@ class ReactionCrudSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $image = $this->mediaService->saveToFilesystem($this->assetStorage, $newImage);
-        $reaction->setImage($image);
+        $reaction->image = $this->mediaService->saveToFilesystem($this->assetStorage, $newImage);
     }
 }

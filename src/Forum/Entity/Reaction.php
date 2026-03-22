@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Forum\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
@@ -22,29 +23,13 @@ class Reaction
 
     #[ORM\Column(length: 255)]
     #[Groups('Reaction')]
-    private string $name;
+    public string $name;
 
     #[ORM\Column(length: 255)]
     #[Groups('Reaction')]
-    private string $image;
+    public string $image;
 
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
-
-    public function getImage(): string
-    {
-        return $this->image;
-    }
-
-    public function setImage(string $image): void
-    {
-        $this->image = $image;
-    }
+    #[ORM\Column(type: Types::INTEGER)]
+    #[Groups('Reaction')]
+    public int $reputation = 0;
 }

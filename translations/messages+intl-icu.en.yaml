@@ -69,6 +69,7 @@ profile:
     comments: 'comments'
     followers: 'followers'
     following: 'following'
+    reputation: 'reputation'
     registered: 'Registered: {date}'
     last_seen: 'Last Seen: {date}'
 follow: 'Follow'
