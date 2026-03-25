@@ -24,7 +24,9 @@ use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\RateLimiter\Exception\RateLimitExceededException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Translation\TranslatableMessage;
 
 #[Route('/topic', name: 'topic')]
 class TopicController extends AbstractController
@@ -53,12 +55,18 @@ class TopicController extends AbstractController
 
             $commentForm->handleRequest($request);
             if ($commentForm->isSubmitted() && $commentForm->isValid() && !empty($commentForm->getData())) {
-                $comment = $this->createCommentService->createComment($topic, $commentForm->getData());
-                $this->commentRepository->save($comment);
-                return $this->redirectToRoute('forumify_forum_topic', [
-                    'slug' => $topic->getSlug(),
-                    'lastPageFirst' => true,
-                ]);
+                try {
+                    $comment = $this->createCommentService->createComment($topic, $commentForm->getData());
+                    $this->commentRepository->save($comment);
+                    return $this->redirectToRoute('forumify_forum_topic', [
+                        'slug' => $topic->getSlug(),
+                        'lastPageFirst' => true,
+                    ]);
+                } catch (RateLimitExceededException $ex) {
+                    $this->addFlash('error', new TranslatableMessage('rate_limited', [
+                        'retryafter' => $ex->getRetryAfter()->getTimestamp() - time(),
+                    ]));
+                }
             }
         }
 

@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Loader\DirectoryLoader;
 use Symfony\Component\DependencyInjection\Loader\GlobFileLoader;
-use Symfony\Component\DependencyInjection\Loader\IniFileLoader;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
@@ -45,16 +44,15 @@ abstract class AbstractForumifyBundle extends AbstractBundle
         $locator = new FileLocator($configDir);
 
         $resolver = new LoaderResolver([
-            new YamlFileLoader($container, $locator),
-            new IniFileLoader($container, $locator),
-            new PhpFileLoader($container, $locator),
-            new GlobFileLoader($container, $locator),
-            new DirectoryLoader($container, $locator),
-            new ClosureLoader($container),
+            new YamlFileLoader($container, $locator, $environment),
+            new PhpFileLoader($container, $locator, $environment),
+            new GlobFileLoader($container, $locator, $environment),
+            new DirectoryLoader($container, $locator, $environment),
+            new ClosureLoader($container, $environment),
         ]);
 
         $configLoader = new DelegatingLoader($resolver);
-        $extensions = '.{php,xml,yaml,yml}';
+        $extensions = '.{php,yaml,yml}';
 
         $configLoader->load($configDir . '/{packages}/*' . $extensions, 'glob');
         $configLoader->load($configDir . '/{packages}/' . $environment . '/*' . $extensions, 'glob');
