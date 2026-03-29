@@ -10,6 +10,7 @@ use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Repository\AbstractRepository;
 use RuntimeException;
 use Symfony\Contracts\Service\Attribute\Required;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 /**
  * @template T of object
@@ -23,6 +24,9 @@ abstract class AbstractDoctrineList extends AbstractList
 
     /** @var string|array{ permission: string, alias?: string, entity?: class-string }|null */
     protected string|array|null $aclPermission = null;
+
+    public int $lastPage = 0;
+    private ?int $totalCount = null;
 
     /**
      * @return class-string<T>
@@ -46,11 +50,15 @@ abstract class AbstractDoctrineList extends AbstractList
 
     protected function getTotalCount(): int
     {
+        if ($this->totalCount !== null) {
+            return $this->totalCount;
+        }
+
         $qb = $this->getQuery();
         $rootAlias = $qb->getRootAliases()[0];
 
         $ids = implode(',', array_map(static fn (string $id) => "$rootAlias.$id", $this->identifiers));
-        return (int)$this->getQuery()
+        return $this->totalCount = (int)$this->getQuery()
             ->select("COUNT($ids)")
             ->getQuery()
             ->getSingleScalarResult();
@@ -73,6 +81,17 @@ abstract class AbstractDoctrineList extends AbstractList
         }
 
         return $qb;
+    }
+
+    #[PostMount]
+    public function postMount(): void
+    {
+        $total = $this->getTotalCount();
+
+        $this->lastPage = (int)ceil($total / $this->limit);
+        if ($this->lastPageFirst) {
+            $this->page = $this->lastPage;
+        }
     }
 
     #[Required]

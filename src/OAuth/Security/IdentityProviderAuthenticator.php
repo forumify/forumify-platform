@@ -46,7 +46,10 @@ class IdentityProviderAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $idpSlug = $request->attributes->get('idp')['slug'] ?? null;
+        $idpSlug = $request->attributes->get('idp');
+        if (is_array($idpSlug)) {
+            $idpSlug = $idpSlug['slug'] ?? null;
+        }
         if (empty($idpSlug)) {
             throw new BadCredentialsException('No idp slug provided in request');
         }

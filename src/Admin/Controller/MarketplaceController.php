@@ -68,7 +68,7 @@ class MarketplaceController extends AbstractController
         Request $request,
         MarketplaceConnectService $connectService,
     ): Response {
-        $code = $request->get('code');
+        $code = $request->query->get('code');
         if ($code === null) {
             return $this->render('@Forumify/admin/marketplace/connect.html.twig', [
                 'error' => 'code_missing',
@@ -76,7 +76,7 @@ class MarketplaceController extends AbstractController
         }
 
         $session = $request->getSession();
-        $state = $request->get('state');
+        $state = $request->query->get('state');
         if ($state !== $session->get('oauth.state')) {
             return $this->render('@Forumify/admin/marketplace/connect.html.twig', [
                 'error' => 'state_mismatch',
