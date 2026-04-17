@@ -66,7 +66,7 @@ class ForgotPasswordController extends AbstractController
             ->orWhere('u.username = :q')
             ->setParameter('q', $query)
             ->getQuery()
-            ->getSingleResult()
+            ->getOneOrNullResult()
         ;
 
         if ($user !== null) {
