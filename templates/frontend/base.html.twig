@@ -3,7 +3,7 @@
 <head>
     {% set logo %}
         {%- if setting('forumify.logo') -%}
-            {{ asset(setting('forumify.logo'), 'forumify.asset') }}
+            {{ asset(setting('forumify.logo'), 'forumify.asset')|imagine_filter('avatar_sm') }}
         {%- else -%}
             {{ asset('bundles/forumify/images/forumify.svg') }}
         {% endif %}

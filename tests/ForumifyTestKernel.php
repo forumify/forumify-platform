@@ -35,6 +35,7 @@ class ForumifyTestKernel extends ForumifyKernel
             new \DAMA\DoctrineTestBundle\DAMADoctrineTestBundle(),
             new \ApiPlatform\Symfony\Bundle\ApiPlatformBundle(),
             new \Zenstruck\Foundry\ZenstruckFoundryBundle(),
+            new \Liip\ImagineBundle\LiipImagineBundle(),
         ];
     }
 }

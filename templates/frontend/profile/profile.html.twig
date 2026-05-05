@@ -13,7 +13,7 @@
                         </div>
                         <div class="card-body grid-xs-6 grid-md-4 gap-4">
                             {% for badge in user.badges %}
-                                <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset') }}" title="{{ badge.name }}">
+                                <img width="100%" height="auto" src="{{ asset(badge.image, 'forumify.asset')|imagine_filter('avatar_lg') }}" title="{{ badge.name }}">
                             {% endfor %}
                         </div>
                     </div>
