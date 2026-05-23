@@ -282,7 +282,7 @@ class PluginService
      */
     private function run(array $cmd): string
     {
-        $process = new Process($cmd, $this->rootDir);
+        $process = new Process($cmd, $this->rootDir, ['QUERY_STRING' => false]);
         $process->mustRun();
         return $process->getOutput() . "\n" . $process->getErrorOutput();
     }
