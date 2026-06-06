@@ -27,6 +27,11 @@ class ErrorSubscriber
             return;
         }
 
+        dd($event->getRequest()->attributes);
+        if ($event->getRequest()->attributes->has('_api_operation')) {
+            return;
+        }
+
         $exception = $event->getThrowable();
         $statusCode = method_exists($exception, 'getStatusCode')
             ? $exception->getStatusCode()

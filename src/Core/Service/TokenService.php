@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Service;
 
-use DateTime;
+use DateInterval;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Forumify\OAuth\Entity\OAuthClient;
@@ -22,10 +24,12 @@ class TokenService
     /**
      * @param array<string> $resourceAccess
      */
-    public function createJwt(UserInterface $user, DateTime $expiresAt, array $resourceAccess = []): string
+    public function createJwt(UserInterface $user, ?DateTimeInterface $expiresAt = null, array $resourceAccess = []): string
     {
+        $exp = $expiresAt ?? new DateTimeImmutable()->add(new DateInterval('PT1H'));
+
         $payload = [
-            'exp' => $expiresAt->getTimestamp(),
+            'exp' => $exp->getTimestamp(),
             'sub' => $user->getUserIdentifier(),
             'resource_access' => $resourceAccess,
         ];

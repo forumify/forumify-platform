@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Tests\Tests\Factories\Core;
 
 use Forumify\Core\Entity\User;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-class UserFactory extends PersistentProxyObjectFactory
+/**
+ * @extends PersistentObjectFactory<User>
+ */
+class UserFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {

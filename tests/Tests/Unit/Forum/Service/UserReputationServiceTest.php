@@ -18,8 +18,6 @@ class UserReputationServiceTest extends KernelTestCase
 
     public function testGetReputation(): void
     {
-        $service = self::getContainer()->get(UserReputationService::class);
-
         $authorUser = UserFactory::createOne();
         $otherAuthorUser = UserFactory::createOne();
         $reactorUser1 = UserFactory::createOne();
@@ -59,7 +57,8 @@ class UserReputationServiceTest extends KernelTestCase
             'reaction' => $otherReaction,
         ]);
 
-        $reputation = $service->getReputation($authorUser->_real());
+        $service = self::getContainer()->get(UserReputationService::class);
+        $reputation = $service->getReputation($authorUser);
 
         self::assertEquals(30, $reputation);
     }

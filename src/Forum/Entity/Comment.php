@@ -23,13 +23,45 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource(
-    uriTemplate: '/topics/{topicId}/comments',
-    uriVariables: [
-        'topicId' => new Link(fromClass: Topic::class, toProperty: 'topic'),
+    routePrefix: '/forum',
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Patch(
+            extraProperties: ['acl' => [
+                'permission' => 'moderate',
+                'entity' => 'topic.forum',
+            ]],
+        ),
+        new Delete(
+            extraProperties: ['acl' => [
+                'permission' => 'moderate',
+                'entity' => 'topic.forum',
+            ]],
+        ),
+        new GetCollection(
+            uriTemplate: '/topics/{topicId}/comments',
+            uriVariables: [
+                'topicId' => new Link(fromClass: Topic::class, toProperty: 'topic'),
+            ],
+        ),
+        new Post(
+            uriTemplate: '/topics/{topicId}/comments',
+            uriVariables: [
+                'topicId' => new Link(fromClass: Topic::class, toProperty: 'topic'),
+            ],
+            provider: CreateProvider::class,
+            extraProperties: ['acl' => [
+                'permission' => 'create_comment',
+                'entity' => 'topic.forum',
+            ]],
+        ),
     ],
-    operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
+    extraProperties: ['acl' => [
+        'permission' => 'view',
+        'entity' => 'topic.forum',
+    ]],
 )]
-#[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
 class Comment implements SubscribableInterface
 {
     use IdentifiableEntityTrait;
