@@ -10,6 +10,7 @@ use Deprecated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Api\Entity\NewAsset;
 use Forumify\Api\Serializer\Attribute\Asset;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Forum\Entity\Badge;
@@ -63,8 +64,10 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface,
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['MessageThread'])]
-    #[Asset('forumify.avatar')]
     private ?string $avatar = null;
+
+    #[Asset('avatar', 'forumify.avatar', 'avatar.storage')]
+    public ?NewAsset $newAvatar = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $signature = null;

@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Tests\Tests\Application\Api\Forum;
 
 use ApiPlatform\Metadata\IriConverterInterface;
+use Forumify\Core\Service\TokenService;
 use Forumify\Forum\Entity\Forum;
-use Forumify\Forum\Entity\ForumGroup;
+use Symfony\Component\HttpClient\Exception\ClientException;
 use Tests\Tests\Application\Api\ApiTestCase;
 use Tests\Tests\Application\Api\Crud\DeleteTestTrait;
 use Tests\Tests\Application\Api\Crud\GetCollectionTestTrait;
@@ -15,6 +16,7 @@ use Tests\Tests\Application\Api\Crud\PatchTestTrait;
 use Tests\Tests\Application\Api\Crud\PostTestTrait;
 use Tests\Tests\Factories\Forum\ForumFactory;
 use Tests\Tests\Factories\Forum\ForumGroupFactory;
+use Tests\Tests\Factories\OAuth\OAuthClientFactory;
 
 class ForumApiTest extends ApiTestCase
 {
@@ -71,5 +73,29 @@ class ForumApiTest extends ApiTestCase
 
         self::assertArrayHasKey('group', $response);
         self::assertSame($groupIri, $response['group']);
+    }
+
+    public function testGetNotAdmin(): void
+    {
+        $oauthClient = OAuthClientFactory::createOne();
+        $this->token = self::getContainer()->get(TokenService::class)->createJwt($oauthClient);
+
+        $forum = ForumFactory::createOne();
+
+        $this->expectException(ClientException::class);
+        $this->expectExceptionCode(403);
+        $this->get(self::endpoint() . '/' . $forum->getId());
+    }
+
+    public function testGetCollectionNotAdmin(): void
+    {
+        $oauthClient = OAuthClientFactory::createOne();
+        $this->token = self::getContainer()->get(TokenService::class)->createJwt($oauthClient);
+
+        ForumFactory::createMany(3);
+
+        $response = $this->getCollection(self::endpoint());
+
+        self::assertEmpty($response);
     }
 }

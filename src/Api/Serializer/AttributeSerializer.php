@@ -8,7 +8,6 @@ use ArrayObject;
 use ReflectionClass;
 use ReflectionObject;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
@@ -21,16 +20,13 @@ use Symfony\Contracts\Service\Attribute\Required;
 abstract class AttributeSerializer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
     private NormalizerInterface&DenormalizerInterface&SerializerAwareInterface $decorated;
-    private PropertyAccessorInterface $propertyAccessor;
 
     #[Required]
     public function setServices(
         #[AutowireDecorated]
         NormalizerInterface&DenormalizerInterface&SerializerAwareInterface $decorated,
-        PropertyAccessorInterface $propertyAccessor,
     ): void {
         $this->decorated = $decorated;
-        $this->propertyAccessor = $propertyAccessor;
     }
 
     public function setSerializer(SerializerInterface $serializer): void

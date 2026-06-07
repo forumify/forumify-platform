@@ -27,7 +27,7 @@ class Menu
         }
     }
 
-    public function addItem(Menu|MenuItem $item, ?int $position = 0): static
+    public function addItem(Menu|MenuItem $item, int $position = 0): static
     {
         if (!isset($this->items[$position])) {
             $this->items[$position] = $item;
