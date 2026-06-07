@@ -30,7 +30,7 @@ class CommentApiTest extends ApiTestCase
 
     protected static function endpoint(): string
     {
-        return '/api/forum/comments';
+        return '/api/forums/comments';
     }
 
     protected function getPatchBody(): array
@@ -64,13 +64,10 @@ class CommentApiTest extends ApiTestCase
 
     public function testGetCollectionOnTopic(): void
     {
-        $topic1 = TopicFactory::createOne();
-        $comment1 = CommentFactory::createOne(['topic' => $topic1]);
+        $comment1 = CommentFactory::createOne();
+        $comment2 = CommentFactory::createOne();
 
-        $topic2 = TopicFactory::createOne();
-        $comment2 = CommentFactory::createOne(['topic' => $topic2]);
-
-        $response = $this->getCollection("/api/forum/topics/{$topic1->getId()}/comments");
+        $response = $this->getCollection("/api/forums/topics/{$comment1->getTopic()->getId()}/comments");
 
         self::assertCount(1, $response);
 
@@ -84,7 +81,7 @@ class CommentApiTest extends ApiTestCase
         $topic = TopicFactory::createOne();
         $topicIri = self::getContainer()->get(IriConverterInterface::class)->getIriFromResource($topic);
 
-        $response = $this->post("/api/forum/topics/{$topic->getId()}/comments", [
+        $response = $this->post("/api/forums/topics/{$topic->getId()}/comments", [
             'json' => [
                 'content' => 'Hello from tests!',
             ],

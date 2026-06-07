@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource(
-    routePrefix: '/forum',
+    routePrefix: '/forums',
     operations: [
         new Get(),
         new GetCollection(),

@@ -29,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(BadgeRepository::class)]
 #[ApiResource(
     security: 'is_granted("forumify.admin.settings.badges.view")',
-    routePrefix: '/forum',
+    routePrefix: '/forums',
     operations: [
         new Get(),
         new GetCollection(),

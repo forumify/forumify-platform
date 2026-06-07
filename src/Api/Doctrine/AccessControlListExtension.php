@@ -69,9 +69,11 @@ class AccessControlListExtension implements QueryCollectionExtensionInterface
 
         $idField = $this->em->getClassMetadata($resourceClass)->getIdentifier()[0] ?? 'id';
 
-        $visibleIds = $this->getVisibleACLIds($resourceClass, $idField, $permission);
+        // We can't add ACL to the query directly because of some API-Platform fuckery
+        // in their pagination extension,... so we add a WHERE IN instead.
+        $accessible = $this->getAccess($resourceClass, $idField, $permission);
         $qb->andWhere("$alias.$idField IN (:acl_entity_ids)")
-            ->setParameter('acl_entity_ids', $visibleIds);
+            ->setParameter('acl_entity_ids', $accessible);
     }
 
     /**
@@ -122,7 +124,7 @@ class AccessControlListExtension implements QueryCollectionExtensionInterface
      * @param class-string $class
      * @return array<mixed>
      */
-    private function getVisibleACLIds(string $class, string $idField, string $permission): array
+    private function getAccess(string $class, string $idField, string $permission): array
     {
         $repository = $this->em->getRepository($class);
         if (!$repository instanceof AbstractRepository) {

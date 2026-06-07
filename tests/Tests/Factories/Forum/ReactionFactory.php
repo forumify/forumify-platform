@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Tests\Tests\Factories\Forum;
 
 use Forumify\Forum\Entity\Reaction;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-class ReactionFactory extends PersistentProxyObjectFactory
+/**
+ * @extends PersistentObjectFactory<Reaction>
+ */
+class ReactionFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {
@@ -19,7 +22,7 @@ class ReactionFactory extends PersistentProxyObjectFactory
         return [
             'name' => self::faker()->word(),
             'image' => self::faker()->url(),
-            'reputation' => self::faker()->numberBetween(1, 100),
+            'reputation' => self::faker()->randomElement([-1, 0, 1]),
         ];
     }
 }

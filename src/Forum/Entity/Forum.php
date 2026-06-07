@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace Forumify\Forum\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,7 +26,18 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ForumRepository::class)]
 #[ApiResource(
-    extraProperties: ['acl' => ['permission' => 'view']],
+    operations: [
+        new Get(
+            uriTemplate: '/forums/{id<\d+>}',
+            extraProperties: ['acl' => 'view'],
+        ),
+        new GetCollection(
+            extraProperties: ['acl' => 'view'],
+        ),
+        new Post(security: 'is_granted("forumify.admin.forums.manage")'),
+        new Patch(security: 'is_granted("forumify.admin.forums.manage")'),
+        new Delete(security: 'is_granted("forumify.admin.forums.manage")'),
+    ],
 )]
 class Forum implements
     AccessControlledEntityInterface,
@@ -42,7 +58,7 @@ class Forum implements
     private string $title = '';
 
     #[ORM\Column(unique: true)]
-    #[Groups('Forum')]
+    #[Groups('Forum::read')]
     #[Gedmo\Slug(fields: ['title'])]
     private string $slug;
 
@@ -56,6 +72,7 @@ class Forum implements
 
     #[ORM\ManyToOne(targetEntity: Forum::class, cascade: ['persist'], inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent', onDelete: 'CASCADE')]
+    #[Groups('Forum::write')]
     private ?Forum $parent = null;
 
     /**
@@ -88,6 +105,7 @@ class Forum implements
     private ForumDisplaySettings $displaySettings;
 
     #[ORM\Column(type: 'text', nullable: true)]
+    #[Groups('Forum')]
     private ?string $topicTemplate = null;
 
     /**

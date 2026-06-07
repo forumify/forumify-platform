@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace Tests\Tests\Factories\Forum;
 
-use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\ForumGroup;
 use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
 /**
- * @extends PersistentObjectFactory<Forum>
+ * @extends PersistentObjectFactory<ForumGroup>
  */
-class ForumFactory extends PersistentObjectFactory
+class ForumGroupFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {
-        return Forum::class;
+        return ForumGroup::class;
     }
 
     protected function defaults(): array|callable
     {
         return [
-            'title' => self::faker()->title(),
+            'title' => self::faker()->sentence(3),
         ];
     }
 }

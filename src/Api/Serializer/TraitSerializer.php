@@ -6,12 +6,15 @@ namespace Forumify\Api\Serializer;
 
 use ApiPlatform\Metadata\IriConverterInterface;
 use ArrayObject;
+use DateTimeInterface;
 use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SortableEntityInterface;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
+use Symfony\Component\PropertyAccess\PropertyAccessorBuilder;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
@@ -20,14 +23,16 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[AsDecorator('api_platform.jsonld.normalizer.item')]
 class TraitSerializer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
-    /** @var array<class-string, array<string, string>> */
-    private array $uses = [];
+    private readonly PropertyAccessorInterface $propertyAccessor;
 
     public function __construct(
         #[AutowireDecorated]
         private readonly NormalizerInterface&DenormalizerInterface&SerializerAwareInterface $decorated,
         private readonly IriConverterInterface $iriConverter,
     ) {
+        $this->propertyAccessor = new PropertyAccessorBuilder()
+            ->disableExceptionOnInvalidPropertyPath()
+            ->getPropertyAccessor();
     }
 
     public function normalize(mixed $data, ?string $format = null, array $context = []): array|string|int|float|bool|ArrayObject|null
@@ -37,49 +42,43 @@ class TraitSerializer implements NormalizerInterface, DenormalizerInterface, Ser
             return $result;
         }
 
-        $traits = $this->getUsedTraits($data);
-        if (array_key_exists(IdentifiableEntityTrait::class, $traits)) {
-            $result['id'] = $data->getId();
-        }
+        // IdentifiableEntityTrait
+        $this->setIfExists($data, $result, 'id');
 
-        if (array_key_exists(BlameableEntityTrait::class, $traits)) {
-            if ($user = $data->getCreatedBy()) {
-                $result['createdBy'] = $this->iriConverter->getIriFromResource($user);
-            }
-            if ($user = $data->getUpdatedBy()) {
-                $result['updatedBy'] = $this->iriConverter->getIriFromResource($user);
-            }
-        }
+        // BlameableEntityTrait
+        $this->setIfExists($data, $result, 'createdBy');
+        $this->setIfExists($data, $result, 'updatedBy');
 
-        if (array_key_exists(TimestampableEntityTrait::class, $traits)) {
-            if ($date = $data->getCreatedAt()) {
-                $result['createdAt'] = $date->format('c');
-            }
-            if ($date = $data->getUpdatedAt()) {
-                $result['createdAt'] = $date->format('c');
-            }
-        }
+        // TimestampableEntityTrait
+        $this->setIfExists($data, $result, 'createdAt');
+        $this->setIfExists($data, $result, 'updatedAt');
 
-        if (array_key_exists(SortableEntityInterface::class, $traits)) {
-            $result['position'] = $data->getPosition();
-        }
+        // SortableEntityTrait
+        $this->setIfExists($data, $result, 'position');
+
+        // HierarchicalEntityInterface
+        $this->setIfExists($data, $result, 'parent');
 
         return $result;
     }
 
     /**
-     * @return array<string, string>
+     * @param array<string, mixed> $result
      */
-    private function getUsedTraits(object $data): array
+    private function setIfExists(object $data, array &$result, string $property): void
     {
-        $cls = get_class($data);
-        if (isset($this->uses[$cls])) {
-            return $this->uses[$cls];
+        $value = $this->propertyAccessor->getValue($data, $property);
+        if ($value === null) {
+            return;
         }
 
-        $uses = class_uses($data);
-        $this->uses[$cls] = $uses;
-        return $uses;
+        if ($value instanceof DateTimeInterface) {
+            $value = $value->format('c');
+        } elseif (is_object($value)) {
+            $value = $this->iriConverter->getIriFromResource($value);
+        }
+
+        $result[$property] = $value;
     }
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool

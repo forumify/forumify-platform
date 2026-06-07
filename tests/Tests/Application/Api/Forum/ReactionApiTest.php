@@ -10,9 +10,9 @@ use Tests\Tests\Application\Api\Crud\GetCollectionTestTrait;
 use Tests\Tests\Application\Api\Crud\GetTestTrait;
 use Tests\Tests\Application\Api\Crud\PatchTestTrait;
 use Tests\Tests\Application\Api\Crud\PostTestTrait;
-use Tests\Tests\Factories\Forum\BadgeFactory;
+use Tests\Tests\Factories\Forum\ReactionFactory;
 
-class BadgeApiTest extends ApiTestCase
+class ReactionApiTest extends ApiTestCase
 {
     use GetCollectionTestTrait;
     use GetTestTrait;
@@ -22,35 +22,35 @@ class BadgeApiTest extends ApiTestCase
 
     protected static function factory(): string
     {
-        return BadgeFactory::class;
+        return ReactionFactory::class;
     }
 
     protected static function endpoint(): string
     {
-        return '/api/forums/badges';
+        return '/api/forums/reactions';
     }
 
     protected function getPostBody(): array
     {
         return [
             [
-                'name' => 'Test Badge',
-                'description' => 'Badge for testing purposes',
+                'name' => 'Test Reaction',
                 'newImage' => [
-                    'filename' => 'badge.png',
+                    'filename' => 'reaction.png',
                     'data' => base64_encode(file_get_contents(TEST_DATA_DIR . '/forumify.png')),
                 ],
+                'reputation' => 0,
             ],
             function (array $data) {
-                self::assertEquals('Test Badge', $data['name']);
+                self::assertEquals('Test Reaction', $data['name']);
                 self::assertStringStartsWith('/storage/assets/', $data['image']);
-                self::assertStringEndsWith('badge.png', $data['image']);
+                self::assertStringEndsWith('reaction.png', $data['image']);
             },
         ];
     }
 
     protected function getPatchBody(): array
     {
-        return ['name' => 'Blip Badge'];
+        return ['name' => 'Blip Reaction'];
     }
 }
