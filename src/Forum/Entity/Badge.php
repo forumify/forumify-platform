@@ -24,7 +24,6 @@ use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Repository\BadgeRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(BadgeRepository::class)]
 #[ApiResource(
@@ -54,7 +53,6 @@ class Badge implements SortableEntityInterface, AuditableEntityInterface
     private string $description;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(allowNull: false)]
     #[Groups('Badge')]
     private string $image;
 
