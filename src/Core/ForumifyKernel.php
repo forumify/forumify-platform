@@ -49,8 +49,9 @@ class ForumifyKernel extends Kernel
         }
 
         foreach ($plugins as $plugin) {
-            /** @var class-string<BundleInterface> $plugin */
-            yield new $plugin();
+            if (is_a($plugin, BundleInterface::class, true)) {
+                yield new $plugin();
+            }
         }
     }
 
