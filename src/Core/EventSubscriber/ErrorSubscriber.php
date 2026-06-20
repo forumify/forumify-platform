@@ -23,7 +23,7 @@ class ErrorSubscriber
 
     public function __invoke(ExceptionEvent $event): void
     {
-        if ($this->env === 'dev') {
+        if (in_array($this->env, ['dev', 'test'], true)) {
             return;
         }
 

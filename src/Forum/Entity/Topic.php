@@ -29,42 +29,43 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     routePrefix: '/forums',
     operations: [
-        new Get(),
-        new GetCollection(),
-        new Patch(
+        new Get(
+            security: 'is_granted("TOPIC_VIEW", object)',
+        ),
+        new GetCollection(
             extraProperties: ['acl' => [
-                'permission' => 'moderate',
+                'permission' => 'view',
                 'entity' => 'forum',
             ]],
         ),
+        new Post(
+            uriTemplate: '/{forumId}/topics',
+            uriVariables: [
+                'forumId' => new Link(
+                    fromClass: Forum::class,
+                    toProperty: 'forum',
+                    security: 'is_granted("TOPIC_CREATE", forum)',
+                ),
+            ],
+            provider: CreateProvider::class,
+        ),
+        new Patch(
+            security: 'is_granted("TOPIC_EDIT", object)',
+        ),
         new Delete(
-            extraProperties: ['acl' => [
-                'permission' => 'moderate',
-                'entity' => 'forum',
-            ]],
+            security: 'is_granted("TOPIC_DELETE", object)',
         ),
         new GetCollection(
             uriTemplate: '/{forumId}/topics',
             uriVariables: [
                 'forumId' => new Link(fromClass: Forum::class, toProperty: 'forum'),
             ],
-        ),
-        new Post(
-            uriTemplate: '/{forumId}/topics',
-            uriVariables: [
-                'forumId' => new Link(fromClass: Forum::class, toProperty: 'forum'),
-            ],
-            provider: CreateProvider::class,
             extraProperties: ['acl' => [
-                'permission' => 'create_topic',
+                'permission' => 'view',
                 'entity' => 'forum',
             ]],
         ),
     ],
-    extraProperties: ['acl' => [
-        'permission' => 'view',
-        'entity' => 'forum',
-    ]],
 )]
 class Topic implements SubscribableInterface, AuditableEntityInterface
 {
@@ -296,5 +297,23 @@ class Topic implements SubscribableInterface, AuditableEntityInterface
     public function getNameForAudit(): string
     {
         return $this->getTitle();
+    }
+
+    /**
+     * @param array<ForumTag>|Collection<int, ForumTag> $tags
+     */
+    public function setTags(Collection|array $tags): void
+    {
+        $this->tags = $tags instanceof Collection ? $tags : new ArrayCollection($tags);
+    }
+
+    public function addTag(ForumTag $tag): void
+    {
+        $this->tags->add($tag);
+    }
+
+    public function removeTag(ForumTag $tag): void
+    {
+        $this->tags->removeElement($tag);
     }
 }

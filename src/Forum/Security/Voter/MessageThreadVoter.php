@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Security\Voter;
 
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\MessageThread;
@@ -27,7 +28,7 @@ class MessageThreadVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (!$user instanceof User) {
+        if (!$user instanceof AuthorizableInterface) {
             return false;
         }
 
@@ -42,7 +43,7 @@ class MessageThreadVoter extends Voter
     /**
      * User must be a participant of the thread in order to view it
      */
-    private function voteOnView(?MessageThread $subject, User $user): bool
+    private function voteOnView(?MessageThread $subject, AuthorizableInterface $user): bool
     {
         if ($subject === null) {
             return false;
@@ -50,7 +51,7 @@ class MessageThreadVoter extends Voter
 
         /** @var User $participant */
         foreach ($subject->getParticipants() as $participant) {
-            if ($participant->getId() === $user->getId()) {
+            if ($participant->getId() === $user->getUserId()) {
                 return true;
             }
         }
@@ -58,15 +59,19 @@ class MessageThreadVoter extends Voter
         return false;
     }
 
-    public function voteOnReply(?MessageThread $subject, User $user): bool
+    public function voteOnReply(?MessageThread $subject, AuthorizableInterface $user): bool
     {
         return $subject !== null
             && $this->isVerified($user)
             && $this->voteOnView($subject, $user);
     }
 
-    private function isVerified(User $user): bool
+    private function isVerified(AuthorizableInterface $user): bool
     {
+        if (!$user instanceof User) {
+            return true;
+        }
+
         return $user->isEmailVerified() && !$user->isBanned();
     }
 }

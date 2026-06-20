@@ -3,6 +3,7 @@ api_platform:
     version: 1.0.0
     path_segment_name_generator: api_platform.metadata.path_segment_name_generator.dash
     use_symfony_listeners: true
+    enable_link_security: true
     eager_loading:
         force_eager: false
     defaults:

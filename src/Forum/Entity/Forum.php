@@ -98,7 +98,6 @@ class Forum implements
      */
     #[ORM\OneToMany(mappedBy: 'parentForum', targetEntity: ForumGroup::class)]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    #[Groups('Forum')]
     private Collection $groups;
 
     #[ORM\Embedded(class: ForumDisplaySettings::class, columnPrefix: 'display_settings_')]
@@ -108,9 +107,7 @@ class Forum implements
     #[Groups('Forum')]
     private ?string $topicTemplate = null;
 
-    /**
-     * @var Collection<int, ForumTag>
-     */
+    /** @var Collection<int, ForumTag> */
     #[ORM\OneToMany(targetEntity: ForumTag::class, mappedBy: 'forum', cascade: ['persist', 'remove'], orphanRemoval: true)]
     public Collection $tags;
 

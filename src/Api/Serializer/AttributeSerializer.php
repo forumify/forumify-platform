@@ -36,7 +36,7 @@ abstract class AttributeSerializer implements NormalizerInterface, DenormalizerI
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
-        if (!class_exists($type)) {
+        if (!class_exists($type) || !is_array($data)) {
             return $this->decorated->denormalize($data, $type, $format, $context);
         }
 

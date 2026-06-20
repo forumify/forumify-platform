@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Tests\Application\Api\Forum;
 
 use ApiPlatform\Metadata\IriConverterInterface;
-use Forumify\Core\Service\TokenService;
 use Forumify\Forum\Entity\Forum;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Tests\Tests\Application\Api\ApiTestCase;
@@ -77,8 +76,7 @@ class ForumApiTest extends ApiTestCase
 
     public function testGetNotAdmin(): void
     {
-        $oauthClient = OAuthClientFactory::createOne();
-        $this->token = self::getContainer()->get(TokenService::class)->createJwt($oauthClient);
+        $this->oauthClient = OAuthClientFactory::createOne();
 
         $forum = ForumFactory::createOne();
 
@@ -89,8 +87,7 @@ class ForumApiTest extends ApiTestCase
 
     public function testGetCollectionNotAdmin(): void
     {
-        $oauthClient = OAuthClientFactory::createOne();
-        $this->token = self::getContainer()->get(TokenService::class)->createJwt($oauthClient);
+        $this->oauthClient = OAuthClientFactory::createOne();
 
         ForumFactory::createMany(3);
 

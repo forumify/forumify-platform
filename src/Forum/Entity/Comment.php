@@ -25,42 +25,43 @@ use Symfony\Component\Serializer\Attribute\Groups;
 #[ApiResource(
     routePrefix: '/forums',
     operations: [
-        new Get(),
-        new GetCollection(),
-        new Patch(
+        new Get(
+            security: 'is_granted("COMMENT_VIEW", object)',
+        ),
+        new GetCollection(
             extraProperties: ['acl' => [
-                'permission' => 'moderate',
+                'permission' => 'view',
                 'entity' => 'topic.forum',
             ]],
         ),
+        new Patch(
+            security: 'is_granted("COMMENT_EDIT", object)',
+        ),
         new Delete(
-            extraProperties: ['acl' => [
-                'permission' => 'moderate',
-                'entity' => 'topic.forum',
-            ]],
+            security: 'is_granted("COMMENT_DELETE", object)',
         ),
         new GetCollection(
             uriTemplate: '/topics/{topicId}/comments',
             uriVariables: [
-                'topicId' => new Link(fromClass: Topic::class, toProperty: 'topic'),
+                'topicId' => new Link(
+                    fromClass: Topic::class,
+                    toProperty: 'topic',
+                    security: 'is_granted("TOPIC_VIEW", topic)'
+                ),
             ],
         ),
         new Post(
             uriTemplate: '/topics/{topicId}/comments',
             uriVariables: [
-                'topicId' => new Link(fromClass: Topic::class, toProperty: 'topic'),
+                'topicId' => new Link(
+                    fromClass: Topic::class,
+                    toProperty: 'topic',
+                    security: 'is_granted("COMMENT_CREATE", topic)'
+                ),
             ],
             provider: CreateProvider::class,
-            extraProperties: ['acl' => [
-                'permission' => 'create_comment',
-                'entity' => 'topic.forum',
-            ]],
         ),
     ],
-    extraProperties: ['acl' => [
-        'permission' => 'view',
-        'entity' => 'topic.forum',
-    ]],
 )]
 class Comment implements SubscribableInterface
 {

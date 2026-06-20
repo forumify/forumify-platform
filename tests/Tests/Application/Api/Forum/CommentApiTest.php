@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Tests\Application\Api\Forum;
 
-use ApiPlatform\Metadata\IriConverterInterface;
-use Forumify\Core\Service\TokenService;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Tests\Tests\Application\Api\ApiTestCase;
 use Tests\Tests\Application\Api\Crud\DeleteTestTrait;
@@ -40,8 +38,7 @@ class CommentApiTest extends ApiTestCase
 
     public function testGetNotAdmin(): void
     {
-        $oauthClient = OAuthClientFactory::createOne();
-        $this->token = self::getContainer()->get(TokenService::class)->createJwt($oauthClient);
+        $this->oauthClient = OAuthClientFactory::createOne();
 
         $comment = CommentFactory::createOne();
 
@@ -52,8 +49,7 @@ class CommentApiTest extends ApiTestCase
 
     public function testGetCollectionNotAdmin(): void
     {
-        $oauthClient = OAuthClientFactory::createOne();
-        $this->token = self::getContainer()->get(TokenService::class)->createJwt($oauthClient);
+        $this->oauthClient = OAuthClientFactory::createOne();
 
         CommentFactory::createMany(3);
 
@@ -79,7 +75,6 @@ class CommentApiTest extends ApiTestCase
     public function testPostOnTopic(): void
     {
         $topic = TopicFactory::createOne();
-        $topicIri = self::getContainer()->get(IriConverterInterface::class)->getIriFromResource($topic);
 
         $response = $this->post("/api/forums/topics/{$topic->getId()}/comments", [
             'json' => [
@@ -88,6 +83,6 @@ class CommentApiTest extends ApiTestCase
         ]);
 
         self::assertIsInt($response['id']);
-        self::assertEquals($topicIri, $response['topic']);
+        self::assertEquals("/api/forums/topics/{$topic->getId()}", $response['topic']);
     }
 }

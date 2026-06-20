@@ -11,6 +11,7 @@ use Tests\Tests\Application\Api\Crud\GetCollectionTestTrait;
 use Tests\Tests\Application\Api\Crud\GetTestTrait;
 use Tests\Tests\Application\Api\Crud\PatchTestTrait;
 use Tests\Tests\Factories\Forum\ForumFactory;
+use Tests\Tests\Factories\Forum\ForumTagFactory;
 use Tests\Tests\Factories\Forum\TopicFactory;
 
 class TopicApiTest extends ApiTestCase
@@ -60,5 +61,25 @@ class TopicApiTest extends ApiTestCase
 
         self::assertIsInt($response['id']);
         self::assertEquals($forumIri, $response['forum']);
+    }
+
+    public function testCanAssignAndGetTags(): void
+    {
+        $forum = ForumFactory::createOne();
+        $tag = ForumTagFactory::createOne(['forum' => $forum]);
+        $tagIri = "/api/forums/forum-tags/{$tag->getId()}";
+
+        $topic = $this->post("/api/forums/{$forum->getId()}/topics", [
+            'json' => [
+                'title' => 'Topic With Tag',
+                'tags' => [$tagIri],
+            ],
+        ]);
+        self::assertArrayHasKey('tags', $topic);
+        self::assertContains($tagIri, $topic['tags']);
+
+        $topic = $this->get($topic['@id']);
+        self::assertArrayHasKey('tags', $topic);
+        self::assertContains($tagIri, $topic['tags']);
     }
 }

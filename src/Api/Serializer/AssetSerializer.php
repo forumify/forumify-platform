@@ -44,6 +44,10 @@ class AssetSerializer extends AttributeSerializer
     protected function normalizeProperty(array &$result, object $data, string $property, object $attribute): void
     {
         $value = $this->propertyAccessor->getValue($data, $attribute->field);
+        if (empty($value)) {
+            return;
+        }
+
         $result[$attribute->field] = $this->packages->getUrl($value, $attribute->package);
     }
 

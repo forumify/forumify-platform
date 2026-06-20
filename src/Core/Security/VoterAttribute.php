@@ -15,6 +15,7 @@ enum VoterAttribute: string
 
     case ACL = 'ACCESS_CONTROL_LIST';
 
+    case CommentView = 'COMMENT_VIEW';
     case CommentCreate = 'COMMENT_CREATE';
     case CommentEdit = 'COMMENT_EDIT';
     case CommentDelete = 'COMMENT_DELETE';

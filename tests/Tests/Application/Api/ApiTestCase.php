@@ -7,6 +7,7 @@ namespace Tests\Tests\Application\Api;
 use ApiPlatform\Symfony\Bundle\Test\ApiTestCase as ApipApiTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
 use Forumify\Core\Service\TokenService;
+use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Tests\Tests\Factories\Core\RoleFactory;
@@ -18,8 +19,15 @@ abstract class ApiTestCase extends ApipApiTestCase
 {
     use Factories;
 
-    protected ?string $token = null;
-    protected ?HttpClientInterface $client = null;
+    protected ?OAuthClient $oauthClient = null;
+    private ?HttpClientInterface $client = null;
+    private TokenService $tokenService;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->tokenService = self::getContainer()->get(TokenService::class);
+    }
 
     protected function getHttpClient(): HttpClientInterface
     {
@@ -63,19 +71,16 @@ abstract class ApiTestCase extends ApipApiTestCase
 
     protected function withDefaultOptions(array $options): array
     {
-        if ($this->token === null) {
-            $oauthClient = OAuthClientFactory::createOne([
-                'user' => UserFactory::createOne([
-                    'roleEntities' => new ArrayCollection([RoleFactory::findOrCreate(['slug' => 'super-admin'])]),
-                ]),
-            ]);
+        $this->oauthClient ??= OAuthClientFactory::createOne([
+            'user' => UserFactory::createOne([
+                'roleEntities' => new ArrayCollection([RoleFactory::findOrCreate(['slug' => 'super-admin'])]),
+            ]),
+        ]);
 
-            $tokenService = self::getContainer()->get(TokenService::class);
-            $this->token = $tokenService->createJwt($oauthClient);
-        }
+        $token = 'Bearer ' . $this->tokenService->createJwt($this->oauthClient);
 
         $options['headers'] = array_merge([
-            'Authorization' => "Bearer {$this->token}",
+            'Authorization' => $token,
             'Accept' => 'application/ld+json',
             'Content-Type' => 'application/ld+json',
         ], $options['headers'] ?? []);
