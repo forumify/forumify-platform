@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Forumify\Forum\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,15 +18,27 @@ use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
 use Forumify\Core\Entity\User;
+use Forumify\Forum\Api\Processor\MessageThreadPostProcessor;
+use Forumify\Forum\Form\NewMessageThread;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MessageThreadRepository::class)]
 #[ApiResource(
+    routePrefix: '/messenger',
     operations: [
+        new Get(
+            security: 'is_granted("MESSAGE_THREAD_VIEW", object)',
+        ),
+        new GetCollection(),
+        new Post(
+            security: 'is_granted("MESSAGE_THREAD_CREATE")',
+            processor: MessageThreadPostProcessor::class,
+            input: NewMessageThread::class,
+        ),
         new Patch(
-            security: 'object.getParticipants().contains(user)'
+            security: 'is_granted("MESSAGE_THREAD_VIEW", object)',
         ),
     ],
 )]
@@ -53,6 +68,7 @@ class MessageThread
     private Collection $messages;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Groups('MessageThread::read')]
     private DateTimeImmutable $lastMessageAt;
 
     public function __construct()
@@ -81,11 +97,11 @@ class MessageThread
     }
 
     /**
-     * @param Collection<int, User> $participants
+     * @param Collection<int, User>|array<User> $participants
      */
-    public function setParticipants(Collection $participants): void
+    public function setParticipants(Collection|array $participants): void
     {
-        $this->participants = $participants;
+        $this->participants = $participants instanceof Collection ? $participants : new ArrayCollection($participants);
     }
 
     public function addParticipant(User $user): void

@@ -9,7 +9,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
- * Super admins can do EVERYTHING on ALL ENTITIES.
+ * Super admins can do EVERYTHING on ALL ENTITIES except for private messages.
  * Only the website owner/administrator should need this role.
  *
  * @extends Voter<string, mixed>
@@ -22,7 +22,7 @@ class SuperAdminVoter extends Voter
     /** @inheritDoc */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return true;
+        return !str_starts_with($attribute, 'MESSAGE_');
     }
 
     /** @inheritDoc */

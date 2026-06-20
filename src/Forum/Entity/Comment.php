@@ -23,13 +23,46 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ApiResource(
-    uriTemplate: '/topics/{topicId}/comments',
-    uriVariables: [
-        'topicId' => new Link(fromClass: Topic::class, toProperty: 'topic'),
+    routePrefix: '/forums',
+    operations: [
+        new Get(
+            security: 'is_granted("COMMENT_VIEW", object)',
+        ),
+        new GetCollection(
+            extraProperties: ['acl' => [
+                'permission' => 'view',
+                'entity' => 'topic.forum',
+            ]],
+        ),
+        new Patch(
+            security: 'is_granted("COMMENT_EDIT", object)',
+        ),
+        new Delete(
+            security: 'is_granted("COMMENT_DELETE", object)',
+        ),
+        new GetCollection(
+            uriTemplate: '/topics/{topicId}/comments',
+            uriVariables: [
+                'topicId' => new Link(
+                    fromClass: Topic::class,
+                    toProperty: 'topic',
+                    security: 'is_granted("TOPIC_VIEW", topic)'
+                ),
+            ],
+        ),
+        new Post(
+            uriTemplate: '/topics/{topicId}/comments',
+            uriVariables: [
+                'topicId' => new Link(
+                    fromClass: Topic::class,
+                    toProperty: 'topic',
+                    security: 'is_granted("COMMENT_CREATE", topic)'
+                ),
+            ],
+            provider: CreateProvider::class,
+        ),
     ],
-    operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
 )]
-#[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
 class Comment implements SubscribableInterface
 {
     use IdentifiableEntityTrait;

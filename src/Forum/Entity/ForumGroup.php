@@ -8,10 +8,8 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Link;
 use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
-use ApiPlatform\State\CreateProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,13 +24,21 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: ForumGroupRepository::class)]
 #[ApiResource(
-    uriTemplate: '/forums/{forumId}/forum-groups',
-    uriVariables: [
-        'forumId' => new Link(fromClass: Forum::class, toProperty: 'parentForum'),
-    ],
-    operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
+    routePrefix: '/forums',
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(
+            security: 'is_granted("forumify.admin.forums.manage")'
+        ),
+        new Patch(
+            security: 'is_granted("forumify.admin.forums.manage")',
+        ),
+        new Delete(
+            security: 'is_granted("forumify.admin.forums.manage")',
+        ),
+    ]
 )]
-#[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
 class ForumGroup implements AccessControlledEntityInterface, SortableEntityInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
@@ -42,12 +48,9 @@ class ForumGroup implements AccessControlledEntityInterface, SortableEntityInter
     #[Groups('ForumGroup')]
     private string $title;
 
-    /**
-     * @var Collection<int, Forum>
-     */
+    /** @var Collection<int, Forum> */
     #[ORM\OneToMany(mappedBy: 'group', targetEntity: Forum::class)]
     #[ORM\OrderBy(['position' => 'ASC'])]
-    #[Groups('ForumGroup')]
     private Collection $forums;
 
     #[ORM\ManyToOne(targetEntity: Forum::class, inversedBy: 'groups')]

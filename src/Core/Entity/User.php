@@ -10,13 +10,13 @@ use Deprecated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Forumify\Api\Entity\NewAsset;
 use Forumify\Api\Serializer\Attribute\Asset;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Forum\Entity\Subscription;
 use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(operations: [])]
@@ -28,7 +28,6 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface,
 
     /** @var non-empty-string $username*/
     #[ORM\Column(length: 32, unique: true)]
-    #[Groups(['MessageThread'])]
     private string $username;
 
     #[ORM\Column(length: 128, unique: true, nullable: true)]
@@ -49,7 +48,6 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface,
     private ?string $password = null;
 
     #[ORM\Column(length: 32)]
-    #[Groups(['MessageThread'])]
     private string $displayName = '';
 
     /**
@@ -62,9 +60,10 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface,
     private ?string $timezone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['MessageThread'])]
-    #[Asset('forumify.avatar')]
     private ?string $avatar = null;
+
+    #[Asset('avatar', 'forumify.avatar', 'avatar.storage')]
+    public ?NewAsset $newAvatar = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $signature = null;
@@ -113,6 +112,11 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface,
     public function getUserId(): int
     {
         return $this->getId();
+    }
+
+    public function getUser(): User
+    {
+        return $this;
     }
 
     public function getUsername(): string

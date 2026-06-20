@@ -23,7 +23,11 @@ class ErrorSubscriber
 
     public function __invoke(ExceptionEvent $event): void
     {
-        if ($this->env === 'dev') {
+        if (in_array($this->env, ['dev', 'test'], true)) {
+            return;
+        }
+
+        if ($event->getRequest()->attributes->has('_api_operation')) {
             return;
         }
 

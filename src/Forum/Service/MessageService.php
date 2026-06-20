@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Forum\Service;
 
 use DateTime;
-use Forumify\Core\Entity\User;
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Service\SimpleRateLimiter;
 use Forumify\Forum\Entity\Message;
 use Forumify\Forum\Entity\MessageThread;
@@ -34,10 +34,9 @@ class MessageService
         $thread->setTitle($newThread->getTitle());
         $thread->setParticipants($newThread->getParticipants());
 
-        /** @var User|null $user */
         $user = $this->security->getUser();
-        if ($user !== null) {
-            $thread->getParticipants()->add($user);
+        if ($user instanceof AuthorizableInterface) {
+            $thread->getParticipants()->add($user->getUser());
         } else {
             $participant = $thread->getParticipants()->first() ?: null;
             $thread->setCreatedBy($participant);
@@ -53,7 +52,7 @@ class MessageService
         return $thread;
     }
 
-    public function replyToThread(MessageThread $thread, MessageReply $reply): void
+    public function replyToThread(MessageThread $thread, MessageReply $reply): Message
     {
         $this->rateLimiter->limit();
 
@@ -61,6 +60,7 @@ class MessageService
         $thread->addMessage($message);
 
         $this->messageThreadRepository->save($thread);
+        return $message;
     }
 
     private function createMessage(MessageThread $thread, MessageReply $reply): Message

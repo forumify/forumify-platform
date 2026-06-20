@@ -34,7 +34,7 @@ class BadgeCrudSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
 
         $newImage = $form->get('newImage')->getData();
-        if (!($newImage instanceof UploadedFile)) {
+        if (!$newImage instanceof UploadedFile) {
             return;
         }
 

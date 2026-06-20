@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Security\Voter;
 
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\ACLService;
@@ -38,8 +39,9 @@ class TopicVoter extends Voter
             return true;
         }
 
-        /** @var User|null $user */
         $user = $token->getUser();
+        $user = $user instanceof AuthorizableInterface ? $user->getUser() : null;
+
         return match ($attribute) {
             VoterAttribute::TopicView->value => $subject instanceof Topic && $this->voteOnView($user, $subject),
             VoterAttribute::TopicCreate->value => $subject instanceof Forum && $this->voteOnCreate($user, $subject),

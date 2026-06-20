@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Application\Forum;
+namespace Tests\Tests\Application\Forum;
 
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Form\TopicData;

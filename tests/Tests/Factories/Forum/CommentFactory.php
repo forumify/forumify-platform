@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace Tests\Tests\Factories\Forum;
 
 use Forumify\Forum\Entity\Comment;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-class CommentFactory extends PersistentProxyObjectFactory
+/**
+ * @extends PersistentObjectFactory<Comment>
+ */
+class CommentFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {

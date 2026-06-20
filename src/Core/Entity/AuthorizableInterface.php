@@ -14,6 +14,8 @@ interface AuthorizableInterface extends UserInterface
 
     public function getUserId(): int;
 
+    public function getUser(): User;
+
     /**
      * @return Collection<int, Role>
      */

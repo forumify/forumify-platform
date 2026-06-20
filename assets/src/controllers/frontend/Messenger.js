@@ -20,7 +20,7 @@ export class Messenger extends Controller {
       return;
     }
 
-    const res = await request(`/api/message-threads/${threadId}`, {
+    const res = await request(`/api/messenger/message-threads/${threadId}`, {
       method: 'PATCH',
       data: { title },
     });

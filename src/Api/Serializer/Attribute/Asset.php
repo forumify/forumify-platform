@@ -10,6 +10,8 @@ use Attribute;
 class Asset
 {
     public function __construct(
+        public readonly string $field,
+        public readonly string $package,
         public readonly string $storage,
     ) {
     }

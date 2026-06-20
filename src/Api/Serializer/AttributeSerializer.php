@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Api\Serializer;
 
 use ArrayObject;
+use ReflectionClass;
 use ReflectionObject;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -35,6 +36,20 @@ abstract class AttributeSerializer implements NormalizerInterface, DenormalizerI
 
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
+        if (!class_exists($type) || !is_array($data)) {
+            return $this->decorated->denormalize($data, $type, $format, $context);
+        }
+
+        $attr = $this->getAttributeClass();
+        $refl = new ReflectionClass($type);
+        foreach ($refl->getProperties() as $property) {
+            $propertyName = $property->getName();
+            $attributes = $property->getAttributes($attr);
+            foreach ($attributes as $attribute) {
+                $this->denormalizeProperty($data, $propertyName, $attribute->newInstance());
+            }
+        }
+
         return $this->decorated->denormalize($data, $type, $format, $context);
     }
 
@@ -60,15 +75,10 @@ abstract class AttributeSerializer implements NormalizerInterface, DenormalizerI
         $attr = $this->getAttributeClass();
         $refl = new ReflectionObject($data);
         foreach ($refl->getProperties() as $property) {
+            $propertyName = $property->getName();
             $attributes = $property->getAttributes($attr);
             foreach ($attributes as $attribute) {
-                $attrInstance = $attribute->newInstance();
-                $value = $property->getValue($data);
-
-                $data = $this->normalizeProperty($value, $attrInstance);
-                if ($data !== null) {
-                    $result[$property->getName()] = $data;
-                }
+                $this->normalizeProperty($result, $data, $propertyName, $attribute->newInstance());
             }
         }
 
@@ -91,18 +101,18 @@ abstract class AttributeSerializer implements NormalizerInterface, DenormalizerI
     abstract protected function getAttributeClass(): string;
 
     /**
+     * @param array<string, mixed> $result
      * @param T $attribute
      */
-    protected function normalizeProperty(mixed $value, object $attribute): mixed
+    protected function normalizeProperty(array &$result, object $data, string $property, object $attribute): void
     {
-        return $value;
     }
 
     /**
+     * @param array<string, mixed> $data
      * @param T $attribute
      */
-    protected function denormalizeProperty(mixed $value, object $attribute): mixed
+    protected function denormalizeProperty(array &$data, string $property, object $attribute): void
     {
-        return $value;
     }
 }
