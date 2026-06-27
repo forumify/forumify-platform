@@ -72,6 +72,11 @@ class AccessControlListExtension implements QueryCollectionExtensionInterface
         // We can't add ACL to the query directly because of some API-Platform fuckery
         // in their pagination extension,... so we add a WHERE IN instead.
         $accessible = $this->getAccess($resourceClass, $idField, $permission);
+        if (empty($accessible)) {
+            $qb->andWhere('1 = 0');
+            return;
+        }
+
         $qb->andWhere("$alias.$idField IN (:acl_entity_ids)")
             ->setParameter('acl_entity_ids', $accessible);
     }
