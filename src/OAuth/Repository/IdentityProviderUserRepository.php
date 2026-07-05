@@ -34,4 +34,18 @@ class IdentityProviderUserRepository extends AbstractRepository
             ->getResult()
         ;
     }
+
+    public function findOneByExternalIdAndIdpType(string $externalId, string $idpType): ?IdentityProviderUser
+    {
+        return $this
+            ->createQueryBuilder('ipu')
+            ->innerJoin('ipu.identityProvider', 'ip')
+            ->where('ip.type = :type')
+            ->andWhere('ipu.externalIdentifier = :externalId')
+            ->setParameter('type', $idpType)
+            ->setParameter('externalId', $externalId)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
