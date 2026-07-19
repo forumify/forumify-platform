@@ -23,6 +23,7 @@ use ReflectionAttribute;
 use ReflectionClass;
 use Stringable;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\Attribute\WhenNot;
 use Throwable;
 
 #[AsDoctrineListener(event: Events::postPersist, priority: -999)]
@@ -30,6 +31,7 @@ use Throwable;
 #[AsDoctrineListener(event: Events::postUpdate, priority: -999)]
 #[AsDoctrineListener(event: Events::preRemove, priority: -999)]
 #[AsDoctrineListener(event: Events::postRemove, priority: -999)]
+#[WhenNot('test')]
 class AuditableEntityListener
 {
     /** @var array<int, array<mixed>> */
