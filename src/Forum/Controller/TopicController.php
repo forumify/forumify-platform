@@ -60,7 +60,7 @@ class TopicController extends AbstractController
                     $this->commentRepository->save($comment);
                     return $this->redirectToRoute('forumify_forum_topic', [
                         'slug' => $topic->getSlug(),
-                        'lastPageFirst' => true,
+                        'comment' => $comment->getId(),
                     ]);
                 } catch (RateLimitExceededException $ex) {
                     $this->addFlash('error', new TranslatableMessage('rate_limited', [

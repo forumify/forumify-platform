@@ -11,15 +11,21 @@ export class CommentEditor extends Controller {
     this.isEditing = false;
     this.editor = null;
 
-    if (this.element.classList.contains('selected')) {
-      const rect = this.element.getBoundingClientRect();
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    window.setTimeout(this._scrollToSelected.bind(this), 250);
+  }
 
-      window.scrollTo({
-        top: rect.top + scrollTop - 150,
-        behavior: 'smooth',
-      });
+  _scrollToSelected() {
+    if (!this.element.classList.contains('selected')) {
+      return;
     }
+
+    const rect = this.element.getBoundingClientRect();
+    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+    window.scrollTo({
+      top: rect.top + scrollTop - 150,
+      behavior: 'smooth',
+    });
   }
 
   toggleEdit() {
