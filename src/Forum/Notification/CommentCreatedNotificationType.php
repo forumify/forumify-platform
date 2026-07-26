@@ -62,11 +62,12 @@ class CommentCreatedNotificationType extends AbstractEmailNotificationType
 
     public function getUrl(Notification $notification): string
     {
-        $slug = $this->getComment($notification)?->getTopic()?->getSlug();
+        $comment = $this->getComment($notification);
 
-        return $slug !== null
-            ? $this->urlGenerator->generate('forumify_forum_topic', ['slug' => $slug])
-            : '';
+        return $comment !== null ? $this->urlGenerator->generate('forumify_forum_topic', [
+            'slug' => $comment->getTopic()->getSlug(),
+            'comment' => $comment->getId(),
+        ]) : '';
     }
 
     private function getComment(Notification $notification): ?Comment
