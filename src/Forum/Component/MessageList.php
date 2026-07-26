@@ -75,8 +75,12 @@ class MessageList extends AbstractDoctrineList
         return $this->thread;
     }
 
-    public function getReplyForm(): FormView
+    public function getReplyForm(): ?FormView
     {
+        if (!$this->security->isGranted(VoterAttribute::MessageThreadReply->value, $this->getThread())) {
+            return null;
+        }
+
         if ($this->replyForm !== null) {
             return $this->replyForm;
         }

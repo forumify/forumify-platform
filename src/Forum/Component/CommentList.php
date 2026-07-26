@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Component;
 
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
 use Forumify\Forum\Entity\Comment;
@@ -44,19 +46,22 @@ class CommentList extends AbstractDoctrineList
             return;
         }
 
-        $position = (int)parent::getQuery()
-            ->select('COUNT(e.id)')
-            ->where('e.topic = :topic')
-            ->andWhere('e.createdAt < :createdAt')
-            ->andWhere('e.id < :id')
-            ->setParameter('topic', $this->topic)
-            ->setParameter('createdAt', $comment->getCreatedAt())
-            ->setParameter('id', $comment->getId())
-            ->getQuery()
-            ->getSingleScalarResult()
-        ;
+        try {
+            $position = (int)parent::getQuery()
+                ->select('COUNT(e.id)')
+                ->where('e.topic = :topic')
+                ->andWhere('e.createdAt < :createdAt')
+                ->andWhere('e.id < :id')
+                ->setParameter('topic', $this->topic)
+                ->setParameter('createdAt', $comment->getCreatedAt())
+                ->setParameter('id', $comment->getId())
+                ->getQuery()
+                ->getSingleScalarResult()
+            ;
 
-        $this->page = intdiv($position, $this->limit) + 1;
+            $this->page = intdiv($position, $this->limit) + 1;
+        } catch (NoResultException|NonUniqueResultException) {
+        }
     }
 
     #[LiveAction]
