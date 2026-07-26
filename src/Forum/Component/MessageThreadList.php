@@ -57,6 +57,11 @@ class MessageThreadList extends AbstractDoctrineList
         $this->selectedThreadId = $threadId;
     }
 
+    public function canCreateThreads(): bool
+    {
+        return $this->security->isGranted(VoterAttribute::MessageThreadCreate->value);
+    }
+
     public function getSelectedThread(): ?MessageThread
     {
         if ($this->selectedThreadId === null) {

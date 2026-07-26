@@ -27,6 +27,7 @@
                     {{ form_row(form.forumify__hide_usernames) }}
                 </div>
                 <div id="spam-protection">
+                    {{ form_row(form.forumify__readonly) }}
                     {% embed '@Forumify/components/tabs.html.twig' %}
                         {% block tabs %}
                             <button type="button" class="btn-link" data-tab-id="recaptcha">

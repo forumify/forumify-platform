@@ -18,13 +18,15 @@
 {% block pagination_top %}
     <div class="card-title flex justify-between items-center">
         <span>{{ 'messenger.inbox'|trans }}</span>
-        <a
-            class="btn-primary btn-icon"
-            aria-label="{{ 'messenger.new_message'|trans }}"
-            href="{{ path('forumify_forum_messenger_thread_create') }}"
-        >
-            <i class="ph ph-paper-plane-tilt"></i>
-        </a>
+        {% if this.canCreateThreads %}
+            <a
+                class="btn-primary btn-icon"
+                aria-label="{{ 'messenger.new_message'|trans }}"
+                href="{{ path('forumify_forum_messenger_thread_create') }}"
+            >
+                <i class="ph ph-paper-plane-tilt"></i>
+            </a>
+        {% endif %}
     </div>
     {{ parent() }}
 {% endblock %}

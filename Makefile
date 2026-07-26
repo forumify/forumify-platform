@@ -2,6 +2,7 @@
 quality:
 	@./vendor/bin/phpcs
 	@./vendor/bin/phpstan
+	@cd ./assets && npm run lint
 
 .PHONY: quality-fix
 quality-fix:

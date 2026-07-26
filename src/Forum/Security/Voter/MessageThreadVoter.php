@@ -6,8 +6,10 @@ namespace Forumify\Forum\Security\Voter;
 
 use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\MessageThread;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -16,6 +18,12 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class MessageThreadVoter extends Voter
 {
+    public function __construct(
+        private readonly SettingRepository $settingRepository,
+        private readonly Security $security,
+    ) {
+    }
+
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [
@@ -68,6 +76,10 @@ class MessageThreadVoter extends Voter
 
     private function isVerified(AuthorizableInterface $user): bool
     {
+        if ($this->settingRepository->get('forumify.readonly') && !$this->security->isGranted(VoterAttribute::SuperAdmin->value)) {
+            return false;
+        }
+
         if (!$user instanceof User) {
             return true;
         }

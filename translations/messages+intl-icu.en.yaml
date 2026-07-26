@@ -401,6 +401,8 @@ admin:
         index_help: 'The default path to use as frontend index. For example if you want to display a forum, you can use "forum/example-forum". Leave blank if plan to use a CMS page with an empty url key.'
         enable_auto_updates: 'Enable automatic updates'
         enable_auto_updates_help: 'Automatically keep forumify up to date with security patches. For major releases, you need to manually update in Settings -> Plugins.'
+        readonly: 'Enable Read-Only Mode'
+        readonly_help: 'Turns your entire website into read-only mode. Only users with the Super Admin role are able to bypass read-only mode.'
         recaptcha_info: 'Google reCAPTCHA'
         recaptcha_help: >
             <p>Adds Google's reCAPTCHA V3 invisible bot detection service to login and registration pages.</p>
