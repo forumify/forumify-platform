@@ -1,4 +1,4 @@
-<div class="flex gap-1 justify-end" {{ attributes }} data-poll="delay(30000)|$render">
+<div id="{{ comment.id }}" class="flex gap-1 justify-end" {{ attributes }} data-poll="delay(30000)|$render">
     {% for reaction in this.groupedReactions %}
         <a
             class="btn-small {{ this.userReacted(reaction.id) ? 'btn-outlined-highlighted' : 'btn-outlined' }}"

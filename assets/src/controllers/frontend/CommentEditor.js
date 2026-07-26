@@ -10,6 +10,16 @@ export class CommentEditor extends Controller {
   initialize() {
     this.isEditing = false;
     this.editor = null;
+
+    if (this.element.classList.contains('selected')) {
+      const rect = this.element.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+      window.scrollTo({
+        top: rect.top + scrollTop - 150,
+        behavior: 'smooth',
+      });
+    }
   }
 
   toggleEdit() {
@@ -51,5 +61,22 @@ export class CommentEditor extends Controller {
     const richText = this.element.querySelector('.rich-text');
     richText.innerHTML = newContent;
     this.discardEdit();
+  }
+
+  copyUrl(event) {
+    navigator.clipboard.writeText(event.params.url);
+
+    let target = event.target;
+    if (target.nodeName !== 'I') {
+      target = target.querySelector('i');
+    }
+
+    target.classList.remove('ph-link');
+    target.classList.add('ph-check');
+
+    window.setTimeout(() => {
+      target.classList.add('ph-link');
+      target.classList.remove('ph-check');
+    }, 3500);
   }
 }

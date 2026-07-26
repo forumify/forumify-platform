@@ -1,8 +1,12 @@
 {% block comment_list_comment %}
     {% set isAnswer = topic.answer is not null and topic.answer.id == item.id %}
-    <li class="comment box{% if isAnswer %} answer{% endif %}" {{ stimulus_controller('forumify/comment-editor', {
-        updateUrl: path('forumify_forum_comment_edit', { id: item.id })
-    }) }}>
+    {% set isSelected = item.id == this.selectedCommentId %}
+    {% set updateUrl = path('forumify_forum_comment_edit', { id: item.id }) %}
+    <li
+        id="{{ item.id }}"
+        class="comment box{% if isAnswer %} answer{% endif %}{% if isSelected %} selected{% endif %}"
+        {{ stimulus_controller('forumify/comment-editor', { updateUrl: updateUrl }) }}
+    >
         {% block comment_list_comment_author %}
             <div class="comment-author">
                 {% include '@Forumify/components/avatar.html.twig' with { user: item.createdBy } only %}
@@ -58,6 +62,14 @@
                         {% block comment_list_comment_content_toolbar %}
                             <div class="comment-toolbar">
                                 {% block comment_list_comment_content_toolbar_buttons %}
+                                    {% set commentLink = absolute_url(path('forumify_forum_topic', { slug: topic.slug, comment: item.id })) %}
+                                    <button
+                                        class="btn-link btn-small btn-icon text-secondary"
+                                        type="button"
+                                        {{ stimulus_action('forumify/comment-editor', 'copyUrl', null, { url: commentLink }) }}
+                                    >
+                                        <i class="ph ph-link"></i>
+                                    </button>
                                     {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentEdit').value, item) %}
                                         <a
                                             class="btn-link btn-small btn-icon text-secondary"
