@@ -17,7 +17,7 @@ export class CommentEditor extends Controller {
 
       window.scrollTo({
         top: rect.top + scrollTop - 150,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   }
