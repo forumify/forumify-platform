@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Security\Voter;
 
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\ACLService;
 use Forumify\Forum\Entity\Forum;
@@ -17,8 +19,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class TopicVoter extends Voter
 {
-    public function __construct(private readonly ACLService $aclService)
-    {
+    public function __construct(
+        private readonly ACLService $aclService,
+        private readonly SettingRepository $settingRepository,
+    ) {
     }
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -38,8 +42,9 @@ class TopicVoter extends Voter
             return true;
         }
 
-        /** @var User|null $user */
         $user = $token->getUser();
+        $user = $user instanceof AuthorizableInterface ? $user->getUser() : null;
+
         return match ($attribute) {
             VoterAttribute::TopicView->value => $subject instanceof Topic && $this->voteOnView($user, $subject),
             VoterAttribute::TopicCreate->value => $subject instanceof Forum && $this->voteOnCreate($user, $subject),
@@ -72,6 +77,10 @@ class TopicVoter extends Voter
 
     private function voteOnCreate(?User $user, Forum $forum): bool
     {
+        if ($this->settingRepository->get('forumify.readonly')) {
+            return false;
+        }
+
         if ($user === null || !$user->isEmailVerified() || $user->isBanned()) {
             return false;
         }
@@ -81,6 +90,10 @@ class TopicVoter extends Voter
 
     private function voteOnEditOrDelete(?User $user, Topic $topic): bool
     {
+        if ($this->settingRepository->get('forumify.readonly')) {
+            return false;
+        }
+
         if ($user === null || $user->isBanned()) {
             return false;
         }

@@ -35,7 +35,7 @@ class PlatformInstallSubscriber extends AbstractController
 
         $request = $event->getRequest();
         $route = $request->attributes->get('_route');
-        if (str_starts_with($route, '_profiler') || str_starts_with($route, '_wdt')) {
+        if ($route === null || str_starts_with($route, '_profiler') || str_starts_with($route, '_wdt')) {
             return;
         }
 

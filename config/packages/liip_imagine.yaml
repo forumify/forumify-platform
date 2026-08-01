@@ -1,0 +1,21 @@
+liip_imagine:
+    controller:
+        redirect_response_code: 301
+    default_filter_set_settings:
+        format: webp
+    filter_sets:
+        avatar:
+            filters:
+                thumbnail: { size: [48, 48], mode: inset }
+        avatar_xs:
+            filters:
+                thumbnail: { size: [24, 24], mode: inset }
+        avatar_sm:
+            filters:
+                thumbnail: { size: [32, 32], mode: inset }
+        avatar_lg:
+            filters:
+                thumbnail: { size: [150, 150], mode: inset }
+        reaction:
+            filters:
+                thumbnail: { size: [20, 20], mode: inset }

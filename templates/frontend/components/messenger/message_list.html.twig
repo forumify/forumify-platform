@@ -1,17 +1,20 @@
 {% extends '@Forumify/components/list.html.twig' %}
 {% block container %}
     {{ parent() }}
-    <div class="box mt-4">
-        {{ form_start(this.replyForm) }}
-        {{ form_widget(this.replyForm) }}
-        <div class="flex justify-center">
-            <button type="submit" class="btn-primary">
-                <i class="ph ph-paper-plane-tilt"></i>
-                {{ 'messenger.reply'|trans }}
-            </button>
+    {% set replyForm = this.replyForm %}
+    {% if replyForm is not null %}
+        <div class="box mt-4">
+            {{ form_start(replyForm) }}
+            {{ form_widget(replyForm) }}
+            <div class="flex justify-center">
+                <button type="submit" class="btn-primary">
+                    <i class="ph ph-paper-plane-tilt"></i>
+                    {{ 'messenger.reply'|trans }}
+                </button>
+            </div>
+            {{ form_end(replyForm) }}
         </div>
-        {{ form_end(this.replyForm) }}
-    </div>
+    {% endif %}
 {% endblock %}
 {% block row %}
     <div class="message" {{ stimulus_controller('forumify/comment-editor', {

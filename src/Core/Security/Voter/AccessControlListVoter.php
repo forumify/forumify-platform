@@ -8,6 +8,7 @@ use Forumify\Core\Entity\AccessControlledEntityInterface;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ACLRepository;
 use Forumify\Core\Security\VoterAttribute;
+use Forumify\OAuth\Entity\OAuthClient;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -35,8 +36,12 @@ class AccessControlListVoter extends Voter
     {
         ['permission' => $permission, 'entity' => $entity] = $subject;
 
-        /** @var User|null $user */
+        /** @var User|OAuthClient|null $user */
         $user = $token->getUser();
+        if ($user instanceof OAuthClient) {
+            $user = $user->getUser();
+        }
+
         $userId = (string)($user?->getId() ?? 'guest');
         if (!isset($this->aclMemo[$userId])) {
             $this->aclMemo[$userId] = $this->createACLLookup($user);

@@ -1,6 +1,14 @@
 {% set avatar = (user is not null and user.avatar is not empty) ? user.avatar : setting('forumify.default_avatar') %}
+{% set imagineFilters = ['avatar', 'avatar-xs', 'avatar-sm', 'avatar-lg'] %}
+{% set resolvedClassName = className|default('') %}
+{% set activeFilter = 'avatar' %}
+{% for filter in imagineFilters %}
+    {% if filter in resolvedClassName %}
+        {% set activeFilter = filter|replace({'-': '_'}) %}
+    {% endif %}
+{% endfor %}
 {% if avatar is not empty %}
-    <img class="avatar {{ className|default('') }}" src="{{ asset(avatar, 'forumify.avatar') }}" alt="">
+    <img class="avatar {{ resolvedClassName }}" src="{{ asset(avatar, 'forumify.avatar')|imagine_filter(activeFilter) }}" alt="">
 {% else %}
     <div class="avatar">&nbsp;</div>
 {% endif %}

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Security\Voter;
 
+use Forumify\Core\Entity\AuthorizableInterface;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Repository\SettingRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\ACLService;
 use Forumify\Forum\Entity\Comment;
@@ -17,13 +19,16 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class CommentVoter extends Voter
 {
-    public function __construct(private readonly ACLService $aclService)
-    {
+    public function __construct(
+        private readonly ACLService $aclService,
+        private readonly SettingRepository $settingRepository,
+    ) {
     }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
         return in_array($attribute, [
+            VoterAttribute::CommentView->value,
             VoterAttribute::CommentCreate->value,
             VoterAttribute::CommentEdit->value,
             VoterAttribute::CommentDelete->value,
@@ -33,9 +38,7 @@ class CommentVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (!$user instanceof User) {
-            return false;
-        }
+        $user = $user instanceof AuthorizableInterface ? $user->getUser() : null;
 
         $forum = ($subject instanceof Comment ? $subject->getTopic() : $subject)->getForum();
         if ($this->aclService->can('moderate', $forum)) {
@@ -43,6 +46,7 @@ class CommentVoter extends Voter
         }
 
         return match ($attribute) {
+            VoterAttribute::CommentView->value => $this->aclService->can('view', $forum),
             VoterAttribute::CommentCreate->value => $subject instanceof Topic && $this->voteOnCreate($user, $subject),
             VoterAttribute::CommentEdit->value,
             VoterAttribute::CommentDelete->value => $subject instanceof Comment && $this->voteOnEditOrDelete($user, $subject),
@@ -50,25 +54,29 @@ class CommentVoter extends Voter
         };
     }
 
-    private function voteOnCreate(User $user, Topic $topic): bool
+    private function voteOnCreate(?User $user, Topic $topic): bool
     {
-        if (!$user->isEmailVerified() || $user->isBanned()) {
+        if ($user === null || !$user->isEmailVerified() || $user->isBanned() || $topic->isLocked()) {
             return false;
         }
 
-        if ($topic->isLocked()) {
+        if ($this->settingRepository->get('forumify.readonly')) {
             return false;
         }
 
         return $this->aclService->can('create_comment', $topic->getForum());
     }
 
-    private function voteOnEditOrDelete(User $user, Comment $comment): bool
+    private function voteOnEditOrDelete(?User $user, Comment $comment): bool
     {
-        if ($comment->getCreatedBy()?->getId() === $user->getId()) {
-            return true;
+        if ($user === null) {
+            return false;
         }
 
-        return false;
+        if ($this->settingRepository->get('forumify.readonly')) {
+            return false;
+        }
+
+        return $comment->getCreatedBy()?->getId() === $user->getId();
     }
 }

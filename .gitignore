@@ -12,3 +12,4 @@ coverage/
 .phpcs-cache
 var
 tests/config/reference.php
+tests/public/storage

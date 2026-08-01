@@ -24,7 +24,7 @@ class RemoveSeenNotificationsTaskTest extends KernelTestCase
         $user = $createUser();
         (self::getContainer()->get(RemoveSeenNotificationsTask::class))();
 
-        $count = self::getContainer()->get(NotificationRepository::class)->count(['recipient' => $user->_real()]);
+        $count = self::getContainer()->get(NotificationRepository::class)->count(['recipient' => $user]);
         self::assertEquals($expectedCount, $count);
     }
 

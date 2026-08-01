@@ -46,7 +46,7 @@
                                 user: lastComment.createdBy
                             } only %}
                             <div class="flex flex-col">
-                                <a href="{{ path('forumify_forum_topic', { slug: topic.slug }) }}">
+                                <a href="{{ path('forumify_forum_topic', { slug: topic.slug, comment: lastComment.id }) }}">
                                     {{ topic.title }}
                                 </a>
                                 <span>

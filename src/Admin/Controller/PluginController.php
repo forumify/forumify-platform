@@ -29,9 +29,7 @@ class PluginController extends AbstractController
     #[Route('', 'list')]
     public function list(MarketplaceService $marketplaceService): Response
     {
-        $activePlugins = $this->pluginRepository->findBy(['active' => true, 'type' => Plugin::TYPE_PLUGIN], ['package' => 'ASC']);
-        $inactivePlugins = $this->pluginRepository->findBy(['active' => false, 'type' => Plugin::TYPE_PLUGIN], ['package' => 'ASC']);
-        $themes = $this->pluginRepository->findBy(['type' => Plugin::TYPE_THEME], ['package' => 'ASC']);
+        [$activePlugins, $inactivePlugins, $themes] = $this->getPlugins();
 
         $latestVersions = $this->pluginService->getLatestVersions();
         $platformVersions = $latestVersions['forumify/forumify-platform'] ?? null;
@@ -70,6 +68,35 @@ class PluginController extends AbstractController
             'marketplaceCustomer' => $marketplaceCustomer,
             'marketplacePlugins' => $marketplacePlugins,
         ]);
+    }
+
+    /**
+     * @return array{array<Plugin>, array<Plugin>, array<Plugin>}
+     */
+    private function getPlugins(): array
+    {
+        $activePlugins = [];
+        $inactivePlugins = [];
+        $themes = [];
+        foreach ($this->pluginRepository->findBy([], ['package' => 'ASC']) as $plugin) {
+            if (!class_exists($plugin->getPluginClass())) {
+                continue;
+            }
+
+            if ($plugin->getType() === Plugin::TYPE_THEME) {
+                $themes[] = $plugin;
+                continue;
+            }
+
+            if ($plugin->isActive()) {
+                $activePlugins[] = $plugin;
+                continue;
+            }
+
+            $inactivePlugins[] = $plugin;
+        }
+
+        return [$activePlugins, $inactivePlugins, $themes];
     }
 
     #[Route('/refresh', 'refresh')]

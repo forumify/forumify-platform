@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Repository\RoleRepository;
@@ -45,6 +46,11 @@ class Role implements SortableEntityInterface, AuditableEntityInterface
     /** @var Collection<int, User> */
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'roles', fetch: 'EXTRA_LAZY')]
     private Collection $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
     public function getTitle(): string
     {

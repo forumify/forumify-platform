@@ -114,7 +114,7 @@ abstract class AbstractTable
                 $this->search[$name] = $this->search[$name] ?? '';
             }
         }
-        array_filter($this->search);
+        $this->search = array_filter($this->search);
     }
 
     /**

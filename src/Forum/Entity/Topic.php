@@ -27,13 +27,46 @@ use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: TopicRepository::class)]
 #[ApiResource(
-    uriTemplate: '/forums/{forumId}/topics',
-    uriVariables: [
-        'forumId' => new Link(fromClass: Forum::class, toProperty: 'forum'),
+    routePrefix: '/forums',
+    operations: [
+        new Get(
+            security: 'is_granted("TOPIC_VIEW", object)',
+        ),
+        new GetCollection(
+            extraProperties: ['acl' => [
+                'permission' => 'view',
+                'entity' => 'forum',
+            ]],
+        ),
+        new Post(
+            uriTemplate: '/{forumId}/topics',
+            uriVariables: [
+                'forumId' => new Link(
+                    fromClass: Forum::class,
+                    toProperty: 'forum',
+                    security: 'is_granted("TOPIC_CREATE", forum)',
+                ),
+            ],
+            provider: CreateProvider::class,
+        ),
+        new Patch(
+            security: 'is_granted("TOPIC_EDIT", object)',
+        ),
+        new Delete(
+            security: 'is_granted("TOPIC_DELETE", object)',
+        ),
+        new GetCollection(
+            uriTemplate: '/{forumId}/topics',
+            uriVariables: [
+                'forumId' => new Link(fromClass: Forum::class, toProperty: 'forum'),
+            ],
+            extraProperties: ['acl' => [
+                'permission' => 'view',
+                'entity' => 'forum',
+            ]],
+        ),
     ],
-    operations: [new GetCollection(), new Post(provider: CreateProvider::class)]
 )]
-#[ApiResource(operations: [new Get(), new GetCollection(), new Patch(), new Delete()])]
 class Topic implements SubscribableInterface, AuditableEntityInterface
 {
     use IdentifiableEntityTrait;
@@ -55,7 +88,6 @@ class Topic implements SubscribableInterface, AuditableEntityInterface
      */
     #[ORM\OneToMany(mappedBy: 'topic', targetEntity: TopicImage::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdAt' => 'ASC'])]
-    #[Groups('Topic')]
     private Collection $images;
 
     /**
@@ -86,7 +118,7 @@ class Topic implements SubscribableInterface, AuditableEntityInterface
     private bool $hidden = false;
 
     #[ORM\Column(type: 'integer', options: ['unsigned' => true, 'default' => 0])]
-    #[Groups('Topic')]
+    #[Groups('Topic::read')]
     #[AuditExcludedField]
     private int $views = 0;
 
@@ -99,6 +131,7 @@ class Topic implements SubscribableInterface, AuditableEntityInterface
         joinColumns: new JoinColumn(onDelete: 'CASCADE'),
         inverseJoinColumns: new JoinColumn(onDelete: 'CASCADE'),
     )]
+    #[Groups('Topic')]
     public Collection $tags;
 
     public function __construct()
@@ -264,5 +297,23 @@ class Topic implements SubscribableInterface, AuditableEntityInterface
     public function getNameForAudit(): string
     {
         return $this->getTitle();
+    }
+
+    /**
+     * @param array<ForumTag>|Collection<int, ForumTag> $tags
+     */
+    public function setTags(Collection|array $tags): void
+    {
+        $this->tags = $tags instanceof Collection ? $tags : new ArrayCollection($tags);
+    }
+
+    public function addTag(ForumTag $tag): void
+    {
+        $this->tags->add($tag);
+    }
+
+    public function removeTag(ForumTag $tag): void
+    {
+        $this->tags->removeElement($tag);
     }
 }

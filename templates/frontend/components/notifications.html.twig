@@ -22,7 +22,7 @@
                     <li class="p-3 flex gap-2 notification">
                         {% set image = notificationType.image(notification) %}
                         {% if image is not empty %}
-                            <img width="48px" height="48px" style="object-fit: contain" src="{{ notificationType.image(notification) }}" alt="">
+                            <img class="avatar" src="{{ notificationType.image(notification)|imagine_filter('avatar') }}" alt="">
                         {% endif %}
                         <div>
                             {% set notificationTitle %}

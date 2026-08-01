@@ -15,10 +15,6 @@ use Twig\TwigTest;
  */
 class CoreExtension extends AbstractExtension
 {
-    public function __construct()
-    {
-    }
-
     public function getFilters(): array
     {
         return [

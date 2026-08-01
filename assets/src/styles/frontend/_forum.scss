@@ -166,6 +166,10 @@
     &.answer {
         background-color: rgba(0, 255, 0, 0.07);
     }
+
+    &.selected {
+        border: 1px solid var(--c-primary);
+    }
 }
 
 .messenger {

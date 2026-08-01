@@ -1,4 +1,4 @@
-<div class="flex gap-1 justify-end" {{ attributes }} data-poll="delay(30000)|$render">
+<div id="{{ comment.id }}" class="flex gap-1 justify-end" {{ attributes }} data-poll="delay(30000)|$render">
     {% for reaction in this.groupedReactions %}
         <a
             class="btn-small {{ this.userReacted(reaction.id) ? 'btn-outlined-highlighted' : 'btn-outlined' }}"
@@ -6,7 +6,7 @@
             data-live-action-param="toggleReaction"
             data-live-reaction-id-param="{{ reaction.id }}"
         >
-            <img class="reaction mr-1" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="">
+            <img class="reaction mr-1" src="{{ asset(reaction.image, 'forumify.asset')|imagine_filter('reaction') }}" alt="">
             {{ reaction.count }}
         </a>
     {% endfor %}
@@ -30,7 +30,7 @@
                         data-live-allow-remove="0"
                         aria-label="{{ reaction.name }}"
                     >
-                        <img class="reaction" src="{{ asset(reaction.image, 'forumify.asset') }}" alt="{{ reaction.name }}">
+                        <img class="reaction" src="{{ asset(reaction.image, 'forumify.asset')|imagine_filter('reaction') }}" alt="{{ reaction.name }}">
                     </button>
                 {% endfor %}
             </div>

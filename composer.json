@@ -7,6 +7,7 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-dom": "*",
+        "ext-gd": "*",
         "ext-iconv": "*",
         "api-platform/doctrine-orm": "^4.1",
         "api-platform/symfony": "^4.1",
@@ -61,7 +62,8 @@
         "twig/extra-bundle": "^3.7",
         "twig/markdown-extra": "^3.18",
         "twig/string-extra": "^3.7",
-        "twig/twig": "^3.11.2"
+        "twig/twig": "^3.11.2",
+        "liip/imagine-bundle": "^2.17"
     },
     "require-dev": {
         "phpunit/phpunit": "^11.5",
@@ -101,7 +103,7 @@
             "require": "7.4.*"
         },
         "branch-alias": {
-            "dev-master": "1.0.x-dev"
+            "dev-master": "1.2.x-dev"
         }
     }
 }

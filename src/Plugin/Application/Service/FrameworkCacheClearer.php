@@ -35,7 +35,7 @@ class FrameworkCacheClearer
             sleep($attempts);
         }
 
-        if (!$success && $lastException !== null) {
+        if (!$success) {
             throw $lastException;
         }
     }
