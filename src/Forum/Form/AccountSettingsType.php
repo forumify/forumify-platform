@@ -60,7 +60,11 @@ class AccountSettingsType extends AbstractType
             ->add('signature', RichTextEditorType::class, [
                 'required' => false,
             ])
-            ->add('timezone', TimezoneType::class, ['autocomplete' => true])
+            ->add('timezone', TimezoneType::class, [
+                'required' => false,
+                'autocomplete' => true,
+                'placeholder' => 'account_settings.timezone_placeholder',
+            ])
             ->add('newPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,

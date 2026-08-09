@@ -6,9 +6,7 @@ namespace Forumify\Core\Twig\Extension;
 
 use DateTime;
 use DateTimeImmutable;
-use DateTimeZone;
-use Forumify\Core\Entity\User;
-use Symfony\Bundle\SecurityBundle\Security;
+use Forumify\Core\Service\TimezoneResolver;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -16,7 +14,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 class CoreRuntime implements RuntimeExtensionInterface
 {
     public function __construct(
-        private readonly Security $security,
+        private readonly TimezoneResolver $timezoneResolver,
         private readonly TranslatorInterface $translator,
         #[Autowire(env: 'bool:FORUMIFY_DEMO')]
         private readonly bool $isDemo,
@@ -69,10 +67,8 @@ class CoreRuntime implements RuntimeExtensionInterface
 
     private function getAbsolute(DateTime $date): string
     {
-        $user = $this->security->getUser();
-        $timezone = $user instanceof User ? $user->getTimezone() : 'UTC';
-        $date->setTimezone(new DateTimeZone($timezone));
+        $date->setTimezone($this->timezoneResolver->getTimezone());
 
-        return $date->format('j M Y \a\t g:i A');
+        return $date->format('j M Y \a\t g:i A T');
     }
 }

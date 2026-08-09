@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -89,6 +90,13 @@ class ConfigurationType extends AbstractType
                 'help' => 'admin.configuration.index_help',
                 'required' => false,
                 'empty_data' => '',
+            ])
+            ->add('forumify__default_timezone', TimezoneType::class, [
+                'label' => 'admin.configuration.default_timezone',
+                'help' => 'admin.configuration.default_timezone_help',
+                'required' => false,
+                'autocomplete' => true,
+                'placeholder' => 'UTC',
             ])
             ->add('forumify__enable_auto_updates', CheckboxType::class, [
                 'label' => 'admin.configuration.enable_auto_updates',

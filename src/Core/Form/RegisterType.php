@@ -42,8 +42,9 @@ class RegisterType extends AbstractType
                 'second_options' => ['label' => 'Repeat password', 'attr' => ['autocomplete' => 'new-password']],
             ])
             ->add('timezone', ChoiceType::class, [
+                'required' => false,
                 'autocomplete' => true,
-                'placeholder' => 'Select a timezone',
+                'placeholder' => 'registration.timezone_placeholder',
                 'choices' => $this->getTimezones(),
                 'attr' => [
                     'data-controller' => 'forumify--timezone-input',

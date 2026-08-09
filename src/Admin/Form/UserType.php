@@ -42,7 +42,11 @@ class UserType extends AbstractType
             ->add('username', TextType::class)
             ->add('displayName', TextType::class)
             ->add('email', TextType::class)
-            ->add('timezone', TimezoneType::class, ['autocomplete' => true])
+            ->add('timezone', TimezoneType::class, [
+                'required' => false,
+                'autocomplete' => true,
+                'placeholder' => 'account_settings.timezone_placeholder',
+            ])
             ->add('newAvatar', FileType::class, [
                 'mapped' => false,
                 'label' => 'Avatar',
