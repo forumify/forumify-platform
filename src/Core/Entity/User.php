@@ -206,9 +206,9 @@ class User implements AuthorizableInterface, PasswordAuthenticatedUserInterface,
         $this->language = $language;
     }
 
-    public function getTimezone(): string
+    public function getTimezone(): ?string
     {
-        return $this->timezone ?? 'UTC';
+        return $this->timezone;
     }
 
     public function setTimezone(?string $timezone): void

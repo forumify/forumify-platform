@@ -106,6 +106,7 @@ account_settings:
     linked_accounts: 'Linked Accounts'
     unlink_warning: 'You are about to unlink {user} from your account. You will no longer be able to log in with {provider}.'
     account_unlinked: 'External account removed.'
+    timezone_placeholder: 'Use the website default'
 user_notification_settings_type:
     label: 'Notification settings'
     auto_subscribe: 'Automatically subscribe to notifications for:'
@@ -141,6 +142,7 @@ login:
         discord: 'Sign in with Discord'
 registration:
     register: 'Register'
+    timezone_placeholder: 'Use the website default'
     validation_error:
         username_alphanumeric: 'Username can only contain letters, numbers, underscores and hyphens.'
         username_one_letter: 'Username must contain at least one letter.'
@@ -298,10 +300,6 @@ admin:
         crud:
             single: 'badge'
             plural: 'badges'
-    calendar:
-        crud:
-            single: 'calendar'
-            plural: 'calendars'
     o_auth_client:
         crud:
             single: 'api client'
@@ -393,6 +391,8 @@ admin:
         logo: 'Logo'
         default_avatar: 'Default avatar'
         default_avatar_help: 'Avatar to use for users that have no custom avatar.'
+        default_timezone: 'Default timezone'
+        default_timezone_help: 'Timezone used to display dates and times to guests, and to users who did not pick one themselves. Defaults to UTC.'
         enable_registrations: 'Enable registrations'
         hide_usernames: 'Hide usernames'
         login_method: 'Login method'
@@ -687,14 +687,3 @@ admin:
                 recipient_help: 'A single user created using <a href="https://symfony.com/doc/current/reference/formats/expression_language.html" target="_blank">Symfony''s Expression Language</a>. Supports user objects from payloads, user IDs and usernames. For example, one of: <code>"admin", entity.getCreatedBy(), 5, "8"</code>'
             role:
                 recipient_help: 'A single user created using <a href="https://symfony.com/doc/current/reference/formats/expression_language.html" target="_blank">Symfony''s Expression Language</a>. Supports user objects from payloads, user IDs and usernames. For example, one of: <code>"admin", entity.getCreatedBy(), 5, "8"</code>'
-calendar:
-    title: 'Calendar'
-    all_calendars: 'All Calendars'
-    event:
-        edit: 'Edit Event'
-        until: 'until'
-        create: 'Create Event'
-        created: 'Event created.'
-        created_by: 'Event by'
-        delete: 'You are about to delete event "{event}".'
-        deleted: 'Event deleted.'
