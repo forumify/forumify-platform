@@ -27,7 +27,7 @@
                 {% if can('view', group) %}
                     {% include '@Forumify/frontend/forum/forum_group.html.twig' with {
                         title: group.title,
-                        forums: group.forums.toArray
+                        forums: groupedForums[group.id]|default([])
                     } %}
                 {% endif %}
             {% endfor %}
