@@ -13,11 +13,9 @@ use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Repository\CommentRepository;
-use Psr\Cache\InvalidArgumentException;
+use Forumify\Forum\Repository\TopicVisibility;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Contracts\Cache\CacheInterface;
-use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\Contracts\Cache\TagAwareCacheInterface;
+use Symfony\Component\Cache\Adapter\TagAwareAdapterInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
 class LastCommentService implements ResetInterface
@@ -27,14 +25,14 @@ class LastCommentService implements ResetInterface
     /** @var array<int, array{id: int, createdAt: DateTime}>|null */
     private ?array $lastCommentPerForum = null;
 
+    /** @var array<int, array{id: int, createdAt: DateTime}|null> */
+    private array $lastCommentPerForumTree = [];
+
     /** @var array<int, Comment|null> */
     private array $lastCommentPerTopic = [];
 
-    /**
-     * @param TagAwareCacheInterface $cache
-     */
     public function __construct(
-        private readonly CacheInterface $cache,
+        private readonly TagAwareAdapterInterface $cache,
         private readonly Security $security,
         private readonly CommentRepository $commentRepository,
         private readonly UserRepository $userRepository,
@@ -43,55 +41,43 @@ class LastCommentService implements ResetInterface
     ) {
     }
 
+    public static function getForumCacheTag(int $forumId): string
+    {
+        return self::LAST_COMMENT_CACHE_TAG . '.' . $forumId;
+    }
+
     public function clearCache(): void
     {
         $this->cache->invalidateTags([self::LAST_COMMENT_CACHE_TAG]);
+        $this->reset();
+    }
+
+    public function clearCacheForForum(int $forumId): void
+    {
+        $this->cache->invalidateTags([self::getForumCacheTag($forumId)]);
+        $this->reset();
     }
 
     /**
-     * Loads the last comment of several forums, with their topic and author, up front so the
-     * getLastComment() calls that follow are served from the identity map.
-     *
      * @param iterable<Forum> $forums
      */
     public function preload(iterable $forums): void
     {
-        /** @var User|null $user */
-        $user = $this->security->getUser();
-        $userId = (string)($user?->getId() ?? 'guest');
-
         $ids = [];
         foreach ($forums as $forum) {
             if (!$forum->getDisplaySettings()->isShowLastCommentBy()) {
                 continue;
             }
 
-            $lastComment = $this->getLastCommentForForumTree($forum, $userId);
+            $lastComment = $this->getLastCommentForForumTree($forum);
             if ($lastComment !== null) {
                 $ids[] = $lastComment['id'];
             }
         }
 
         $comments = $this->commentRepository->findWithTopicAndAuthor($ids);
-
-        // fetch joining the roles above would repeat every comment body per role
         $authors = array_filter(array_map(static fn (Comment $comment) => $comment->getCreatedBy(), $comments));
         $this->userRepository->preloadRoles($authors);
-    }
-
-    public function getLastComment(Forum|Topic $subject): ?Comment
-    {
-        if ($subject instanceof Topic) {
-            return $this->getLastCommentForTopic($subject);
-        }
-
-        /** @var User|null $user */
-        $user = $this->security->getUser();
-        $userId = (string)($user?->getId() ?? 'guest');
-        $comment = $this->getLastCommentForForumTree($subject, $userId);
-        return $comment !== null
-            ? $this->commentRepository->find($comment['id'])
-            : null;
     }
 
     /**
@@ -103,6 +89,26 @@ class LastCommentService implements ResetInterface
         foreach ($topics as $topic) {
             $this->lastCommentPerTopic[$topic->getId()] = $lastComments[$topic->getId()] ?? null;
         }
+    }
+
+    public function getLastComment(Forum|Topic $subject): ?Comment
+    {
+        if ($subject instanceof Topic) {
+            return $this->getLastCommentForTopic($subject);
+        }
+
+        $lastComment = $this->getLastCommentForForumTree($subject);
+
+        return $lastComment !== null
+            ? $this->commentRepository->find($lastComment['id'])
+            : null;
+    }
+
+    public function reset(): void
+    {
+        $this->lastCommentPerForum = null;
+        $this->lastCommentPerForumTree = [];
+        $this->lastCommentPerTopic = [];
     }
 
     private function getLastCommentForTopic(Topic $topic): ?Comment
@@ -128,44 +134,31 @@ class LastCommentService implements ResetInterface
 
     /**
      * @return array{id: int, createdAt: DateTime}|null
-     * @throws InvalidArgumentException
      */
-    private function getLastCommentForForumTree(Forum $forum, string $userId): ?array
+    private function getLastCommentForForumTree(Forum $forum): ?array
     {
-        return $this->cache->get("forumify.forum.{$forum->getId()}.last_comment.$userId", function (ItemInterface $item) use ($forum, $userId) {
-            $item->tag([self::LAST_COMMENT_CACHE_TAG]);
+        $forumId = $forum->getId();
+        if (array_key_exists($forumId, $this->lastCommentPerForumTree)) {
+            return $this->lastCommentPerForumTree[$forumId];
+        }
 
-            return $this->refreshLastCommentCache($forum, $userId);
-        });
-    }
-
-    /**
-     * @return array{id: int, createdAt: DateTime}|null
-     */
-    private function refreshLastCommentCache(Forum $forum, string $userId): ?array
-    {
-        $lastComments = $forum->getChildren()
-            ->filter(fn (Forum $child) => $this->aclService->can('view', $child))
-            ->map(fn (Forum $child) => $this->getLastCommentForForumTree($child, $userId));
-
-        $lastComment = $this->getLastCommentPerForum()[$forum->getId()] ?? null;
-
-        foreach ($lastComments as $maybeLast) {
-            if ($maybeLast === null) {
+        $lastComment = $this->getLastCommentPerForum()[$forumId] ?? null;
+        foreach ($forum->getChildren() as $child) {
+            if (!$this->aclService->can('view', $child)) {
                 continue;
             }
 
-            if ($lastComment === null) {
-                $lastComment = $maybeLast;
+            $childLastComment = $this->getLastCommentForForumTree($child);
+            if ($childLastComment === null) {
                 continue;
             }
 
-            if ($maybeLast['createdAt'] > $lastComment['createdAt']) {
-                $lastComment = $maybeLast;
+            if ($lastComment === null || $childLastComment['createdAt'] > $lastComment['createdAt']) {
+                $lastComment = $childLastComment;
             }
         }
 
-        return $lastComment;
+        return $this->lastCommentPerForumTree[$forumId] = $lastComment;
     }
 
     /**
@@ -173,18 +166,75 @@ class LastCommentService implements ResetInterface
      */
     private function getLastCommentPerForum(): array
     {
-        /** @var User|null $user */
-        $user = $this->security->getUser();
+        if ($this->lastCommentPerForum !== null) {
+            return $this->lastCommentPerForum;
+        }
 
-        return $this->lastCommentPerForum ??= $this->commentRepository->findLastCommentPerForum(
-            $user,
-            $this->forumVisibility->getTopicVisibilityPerForum(),
-        );
+        $visibility = $this->forumVisibility->getTopicVisibilityPerForum();
+        $sharedVisibility = array_filter($visibility, static fn (TopicVisibility $v) => $v->includesOthers());
+        $ownTopicsVisibility = array_diff_key($visibility, $sharedVisibility);
+
+        $user = $this->security->getUser();
+        $lastComments = $this->getSharedLastComments($sharedVisibility);
+        if (!empty($ownTopicsVisibility) && $user instanceof User) {
+            $lastComments += $this->commentRepository->findLastCommentPerForum($user, $ownTopicsVisibility);
+        }
+
+        return $this->lastCommentPerForum = $lastComments;
     }
 
-    public function reset(): void
+    /**
+     * @param array<int, TopicVisibility> $visibility
+     * @return array<int, array{id: int, createdAt: DateTime}>
+     */
+    private function getSharedLastComments(array $visibility): array
     {
-        $this->lastCommentPerForum = null;
-        $this->lastCommentPerTopic = [];
+        $forumIdPerKey = [];
+        foreach ($visibility as $forumId => $forumVisibility) {
+            $forumIdPerKey[self::getCacheKey($forumId, $forumVisibility)] = $forumId;
+        }
+
+        $lastComments = [];
+        $missing = [];
+        foreach ($this->cache->getItems(array_keys($forumIdPerKey)) as $key => $item) {
+            $forumId = $forumIdPerKey[$key];
+            if (!$item->isHit()) {
+                $missing[$forumId] = $item;
+                continue;
+            }
+
+            $lastComment = $item->get();
+            if ($lastComment !== null) {
+                $lastComments[$forumId] = $lastComment;
+            }
+        }
+
+        if (empty($missing)) {
+            return $lastComments;
+        }
+
+        $resolved = $this->commentRepository->findLastCommentPerForum(null, array_intersect_key($visibility, $missing));
+        foreach ($missing as $forumId => $item) {
+            $lastComment = $resolved[$forumId] ?? null;
+            $item->set($lastComment);
+            $item->tag([self::LAST_COMMENT_CACHE_TAG, self::getForumCacheTag($forumId)]);
+            $this->cache->saveDeferred($item);
+
+            if ($lastComment !== null) {
+                $lastComments[$forumId] = $lastComment;
+            }
+        }
+        $this->cache->commit();
+
+        return $lastComments;
+    }
+
+    private static function getCacheKey(int $forumId, TopicVisibility $visibility): string
+    {
+        return sprintf(
+            'forumify.forum.%d.last_comment.%s',
+            $forumId,
+            $visibility->includesHidden() ? 'all' : 'visible',
+        );
     }
 }

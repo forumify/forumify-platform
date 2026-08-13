@@ -18,4 +18,6 @@ services:
         class: Symfony\Component\Cache\Adapter\FilesystemTagAwareAdapter
         parent: cache.adapter.filesystem
 
+    Symfony\Component\Cache\Adapter\TagAwareAdapterInterface: '@cache.app'
+
     Twig\Extension\StringLoaderExtension: ~
