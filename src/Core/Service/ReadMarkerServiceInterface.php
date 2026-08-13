@@ -14,6 +14,11 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 interface ReadMarkerServiceInterface
 {
     /**
+     * Identifies the subject in read marker requests. Must be unique across read marker services.
+     */
+    public static function getType(): string;
+
+    /**
      * @return class-string<TSubject>
      */
     public static function getEntityClass(): string;

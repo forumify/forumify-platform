@@ -18,6 +18,11 @@ class TopicReadMarkerService implements ReadMarkerServiceInterface
     {
     }
 
+    public static function getType(): string
+    {
+        return 'topic';
+    }
+
     public static function getEntityClass(): string
     {
         return Topic::class;

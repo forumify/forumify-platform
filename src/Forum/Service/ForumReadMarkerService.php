@@ -28,6 +28,11 @@ class ForumReadMarkerService implements ReadMarkerServiceInterface, ResetInterfa
     ) {
     }
 
+    public static function getType(): string
+    {
+        return 'forum';
+    }
+
     public static function getEntityClass(): string
     {
         return Forum::class;

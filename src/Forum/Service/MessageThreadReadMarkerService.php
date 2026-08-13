@@ -18,6 +18,11 @@ class MessageThreadReadMarkerService implements ReadMarkerServiceInterface
     {
     }
 
+    public static function getType(): string
+    {
+        return 'message_thread';
+    }
+
     public static function getEntityClass(): string
     {
         return MessageThread::class;
