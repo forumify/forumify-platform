@@ -8,7 +8,7 @@ use Forumify\OAuth\Entity\OAuthClient;
 use Forumify\OAuth\Repository\OAuthClientRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class AuthorizeControllerTest extends WebTestCase
 {

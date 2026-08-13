@@ -1,0 +1,17 @@
+forumify:
+    resource: '@ForumifyBundle/config/routes.yaml'
+
+_security_logout:
+    resource: security.route_loader.logout
+    type: service
+
+ux_autocomplete:
+    resource: '@AutocompleteBundle/config/routes.php'
+    prefix: '/autocomplete'
+
+live_component:
+    resource: '@LiveComponentBundle/config/routes.php'
+    prefix: '/_components'
+
+_liip_imagine:
+    resource: '@LiipImagineBundle/Resources/config/routing.yaml'

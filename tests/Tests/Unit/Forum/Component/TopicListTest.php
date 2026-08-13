@@ -9,8 +9,8 @@ use Forumify\Forum\Component\TopicList;
 use Forumify\Forum\Entity\Forum;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
-use Tests\Tests\Traits\ForumTrait;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\ForumTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class TopicListTest extends KernelTestCase
 {

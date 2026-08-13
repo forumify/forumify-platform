@@ -1,8 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+use Forumify\Testing\ForumifyTestKernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Tests\ForumifyTestKernel;
 
 require_once dirname(__DIR__) . '/../vendor/autoload_runtime.php';
 
