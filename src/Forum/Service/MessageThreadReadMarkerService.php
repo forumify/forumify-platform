@@ -35,5 +35,6 @@ class MessageThreadReadMarkerService implements ReadMarkerServiceInterface
 
     public function markAsRead(User $user, mixed $subject): void
     {
+        $this->readMarkerRepository->read($user, MessageThread::class, $subject->getId());
     }
 }

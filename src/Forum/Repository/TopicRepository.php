@@ -25,13 +25,54 @@ class TopicRepository extends AbstractRepository
     public function incrementViews(Topic $topic): void
     {
         $topic->setViews($topic->getViews() + 1);
+        // incremented in the database so concurrent views don't overwrite each other
         $this->createQueryBuilder('t')
             ->update(Topic::class, 't')
-            ->set('t.views', $topic->getViews())
+            ->set('t.views', 't.views + 1')
             ->where('t.id = :topicId')
             ->setParameter('topicId', $topic->getId())
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * @param array<Topic> $topics
+     */
+    public function preloadTags(array $topics): void
+    {
+        if (empty($topics)) {
+            return;
+        }
+
+        $this->createQueryBuilder('t')
+            ->addSelect('tags')
+            ->leftJoin('t.tags', 'tags')
+            ->where('t IN (:topics)')
+            ->setParameter('topics', $topics)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param array<Topic> $topics
+     * @return array<int, int> comment counts keyed by topic id
+     */
+    public function countCommentsPerTopic(array $topics): array
+    {
+        if (empty($topics)) {
+            return [];
+        }
+
+        $rows = $this->createQueryBuilder('t')
+            ->select('t.id AS topicId', 'COUNT(c.id) AS commentCount')
+            ->leftJoin('t.comments', 'c')
+            ->where('t IN (:topics)')
+            ->setParameter('topics', $topics)
+            ->groupBy('t.id')
+            ->getQuery()
+            ->getScalarResult();
+
+        return array_column($rows, 'commentCount', 'topicId');
     }
 
     public function getVisibleTopicsQuery(): QueryBuilder

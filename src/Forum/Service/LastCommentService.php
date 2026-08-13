@@ -27,6 +27,9 @@ class LastCommentService implements ResetInterface
     /** @var array<int, array{id: int, createdAt: DateTime}>|null */
     private ?array $lastCommentPerForum = null;
 
+    /** @var array<int, Comment|null> */
+    private array $lastCommentPerTopic = [];
+
     /**
      * @param TagAwareCacheInterface $cache
      */
@@ -91,8 +94,23 @@ class LastCommentService implements ResetInterface
             : null;
     }
 
+    /**
+     * @param array<Topic> $topics
+     */
+    public function preloadTopics(array $topics): void
+    {
+        $lastComments = $this->commentRepository->findLastCommentPerTopic($topics);
+        foreach ($topics as $topic) {
+            $this->lastCommentPerTopic[$topic->getId()] = $lastComments[$topic->getId()] ?? null;
+        }
+    }
+
     private function getLastCommentForTopic(Topic $topic): ?Comment
     {
+        if (array_key_exists($topic->getId(), $this->lastCommentPerTopic)) {
+            return $this->lastCommentPerTopic[$topic->getId()];
+        }
+
         $qb = $this->commentRepository->createQueryBuilder('c');
         try {
             return $qb
@@ -167,5 +185,6 @@ class LastCommentService implements ResetInterface
     public function reset(): void
     {
         $this->lastCommentPerForum = null;
+        $this->lastCommentPerTopic = [];
     }
 }

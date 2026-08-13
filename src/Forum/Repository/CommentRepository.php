@@ -10,6 +10,7 @@ use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\Topic;
 
 /**
  * @extends AbstractRepository<Comment>
@@ -77,6 +78,37 @@ class CommentRepository extends AbstractRepository
             ->setParameter('ids', $ids)
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * @param array<Topic> $topics
+     * @return array<int, Comment> keyed by topic id
+     */
+    public function findLastCommentPerTopic(array $topics): array
+    {
+        if (empty($topics)) {
+            return [];
+        }
+
+        $rows = $this->createQueryBuilder('c')
+            ->select('IDENTITY(c.topic) AS topicId', 'MAX(c.id) AS lastCommentId')
+            ->where('c.topic IN (:topics)')
+            ->setParameter('topics', $topics)
+            ->groupBy('c.topic')
+            ->getQuery()
+            ->getScalarResult();
+
+        $topicIdPerComment = [];
+        foreach ($rows as $row) {
+            $topicIdPerComment[(int)$row['lastCommentId']] = (int)$row['topicId'];
+        }
+
+        $lastComments = [];
+        foreach ($this->findWithTopicAndAuthor(array_keys($topicIdPerComment)) as $comment) {
+            $lastComments[$topicIdPerComment[$comment->getId()]] = $comment;
+        }
+
+        return $lastComments;
     }
 
     /**

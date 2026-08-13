@@ -6,7 +6,6 @@ namespace Forumify\Forum\Component;
 
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
-use Forumify\Core\Entity\ReadMarker;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
@@ -49,11 +48,7 @@ class MessageThreadList extends AbstractDoctrineList
             return;
         }
 
-        $user = $this->getUser();
-        if (!$this->readMarkerRepository->isRead($user, MessageThread::class, $threadId)) {
-            $this->readMarkerRepository->save(new ReadMarker($user, MessageThread::class, $threadId));
-        }
-
+        $this->readMarkerRepository->read($this->getUser(), MessageThread::class, $threadId);
         $this->selectedThreadId = $threadId;
     }
 
