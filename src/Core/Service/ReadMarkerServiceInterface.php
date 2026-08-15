@@ -24,6 +24,13 @@ interface ReadMarkerServiceInterface
     public static function getEntityClass(): string;
 
     /**
+     * Resolves the read state of several subjects at once, so read() does not query per subject.
+     *
+     * @param array<TSubject> $subjects
+     */
+    public function preload(User $user, array $subjects): void;
+
+    /**
      * @param TSubject $subject
      */
     public function read(User $user, mixed $subject): bool;

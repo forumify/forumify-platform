@@ -45,11 +45,11 @@ class TopicReadMarkerService implements ReadMarkerServiceInterface, ResetInterfa
     }
 
     /**
-     * @param array<Topic> $topics
+     * @param array<Topic> $subjects
      */
-    public function preload(User $user, array $topics): void
+    public function preload(User $user, array $subjects): void
     {
-        $topicIds = array_map(static fn (Topic $topic) => $topic->getId(), $topics);
+        $topicIds = array_map(static fn (Topic $topic) => $topic->getId(), $subjects);
         $read = array_flip($this->readMarkerRepository->findReadSubjectIds($user, Topic::class, $topicIds));
 
         foreach ($topicIds as $topicId) {

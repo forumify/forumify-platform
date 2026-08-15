@@ -67,7 +67,10 @@ class MarkAsReadProcessor implements ProcessorInterface
                 continue;
             }
 
-            foreach ($this->registry->findSubjects($type, $ids) as $id => $subject) {
+            $subjects = $this->registry->findSubjects($type, $ids);
+            $service->preload($user, $subjects);
+
+            foreach ($subjects as $id => $subject) {
                 $states[] = ReadMarkerState::create($type, $id, $service->read($user, $subject));
             }
         }

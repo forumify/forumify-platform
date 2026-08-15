@@ -1,10 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
+import { request } from '../services/api';
 
-/**
- * Reading one marker can change the others on the page: reading a forum also reads its sub forums
- * and their topics. Rather than letting every marker refresh itself, this controller spans the whole
- * page and resolves them all in a single request.
- */
 export class ReadMarkers extends Controller {
   static targets = ['marker'];
 
@@ -18,25 +14,26 @@ export class ReadMarkers extends Controller {
     const marker = event.currentTarget;
     marker.classList.add('d-none');
 
-    const response = await fetch(this.urlValue, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        subject: this.subject(marker),
-        markers: this.markerTargets.map((target) => this.subject(target)),
-      }),
-    });
+    let states;
+    try {
+      const response = await request(this.urlValue, {
+        method: 'POST',
+        data: {
+          subject: this.subject(marker),
+          markers: this.markerTargets.map((target) => this.subject(target)),
+        },
+      });
 
-    if (!response.ok) {
+      if (!response.ok) {
+        throw new Error(`Marking as read failed with status ${response.status}.`);
+      }
+
+      const { markers } = await response.json();
+      states = new Map(markers.map((state) => [this.key(state.type, state.id), state.read]));
+    } catch (error) {
       marker.classList.remove('d-none');
-      return;
+      throw error;
     }
-
-    const { markers } = await response.json();
-    const states = new Map(markers.map((state) => [this.key(state.type, state.id), state.read]));
 
     this.markerTargets.forEach((target) => {
       const read = states.get(this.key(target.dataset.readMarkerType, target.dataset.readMarkerId));
@@ -53,7 +50,6 @@ export class ReadMarkers extends Controller {
     };
   }
 
-  // markers of different types can share an id, so the type is part of the key
   key(type, id) {
     return `${type}:${id}`;
   }

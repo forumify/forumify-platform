@@ -36,6 +36,8 @@ class CommentReactionRepository extends AbstractRepository
             ->getQuery()
             ->getScalarResult();
 
-        return array_column($rows, 'reactionCount', 'commentId');
+        $counts = array_fill_keys(array_map(static fn (Comment $comment) => $comment->getId(), $comments), 0);
+
+        return array_replace($counts, array_map(intval(...), array_column($rows, 'reactionCount', 'commentId')));
     }
 }

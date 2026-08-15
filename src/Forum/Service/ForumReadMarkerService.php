@@ -38,6 +38,14 @@ class ForumReadMarkerService implements ReadMarkerServiceInterface, ResetInterfa
         return Forum::class;
     }
 
+    /**
+     * @param array<Forum> $subjects
+     */
+    public function preload(User $user, array $subjects): void
+    {
+        $this->getUnreadForums($user);
+    }
+
     public function read(User $user, mixed $subject): bool
     {
         return !isset($this->getUnreadForums($user)[$subject->getId()]);
