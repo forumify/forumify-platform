@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Tests\Tests\Factories\Forum;
 
 use Forumify\Forum\Entity\CommentReaction;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 use Tests\Tests\Factories\Core\UserFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-class CommentReactionFactory extends PersistentProxyObjectFactory
+/**
+ * @extends PersistentObjectFactory<CommentReaction>
+ */
+class CommentReactionFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {
