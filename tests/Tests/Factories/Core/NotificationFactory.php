@@ -6,9 +6,12 @@ namespace Tests\Tests\Factories\Core;
 
 use Forumify\Core\Entity\Notification;
 use Forumify\Core\Notification\GenericNotificationType;
-use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
 
-class NotificationFactory extends PersistentProxyObjectFactory
+/**
+ * @extends PersistentObjectFactory<Notification>
+ */
+class NotificationFactory extends PersistentObjectFactory
 {
     public static function class(): string
     {
