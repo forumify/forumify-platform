@@ -10,8 +10,8 @@ use Forumify\Forum\Repository\ForumRepository;
 use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateTopicService;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\ACLTrait;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\ACLTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class TopicControllerTest extends WebTestCase
 {

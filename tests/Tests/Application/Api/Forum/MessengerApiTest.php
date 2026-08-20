@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Tests\Tests\Application\Api\Messenger;
 
 use Symfony\Component\HttpClient\Exception\ClientException;
-use Tests\Tests\Application\Api\ApiTestCase;
-use Tests\Tests\Factories\Core\UserFactory;
-use Tests\Tests\Factories\Forum\MessageFactory;
-use Tests\Tests\Factories\Forum\MessageThreadFactory;
-use Tests\Tests\Factories\OAuth\OAuthClientFactory;
+use Forumify\Testing\Api\ApiTestCase;
+use Forumify\Testing\Factories\Core\UserFactory;
+use Forumify\Testing\Factories\Forum\MessageFactory;
+use Forumify\Testing\Factories\Forum\MessageThreadFactory;
+use Forumify\Testing\Factories\OAuth\OAuthClientFactory;
 
 class MessengerApiTest extends ApiTestCase
 {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Tests\Tests\Application\Forum;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Factories\Core\UserFactory;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Factories\Core\UserFactory;
+use Forumify\Testing\Traits\UserTrait;
 use Zenstruck\Foundry\Test\Factories;
 
 class MessengerControllerTest extends WebTestCase

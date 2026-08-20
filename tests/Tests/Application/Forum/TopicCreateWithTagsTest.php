@@ -10,8 +10,8 @@ use Forumify\Forum\Repository\ForumRepository;
 use Forumify\Forum\Repository\ForumTagRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\ACLTrait;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\ACLTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class TopicCreateWithTagsTest extends WebTestCase
 {

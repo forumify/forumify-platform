@@ -10,7 +10,7 @@ use Forumify\Core\Entity\ACL;
 use Forumify\Core\Repository\ACLRepository;
 use Forumify\Core\Repository\RoleRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class IndexControllerTest extends WebTestCase
 {

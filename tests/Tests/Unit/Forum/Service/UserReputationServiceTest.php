@@ -6,10 +6,10 @@ namespace Tests\Tests\Unit\Forum\Service;
 
 use Forumify\Forum\Service\UserReputationService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Tests\Tests\Factories\Core\UserFactory;
-use Tests\Tests\Factories\Forum\CommentFactory;
-use Tests\Tests\Factories\Forum\CommentReactionFactory;
-use Tests\Tests\Factories\Forum\ReactionFactory;
+use Forumify\Testing\Factories\Core\UserFactory;
+use Forumify\Testing\Factories\Forum\CommentFactory;
+use Forumify\Testing\Factories\Forum\CommentReactionFactory;
+use Forumify\Testing\Factories\Forum\ReactionFactory;
 use Zenstruck\Foundry\Test\Factories;
 
 class UserReputationServiceTest extends KernelTestCase

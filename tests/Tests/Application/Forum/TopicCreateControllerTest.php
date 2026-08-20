@@ -7,8 +7,8 @@ namespace Tests\Tests\Application\Forum;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\ACLTrait;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\ACLTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class TopicCreateControllerTest extends WebTestCase
 {

@@ -14,8 +14,8 @@ use Forumify\Forum\Service\LastCommentService;
 use Forumify\Forum\Service\TopicReadMarkerService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
-use Tests\Tests\Traits\ForumTrait;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\ForumTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class TopicListTest extends KernelTestCase
 {

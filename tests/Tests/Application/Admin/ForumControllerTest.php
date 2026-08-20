@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Application\Admin;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class ForumControllerTest extends WebTestCase
 {
