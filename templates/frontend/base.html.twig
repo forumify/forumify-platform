@@ -46,7 +46,9 @@
         {{ theme_tags() }}
     {% endblock %}
 </head>
-<body>
+<body {{ stimulus_controller('forumify/read-markers', {
+    url: path('forumify_api_read_marker_mark_as_read'),
+}) }}>
 {% block base %}
     {% include '@Forumify/frontend/blocks/header/header.html.twig' %}
     {% include '@Forumify/frontend/blocks/alerts.html.twig' %}

@@ -36,6 +36,26 @@ class UserRepository extends AbstractRepository implements UserLoaderInterface
             ->getOneOrNullResult();
     }
 
+    /**
+     * Initializes the role collections of the given users in a single query.
+     *
+     * @param array<User> $users
+     */
+    public function preloadRoles(array $users): void
+    {
+        if (empty($users)) {
+            return;
+        }
+
+        $this->createQueryBuilder('u')
+            ->addSelect('roles')
+            ->leftJoin('u.roles', 'roles')
+            ->where('u IN (:users)')
+            ->setParameter('users', $users)
+            ->getQuery()
+            ->getResult();
+    }
+
     private function getUserIdentifierWhere(): string
     {
         $request = $this->requestStack->getCurrentRequest();

@@ -5,8 +5,13 @@ declare(strict_types=1);
 namespace Tests\Tests\Unit\Forum\Component;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Forumify\Core\Repository\UserRepository;
 use Forumify\Forum\Component\TopicList;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Repository\CommentReactionRepository;
+use Forumify\Forum\Repository\TopicRepository;
+use Forumify\Forum\Service\LastCommentService;
+use Forumify\Forum\Service\TopicReadMarkerService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Forumify\Testing\Traits\ForumTrait;
@@ -34,10 +39,10 @@ class TopicListTest extends KernelTestCase
         $this->createTopic($forum, author: $user);
         $this->createTopic($forum, author: $this->createUser('tester2', 'tester2@example.com'));
 
-        $tempTl = new TopicList($security);
+        $tempTl = $this->createTopicList($security);
         $tempTl->forum = $forum;
         foreach ($tempTl->getSortModes() as ['mode' => $mode]) {
-            $topicList = new TopicList($security);
+            $topicList = $this->createTopicList($security);
             $topicList->setServices($em);
             $topicList->forum = $forum;
 
@@ -46,5 +51,19 @@ class TopicListTest extends KernelTestCase
 
             self::assertSame(1, $result->totalCount);
         }
+    }
+
+    private function createTopicList(Security $security): TopicList
+    {
+        $container = self::getContainer();
+
+        return new TopicList(
+            $security,
+            $container->get(TopicRepository::class),
+            $container->get(CommentReactionRepository::class),
+            $container->get(LastCommentService::class),
+            $container->get(TopicReadMarkerService::class),
+            $container->get(UserRepository::class),
+        );
     }
 }

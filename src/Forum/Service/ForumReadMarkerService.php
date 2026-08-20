@@ -6,21 +6,31 @@ namespace Forumify\Forum\Service;
 
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\ReadMarkerRepository;
-use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\ReadMarkerServiceInterface;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
-use Symfony\Bundle\SecurityBundle\Security;
+use Forumify\Forum\Repository\TopicRepository;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @implements ReadMarkerServiceInterface<Forum>
  */
-class ForumReadMarkerService implements ReadMarkerServiceInterface
+class ForumReadMarkerService implements ReadMarkerServiceInterface, ResetInterface
 {
+    /** @var array<int, array<int, true>> unread forum ids, per user id */
+    private array $unreadForums = [];
+
     public function __construct(
         private readonly ReadMarkerRepository $readMarkerRepository,
-        private readonly Security $security,
+        private readonly TopicRepository $topicRepository,
+        private readonly ForumTreeService $forumTree,
+        private readonly ForumVisibilityService $forumVisibility,
     ) {
+    }
+
+    public static function getType(): string
+    {
+        return 'forum';
     }
 
     public static function getEntityClass(): string
@@ -28,45 +38,62 @@ class ForumReadMarkerService implements ReadMarkerServiceInterface
         return Forum::class;
     }
 
+    /**
+     * @param array<Forum> $subjects
+     */
+    public function preload(User $user, array $subjects): void
+    {
+        $this->getUnreadForums($user);
+    }
+
     public function read(User $user, mixed $subject): bool
     {
-        $canViewHidden = $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $subject, 'permission' => 'moderate']);
-        $topicIds = $this->getTopicIds($user, $subject, $canViewHidden);
-        return $this->readMarkerRepository->areAllRead($user, Topic::class, $topicIds);
+        return !isset($this->getUnreadForums($user)[$subject->getId()]);
     }
 
     public function markAsRead(User $user, mixed $subject): void
     {
-        $canViewHidden = $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $subject, 'permission' => 'moderate']);
-        $topicIds = $this->getTopicIds($user, $subject, $canViewHidden);
+        $visibility = $this->forumVisibility->getTopicVisibilityInTree($subject);
+        $topicIds = $this->topicRepository->findVisibleTopicIds($user, $visibility);
         $this->readMarkerRepository->markAllRead($user, Topic::class, $topicIds);
+
+        $this->reset();
+    }
+
+    public function reset(): void
+    {
+        $this->unreadForums = [];
     }
 
     /**
-     * @return array<int>
+     * A forum is unread when it, or any of the sub forums the user can view, contains a topic without
+     * a read marker. Resolving that per forum means walking the same tree over and over, so it is
+     * determined for all forums at once in a single query.
+     *
+     * @return array<int, true> forum ids, used as a set
      */
-    private function getTopicIds(User $user, Forum $forum, bool $canViewHidden): array
+    private function getUnreadForums(User $user): array
     {
-        $onlyShowOwnTopics = $forum->getDisplaySettings()->isOnlyShowOwnTopics();
-        $canViewAll = !$onlyShowOwnTopics || $this->security->isGranted(VoterAttribute::ACL->value, ['entity' => $forum, 'permission' => 'show_all_topics']);
+        $userId = $user->getId();
+        if (isset($this->unreadForums[$userId])) {
+            return $this->unreadForums[$userId];
+        }
 
-        $visibleTopics = $canViewAll
-            ? $forum->getTopics()
-            : $forum->getTopics()->filter(fn (Topic $topic) => $topic->getCreatedBy()?->getId() === $user->getId());
+        $forums = $this->forumTree->getForums();
+        $visibility = $this->forumVisibility->getTopicVisibilityPerForum();
 
-        $ownTopicIds = $visibleTopics
-            ->filter(fn (Topic $topic) => !$topic->isHidden() || $canViewHidden)
-            ->map(fn (Topic $topic) => $topic->getId())
-            ->toArray();
+        $unread = [];
+        foreach ($this->topicRepository->findForumIdsWithUnreadTopics($user, $visibility) as $forumId) {
+            for ($forum = $forums[$forumId] ?? null; $forum !== null; $forum = $forum->getParent()) {
+                $id = $forum->getId();
+                if (isset($unread[$id]) || !isset($visibility[$id])) {
+                    break;
+                }
 
-        $childTopicIds = $forum->getChildren()
-            ->filter(fn (Forum $subForum) => $this->security->isGranted(VoterAttribute::ACL->value, [
-                'permission' => 'view',
-                'entity' => $subForum,
-            ]))
-            ->map(fn (Forum $subForum) => $this->getTopicIds($user, $subForum, $canViewHidden))
-            ->toArray();
+                $unread[$id] = true;
+            }
+        }
 
-        return array_merge($ownTopicIds, ...$childTopicIds);
+        return $this->unreadForums[$userId] = $unread;
     }
 }

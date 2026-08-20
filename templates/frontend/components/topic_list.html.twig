@@ -57,7 +57,7 @@
                             {% if topic.pinned %}<i class="ph ph-push-pin"></i>{% endif %}
                             {% if topic.locked %}<i class="ph ph-lock"></i>{% endif %}
                             {% if topic.hidden %}<i class="ph ph-eye-slash"></i>{% endif %}
-                            {% if not topic.tags.empty %}
+                            {% if topic.tags is not empty %}
                                 {% for tag in topic.tags %}
                                     {% include '@Forumify/frontend/forum/forum_tag.html.twig' with {
                                         tag: tag,
@@ -107,10 +107,10 @@
                 {% endif %}
                 {% if forum.displaySettings.showTopicStatistics %}
                     <div class="flex gap-4 pl-1 text-small">
-                        <span>{{ max(0, topic.comments.count - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></span>
+                        <span>{{ max(0, this.commentCount(topic) - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></span>
                         <span>{{ topic.views|short_number }} <i class="ph ph-eye"></i></span>
                         {% if topic.firstComment %}
-                            <span>{{ topic.firstComment.reactions.count|short_number }} <i class="ph ph-sparkle"></i></span>
+                            <span>{{ this.reactionCount(topic)|short_number }} <i class="ph ph-sparkle"></i></span>
                         {% endif %}
                     </div>
                 {% endif %}
