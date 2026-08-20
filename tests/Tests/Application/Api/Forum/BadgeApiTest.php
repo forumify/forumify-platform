@@ -53,4 +53,21 @@ class BadgeApiTest extends ApiTestCase
     {
         return ['name' => 'Blip Badge'];
     }
+
+    public function testPatchReplacesImage(): void
+    {
+        $badge = BadgeFactory::createOne(['image' => 'existing.png']);
+
+        $patched = $this->patch(self::endpoint() . "/{$badge->getId()}", [
+            'json' => [
+                'newImage' => [
+                    'filename' => 'replacement.png',
+                    'data' => base64_encode((string) file_get_contents(TEST_DATA_DIR . '/forumify.png')),
+                ],
+            ],
+        ]);
+
+        self::assertStringStartsWith('/storage/assets/', $patched['image']);
+        self::assertStringEndsWith('replacement.png', $patched['image']);
+    }
 }

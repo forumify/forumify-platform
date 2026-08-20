@@ -15,6 +15,7 @@ import { RichTextEditor } from '../controllers/RichTextEditor';
 import { Tabs } from '../controllers/Tabs';
 import { Theme } from '../controllers/Theme';
 import { TimezoneInput } from '../controllers/TimezoneInput';
+import { Upload } from '../controllers/Upload';
 import { Youtube } from '../controllers/Youtube';
 
 export default (app) => {
@@ -36,6 +37,7 @@ export default (app) => {
   register('tabs', Tabs);
   register('theme', Theme);
   register('timezone-input', TimezoneInput);
+  register('upload', Upload);
   register('youtube', Youtube);
 
   return register;

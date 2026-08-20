@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Forumify\Cms\Form;
 
 use Forumify\Cms\Entity\Resource;
-use Symfony\Component\Asset\Packages;
+use Forumify\Core\Form\UploadType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,11 +16,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ResourceType extends AbstractType
 {
-    public function __construct(
-        private readonly Packages $packages,
-    ) {
-    }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -44,14 +38,10 @@ class ResourceType extends AbstractType
             ]);
         }
 
-        $builder->add('file', FileType::class, [
-            'mapped' => false,
-            'required' => $resource === null,
-            'attr' => [
-                'preview' => !empty($resource?->getPath())
-                    ? $this->packages->getUrl($resource->getPath(), 'forumify.resource')
-                    : null,
-            ],
+        $builder->add('path', UploadType::class, [
+            'label' => 'File',
+            'filesystem' => 'resource.storage',
+            'asset_package' => 'forumify.resource',
         ]);
     }
 }

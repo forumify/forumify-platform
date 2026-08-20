@@ -107,9 +107,9 @@
                 {% endif %}
             </div>
         </div>
-        {% if topic.image %}
-            <img class="topic-image" src="{{ asset(topic.image, 'forumify.media') }}" alt="topic-image">
-        {% endif %}
+        {% for image in topic.images %}
+            <img class="topic-image" src="{{ asset(image, 'forumify.media') }}" alt="topic-image">
+        {% endfor %}
         <div class="comment-list">
             {{ component('CommentList', { topic: topic }) }}
         </div>

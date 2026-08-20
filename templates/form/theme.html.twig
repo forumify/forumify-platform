@@ -76,6 +76,10 @@
     {%- include '@Forumify/form/type/upload.html.twig' -%}
 {%- endblock -%}
 
+{%- block upload_file_widget -%}
+    <input type="file" id="{{ id }}" name="{{ full_name }}"{% with { attr: attr } %}{{ block('attributes') }}{% endwith %}>
+{%- endblock -%}
+
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {%- if type == 'file' -%}

@@ -8,9 +8,7 @@ use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Core\Form\EntityType;
 use Forumify\Core\Form\UploadType;
-use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,11 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class UserType extends AbstractType
 {
-    public function __construct(
-        private readonly Packages $packages,
-    ) {
-    }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -36,9 +29,6 @@ class UserType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        /** @var User $user */
-        $user = $options['data'];
-
         $builder
             ->add('username', TextType::class)
             ->add('displayName', TextType::class)
@@ -49,23 +39,12 @@ class UserType extends AbstractType
                 'placeholder' => 'account_settings.timezone_placeholder',
             ])
             ->add('avatar', UploadType::class, [
-                'asset_package' => 'forumify.avatar',
-                'filesystem' => 'avatar.storage',
-                'required' => false,
-            ])
-            ->add('newAvatar', FileType::class, [
-                'mapped' => false,
                 'label' => 'Avatar',
-                'attr' => [
-                    'preview' => !empty($user->getAvatar())
-                        ? $this->packages->getUrl($user->getAvatar(), 'forumify.avatar')
-                        : null,
-                ],
-                'constraints' => [
-                    new Assert\Image(
-                        maxSize: '10M',
-                    ),
-                ],
+                'required' => false,
+                'filesystem' => 'avatar.storage',
+                'asset_package' => 'forumify.avatar',
+                'accept' => 'image/*',
+                'file_constraints' => [new Assert\Image(maxSize: '10M')],
             ])
             ->add('roleEntities', UserRoleType::class, [
                 'label' => 'Roles',

@@ -4,22 +4,18 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Service;
 
-use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\NewComment;
 use Forumify\Forum\Form\TopicData;
 use Forumify\Forum\Repository\ForumTagRepository;
 use Forumify\Forum\Repository\TopicRepository;
-use League\Flysystem\FilesystemOperator;
 
 class CreateTopicService
 {
     public function __construct(
         private readonly TopicRepository $topicRepository,
         private readonly CreateCommentService $commentService,
-        private readonly FilesystemOperator $mediaStorage,
-        private readonly MediaService $mediaService,
         private readonly ForumTagRepository $forumTagRepository,
     ) {
     }
@@ -30,10 +26,7 @@ class CreateTopicService
         $topic->setTitle($newTopic->getTitle());
         $topic->setCreatedBy($newTopic->getAuthor());
         $topic->setForum($forum);
-        if ($newTopic->getImage() !== null) {
-            $image = $this->mediaService->saveToFilesystem($this->mediaStorage, $newTopic->getImage());
-            $topic->setImage($image);
-        }
+        $topic->setImage($newTopic->getImage());
 
         $topic->tags = $newTopic->getTags();
         $defaultTags = $this->forumTagRepository->findByForum($forum, true);

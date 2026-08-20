@@ -237,6 +237,11 @@ plugin:
     homepage: 'Homepage'
 file_upload:
     drop_text: 'Drop files here or click to browse.'
+    multiple_hint: 'You can add several files at once.'
+    new: 'New'
+    download: 'Download'
+    remove: 'Remove'
+    required: 'Please upload a file.'
 forum:
     comment:
         mark_answer: 'Mark as answer'

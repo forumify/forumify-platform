@@ -20,7 +20,9 @@ security:
             logout:
                 path: forumify_core_logout
             login_throttling:
-                max_attempts: 3
+                # Effectively disabled, the limiter persists in the cache and would
+                # otherwise start failing tests after repeated runs.
+                max_attempts: 999999
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
