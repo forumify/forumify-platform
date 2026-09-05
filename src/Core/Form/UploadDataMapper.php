@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Form;
 
-use Forumify\Core\Service\FileDeletionQueue;
-use Forumify\Core\Service\MediaService;
+use Forumify\Core\Service\UploadTransaction;
 use League\Flysystem\FilesystemOperator;
 use RuntimeException;
 use Symfony\Component\Form\DataMapperInterface;
@@ -16,8 +15,7 @@ use Traversable;
 class UploadDataMapper implements DataMapperInterface
 {
     public function __construct(
-        private readonly MediaService $mediaService,
-        private readonly FileDeletionQueue $deletionQueue,
+        private readonly UploadTransaction $transaction,
         private readonly FilesystemOperator $filesystem,
         private readonly bool $multiple,
     ) {
@@ -40,7 +38,7 @@ class UploadDataMapper implements DataMapperInterface
 
         $removed = array_values(array_intersect($this->getRemoved($children['removed']), $existing));
         $kept = array_values(array_diff($existing, $removed));
-        $uploaded = array_map($this->write(...), $this->getUploads($children['file']));
+        $uploaded = array_map($this->stage(...), $this->getUploads($children['file']));
 
         if (!$this->multiple && $uploaded !== []) {
             $removed = array_merge($removed, $kept);
@@ -48,7 +46,7 @@ class UploadDataMapper implements DataMapperInterface
         }
 
         foreach ($removed as $path) {
-            $this->deletionQueue->queue($this->filesystem, $path);
+            $this->transaction->stageDeletion($this->filesystem, $path);
         }
 
         $paths = array_merge($kept, $uploaded);
@@ -85,9 +83,9 @@ class UploadDataMapper implements DataMapperInterface
         return array_values(array_filter($data, static fn (mixed $f): bool => $f instanceof UploadedFile));
     }
 
-    private function write(UploadedFile $file): string
+    private function stage(UploadedFile $file): string
     {
-        $path = $this->mediaService->saveToFilesystem($this->filesystem, $file);
+        $path = $this->transaction->stageUpload($this->filesystem, $file);
         if (str_contains($path, ',')) {
             throw new RuntimeException("Stored filename \"$path\" contains a comma, which cannot be represented in a simple_array field.");
         }
