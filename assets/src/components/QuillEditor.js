@@ -51,16 +51,7 @@ export const QuillEditor = (element) => {
       mention: {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
         mentionDenotationChars: ['@'],
-        source: function (searchTerm, renderList) {
-          if (searchTerm.length === 0) {
-            renderList([]);
-          }
-
-          fetch('/users/search?query=' + searchTerm)
-            .then((res) => res.json())
-            .then((users) => users.map((user) => ({ id: user.id, value: user.displayName || user.username })))
-            .then((users) => renderList(users));
-        },
+        source: createMentionSource(),
       },
     },
     theme: 'snow',
@@ -131,4 +122,35 @@ const keepOnlyCollapsibleNbsp = (text, protectStart, protectEnd) => {
   return result;
 };
 
+const MENTION_SEARCH_DEBOUNCE = 250;
 
+/**
+ * @returns {(searchTerm: string, renderList: (values: Array, searchTerm: string) => void) => void}
+ */
+const createMentionSource = () => {
+  let timeout;
+  let controller;
+
+  return (searchTerm, renderList) => {
+    clearTimeout(timeout);
+    controller?.abort();
+
+    if (searchTerm.length === 0) {
+      renderList([], searchTerm);
+      return;
+    }
+
+    timeout = setTimeout(() => {
+      controller = new AbortController();
+      fetch('/users/search?query=' + encodeURIComponent(searchTerm), { signal: controller.signal })
+        .then((res) => res.json())
+        .then((users) => users.map((user) => ({ id: user.id, value: user.displayName || user.username })))
+        .then((users) => renderList(users, searchTerm))
+        .catch((e) => {
+          if (e.name !== 'AbortError') {
+            renderList([], searchTerm);
+          }
+        });
+    }, MENTION_SEARCH_DEBOUNCE);
+  };
+};
