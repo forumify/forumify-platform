@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace Forumify\Admin\Form;
 
 use Forumify\Core\Form\InfoType;
-use Symfony\Component\Asset\Packages;
+use Forumify\Core\Form\UploadType;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
@@ -23,7 +22,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ConfigurationType extends AbstractType
 {
     public function __construct(
-        private readonly Packages $packages,
         #[Autowire(env: 'bool:FORUMIFY_HOSTED_INSTANCE')]
         private readonly bool $isHostedInstance,
     ) {
@@ -35,36 +33,22 @@ class ConfigurationType extends AbstractType
             ->add('forumify__title', TextType::class, [
                 'label' => 'admin.configuration.forum_title',
             ])
-            ->add('logo', FileType::class, [
+            ->add('forumify__logo', UploadType::class, [
                 'label' => 'admin.configuration.logo',
                 'required' => false,
-                'mapped' => false,
-                'attr' => [
-                    'preview' => ($logo = $options['data']['forumify__logo'] ?? null) !== null
-                        ? $this->packages->getUrl($logo, 'forumify.asset')
-                        : null,
-                ],
-                'constraints' => [
-                    new Assert\Image(
-                        maxSize: '10M',
-                    ),
-                ],
+                'filesystem' => 'asset.storage',
+                'asset_package' => 'forumify.asset',
+                'accept' => 'image/*',
+                'file_constraints' => [new Assert\Image(maxSize: '10M')],
             ])
-            ->add('defaultAvatar', FileType::class, [
+            ->add('forumify__default_avatar', UploadType::class, [
                 'label' => 'admin.configuration.default_avatar',
                 'help' => 'admin.configuration.default_avatar_help',
                 'required' => false,
-                'mapped' => false,
-                'attr' => [
-                    'preview' => ($avatar = $options['data']['forumify__default_avatar'] ?? null)
-                        ? $this->packages->getUrl($avatar, 'forumify.avatar')
-                        : null,
-                ],
-                'constraints' => [
-                    new Assert\Image(
-                        maxSize: '10M',
-                    ),
-                ],
+                'filesystem' => 'avatar.storage',
+                'asset_package' => 'forumify.avatar',
+                'accept' => 'image/*',
+                'file_constraints' => [new Assert\Image(maxSize: '10M')],
             ])
             ->add('forumify__enable_registrations', CheckboxType::class, [
                 'label' => 'admin.configuration.enable_registrations',

@@ -7,13 +7,13 @@ namespace Tests\Tests\Application\Forum;
 use DateTime;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Repository\TopicRepository;
+use Forumify\Testing\Factories\Core\ACLFactory;
+use Forumify\Testing\Factories\Core\UserFactory;
+use Forumify\Testing\Factories\Forum\CommentFactory;
+use Forumify\Testing\Factories\Forum\ForumFactory;
+use Forumify\Testing\Factories\Forum\TopicFactory;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use Tests\Tests\Factories\Core\ACLFactory;
-use Tests\Tests\Factories\Core\UserFactory;
-use Tests\Tests\Factories\Forum\CommentFactory;
-use Tests\Tests\Factories\Forum\ForumFactory;
-use Tests\Tests\Factories\Forum\TopicFactory;
 use Zenstruck\Foundry\Test\Factories;
 
 class LastCommentTest extends WebTestCase

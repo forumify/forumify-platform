@@ -16,13 +16,13 @@
             {% block tabpanels %}
                 <div id="general">
                     {{ form_row(form.forumify__title) }}
-                    {{ form_row(form.logo) }}
+                    {{ form_row(form.forumify__logo) }}
                     {{ form_row(form.forumify__default_timezone) }}
                     {{ form_row(form.forumify__enable_auto_updates) }}
                     {{ form_row(form.forumify__index) }}
                 </div>
                 <div id="users">
-                    {{ form_row(form.defaultAvatar) }}
+                    {{ form_row(form.forumify__default_avatar) }}
                     {{ form_row(form.forumify__login_method) }}
                     {{ form_row(form.forumify__enable_registrations) }}
                     {{ form_row(form.forumify__hide_usernames) }}

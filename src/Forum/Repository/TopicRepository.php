@@ -36,6 +36,24 @@ class TopicRepository extends AbstractRepository
     }
 
     /**
+     * @return array<string>
+     */
+    public function findImagesByForum(int|Forum $forum): array
+    {
+        $rows = $this->createQueryBuilder('t')
+            ->select('t.images')
+            ->join('t.forum', 'f')
+            ->where('f = :forum')
+            ->andWhere('t.images IS NOT NULL')
+            ->orderBy('t.createdAt', 'DESC')
+            ->setParameter('forum', $forum)
+            ->getQuery()
+            ->getResult();
+
+        return array_merge(...array_column($rows, 'images'));
+    }
+
+    /**
      * @param array<Topic> $topics
      */
     public function preloadTags(array $topics): void

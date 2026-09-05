@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\ForumTag;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class TopicData
@@ -19,10 +18,7 @@ class TopicData
     #[Assert\NotBlank(allowNull: true)]
     private ?string $content = null;
 
-    #[Assert\Image(maxSize: '10M')]
-    private ?UploadedFile $image = null;
-
-    private ?string $existingImage = null;
+    private ?string $image = null;
 
     private ?User $author = null;
 
@@ -56,24 +52,14 @@ class TopicData
         $this->content = $content;
     }
 
-    public function getImage(): ?UploadedFile
+    public function getImage(): ?string
     {
         return $this->image;
     }
 
-    public function setImage(?UploadedFile $image): void
+    public function setImage(?string $image): void
     {
         $this->image = $image;
-    }
-
-    public function getExistingImage(): ?string
-    {
-        return $this->existingImage;
-    }
-
-    public function setExistingImage(?string $existingImage): void
-    {
-        $this->existingImage = $existingImage;
     }
 
     public function getAuthor(): ?User
