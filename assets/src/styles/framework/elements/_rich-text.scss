@@ -1,6 +1,10 @@
 @use '../typography';
+@use 'quote';
+@use 'quill-table';
 
 .rich-text {
+    overflow-wrap: break-word;
+
     h1, h2, h3, h4, h5, h6 {
         margin: var(--spacing-4) 0 var(--spacing-2);
     }
@@ -80,6 +84,9 @@
         margin: 0;
         padding-left: var(--spacing-4);
     }
+
+    @include quote.quote-styles;
+    @include quill-table.table-styles;
 
     .ql-size-huge {
         @extend .text-huge;

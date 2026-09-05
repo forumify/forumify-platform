@@ -1,0 +1,12 @@
+{%- set authorName = author is null ? 'deleted'|trans : author.displayName -%}
+{%- if author is null -%}
+    {%- set authorMarkup %}<span class="forumify-quote-author">{{ authorName }}</span>{% endset -%}
+{%- else -%}
+    {%- set authorMarkup %}<span class="mention" data-denotation-char="@" data-id="{{ author.id }}" data-value="{{ authorName }}"><span contenteditable="false"><span class="ql-mention-denotation-char">@</span><span class="ql-mention-value">{{ authorName }}</span></span></span>{% endset -%}
+{%- endif -%}
+{%- if source is empty -%}
+    {%- set dateMarkup %}<span class="forumify-quote-date">{{ date|format_date(true) }}</span>{% endset -%}
+{%- else -%}
+    {%- set dateMarkup %}<a class="forumify-quote-date" href="{{ source }}">{{ date|format_date(true) }}</a>{% endset -%}
+{%- endif -%}
+<blockquote class="forumify-quote"><div class="forumify-quote-header">{{ 'quote.wrote_on'|trans({ author: authorMarkup, date: dateMarkup })|raw }}</div><div class="forumify-quote-content">{{ content|raw }}</div></blockquote>

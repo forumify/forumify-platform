@@ -20,6 +20,7 @@ use Forumify\Forum\Notification\MessageUserAddedNotificationType;
 use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Forumify\Forum\Service\MessageService;
+use Forumify\Forum\Service\QuoteService;
 use Forumify\Core\Form\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -182,5 +183,17 @@ class MessengerController extends AbstractController
         $messageRepository->save($message);
 
         return new Response($sanitizer->sanitize($message->getContent()));
+    }
+
+    #[Route('/message/{id}/quote', '_message_quote', methods: ['GET'])]
+    public function quoteMessage(Message $message, QuoteService $quoteService): Response
+    {
+        $this->denyAccessUnlessGranted(VoterAttribute::MessageThreadView->value, $message->getThread());
+
+        return new Response($quoteService->createQuote(
+            $message->getContent(),
+            $message->getCreatedBy(),
+            $message->getCreatedAt(),
+        ));
     }
 }

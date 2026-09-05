@@ -1,0 +1,40 @@
+@mixin quote-styles {
+    .forumify-quote {
+        margin: 0 0 var(--spacing-2);
+        padding: var(--spacing-2) var(--spacing-4);
+        border: var(--border);
+        border-left: 4px solid var(--c-primary);
+        border-radius: var(--border-radius);
+        background-color: var(--c-elevation-0);
+
+        .forumify-quote-header {
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--c-text-secondary);
+            margin-bottom: var(--spacing-2);
+            padding-bottom: var(--spacing-1);
+            border-bottom: var(--border);
+        }
+
+        .forumify-quote-date {
+            color: inherit;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+        .forumify-quote-content > *:first-child {
+            margin-top: 0;
+        }
+
+        .forumify-quote-content > *:last-child {
+            margin-bottom: 0;
+        }
+
+        .forumify-quote {
+            margin-top: var(--spacing-2);
+            background-color: var(--c-elevation-1);
+        }
+    }
+}

@@ -1,0 +1,67 @@
+$handle-offset: -6px;
+
+.ql-image-resizer {
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    outline: 2px solid var(--c-primary-accent);
+}
+
+.ql-image-resizer-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border: 1px solid var(--c-primary-text);
+    border-radius: 2px;
+    background-color: var(--c-primary-accent);
+    pointer-events: auto;
+    touch-action: none;
+}
+
+.ql-image-resizer-nw,
+.ql-image-resizer-n,
+.ql-image-resizer-ne {
+    top: $handle-offset;
+}
+
+.ql-image-resizer-sw,
+.ql-image-resizer-s,
+.ql-image-resizer-se {
+    bottom: $handle-offset;
+}
+
+.ql-image-resizer-nw,
+.ql-image-resizer-w,
+.ql-image-resizer-sw {
+    left: $handle-offset;
+}
+
+.ql-image-resizer-ne,
+.ql-image-resizer-e,
+.ql-image-resizer-se {
+    right: $handle-offset;
+}
+
+.ql-image-resizer-n,
+.ql-image-resizer-s {
+    left: 50%;
+    margin-left: $handle-offset;
+    cursor: ns-resize;
+}
+
+.ql-image-resizer-w,
+.ql-image-resizer-e {
+    top: 50%;
+    margin-top: $handle-offset;
+    cursor: ew-resize;
+}
+
+.ql-image-resizer-nw,
+.ql-image-resizer-se {
+    cursor: nwse-resize;
+}
+
+.ql-image-resizer-ne,
+.ql-image-resizer-sw {
+    cursor: nesw-resize;
+}
