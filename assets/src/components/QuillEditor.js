@@ -2,8 +2,10 @@ import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import 'quill-mention/autoregister';
 import { Quote } from './blots/Quote';
+import { ImageResizer } from './modules/ImageResizer';
 
 Quill.register(Quote);
+Quill.register('modules/imageResizer', ImageResizer);
 
 /**
  * @param {HTMLElement} element
@@ -23,6 +25,7 @@ export const QuillEditor = (element) => {
         [{ color: [] }, { background: [] }],
         ['clean'],
       ],
+      imageResizer: true,
       mention: {
         allowedChars: /^[A-Za-z\sÅÄÖåäö]*$/,
         mentionDenotationChars: ['@'],

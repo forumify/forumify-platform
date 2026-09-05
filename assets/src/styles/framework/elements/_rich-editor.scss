@@ -20,6 +20,11 @@
     .ql-editor {
         min-height: 140px;
 
+        img {
+            max-width: 100%;
+            cursor: pointer;
+        }
+
         blockquote {
             margin: 0;
         }
