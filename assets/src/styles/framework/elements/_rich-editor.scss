@@ -1,5 +1,6 @@
 @use '../mixins';
 @use 'buttons';
+@use 'quote';
 
 .rich-editor {
     .ql-container.ql-snow {
@@ -35,6 +36,8 @@
             margin-top: 0;
             margin-bottom: var(--spacing-2);
         }
+
+        @include quote.quote-styles;
     }
 
     .ql-snow {

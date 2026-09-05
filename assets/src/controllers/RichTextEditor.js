@@ -1,5 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
+import Quill from 'quill';
 import { QuillEditor } from '../components/QuillEditor';
+import { Quote } from '../components/blots/Quote';
+
+export const QUOTE_EVENT = 'forumify:quote';
 
 export class RichTextEditor extends Controller {
   quill = null;
@@ -11,6 +15,9 @@ export class RichTextEditor extends Controller {
   }
 
   connect() {
+    this.onQuote = this.insertQuote.bind(this);
+    window.addEventListener(QUOTE_EVENT, this.onQuote);
+
     const form = this.getParentForm();
 
     if (!form) {
@@ -29,8 +36,25 @@ export class RichTextEditor extends Controller {
   }
 
   disconnect() {
+    window.removeEventListener(QUOTE_EVENT, this.onQuote);
     this.quill.setContents([{ insert: '' }]);
     this.quill.off('text-change');
+  }
+
+  insertQuote({ detail }) {
+    const Delta = Quill.import('delta');
+    const index = this.quill.getLength() - 1;
+    const [line] = this.quill.getLine(index);
+
+    const delta = new Delta().retain(index);
+    if (line !== null && line.length() > 1) {
+      delta.insert('\n');
+    }
+    delta.insert({ [Quote.blotName]: detail.html });
+
+    this.quill.updateContents(delta, 'user');
+    this.quill.setSelection(this.quill.getLength() - 1, 0);
+    this.element.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
   getParentForm() {

@@ -1,6 +1,9 @@
 import Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import 'quill-mention/autoregister';
+import { Quote } from './blots/Quote';
+
+Quill.register(Quote);
 
 /**
  * @param {HTMLElement} element
