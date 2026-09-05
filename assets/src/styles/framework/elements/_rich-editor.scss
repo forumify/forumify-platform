@@ -1,6 +1,7 @@
 @use '../mixins';
 @use 'buttons';
 @use 'quote';
+@use 'quill-table';
 
 .rich-editor {
     .ql-container.ql-snow {
@@ -19,6 +20,7 @@
 
     .ql-editor {
         min-height: 140px;
+        overflow-wrap: break-word;
 
         img {
             max-width: 100%;
@@ -43,6 +45,7 @@
         }
 
         @include quote.quote-styles;
+        @include quill-table.table-styles;
     }
 
     .ql-snow {

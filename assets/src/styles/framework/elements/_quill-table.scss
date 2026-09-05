@@ -1,0 +1,130 @@
+@mixin table-styles {
+    .ql-table-wrapper {
+        width: 100%;
+        overflow: auto;
+        scrollbar-width: auto;
+    }
+
+    .ql-table {
+        display: table;
+        table-layout: fixed;
+        border-collapse: collapse;
+        width: auto;
+        background-color: transparent;
+
+        &[data-full] {
+            width: 100%;
+        }
+
+        col {
+            display: table-column;
+        }
+
+        td,
+        th {
+            padding: var(--spacing-2) var(--spacing-3);
+            border: 1px solid var(--c-elevation-5);
+            vertical-align: top;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--c-elevation-2);
+        }
+
+        tr + tr td,
+        tr + tr th {
+            border-top: none;
+        }
+
+        td + td,
+        td + th,
+        th + td,
+        th + th {
+            border-left: none;
+        }
+
+        tbody tr,
+        tbody tr:nth-child(even),
+        tbody tr:not(.disabled):hover {
+            background-color: transparent;
+            transition: none;
+        }
+    }
+
+    .ql-table-caption {
+        caption-side: top;
+        word-break: break-word;
+        color: var(--c-text-secondary);
+    }
+
+    .ql-table-cell-inner {
+        display: inline-block;
+        min-width: 100%;
+        word-break: break-word;
+
+        > *:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.table-up-align,
+.table-up-menu,
+.table-up-dialog__content,
+.table-up-color-picker {
+    --color-picker-bg-color: var(--c-elevation-1);
+    background-color: var(--c-elevation-1);
+    color: var(--c-text-primary);
+}
+
+.table-up-align__item:hover,
+.table-up-menu__item:hover {
+    background-color: var(--c-hover);
+}
+
+.table-up-button {
+    --table-btn-color: var(--c-text-primary);
+    --table-btn-bg-hover: var(--c-hover);
+    --table-btn-color-border: var(--border-color);
+    --table-btn-confirm-color-border: var(--c-primary-accent);
+    --table-btn-confirm-bg: var(--c-primary-accent);
+    --table-btn-confirm-hover: var(--c-primary);
+}
+
+.table-up-color-map__btn {
+    color: var(--c-text-primary);
+    background-color: var(--c-elevation-1);
+
+    &:hover {
+        background-color: var(--c-hover);
+    }
+}
+
+.table-up-color-picker__input {
+    color: var(--c-text-primary);
+    background-color: var(--c-elevation-1);
+    border-color: var(--border-color);
+}
+
+.table-up-input__item {
+    --input-color-text: var(--c-text-primary);
+    --input-color-boxshaow: var(--border-color);
+    --input-color-focus: var(--c-primary-accent);
+}
+
+.table-up-select-box {
+    --select-box-color-border: var(--border-color);
+}
+
+.ql-snow .table-up-select-box {
+    --select-box-color-active: var(--c-primary-accent);
+    --select-box-color-bg-hover: var(--c-hover);
+    --select-box-custom-color-text: var(--c-text-primary);
+    --select-box-custom-color-bg-hover: var(--c-hover);
+}
+
+.table-up-creator__checkbox {
+    --check-color: var(--c-text-primary);
+    --checked-color: var(--c-primary-accent);
+}

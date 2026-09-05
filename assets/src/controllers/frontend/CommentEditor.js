@@ -63,7 +63,7 @@ export class CommentEditor extends Controller {
   }
 
   async save() {
-    const res = await fetch(this.updateUrlValue, { method: 'POST', body: this.editor.root.innerHTML });
+    const res = await fetch(this.updateUrlValue, { method: 'POST', body: this.editor.getSemanticHTML() });
     const newContent = await res.text();
 
     const richText = this.element.querySelector('.rich-text');
