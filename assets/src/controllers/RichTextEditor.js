@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { QuillEditor } from '../components/QuillEditor';
+import { uploadEmbeddedImages } from '../services/media';
 
 export class RichTextEditor extends Controller {
   quill = null;
@@ -52,62 +53,12 @@ export class RichTextEditor extends Controller {
       return;
     }
 
-    this.preSubmitTransformValue(value)
+    uploadEmbeddedImages(value)
       .then((transformedValue) => {
         this.input.value = transformedValue;
       })
       .finally(() => {
         e.target.submit();
       });
-  }
-
-  async preSubmitTransformValue(value) {
-    const dom = document.createElement('div');
-    dom.innerHTML = value;
-
-    const uploads = [];
-    for (const img of dom.querySelectorAll('img')) {
-      if (img.src.startsWith('data:')) {
-        uploads.push(this.handleDataUrlImg(img));
-      }
-    }
-
-    await Promise.all(uploads);
-    return dom.innerHTML;
-  }
-
-  /**
-   * @param {HTMLImageElement} imgElement
-   */
-  async handleDataUrlImg(imgElement) {
-    const [meta, b64data] = imgElement.src.split(',');
-    const type = meta.match(/:(.*?);/)[1];
-    const ext = type.split('/')[1];
-
-    const binData = atob(b64data);
-
-    const bytes = new Uint8Array(binData.length);
-    for (let i = 0; i < binData.length; i++) {
-      bytes[i] = binData.charCodeAt(i);
-    }
-
-    const formData = new FormData();
-    formData.append('file', new File([bytes], `file.${ext}`, { type }));
-
-    try {
-      const response = await fetch('/media/upload', {
-        method: 'post',
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (data.url) {
-        imgElement.src = data.url;
-      } else if (data.error) {
-        console.error(data.error);
-      }
-    } catch (e) {
-      console.error(e);
-    }
   }
 }
