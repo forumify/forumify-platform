@@ -63,7 +63,8 @@ export class Upload extends Controller {
       this.pending = new DataTransfer();
     }
 
-    [...files].forEach((file) => this.pending.items.add(file));
+    const added = this.multipleValue ? [...files] : [...files].slice(0, 1);
+    added.forEach((file) => this.pending.items.add(file));
 
     this.inputTarget.files = this.pending.files;
     this.render();

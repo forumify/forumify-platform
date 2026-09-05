@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Form\Extension;
 
-use Forumify\Core\Service\FileDeletionQueue;
+use Forumify\Core\Service\UploadTransaction;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class FileDeletionExtension extends AbstractTypeExtension
+class UploadTransactionExtension extends AbstractTypeExtension
 {
     private const int AFTER_VALIDATION = -100;
 
-    public function __construct(private readonly FileDeletionQueue $deletionQueue)
+    public function __construct(private readonly UploadTransaction $transaction)
     {
     }
 
@@ -33,8 +33,8 @@ class FileDeletionExtension extends AbstractTypeExtension
             }
 
             $form->isValid()
-                ? $this->deletionQueue->commit()
-                : $this->deletionQueue->discard();
+                ? $this->transaction->writeUploads()
+                : $this->transaction->discard();
         }, self::AFTER_VALIDATION);
     }
 }

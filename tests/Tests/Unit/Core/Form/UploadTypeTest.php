@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\Tests\Unit\Core\Form;
 
+use Forumify\Core\Form\Extension\UploadTransactionExtension;
 use Forumify\Core\Form\UploadType;
-use Forumify\Core\Service\FileDeletionQueue;
 use Forumify\Core\Service\MediaService;
+use Forumify\Core\Service\UploadTransaction;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemOperator;
 use League\Flysystem\Local\LocalFilesystemAdapter;
@@ -15,13 +16,18 @@ use Psr\Log\NullLogger;
 use Symfony\Component\Asset\Package;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\PreloadedExtension;
 use Symfony\Component\Form\Test\TypeTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\Translation\IdentityTranslator;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Validation;
 
 class UploadTypeTest extends TypeTestCase
 {
@@ -29,7 +35,7 @@ class UploadTypeTest extends TypeTestCase
 
     private string $storageDir;
     private FilesystemOperator $storage;
-    private FileDeletionQueue $deletionQueue;
+    private UploadTransaction $transaction;
 
     protected function setUp(): void
     {
@@ -37,7 +43,7 @@ class UploadTypeTest extends TypeTestCase
         mkdir($this->storageDir);
 
         $this->storage = new Filesystem(new LocalFilesystemAdapter($this->storageDir));
-        $this->deletionQueue = new FileDeletionQueue(new NullLogger());
+        $this->transaction = new UploadTransaction(new MediaService(new AsciiSlugger()), new NullLogger());
 
         parent::setUp();
     }
@@ -58,13 +64,18 @@ class UploadTypeTest extends TypeTestCase
 
         $type = new UploadType(
             $packages,
-            new MediaService(new AsciiSlugger()),
-            $this->deletionQueue,
+            $this->transaction,
             new IdentityTranslator(),
             new \ArrayIterator([self::STORAGE => $this->storage]),
         );
 
-        return [new PreloadedExtension([$type], []), new HttpFoundationExtension()];
+        return [
+            new PreloadedExtension([$type], [
+                FormType::class => [new UploadTransactionExtension($this->transaction)],
+            ]),
+            new HttpFoundationExtension(),
+            new ValidatorExtension(Validation::createValidator(), false),
+        ];
     }
 
     public function testKeepsExistingFileWhenNothingIsSubmitted(): void
@@ -88,7 +99,7 @@ class UploadTypeTest extends TypeTestCase
         self::assertSame($form->getData(), array_values(array_diff($stored, ['existing.png']))[0]);
         self::assertStringStartsWith('avatar-', (string) $form->getData());
 
-        $this->deletionQueue->commit();
+        $this->transaction->commit();
         self::assertSame([$form->getData()], $this->storedFiles());
     }
 
@@ -101,18 +112,58 @@ class UploadTypeTest extends TypeTestCase
 
         self::assertNull($form->getData());
 
-        $this->deletionQueue->commit();
+        $this->transaction->commit();
         self::assertSame([], $this->storedFiles());
     }
 
-    public function testDiscardedQueueLeavesFilesUntouched(): void
+    public function testRolledBackTransactionLeavesFilesUntouched(): void
     {
         $this->storage->write('existing.png', 'old');
 
         $form = $this->createUploadForm('existing.png');
         $form->submit(['file' => null, 'removed' => 'existing.png']);
 
-        $this->deletionQueue->discard();
+        $this->transaction->rollback();
+        self::assertSame(['existing.png'], $this->storedFiles());
+    }
+
+    public function testUploadsRejectedByAConstraintNeverReachStorage(): void
+    {
+        $this->storage->write('existing.png', 'old');
+
+        $form = $this->createUploadForm('existing.png', false, [new File(maxSize: '1')]);
+        $form->submit(['file' => $this->upload('avatar.png'), 'removed' => 'existing.png']);
+
+        self::assertFalse($form->isValid());
+        self::assertSame(['existing.png'], $this->storedFiles());
+
+        $this->transaction->commit();
+        self::assertSame(['existing.png'], $this->storedFiles());
+    }
+
+    public function testRemovingTheLastFileOfARequiredUploadKeepsIt(): void
+    {
+        $this->storage->write('existing.png', 'old');
+
+        $form = $this->createUploadForm('existing.png', required: true);
+        $form->submit(['file' => null, 'removed' => 'existing.png']);
+
+        self::assertFalse($form->isValid());
+
+        $this->transaction->commit();
+        self::assertSame(['existing.png'], $this->storedFiles());
+    }
+
+    public function testRollbackRemovesUploadsAndKeepsTheFilesTheyReplaced(): void
+    {
+        $this->storage->write('existing.png', 'old');
+
+        $form = $this->createUploadForm('existing.png');
+        $form->submit(['file' => $this->upload('avatar.png'), 'removed' => '']);
+
+        self::assertCount(2, $this->storedFiles());
+
+        $this->transaction->rollback();
         self::assertSame(['existing.png'], $this->storedFiles());
     }
 
@@ -126,7 +177,7 @@ class UploadTypeTest extends TypeTestCase
 
         self::assertSame('existing.png', $form->getData());
 
-        $this->deletionQueue->commit();
+        $this->transaction->commit();
         self::assertSame(['existing.png', 'someone-elses.png'], $this->storedFiles());
     }
 
@@ -168,14 +219,21 @@ class UploadTypeTest extends TypeTestCase
     }
 
     /**
+     * @param list<Constraint> $fileConstraints
      * @return FormInterface<mixed>
      */
-    private function createUploadForm(mixed $data, bool $multiple = false): FormInterface
-    {
+    private function createUploadForm(
+        mixed $data,
+        bool $multiple = false,
+        array $fileConstraints = [],
+        bool $required = false,
+    ): FormInterface {
         return $this->factory->create(UploadType::class, $data, [
             'filesystem' => self::STORAGE,
             'asset_package' => 'test.package',
             'multiple' => $multiple,
+            'file_constraints' => $fileConstraints,
+            'required' => $required,
         ]);
     }
 

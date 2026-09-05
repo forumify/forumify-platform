@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Form;
 
-use Forumify\Core\Service\FileDeletionQueue;
-use Forumify\Core\Service\MediaService;
+use Forumify\Core\Service\UploadTransaction;
 use League\Flysystem\FilesystemException;
 use League\Flysystem\FilesystemOperator;
 use LogicException;
@@ -40,8 +39,7 @@ class UploadType extends AbstractType
      */
     public function __construct(
         private readonly Packages $packages,
-        private readonly MediaService $mediaService,
-        private readonly FileDeletionQueue $deletionQueue,
+        private readonly UploadTransaction $transaction,
         private readonly TranslatorInterface $translator,
         #[AutowireIterator('flysystem.storage', 'storage')]
         iterable $storages,
@@ -91,8 +89,7 @@ class UploadType extends AbstractType
                 'error_bubbling' => true,
             ])
             ->setDataMapper(new UploadDataMapper(
-                $this->mediaService,
-                $this->deletionQueue,
+                $this->transaction,
                 $this->getStorage($options['filesystem']),
                 $options['multiple'],
             ));
