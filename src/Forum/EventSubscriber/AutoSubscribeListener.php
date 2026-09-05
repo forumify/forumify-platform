@@ -7,12 +7,15 @@ namespace Forumify\Forum\EventSubscriber;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Events;
 use Forumify\Forum\Entity\Comment;
+use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Notification\CommentCreatedNotificationType;
+use Forumify\Forum\Notification\MessageReplyNotificationType;
 use Forumify\Forum\Service\SubscriptionService;
 
 #[AsEntityListener(event: Events::postPersist, method: 'subscribeOnTopicCreated', entity: Topic::class)]
 #[AsEntityListener(event: Events::postPersist, method: 'subscribeOnCommentCreated', entity: Comment::class)]
+#[AsEntityListener(event: Events::postPersist, method: 'subscribeOnMessageThreadCreated', entity: MessageThread::class)]
 class AutoSubscribeListener
 {
     public function __construct(private readonly SubscriptionService $subService)
@@ -50,5 +53,16 @@ class AutoSubscribeListener
             CommentCreatedNotificationType::TYPE,
             $comment->getTopic()->getId()
         );
+    }
+
+    public function subscribeOnMessageThreadCreated(MessageThread $thread): void
+    {
+        foreach ($thread->getParticipants() as $participant) {
+            $this->subService->subscribe(
+                $participant,
+                MessageReplyNotificationType::TYPE,
+                $thread->getId()
+            );
+        }
     }
 }
