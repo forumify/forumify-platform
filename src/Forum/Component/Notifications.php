@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\Forum\Component;
 
 use Forumify\Core\Entity\Notification;
+use Forumify\Core\Notification\NotificationSubjectAwareInterface;
 use Forumify\Core\Notification\NotificationTypeCollection;
 use Forumify\Core\Notification\NotificationTypeInterface;
 use Forumify\Core\Repository\NotificationRepository;
@@ -51,11 +52,30 @@ class Notifications extends AbstractController
             $existingTypes[] = $type->getType();
         }
 
-        $this->notifications = $this->notificationRepository->findBy(
+        $notifications = $this->notificationRepository->findBy(
             ['recipient' => $this->getUser(), 'type' => $existingTypes],
             ['seen' => 'ASC', 'createdAt' => 'DESC'],
             10
         );
+
+        $valid = [];
+        $deleted = [];
+        foreach ($notifications as $notification) {
+            $notificationType = $this->getNotificationType($notification);
+            if ($notificationType instanceof NotificationSubjectAwareInterface
+                && !$notificationType->isSubjectValid($notification)
+            ) {
+                $deleted[] = $notification;
+                continue;
+            }
+            $valid[] = $notification;
+        }
+
+        if (!empty($deleted)) {
+            $this->notificationRepository->removeAll($deleted);
+        }
+
+        $this->notifications = $valid;
         return $this->notifications;
     }
 

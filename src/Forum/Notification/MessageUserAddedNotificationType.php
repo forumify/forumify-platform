@@ -94,7 +94,7 @@ class MessageUserAddedNotificationType extends AbstractEmailNotificationType
         return $user;
     }
 
-    protected function isSubjectValid(Notification $notification): bool
+    public function isSubjectValid(Notification $notification): bool
     {
         return $this->getMessageThread($notification) !== null
             && $this->getUser($notification) !== null;

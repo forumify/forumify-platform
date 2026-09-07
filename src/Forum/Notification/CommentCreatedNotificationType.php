@@ -79,7 +79,7 @@ class CommentCreatedNotificationType extends AbstractEmailNotificationType
         return $comment;
     }
 
-    protected function isSubjectValid(Notification $notification): bool
+    public function isSubjectValid(Notification $notification): bool
     {
         return $this->getComment($notification) !== null;
     }

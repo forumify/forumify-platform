@@ -49,7 +49,7 @@ class AbstractEmailNotificationTypeTest extends TestCase
                 return 'irrelevant.html.twig';
             }
 
-            protected function isSubjectValid(Notification $notification): bool
+            public function isSubjectValid(Notification $notification): bool
             {
                 return false;
             }

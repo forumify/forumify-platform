@@ -85,7 +85,7 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
         return $message;
     }
 
-    protected function isSubjectValid(Notification $notification): bool
+    public function isSubjectValid(Notification $notification): bool
     {
         return $this->getMessage($notification) !== null;
     }

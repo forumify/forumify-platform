@@ -85,7 +85,7 @@ class TopicCreatedNotificationType extends AbstractEmailNotificationType
         return $topic;
     }
 
-    protected function isSubjectValid(Notification $notification): bool
+    public function isSubjectValid(Notification $notification): bool
     {
         return $this->getTopic($notification) !== null;
     }

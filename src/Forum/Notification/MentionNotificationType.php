@@ -103,7 +103,7 @@ class MentionNotificationType extends AbstractEmailNotificationType
         return $notification->getDeserializedContext()['subject'] ?? null;
     }
 
-    protected function isSubjectValid(Notification $notification): bool
+    public function isSubjectValid(Notification $notification): bool
     {
         return $this->getSubject($notification) !== null;
     }
