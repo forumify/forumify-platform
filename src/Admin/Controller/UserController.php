@@ -10,6 +10,7 @@ use Forumify\Admin\Form\UserManageRolesType;
 use Forumify\Admin\Form\UserType;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Event\UserBannedEvent;
+use Forumify\Core\Event\UserDeletedEvent;
 use Forumify\Core\Security\VoterAttribute;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormInterface;
@@ -47,14 +48,49 @@ class UserController extends AbstractCrudController
     }
 
     #[Route('/{identifier}/delete', '_delete')]
+    #[IsGranted('forumify.admin.users.manage')]
     public function delete(Request $request, string $identifier): Response
     {
         $user = $this->repository->find($identifier);
-        if ($user !== null) {
-            $this->denyAccessUnlessGranted(VoterAttribute::UserDelete->value, $user);
+        if ($user === null) {
+            return $this->redirectToRoute('forumify_admin_users_list');
         }
 
-        return parent::delete($request, $identifier);
+        $this->denyAccessUnlessGranted(VoterAttribute::UserDelete->value, $user);
+
+        if ($request->query->getBoolean('confirmed')) {
+            return $this->deleteUser($user, $request->query->getBoolean('deleteContent'));
+        }
+
+        $form = $this->createDeleteContentForm('admin.user.delete.');
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('deleteContent')->getData() !== true) {
+                return $this->deleteUser($user, false);
+            }
+
+            return $this->confirmDeleteContent($user, 'admin.user.delete.', 'forumify_admin_users_delete', [
+                'identifier' => $user->getId(),
+            ]);
+        }
+
+        return $this->render('@Forumify/admin/user/delete.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    private function deleteUser(User $user, bool $deleteContent): Response
+    {
+        $this->eventDispatcher->dispatch(new UserDeletedEvent($user, $deleteContent));
+        $this->repository->remove($user);
+
+        $this->addFlash('success', $deleteContent
+            ? 'admin.user.delete.deleted_and_content'
+            : 'admin.user.delete.deleted');
+
+        return $this->redirectToRoute('forumify_admin_users_list');
     }
 
     #[Route('/{id}/ban', '_ban')]
@@ -71,13 +107,7 @@ class UserController extends AbstractCrudController
             return $this->banUser($user, $request->query->getBoolean('deleteContent'));
         }
 
-        $form = $this->createFormBuilder()
-            ->add('deleteContent', CheckboxType::class, [
-                'label' => 'admin.user.ban.delete_content',
-                'help' => 'admin.user.ban.delete_content_help',
-                'required' => false,
-            ])
-            ->getForm();
+        $form = $this->createDeleteContentForm('admin.user.ban.');
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -85,8 +115,8 @@ class UserController extends AbstractCrudController
                 return $this->banUser($user, false);
             }
 
-            return $this->render('@Forumify/admin/user/ban_delete_content.html.twig', [
-                'user' => $user,
+            return $this->confirmDeleteContent($user, 'admin.user.ban.', 'forumify_admin_users_ban', [
+                'id' => $user->getId(),
             ]);
         }
 
@@ -109,6 +139,37 @@ class UserController extends AbstractCrudController
             : 'admin.user.ban.banned');
 
         return $this->redirectToRoute('forumify_admin_users_list');
+    }
+
+    /**
+     * @return FormInterface<null>
+     */
+    private function createDeleteContentForm(string $translationPrefix): FormInterface
+    {
+        return $this->createFormBuilder()
+            ->add('deleteContent', CheckboxType::class, [
+                'label' => $translationPrefix . 'delete_content',
+                'help' => $translationPrefix . 'delete_content_help',
+                'required' => false,
+            ])
+            ->getForm();
+    }
+
+    /**
+     * @param array<string, mixed> $routeParameters
+     */
+    private function confirmDeleteContent(
+        User $user,
+        string $translationPrefix,
+        string $route,
+        array $routeParameters,
+    ): Response {
+        return $this->render('@Forumify/admin/user/delete_content_confirm.html.twig', [
+            'user' => $user,
+            'translationPrefix' => $translationPrefix,
+            'confirmPath' => $this->generateUrl($route, $routeParameters + ['deleteContent' => 1, 'confirmed' => 1]),
+            'cancelPath' => $this->generateUrl($route, $routeParameters),
+        ]);
     }
 
     #[Route('/{id}/badges', '_badges')]

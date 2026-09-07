@@ -1,0 +1,9 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/confirm.html.twig' with {
+        warningText: (translationPrefix ~ 'delete_content_warning')|trans({ username: user.displayName }),
+        confirmText: (translationPrefix ~ 'delete_content_confirm')|trans,
+        confirmPath: confirmPath,
+        cancelPath: cancelPath,
+    } %}
+{% endblock %}

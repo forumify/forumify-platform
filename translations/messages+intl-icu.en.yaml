@@ -598,6 +598,18 @@ admin:
             delete_content_confirm: 'Ban and delete all content'
             banned: 'User banned.'
             banned_and_deleted: 'User banned and all their content was deleted.'
+        delete:
+            title: 'Delete {username}'
+            warning: 'You are about to delete {username}.'
+            consequence_account: 'Their account, roles, badges, and notification settings are permanently removed.'
+            consequence_content: 'Content they created stays on the forum, but is anonymized: it will show as created by a deleted user.'
+            consequence_reversible: 'Deleting a user can not be undone.'
+            delete_content: 'Also delete all content created by this user'
+            delete_content_help: 'Instead of anonymizing it, deletes their topics, comments, and message threads, as well as any content plugins have registered.'
+            delete_content_warning: 'You chose to delete all content created by {username}. All of their topics, comments, and message threads will be permanently deleted, as well as any content created in plugins. This can not be undone.'
+            delete_content_confirm: 'Delete user and all content'
+            deleted: 'User deleted.'
+            deleted_and_content: 'User and all their content were deleted.'
         actions:
             edit: 'Edit'
             ban: 'Ban'
