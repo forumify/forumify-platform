@@ -94,6 +94,12 @@ class MessageUserAddedNotificationType extends AbstractEmailNotificationType
         return $user;
     }
 
+    protected function isSubjectValid(Notification $notification): bool
+    {
+        return $this->getMessageThread($notification) !== null
+            && $this->getUser($notification) !== null;
+    }
+
     public function getEmailTemplate(Notification $notification): string
     {
         return '@Forumify/emails/notifications/message_user_added.html.twig';

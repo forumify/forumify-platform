@@ -68,4 +68,9 @@ class NewBadgeNotificationType extends AbstractEmailNotificationType
         }
         return $badge;
     }
+
+    protected function isSubjectValid(Notification $notification): bool
+    {
+        return $this->getBadge($notification) !== null;
+    }
 }

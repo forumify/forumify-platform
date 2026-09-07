@@ -31,9 +31,18 @@ abstract class AbstractEmailNotificationType implements NotificationTypeInterfac
 
     abstract public function getEmailTemplate(Notification $notification): string;
 
+    protected function isSubjectValid(Notification $notification): bool
+    {
+        return true;
+    }
+
     /** @inheritDoc */
     public function handleNotification(Notification $notification): void
     {
+        if (!$this->isSubjectValid($notification)) {
+            throw new NotificationSubjectDeletedException();
+        }
+
         if (!$this->shouldSendEmail($notification)) {
             return;
         }

@@ -85,6 +85,11 @@ class TopicCreatedNotificationType extends AbstractEmailNotificationType
         return $topic;
     }
 
+    protected function isSubjectValid(Notification $notification): bool
+    {
+        return $this->getTopic($notification) !== null;
+    }
+
     public function getEmailTemplate(Notification $notification): string
     {
         return '@Forumify/emails/notifications/topic_created.html.twig';
