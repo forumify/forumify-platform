@@ -1,0 +1,107 @@
+{% set settings = widget.settings|default({}) %}
+{% set disclosures = privacy_disclosures() %}
+
+{% block disclosure_data %}
+    {% if settings.showData ?? true %}
+        {% set data = disclosures.data %}
+        {% if data is not empty %}
+            <section class="privacy-policy__section">
+                <h2>{{ 'privacy_policy.data.title'|trans }}</h2>
+                <p>{{ 'privacy_policy.data.intro'|trans }}</p>
+                <dl class="privacy-policy__terms">
+                    {% for disclosure in data %}
+                        <div>
+                            <dt>
+                                {{ disclosure.category|trans }}
+                                <span class="text-light">- {{ ('privacy_policy.legal_basis.' ~ disclosure.legalBasis.value)|trans }}</span>
+                            </dt>
+                            <dd>
+                                {{ disclosure.purpose|trans }}
+                                {%- if disclosure.fields is not empty %}
+                                    {{ 'privacy_policy.data.includes'|trans({
+                                        fields: disclosure.fields|map(field => field|trans)|sentence_list
+                                    }) }}
+                                {%- endif %}
+                                {{ disclosure.retention|trans }}
+                            </dd>
+                        </div>
+                    {% endfor %}
+                </dl>
+            </section>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block disclosure_recipients %}
+    {% if settings.showRecipients ?? true %}
+        {% set recipients = disclosures.recipients %}
+        <section class="privacy-policy__section">
+            <h2>{{ 'privacy_policy.recipients.title'|trans }}</h2>
+            {% if recipients is empty %}
+                <p>{{ 'privacy_policy.recipients.none'|trans }}</p>
+            {% else %}
+                <p>{{ 'privacy_policy.recipients.intro'|trans }}</p>
+                <dl class="privacy-policy__terms">
+                    {% for recipient in recipients %}
+                        <div>
+                            <dt>
+                                {%- if recipient.privacyPolicyUrl -%}
+                                    <a href="{{ recipient.privacyPolicyUrl }}" target="_blank" rel="noopener">{{ recipient.name|trans }}</a>
+                                {%- else -%}
+                                    {{ recipient.name|trans }}
+                                {%- endif -%}
+                            </dt>
+                            <dd>
+                                {{ recipient.purpose|trans }}
+                                {%- if recipient.dataShared is not empty %}
+                                    {{ 'privacy_policy.recipients.shares'|trans({
+                                        fields: recipient.dataShared|map(field => field|trans)|sentence_list
+                                    }) }}
+                                {%- endif %}
+                            </dd>
+                        </div>
+                    {% endfor %}
+                </dl>
+                {% set outsideEea = recipients|filter(recipient => recipient.outsideEea)|map(recipient => recipient.name|trans) %}
+                {% if outsideEea is not empty %}
+                    <p>{{ 'privacy_policy.recipients.transfer'|trans({ names: outsideEea|sentence_list }) }}</p>
+                {% endif %}
+            {% endif %}
+        </section>
+    {% endif %}
+{% endblock %}
+
+{% block disclosure_cookies %}
+    {% if settings.showCookies ?? true %}
+        {% set cookies = disclosures.cookies %}
+        {% if cookies is not empty %}
+            <section class="privacy-policy__section">
+                <h2>{{ 'privacy_policy.cookies.title'|trans }}</h2>
+                <p>{{ 'privacy_policy.cookies.intro'|trans }}</p>
+                <div class="privacy-policy__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>{{ 'privacy_policy.cookies.header.name'|trans }}</th>
+                                <th>{{ 'privacy_policy.cookies.header.purpose'|trans }}</th>
+                                <th>{{ 'privacy_policy.cookies.header.lifetime'|trans }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cookie in cookies %}
+                                <tr>
+                                    <td><code>{{ cookie.name }}</code></td>
+                                    <td>
+                                        {{ cookie.purpose|trans }}
+                                        {%- if cookie.provider %} {{ 'privacy_policy.cookies.set_by'|trans({ provider: cookie.provider }) }}{% endif -%}
+                                    </td>
+                                    <td>{{ cookie.lifetime|trans }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% endif %}
+    {% endif %}
+{% endblock %}

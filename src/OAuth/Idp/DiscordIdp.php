@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Forumify\OAuth\Idp;
 
+use Forumify\OAuth\Compliance\IdentityProviderPrivacyInterface;
 use Forumify\OAuth\Entity\IdentityProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 
-class DiscordIdp extends AbstractOAuthIdp
+class DiscordIdp extends AbstractOAuthIdp implements IdentityProviderPrivacyInterface
 {
     public function __construct(
         private readonly HttpClientInterface $httpClient,
@@ -19,6 +20,16 @@ class DiscordIdp extends AbstractOAuthIdp
     public static function getType(): string
     {
         return 'discord';
+    }
+
+    public function getPrivacyPolicyUrl(): ?string
+    {
+        return 'https://discord.com/privacy';
+    }
+
+    public function transfersDataOutsideEea(): bool
+    {
+        return true;
     }
 
     public function getButtonHtml(IdentityProvider $idp): string

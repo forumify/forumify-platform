@@ -4,13 +4,18 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Form;
 
+use Forumify\Cms\Entity\Page;
+use Forumify\Cms\Repository\PageRepository;
+use Forumify\Core\Compliance\ComplianceMode;
 use Forumify\Core\Form\InfoType;
 use Forumify\Core\Form\UploadType;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimezoneType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,6 +29,7 @@ class ConfigurationType extends AbstractType
     public function __construct(
         #[Autowire(env: 'bool:FORUMIFY_HOSTED_INSTANCE')]
         private readonly bool $isHostedInstance,
+        private readonly PageRepository $pageRepository,
     ) {
     }
 
@@ -134,6 +140,8 @@ class ConfigurationType extends AbstractType
             ])
         ;
 
+        $this->addComplianceFields($builder);
+
         if (!$this->isHostedInstance) {
             $builder
                 ->add('forumify__mailer__from', TextType::class, [
@@ -142,5 +150,101 @@ class ConfigurationType extends AbstractType
                     'required' => false,
                 ]);
         }
+    }
+
+    /**
+     * @param FormBuilderInterface<array<string, mixed>|null> $builder
+     */
+    private function addComplianceFields(FormBuilderInterface $builder): void
+    {
+        $builder
+            ->add('forumify__compliance__mode', ChoiceType::class, [
+                'label' => 'admin.configuration.compliance.mode',
+                'help' => 'admin.configuration.compliance.mode_help',
+                'required' => false,
+                'placeholder' => null,
+                'empty_data' => ComplianceMode::Off->value,
+                'choices' => [
+                    'admin.configuration.compliance.mode_off' => ComplianceMode::Off->value,
+                    'admin.configuration.compliance.mode_generated' => ComplianceMode::Generated->value,
+                    'admin.configuration.compliance.mode_cms_page' => ComplianceMode::CmsPage->value,
+                ],
+                'attr' => [
+                    'data-forumify--compliance-target' => 'mode',
+                    'data-action' => 'change->forumify--compliance#update',
+                ],
+            ])
+            ->add('forumify__compliance__cms_page', ChoiceType::class, [
+                'label' => 'admin.configuration.compliance.cms_page',
+                'help' => 'admin.configuration.compliance.cms_page_help',
+                'required' => false,
+                'placeholder' => 'admin.configuration.compliance.cms_page_placeholder',
+                'choices' => $this->getPageChoices(),
+            ])
+            ->add('forumify__compliance__controller_name', TextType::class, [
+                'label' => 'admin.configuration.compliance.controller_name',
+                'help' => 'admin.configuration.compliance.controller_name_help',
+                'required' => false,
+            ])
+            ->add('forumify__compliance__controller_address', TextareaType::class, [
+                'label' => 'admin.configuration.compliance.controller_address',
+                'required' => false,
+            ])
+            ->add('forumify__compliance__contact_email', EmailType::class, [
+                'label' => 'admin.configuration.compliance.contact_email',
+                'help' => 'admin.configuration.compliance.contact_email_help',
+                'required' => false,
+            ])
+            ->add('forumify__compliance__dpo_contact', TextType::class, [
+                'label' => 'admin.configuration.compliance.dpo_contact',
+                'help' => 'admin.configuration.compliance.dpo_contact_help',
+                'required' => false,
+            ])
+            ->add('forumify__compliance__eu_representative', TextType::class, [
+                'label' => 'admin.configuration.compliance.eu_representative',
+                'help' => 'admin.configuration.compliance.eu_representative_help',
+                'required' => false,
+            ])
+            ->add('forumify__compliance__supervisory_authority', TextType::class, [
+                'label' => 'admin.configuration.compliance.supervisory_authority',
+                'help' => 'admin.configuration.compliance.supervisory_authority_help',
+                'required' => false,
+            ])
+            ->add('forumify__compliance__minimum_age', NumberType::class, [
+                'label' => 'admin.configuration.compliance.minimum_age',
+                'help' => 'admin.configuration.compliance.minimum_age_help',
+                'required' => false,
+                'html5' => true,
+                'constraints' => [new Assert\Range(max: 21, min: 0)],
+            ]);
+
+        if ($this->isHostedInstance) {
+            $builder->add('forumify__compliance__hosting_info', InfoType::class, [
+                'label' => 'admin.configuration.compliance.hosting_info',
+                'help' => 'admin.configuration.compliance.hosting_info_help',
+            ]);
+            return;
+        }
+
+        $builder
+            ->add('forumify__compliance__hosting_provider', TextType::class, [
+                'label' => 'admin.configuration.compliance.hosting_provider',
+                'help' => 'admin.configuration.compliance.hosting_provider_help',
+                'required' => false,
+            ]);
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function getPageChoices(): array
+    {
+        $choices = [];
+        /** @var Page $page */
+        foreach ($this->pageRepository->findAll() as $page) {
+            $choices[$page->getTitle()] = $page->getId();
+        }
+
+        return $choices;
     }
 }
