@@ -35,6 +35,13 @@
         >
             <i class="ph ph-check"></i>
         </button>
+        <div class="flex-grow flex justify-end">
+            {{ component('SubscribeButton', {
+                entityId: thread.id,
+                subscriptionType: constant('Forumify\\Forum\\Notification\\MessageReplyNotificationType::TYPE'),
+                buttonClass: 'btn-link btn-icon btn-small'
+            }) }}
+        </div>
     </div>
     <ul class="flex flex-wrap items-center">
         {% for participant in otherParticipants %}
