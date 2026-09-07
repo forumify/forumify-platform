@@ -85,6 +85,11 @@ class MessageReplyNotificationType extends AbstractEmailNotificationType
         return $message;
     }
 
+    public function isSubjectValid(Notification $notification): bool
+    {
+        return $this->getMessage($notification) !== null;
+    }
+
     public function getEmailTemplate(Notification $notification): string
     {
         return '@Forumify/emails/notifications/message_reply.html.twig';
