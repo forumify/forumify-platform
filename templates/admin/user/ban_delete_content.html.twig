@@ -1,0 +1,9 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% include '@Forumify/admin/components/confirm.html.twig' with {
+        warningText: 'admin.user.ban.delete_content_warning'|trans({ username: user.displayName }),
+        confirmText: 'admin.user.ban.delete_content_confirm'|trans,
+        confirmPath: path('forumify_admin_users_ban', { id: user.id, deleteContent: 1, confirmed: 1 }),
+        cancelPath: path('forumify_admin_users_ban', { id: user.id }),
+    } %}
+{% endblock %}

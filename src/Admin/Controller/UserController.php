@@ -9,7 +9,9 @@ use Forumify\Admin\Form\UserManageBadgesType;
 use Forumify\Admin\Form\UserManageRolesType;
 use Forumify\Admin\Form\UserType;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Event\UserBannedEvent;
 use Forumify\Core\Security\VoterAttribute;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -53,6 +55,60 @@ class UserController extends AbstractCrudController
         }
 
         return parent::delete($request, $identifier);
+    }
+
+    #[Route('/{id}/ban', '_ban')]
+    #[IsGranted('forumify.admin.users.manage')]
+    public function ban(User $user, Request $request): Response
+    {
+        $this->denyAccessUnlessGranted(VoterAttribute::UserBan->value, $user);
+
+        if ($user->isBanned()) {
+            return $this->redirectToRoute('forumify_admin_users_list');
+        }
+
+        if ($request->query->getBoolean('confirmed')) {
+            return $this->banUser($user, $request->query->getBoolean('deleteContent'));
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('deleteContent', CheckboxType::class, [
+                'label' => 'admin.user.ban.delete_content',
+                'help' => 'admin.user.ban.delete_content_help',
+                'required' => false,
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->get('deleteContent')->getData() !== true) {
+                return $this->banUser($user, false);
+            }
+
+            return $this->render('@Forumify/admin/user/ban_delete_content.html.twig', [
+                'user' => $user,
+            ]);
+        }
+
+        return $this->render('@Forumify/admin/user/ban.html.twig', [
+            'user' => $user,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    private function banUser(User $user, bool $deleteContent): Response
+    {
+        $user->setBanned(true);
+        $user->setRoleEntities([]);
+        $this->repository->save($user);
+
+        $this->eventDispatcher->dispatch(new UserBannedEvent($user, $deleteContent));
+
+        $this->addFlash('success', $deleteContent
+            ? 'admin.user.ban.banned_and_deleted'
+            : 'admin.user.ban.banned');
+
+        return $this->redirectToRoute('forumify_admin_users_list');
     }
 
     #[Route('/{id}/badges', '_badges')]

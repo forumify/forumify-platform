@@ -21,9 +21,12 @@ class CommentDeleteController extends AbstractController
     #[Route('/comment/{id}/delete', 'comment_delete')]
     public function __invoke(Comment $comment): Response
     {
-        $this->denyAccessUnlessGranted(VoterAttribute::CommentDelete->value, $comment);
-
         $topic = $comment->getTopic();
+        if ($topic->getFirstComment()?->getId() === $comment->getId()) {
+            return $this->redirectToRoute('forumify_forum_topic_delete', ['slug' => $topic->getSlug()]);
+        }
+
+        $this->denyAccessUnlessGranted(VoterAttribute::CommentDelete->value, $comment);
         $this->commentRepository->remove($comment);
 
         if ($topic->getComments()->isEmpty()) {

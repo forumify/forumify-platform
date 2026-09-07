@@ -36,6 +36,7 @@ class UserTable extends AbstractDoctrineTable
         $this
             ->addColumn('username', [
                 'field' => 'username',
+                'renderer' => $this->renderUsername(...),
             ])
             ->addColumn('displayName', [
                 'field' => 'displayName',
@@ -61,11 +62,11 @@ class UserTable extends AbstractDoctrineTable
 
     #[LiveAction]
     #[IsGranted('forumify.admin.users.manage')]
-    public function toggleBanned(#[LiveArg] int $id): void
+    public function unban(#[LiveArg] int $id): void
     {
         /** @var User|null $user */
         $user = $this->repository->find($id);
-        if ($user === null) {
+        if ($user === null || !$user->isBanned()) {
             return;
         }
 
@@ -73,10 +74,18 @@ class UserTable extends AbstractDoctrineTable
             throw new AccessDeniedException();
         }
 
-        $user->setBanned(!$user->isBanned());
-        $user->setRoleEntities([]);
-
+        $user->setBanned(false);
         $this->repository->save($user);
+    }
+
+    private function renderUsername(string $username, User $user): string
+    {
+        if (!$user->isBanned()) {
+            return $username;
+        }
+
+        $banned = $this->translator->trans('admin.user.banned');
+        return "$username <span class='tag tag-error'>$banned</span>";
     }
 
     private function renderEmail(string $email, User $user): string

@@ -38,13 +38,15 @@
                 {% endblock %}
                 {% block actions_ban %}
                     {% if canManage and is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::UserBan').value, user) %}
-                        <a class="btn-link" {{ live_action('toggleBanned', { id: user.id }) }}>
-                            {% if user.banned %}
+                        {% if user.banned %}
+                            <a class="btn-link" {{ live_action('unban', { id: user.id }) }}>
                                 <i class="ph ph-check-circle"></i> {{ 'admin.user.actions.unban'|trans }}
-                            {% else %}
+                            </a>
+                        {% else %}
+                            <a class="btn-link" href="{{ path('forumify_admin_users_ban', { id: user.id }) }}">
                                 <i class="ph ph-prohibit-inset"></i> {{ 'admin.user.actions.ban'|trans }}
-                            {% endif %}
-                        </a>
+                            </a>
+                        {% endif %}
                     {% endif %}
                 {% endblock %}
                 {% block actions_delete %}

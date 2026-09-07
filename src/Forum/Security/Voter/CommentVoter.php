@@ -40,6 +40,10 @@ class CommentVoter extends Voter
         $user = $token->getUser();
         $user = $user instanceof AuthorizableInterface ? $user->getUser() : null;
 
+        if ($attribute === VoterAttribute::CommentDelete->value && $subject instanceof Comment && $this->isFirstComment($subject)) {
+            return false;
+        }
+
         $forum = ($subject instanceof Comment ? $subject->getTopic() : $subject)->getForum();
         if ($this->aclService->can('moderate', $forum)) {
             return true;
@@ -52,6 +56,11 @@ class CommentVoter extends Voter
             VoterAttribute::CommentDelete->value => $subject instanceof Comment && $this->voteOnEditOrDelete($user, $subject),
             default => false,
         };
+    }
+
+    private function isFirstComment(Comment $comment): bool
+    {
+        return $comment->getTopic()->getFirstComment()?->getId() === $comment->getId();
     }
 
     private function voteOnCreate(?User $user, Topic $topic): bool
