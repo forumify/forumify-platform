@@ -24,7 +24,7 @@
                     </div>
                 {% endblock %}
                 {% block profile_user_actions %}
-                    {% if this.showUserActions and app.user is not null and app.user.id != user.id %}
+                    {% if this.showUserActions and app.user is not null and app.user.id != user.id and not user.banned %}
                         <a
                             class="btn-outlined btn-icon"
                             aria-label="{{ 'profile.message'|trans }}"
@@ -54,6 +54,13 @@
                             </li>
                         {% endfor %}
                     </ul>
+                {% endif %}
+            {% endblock %}
+            {% block profile_user_banned %}
+                {% if user.banned %}
+                    <p class="mt-2 mb-2">
+                        <span class="tag tag-error">{{ 'profile.banned'|trans }}</span>
+                    </p>
                 {% endif %}
             {% endblock %}
             {% block profile_user_stats %}

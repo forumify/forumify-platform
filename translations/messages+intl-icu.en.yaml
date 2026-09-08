@@ -68,6 +68,8 @@ profile:
         in: 'in'
     no_activity: 'This user has not posted any content yet.'
     badges: 'Badges'
+    no_badges: 'This user has not earned any badges yet.'
+    banned: 'Banned'
     topics: 'topics'
     comments: 'comments'
     followers: 'followers'

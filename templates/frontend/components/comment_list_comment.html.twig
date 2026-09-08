@@ -29,6 +29,11 @@
                             </ul>
                         {% endif %}
                     {% endblock %}
+                    {% block comment_list_comment_author_banned %}
+                        {% if item.createdBy.banned %}
+                            <span class="tag tag-error comment-author-banned">{{ 'profile.banned'|trans }}</span>
+                        {% endif %}
+                    {% endblock %}
                     {% block comment_list_comment_author_badges %}
                         <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
                             {% for badge in item.createdBy.badges|filter(b => b.showOnForum) %}
