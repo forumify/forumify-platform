@@ -52,6 +52,9 @@ create_topic: 'Post new topic'
 comment:
     edited: 'Edited on {date} by {user}'
 create_comment: 'Post comment'
+quote:
+    quote: 'Quote'
+    wrote_on: '{author} wrote on {date}:'
 subscribe: 'Subscribe'
 unsubscribe: 'Unsubscribe'
 first: 'First'
@@ -65,6 +68,8 @@ profile:
         in: 'in'
     no_activity: 'This user has not posted any content yet.'
     badges: 'Badges'
+    no_badges: 'This user has not earned any badges yet.'
+    banned: 'Banned'
     topics: 'topics'
     comments: 'comments'
     followers: 'followers'
@@ -143,11 +148,156 @@ login:
 registration:
     register: 'Register'
     timezone_placeholder: 'Use the website default'
+    privacy_notice: 'By registering you agree to our <a href="{link}">privacy policy</a>.'
     validation_error:
         username_alphanumeric: 'Username can only contain letters, numbers, underscores and hyphens.'
         username_one_letter: 'Username must contain at least one letter.'
         username_already_exists: 'The chosen username or email already exists.'
 registrations_disabled: 'Registrations are not enabled for this website.'
+privacy_policy:
+    title: 'Privacy Policy'
+    last_updated: 'Last updated on {date}'
+    list_and: 'and'
+    intro: 'This policy explains what personal data {site} collects, why we use it, who else receives it, and what you can do about it.'
+    controller:
+        title: 'Who is responsible for your data'
+        not_configured: 'The operator of this website has not filled in their contact details yet. Until they do, this policy is incomplete.'
+        intro: '{name} decides why and how your personal data is used on this website.'
+        address: 'Address'
+        contact: 'Contact'
+        dpo: 'Data protection officer'
+        eu_representative: 'EU representative'
+    data:
+        title: 'What we collect'
+        intro: 'This is the personal data this website stores about you, why it is needed, and how long it is kept.'
+        includes: 'This covers {fields}.'
+        account:
+            category: 'Your account'
+            purpose: 'Used to create your account, sign you in, and show you to other members.'
+        content:
+            category: 'What you post'
+            purpose: 'Used to run the forum and deliver your messages.'
+        activity:
+            category: 'How you use the site'
+            purpose: 'Used to keep track of what is new for you, and to show other members whether you are online.'
+        technical:
+            category: 'Technical information'
+            purpose: 'Collected automatically to keep this website secure and available, and to diagnose errors.'
+        audit:
+            category: 'Audit logs'
+            purpose: 'Records changes made on this website, including your own, so that they can be reviewed later.'
+        linked_accounts:
+            category: 'Linked accounts'
+            purpose: 'Stored when you choose to sign in using an account from another service.'
+    field:
+        username: 'your username'
+        email: 'your email address'
+        password: 'your password (stored hashed)'
+        display_name: 'your display name'
+        avatar: 'avatar'
+        signature: 'signature'
+        language: 'language'
+        timezone: 'timezone'
+        roles: 'any roles or badges you have'
+        topics: 'topics'
+        comments: 'comments'
+        reactions: 'reactions'
+        messages: 'private messages'
+        uploads: 'files you upload'
+        read_markers: 'which topics you have read'
+        subscriptions: 'what you follow'
+        last_activity: 'when you were last active'
+        notifications: 'your notifications'
+        ip_address: 'your IP address'
+        user_agent: 'the browser you use'
+        audit_changes: 'what was changed, and by whom'
+        interaction_data: 'signals about how you interact with the page'
+        sign_in_request: 'the fact that you are signing in to this website'
+        external_identifier: 'your account identifier at that service'
+        external_username: 'your username there'
+        all_platform_data: 'everything stored on this website'
+    retention:
+        account: 'Kept for as long as your account exists. Accounts that are never verified are removed after two days.'
+        content: 'Kept after you delete your account, but no longer linked to you.'
+        activity: 'Kept for as long as your account exists. Notifications are removed once seen, and after a year at the latest.'
+        server_logs: 'Kept in server logs, normally for a few weeks.'
+        audit: 'Kept for one year.'
+        until_unlinked: 'Kept until you unlink the account or delete your account.'
+    legal_basis:
+        consent: 'Consent'
+        contract: 'Contract'
+        legal_obligation: 'Legal Obligation'
+        vital_interests: 'Vital Interests'
+        public_task: 'Public Task'
+        legitimate_interests: 'Legitimate Interests'
+    recipients:
+        title: 'Who else receives your data'
+        intro: 'These services receive personal data because of features this website uses.'
+        none: 'Your data is not shared with anyone else.'
+        shares: 'They receive {fields}.'
+        transfer: '{names} are based outside the European Economic Area, so using those features transfers your data outside the EEA.'
+    recipient:
+        recaptcha:
+            purpose: 'Checks that sign-ins and registrations come from a person rather than a bot.'
+        turnstile:
+            purpose: 'Checks that sign-ins and registrations come from a person rather than a bot.'
+        forumify_cloud:
+            purpose: 'Hosts this website and delivers its email.'
+        hosting:
+            purpose: 'Hosts this website and its database, and delivers its email.'
+        identity_provider:
+            purpose: 'Signs you in when you choose to use this service.'
+    cookies:
+        title: 'Cookies'
+        intro: 'Cookies are small files your browser stores. This website uses these:'
+        set_by: 'Set by {provider}.'
+        header:
+            name: 'Cookie'
+            purpose: 'What it does'
+            lifetime: 'How long it lasts'
+    cookie:
+        session:
+            purpose: 'Keeps you signed in while you browse.'
+        remember_me:
+            purpose: 'Keeps you signed in between visits when you ask to be remembered.'
+        theme:
+            purpose: 'Remembers whether you chose the light or dark theme.'
+        recaptcha:
+            purpose: 'Tells people and bots apart.'
+        turnstile:
+            purpose: 'Tells people and bots apart.'
+        lifetime:
+            session: 'Session'
+            remember_me: '7 days'
+            year_1: '1 year'
+            months_6: '6 months'
+            provider_defined: 'Provider Decides'
+    deletion:
+        title: 'Deleting your account'
+        body: 'When your account is deleted, your profile, preferences, follows, reactions and notifications go with it. Topics, comments and messages you wrote stay, so that conversations other members took part in remain readable, but they are no longer linked to you.'
+    rights:
+        title: 'Your rights'
+        intro: 'Depending on where you live, you have some or all of these rights:'
+        access: 'Ask for a copy of the personal data we hold about you.'
+        rectification: 'Correct anything that is wrong. Most of it you can change yourself in your account settings.'
+        erasure: 'Ask us to delete your data.'
+        portability: 'Ask for your data in a portable format.'
+        objection: 'Object to, or ask us to limit, uses based on our legitimate interests.'
+        withdraw_consent: 'Withdraw consent you gave earlier, without affecting what happened before.'
+        non_discrimination: 'Use any of these rights without being treated differently for it.'
+        how_to_exercise: 'To use any of these rights, email <a href="mailto:{email}">{email}</a>. We reply within one month, or within 45 days for requests made under Californian law.'
+        complaint: 'You can also complain to {authority}.'
+    sale:
+        body: 'We do not sell your personal data, and we do not share it for advertising.'
+    children:
+        title: 'Children'
+        body: 'This website is not meant for anyone under {age}. If you think a child has created an account, contact us and we will remove it.'
+    security:
+        title: 'Keeping your data safe'
+        body: 'Passwords are stored hashed. Access to member data is limited by roles and permissions, all actions are logged for auditing, and repeated sign-in attempts are rate limited.'
+    changes:
+        title: 'When this policy changes'
+        body: 'What this website collects, and who else receives it, follows the features it uses. If one is added or removed, such as a plugin or a new way to sign in, this policy changes with it straight away and without a separate announcement. Re-read this page if you want to be certain what applies today.'
 forgot_password:
     find_account: 'Find your account'
     search: 'Search'
@@ -236,7 +386,12 @@ error:
 plugin:
     homepage: 'Homepage'
 file_upload:
-    drop_text: 'Drop files here or click to open dialog.'
+    drop_text: 'Drop files here or click to browse.'
+    multiple_hint: 'You can add several files at once.'
+    new: 'New'
+    download: 'Download'
+    remove: 'Remove'
+    required: 'Please upload a file.'
 forum:
     comment:
         mark_answer: 'Mark as answer'
@@ -343,6 +498,11 @@ admin:
             edit: 'Editing Snippet "{name}"'
             delete_warning: 'You are about to delete the snippet "{name}". If it is still being used anywhere, it will no longer be found.'
         widget:
+            compliance:
+                disclosures: 'Privacy disclosures'
+                show_data: 'Show collected data'
+                show_recipients: 'Show third parties'
+                show_cookies: 'Show cookies'
             layout:
                 two_column: '2 Columns'
                 three_column: '3 Columns'
@@ -442,6 +602,42 @@ admin:
             site_key: Site key
             site_secret: Site secret
         mailer_from_help: 'Email address that the platform will use to send emails from.'
+        compliance:
+            title: 'Compliance'
+            mode: 'Privacy policy'
+            mode_help: 'Decides whether this website publishes a privacy policy, and where it comes from.'
+            mode_off: 'Off'
+            mode_generated: 'Auto generated'
+            mode_cms_page: 'CMS page'
+            off_warning: >
+                No privacy policy is published. Laws such as the GDPR and the CCPA require you to tell members
+                which personal data you collect and why. Pick "Auto generated" or point at a CMS page of your own.
+            generated_info: >
+                forumify builds the policy from what is actually enabled on this website, including plugins and
+                identity providers. Fill in the details below, they are the parts only you can know.
+            cms_page_info: >
+                Your own page is published as-is. Add the "Privacy disclosures" CMS widget to it to keep the
+                generated data, recipient and cookie tables on your page.
+            cms_page: 'Page'
+            cms_page_help: 'Visitors opening the privacy policy are sent to this page.'
+            cms_page_placeholder: 'Select a page'
+            controller_name: 'Responsible party'
+            controller_name_help: 'The person or company that runs this website, as it should appear in the policy.'
+            controller_address: 'Address'
+            contact_email: 'Contact email'
+            contact_email_help: 'Where members send requests to access, correct or delete their data.'
+            dpo_contact: 'Data protection officer'
+            dpo_contact_help: 'Optional. Only required for some organisations.'
+            eu_representative: 'EU representative'
+            eu_representative_help: 'Optional. Required if you are established outside the EU but have EU members.'
+            supervisory_authority: 'Supervisory authority'
+            supervisory_authority_help: 'The data protection authority members can complain to, for example "the Dutch Data Protection Authority".'
+            minimum_age: 'Minimum age'
+            minimum_age_help: 'The minimum age to use this website. Leave empty to omit the section about children.'
+            hosting_provider: 'Hosting provider'
+            hosting_provider_help: 'Who hosts this website and delivers its email, for example "Amazon Web Services". Listed as a recipient of member data.'
+            hosting_info: 'Hosting and email'
+            hosting_info_help: 'This website runs on forumify cloud, so forumify is listed automatically as the hosting and email provider.'
     dashboard:
         greeting: 'Welcome, {user}!'
         cloud_deletion_warning: 'This cloud instance has been scheduled for deletion on {date, date} and will be inaccessible after this date.'
@@ -576,6 +772,32 @@ admin:
             single: 'user'
             plural: 'users'
         email_unverified: 'This email has not been verified yet.'
+        banned: 'Banned'
+        ban:
+            title: 'Ban {username}'
+            warning: 'You are about to ban {username}.'
+            consequence_login: 'They will keep access to their account, but will no longer be able to create topics, comments, or message threads.'
+            consequence_content: 'Content they created before the ban stays visible, unless you choose to delete it below.'
+            consequence_roles: 'All roles assigned to them will be removed, and are not restored when they are unbanned.'
+            consequence_reversible: 'A ban can be lifted again from the user list.'
+            delete_content: 'Also delete all content created by this user'
+            delete_content_help: 'Deletes their topics, comments, and message threads, as well as any content plugins have registered.'
+            delete_content_warning: 'You chose to delete all content created by {username}. All of their topics, comments, and message threads will be permanently deleted, as well as any content created in plugins. This can not be undone.'
+            delete_content_confirm: 'Ban and delete all content'
+            banned: 'User banned.'
+            banned_and_deleted: 'User banned and all their content was deleted.'
+        delete:
+            title: 'Delete {username}'
+            warning: 'You are about to delete {username}.'
+            consequence_account: 'Their account, roles, badges, and notification settings are permanently removed.'
+            consequence_content: 'Content they created stays on the forum, but is anonymized: it will show as created by a deleted user.'
+            consequence_reversible: 'Deleting a user can not be undone.'
+            delete_content: 'Also delete all content created by this user'
+            delete_content_help: 'Instead of anonymizing it, deletes their topics, comments, and message threads, as well as any content plugins have registered.'
+            delete_content_warning: 'You chose to delete all content created by {username}. All of their topics, comments, and message threads will be permanently deleted, as well as any content created in plugins. This can not be undone.'
+            delete_content_confirm: 'Delete user and all content'
+            deleted: 'User deleted.'
+            deleted_and_content: 'User and all their content were deleted.'
         actions:
             edit: 'Edit'
             ban: 'Ban'

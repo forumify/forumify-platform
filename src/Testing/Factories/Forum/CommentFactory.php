@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Forumify\Testing\Factories\Forum;
+
+use Forumify\Forum\Entity\Comment;
+use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
+
+/**
+ * @extends PersistentObjectFactory<Comment>
+ */
+class CommentFactory extends PersistentObjectFactory
+{
+    public static function class(): string
+    {
+        return Comment::class;
+    }
+
+    protected function defaults(): array|callable
+    {
+        return [
+            'content' => self::faker()->paragraphs(asText: true),
+            'topic' => TopicFactory::createOne(),
+        ];
+    }
+}

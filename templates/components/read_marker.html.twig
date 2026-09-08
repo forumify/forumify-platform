@@ -1,10 +1,12 @@
 <div {{ attributes }}>
-    {% if not item|read %}
+    {% if app.user %}
         <a
-            class="btn-link btn-small btn-icon"
-            data-action="live#action"
-            data-live-action-param="markAsRead"
+            class="btn-link btn-small btn-icon{{ this.read ? ' d-none' }}"
             title="{{ 'mark_read'|trans }}"
+            data-read-marker-type="{{ this.type }}"
+            data-read-marker-id="{{ this.id }}"
+            {{ stimulus_target('forumify/read-markers', 'marker') }}
+            {{ stimulus_action('forumify/read-markers', 'markAsRead') }}
         >
             <i class="dot"></i>
         </a>

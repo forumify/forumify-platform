@@ -1,0 +1,34 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    test: true
+    default_locale: en
+    annotations: false
+    http_method_override: false
+    handle_all_throwables: true
+
+    php_errors:
+        log: true
+
+    session:
+        handler_id: null
+        cookie_secure: auto
+        cookie_samesite: lax
+        storage_factory_id: session.storage.factory.mock_file
+
+    router:
+        utf8: true
+
+    validation:
+        email_validation_mode: html5
+        not_compromised_password: false
+
+    property_info:
+        with_constructor_extractor: true
+
+    mailer:
+        dsn: '%env(MAILER_DSN)%'
+
+    translator:
+        default_path: '%kernel.project_dir%/translations'
+        fallbacks:
+            - en

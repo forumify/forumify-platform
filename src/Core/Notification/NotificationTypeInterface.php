@@ -22,6 +22,7 @@ interface NotificationTypeInterface
 
     /**
      * @throws NotificationHandlerException
+     * @throws NotificationSubjectDeletedException the notification will be removed
      */
     public function handleNotification(Notification $notification): void;
 }

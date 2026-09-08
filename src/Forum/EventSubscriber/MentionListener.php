@@ -100,11 +100,15 @@ class MentionListener
             }
 
             $userId = $span->getAttribute('data-id');
+            if (isset($users[$userId])) {
+                continue;
+            }
+
             $user = $this->userRepository->find($userId);
             if ($user !== null) {
-                $users[] = $user;
+                $users[$userId] = $user;
             }
         }
-        return $users;
+        return array_values($users);
     }
 }

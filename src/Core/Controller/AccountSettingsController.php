@@ -6,13 +6,11 @@ namespace Forumify\Core\Controller;
 
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\UserRepository;
-use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Form\AccountSettingsType;
 use Forumify\OAuth\Entity\IdentityProvider;
 use Forumify\OAuth\Entity\IdentityProviderUser;
 use Forumify\OAuth\Repository\IdentityProviderRepository;
 use Forumify\OAuth\Repository\IdentityProviderUserRepository;
-use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,8 +22,6 @@ class AccountSettingsController extends AbstractController
 {
     public function __construct(
         private readonly UserRepository $userRepository,
-        private readonly MediaService $mediaService,
-        private readonly FilesystemOperator $avatarStorage,
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly IdentityProviderUserRepository $idpUserRepository,
         private readonly IdentityProviderRepository $idpRepository,
@@ -41,12 +37,6 @@ class AccountSettingsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $user = $form->getData();
-
-            $newAvatar = $form->get('newAvatar')->getData();
-            if ($newAvatar !== null) {
-                $avatar = $this->mediaService->saveToFilesystem($this->avatarStorage, $newAvatar);
-                $user->setAvatar($avatar);
-            }
 
             $newPassword = $form->get('newPassword')->getData();
             if ($newPassword) {

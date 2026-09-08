@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Tests\Application\Api\Forum;
 
-use Tests\Tests\Application\Api\ApiTestCase;
-use Tests\Tests\Application\Api\Crud\DeleteTestTrait;
-use Tests\Tests\Application\Api\Crud\GetCollectionTestTrait;
-use Tests\Tests\Application\Api\Crud\GetTestTrait;
-use Tests\Tests\Application\Api\Crud\PatchTestTrait;
-use Tests\Tests\Application\Api\Crud\PostTestTrait;
-use Tests\Tests\Factories\Forum\ForumGroupFactory;
+use Forumify\Testing\Api\ApiTestCase;
+use Forumify\Testing\Api\Crud\DeleteTestTrait;
+use Forumify\Testing\Api\Crud\GetCollectionTestTrait;
+use Forumify\Testing\Api\Crud\GetTestTrait;
+use Forumify\Testing\Api\Crud\PatchTestTrait;
+use Forumify\Testing\Api\Crud\PostTestTrait;
+use Forumify\Testing\Factories\Forum\ForumGroupFactory;
 
 class ForumGroupApiTest extends ApiTestCase
 {

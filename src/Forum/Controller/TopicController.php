@@ -9,7 +9,6 @@ use Forumify\Core\Form\EntityType;
 use Forumify\Core\Repository\ReadMarkerRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Core\Service\ACLService;
-use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
 use Forumify\Forum\Form\NewCommentType;
@@ -20,7 +19,6 @@ use Forumify\Forum\Repository\ForumRepository;
 use Forumify\Forum\Repository\TopicRepository;
 use Forumify\Forum\Service\CreateCommentService;
 use Forumify\Forum\Service\LastCommentService;
-use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -83,17 +81,13 @@ class TopicController extends AbstractController
     }
 
     #[Route('/{slug:topic}/edit', '_edit')]
-    public function edit(
-        Request $request,
-        Topic $topic,
-        FilesystemOperator $mediaStorage,
-        MediaService $mediaService,
-    ): Response {
+    public function edit(Request $request, Topic $topic): Response
+    {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicEdit->value, $topic);
 
         $topicData = new TopicData();
         $topicData->setTitle($topic->getTitle());
-        $topicData->setExistingImage($topic->getImage());
+        $topicData->setImage($topic->getImage());
         $topicData->setTags($topic->tags);
 
         $form = $this->createForm(TopicType::class, $topicData, ['forum' => $topic->getForum()]);
@@ -104,10 +98,7 @@ class TopicController extends AbstractController
             $topicData = $form->getData();
 
             $topic->setTitle($topicData->getTitle());
-            if ($topicData->getImage() !== null) {
-                $newImage = $mediaService->saveToFilesystem($mediaStorage, $topicData->getImage());
-                $topic->setImage($newImage);
-            }
+            $topic->setImage($topicData->getImage());
 
             $topic->tags = $topicData->getTags();
             $this->topicRepository->save($topic);

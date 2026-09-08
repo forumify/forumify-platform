@@ -68,6 +68,8 @@ class NotificationMessageHandler
         $this->localeSwitcher->runWithLocale($language, function () use ($notificationType, $notification) {
             try {
                 $notificationType->handleNotification($notification);
+            } catch (NotificationSubjectDeletedException) {
+                $this->notificationRepository->remove($notification);
             } catch (Exception) {
             }
         });

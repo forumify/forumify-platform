@@ -3,22 +3,21 @@
         <a class="{{ this.buttonClass }}" href="{{ path('forumify_core_login', { '_target_path': app.request.requestUri }) }}">
             {% if this.subscribeIcon is not empty %}
                 <i class="{{ this.subscribeIcon }}"></i>
+                <span class="hide-phone ml-2">{{ this.subscribeLabel|trans }}</span>
+            {% else %}
+                <span>{{ this.subscribeLabel|trans }}</span>
             {% endif %}
-            <span class="hide-phone ml-2">{{ this.subscribeLabel|trans }}
         </a>
     {% else %}
         {% set subscription = this.subscription %}
+        {% set icon = subscription is null ? this.subscribeIcon : this.unsubscribeIcon %}
+        {% set label = subscription is null ? this.subscribeLabel : this.unsubscribeLabel %}
         <button class="{{ this.buttonClass }}" data-action="live#action" data-live-action-param="toggleSubscription">
-            {% if subscription is null %}
-                {% if this.subscribeIcon is not empty %}
-                    <i class="{{ this.subscribeIcon }}"></i>
-                {% endif %}
-                <span class="hide-phone ml-2">{{ this.subscribeLabel|trans }}
+            {% if icon is not empty %}
+                <i class="{{ icon }}"></i>
+                <span class="hide-phone ml-2">{{ label|trans }}</span>
             {% else %}
-                {% if this.unsubscribeIcon is not empty %}
-                    <i class="{{ this.unsubscribeIcon }}"></i>
-                {% endif %}
-                <span class="hide-phone ml-2">{{ this.unsubscribeLabel|trans }}
+                <span>{{ label|trans }}</span>
             {% endif %}
         </button>
     {% endif %}

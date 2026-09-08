@@ -79,6 +79,11 @@ class CommentCreatedNotificationType extends AbstractEmailNotificationType
         return $comment;
     }
 
+    public function isSubjectValid(Notification $notification): bool
+    {
+        return $this->getComment($notification) !== null;
+    }
+
     public function getEmailTemplate(Notification $notification): string
     {
         return '@Forumify/emails/notifications/comment_created.html.twig';

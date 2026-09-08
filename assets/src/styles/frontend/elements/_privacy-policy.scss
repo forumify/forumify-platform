@@ -1,0 +1,68 @@
+.privacy-policy {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-5);
+    margin-inline: auto;
+    line-height: 1.7;
+
+    h2 {
+        font-size: 1.25rem;
+        margin-bottom: 0;
+    }
+}
+
+.privacy-policy__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+
+    h1 {
+        margin-bottom: 0;
+    }
+}
+
+.privacy-policy__meta {
+    color: var(--c-text-secondary);
+}
+
+.privacy-policy__lead {
+    font-size: 1.125rem;
+}
+
+.privacy-policy__section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    padding-top: var(--spacing-5);
+    border-top: var(--border);
+}
+
+.privacy-policy__terms {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+
+    dt {
+        font-weight: 600;
+    }
+
+    dd {
+        margin-left: 0;
+    }
+
+    .tag {
+        background-color: transparent;
+    }
+}
+
+.privacy-policy__table {
+    overflow-x: auto;
+
+    table {
+        min-width: 32rem;
+    }
+
+    code {
+        white-space: nowrap;
+    }
+}

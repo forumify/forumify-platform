@@ -7,6 +7,7 @@ namespace Forumify\OAuth\Idp;
 use Firebase\JWT\CachedKeySet;
 use Firebase\JWT\JWT;
 use Forumify\Admin\Form\IdentityProvider\GoogleIdpType;
+use Forumify\OAuth\Compliance\IdentityProviderPrivacyInterface;
 use Forumify\OAuth\Entity\IdentityProvider;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\HttpFactory;
@@ -18,7 +19,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Throwable;
 
-class GoogleIdp extends AbstractIdp
+class GoogleIdp extends AbstractIdp implements IdentityProviderPrivacyInterface
 {
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
@@ -29,6 +30,16 @@ class GoogleIdp extends AbstractIdp
     public static function getType(): string
     {
         return 'google';
+    }
+
+    public function getPrivacyPolicyUrl(): ?string
+    {
+        return 'https://policies.google.com/privacy';
+    }
+
+    public function transfersDataOutsideEea(): bool
+    {
+        return true;
     }
 
     public static function getDataType(): string

@@ -16,9 +16,7 @@ class MediaService
 
     public function saveToFilesystem(FilesystemOperator $filesystem, UploadedFile $file): string
     {
-        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $this->slugger->slug($originalFilename);
-        $destinationFilename = uniqid($safeFilename . '-') . '.' . $file->guessExtension();
+        $destinationFilename = $this->generatePath($file);
 
         $filesystem->write(
             $destinationFilename,
@@ -26,5 +24,13 @@ class MediaService
         );
 
         return $destinationFilename;
+    }
+
+    public function generatePath(UploadedFile $file): string
+    {
+        $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $safeFilename = $this->slugger->slug($originalFilename);
+
+        return uniqid($safeFilename . '-') . '.' . $file->guessExtension();
     }
 }

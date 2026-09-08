@@ -9,11 +9,13 @@ import { List } from '../controllers/List';
 import { Menu } from '../controllers/Menu';
 import { Modal } from '../controllers/Modal';
 import { ProfilePreview } from '../controllers/ProfilePreview';
+import { ReadMarkers } from '../controllers/ReadMarkers';
 import { RichText } from '../controllers/RichText';
 import { RichTextEditor } from '../controllers/RichTextEditor';
 import { Tabs } from '../controllers/Tabs';
 import { Theme } from '../controllers/Theme';
 import { TimezoneInput } from '../controllers/TimezoneInput';
+import { Upload } from '../controllers/Upload';
 import { Youtube } from '../controllers/Youtube';
 
 export default (app) => {
@@ -29,11 +31,13 @@ export default (app) => {
   register('menu', Menu);
   register('modal', Modal);
   register('profile-preview', ProfilePreview);
+  register('read-markers', ReadMarkers);
   register('rich-text', RichText);
   register('rich-text-editor', RichTextEditor);
   register('tabs', Tabs);
   register('theme', Theme);
   register('timezone-input', TimezoneInput);
+  register('upload', Upload);
   register('youtube', Youtube);
 
   return register;

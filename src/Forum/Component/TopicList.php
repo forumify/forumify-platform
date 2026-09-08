@@ -6,9 +6,15 @@ namespace Forumify\Forum\Component;
 
 use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Component\List\AbstractDoctrineList;
+use Forumify\Core\Entity\User;
+use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
+use Forumify\Forum\Repository\CommentReactionRepository;
+use Forumify\Forum\Repository\TopicRepository;
+use Forumify\Forum\Service\LastCommentService;
+use Forumify\Forum\Service\TopicReadMarkerService;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -30,9 +36,78 @@ class TopicList extends AbstractDoctrineList
     #[LiveProp]
     public bool $showControls = true;
 
+    /** @var array<int, int> */
+    private array $commentCounts = [];
+    /** @var array<int, int> */
+    private array $reactionCounts = [];
+
     public function __construct(
         private readonly Security $security,
+        private readonly TopicRepository $topicRepository,
+        private readonly CommentReactionRepository $commentReactionRepository,
+        private readonly LastCommentService $lastCommentService,
+        private readonly TopicReadMarkerService $topicReadMarkerService,
+        private readonly UserRepository $userRepository,
     ) {
+    }
+
+    /**
+     * @return array<Topic>
+     */
+    protected function getData(): array
+    {
+        /** @var array<Topic> $topics */
+        $topics = parent::getData();
+        $this->preload($topics);
+
+        return $topics;
+    }
+
+    public function getCommentCount(Topic $topic): int
+    {
+        return $this->commentCounts[$topic->getId()] ?? $topic->getComments()->count();
+    }
+
+    public function getReactionCount(Topic $topic): int
+    {
+        $firstComment = $topic->getFirstComment();
+        if ($firstComment === null) {
+            return 0;
+        }
+
+        return $this->reactionCounts[$firstComment->getId()] ?? $firstComment->getReactions()->count();
+    }
+
+    /**
+     * Resolves everything the list renders per topic for the whole page at once.
+     *
+     * @param array<Topic> $topics
+     */
+    private function preload(array $topics): void
+    {
+        if (empty($topics)) {
+            return;
+        }
+
+        $this->topicRepository->preloadTags($topics);
+        $this->commentCounts = $this->topicRepository->countCommentsPerTopic($topics);
+
+        $firstComments = array_filter(array_map(static fn (Topic $topic) => $topic->getFirstComment(), $topics));
+        $this->reactionCounts = $this->commentReactionRepository->countPerComment($firstComments);
+
+        $this->lastCommentService->preloadTopics($topics);
+
+        $user = $this->security->getUser();
+        if ($user instanceof User) {
+            $this->topicReadMarkerService->preload($user, $topics);
+        }
+
+        $authors = array_map(static fn (Topic $topic) => $topic->getCreatedBy(), $topics);
+        $lastCommentAuthors = array_map(
+            fn (Topic $topic) => $this->lastCommentService->getLastComment($topic)?->getCreatedBy(),
+            $topics,
+        );
+        $this->userRepository->preloadRoles(array_filter([...$authors, ...$lastCommentAuthors]));
     }
 
     protected function getEntityClass(): string

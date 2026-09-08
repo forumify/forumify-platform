@@ -7,8 +7,9 @@
     <div class="box">
         {{ form_start(form) }}
         {{ form_widget(form) }}
-        <div class="flex justify-center">
+        <div class="flex justify-center items-center gap-2">
             <button class="btn-primary" type="submit">{{ 'post'|trans }}</button>
+            <a href="{{ path('forumify_forum_forum', {slug: forum.slug}) }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
         </div>
         {{ form_end(form) }}
     </div>

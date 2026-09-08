@@ -13,7 +13,9 @@ body {
 
 footer {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
+    gap: var(--spacing-1) var(--spacing-4);
     margin-bottom: var(--spacing-6);
 }
 

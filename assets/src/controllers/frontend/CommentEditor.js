@@ -1,5 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 import { QuillEditor } from '../../components/QuillEditor';
+import { Quote } from '../../components/blots/Quote';
+import { QUOTE_EVENT } from '../RichTextEditor';
+import { uploadEmbeddedImages } from '../../services/media';
 
 export class CommentEditor extends Controller {
   static targets = ['editButton', 'editorContainer'];
@@ -61,12 +64,30 @@ export class CommentEditor extends Controller {
   }
 
   async save() {
-    const res = await fetch(this.updateUrlValue, { method: 'POST', body: this.editor.root.innerHTML });
+    const content = await uploadEmbeddedImages(this.editor.getSemanticHTML());
+    const res = await fetch(this.updateUrlValue, { method: 'POST', body: content });
     const newContent = await res.text();
 
     const richText = this.element.querySelector('.rich-text');
     richText.innerHTML = newContent;
     this.discardEdit();
+  }
+
+  async quote(event) {
+    const response = await fetch(event.params.url);
+    if (!response.ok) {
+      return;
+    }
+
+    const container = document.createElement('div');
+    container.innerHTML = await response.text();
+
+    const quote = container.querySelector(`blockquote.${Quote.className}`);
+    if (quote === null) {
+      return;
+    }
+
+    window.dispatchEvent(new CustomEvent(QUOTE_EVENT, { detail: { html: quote.innerHTML } }));
   }
 
   copyUrl(event) {

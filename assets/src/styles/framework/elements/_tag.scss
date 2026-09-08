@@ -5,4 +5,9 @@
     background-color: var(--c-primary);
     color: var(--c-primary-text);
     padding: calc(var(--spacing-1) / 2) var(--spacing-1);
+
+    &.tag-error {
+        background-color: var(--c-error);
+        color: var(--c-error-text);
+    }
 }

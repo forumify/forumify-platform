@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Repository;
 
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Forumify\Core\Entity\ReadMarker;
+use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\Topic;
@@ -22,13 +25,72 @@ class TopicRepository extends AbstractRepository
     public function incrementViews(Topic $topic): void
     {
         $topic->setViews($topic->getViews() + 1);
+        // incremented in the database so concurrent views don't overwrite each other
         $this->createQueryBuilder('t')
             ->update(Topic::class, 't')
-            ->set('t.views', $topic->getViews())
+            ->set('t.views', 't.views + 1')
             ->where('t.id = :topicId')
             ->setParameter('topicId', $topic->getId())
             ->getQuery()
             ->execute();
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function findImagesByForum(int|Forum $forum): array
+    {
+        $rows = $this->createQueryBuilder('t')
+            ->select('t.images')
+            ->join('t.forum', 'f')
+            ->where('f = :forum')
+            ->andWhere('t.images IS NOT NULL')
+            ->orderBy('t.createdAt', 'DESC')
+            ->setParameter('forum', $forum)
+            ->getQuery()
+            ->getResult();
+
+        return array_merge(...array_column($rows, 'images'));
+    }
+
+    /**
+     * @param array<Topic> $topics
+     */
+    public function preloadTags(array $topics): void
+    {
+        if (empty($topics)) {
+            return;
+        }
+
+        $this->createQueryBuilder('t')
+            ->addSelect('tags')
+            ->leftJoin('t.tags', 'tags')
+            ->where('t IN (:topics)')
+            ->setParameter('topics', $topics)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param array<Topic> $topics
+     * @return array<int, int> comment counts keyed by topic id
+     */
+    public function countCommentsPerTopic(array $topics): array
+    {
+        if (empty($topics)) {
+            return [];
+        }
+
+        $rows = $this->createQueryBuilder('t')
+            ->select('t.id AS topicId', 'COUNT(c.id) AS commentCount')
+            ->leftJoin('t.comments', 'c')
+            ->where('t IN (:topics)')
+            ->setParameter('topics', $topics)
+            ->groupBy('t.id')
+            ->getQuery()
+            ->getScalarResult();
+
+        return array_column($rows, 'commentCount', 'topicId');
     }
 
     public function getVisibleTopicsQuery(): QueryBuilder
@@ -40,5 +102,60 @@ class TopicRepository extends AbstractRepository
         $this->addACLToQuery($qb, 'view', Forum::class, 'f');
 
         return $qb;
+    }
+
+    /**
+     * @param array<int, TopicVisibility> $visibilityPerForum
+     * @return array<int> ids of the forums containing at least one topic the user has not read yet
+     */
+    public function findForumIdsWithUnreadTopics(User $user, array $visibilityPerForum): array
+    {
+        $qb = $this->createVisibleTopicsQuery($user, $visibilityPerForum);
+        if ($qb === null) {
+            return [];
+        }
+
+        $qb
+            ->select('IDENTITY(t.forum)')
+            ->distinct()
+            ->leftJoin(
+                ReadMarker::class,
+                'rm',
+                Join::WITH,
+                'rm.user = :readMarkerUser AND rm.subject = :readMarkerSubject AND rm.subjectId = t.id'
+            )
+            ->andWhere('rm.subjectId IS NULL')
+            ->setParameter('readMarkerUser', $user)
+            ->setParameter('readMarkerSubject', Topic::class)
+        ;
+
+        return array_map(intval(...), $qb->getQuery()->getSingleColumnResult());
+    }
+
+    /**
+     * @param array<int, TopicVisibility> $visibilityPerForum
+     * @return array<int>
+     */
+    public function findVisibleTopicIds(User $user, array $visibilityPerForum): array
+    {
+        $qb = $this->createVisibleTopicsQuery($user, $visibilityPerForum);
+        if ($qb === null) {
+            return [];
+        }
+
+        return array_map(intval(...), $qb->select('t.id')->getQuery()->getSingleColumnResult());
+    }
+
+    /**
+     * @param array<int, TopicVisibility> $visibilityPerForum
+     * @return QueryBuilder|null null when there is nothing to select
+     */
+    private function createVisibleTopicsQuery(User $user, array $visibilityPerForum): ?QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        return TopicVisibility::applyTo($qb, 't', $visibilityPerForum, $user)
+            ? $qb
+            : null;
     }
 }

@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Forumify\Admin\Controller;
 
+use DateTime;
 use Forumify\Admin\Form\ConfigurationType;
+use Forumify\Core\Compliance\ComplianceService;
 use Forumify\Core\Repository\SettingRepository;
-use Forumify\Core\Service\MediaService;
-use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -20,9 +19,6 @@ class ConfigurationController extends AbstractController
 {
     public function __construct(
         private readonly SettingRepository $settingRepository,
-        private readonly MediaService $mediaService,
-        private readonly FilesystemOperator $assetStorage,
-        private readonly FilesystemOperator $avatarStorage,
     ) {
     }
 
@@ -35,9 +31,15 @@ class ConfigurationController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->settingRepository->handleFormData($data);
 
-            $this->handleUnmappedFields($form);
+            $complianceBefore = $this->getComplianceSettings();
+            $this->settingRepository->handleFormData($data);
+            if ($this->getComplianceSettings() !== $complianceBefore) {
+                $this->settingRepository->set(
+                    ComplianceService::SETTING_LAST_UPDATED,
+                    new DateTime()->format('Y-m-d'),
+                );
+            }
 
             $this->addFlash('success', 'flashes.settings_saved');
             return $this->redirectToRoute('forumify_admin_configuration');
@@ -49,25 +51,15 @@ class ConfigurationController extends AbstractController
     }
 
     /**
-     * @param FormInterface<mixed> $form
-     * @return void
+     * @return array<string, mixed>
      */
-    private function handleUnmappedFields(FormInterface $form): void
+    private function getComplianceSettings(): array
     {
-        $settings = [];
-
-        $newLogo = $form->get('logo')->getData();
-        if ($newLogo !== null) {
-            $settings['forumify.logo'] = $this->mediaService->saveToFilesystem($this->assetStorage, $newLogo);
-        }
-
-        $newDefaultAvatar = $form->get('defaultAvatar')->getData();
-        if ($newDefaultAvatar !== null) {
-            $settings['forumify.default_avatar'] = $this->mediaService->saveToFilesystem($this->avatarStorage, $newDefaultAvatar);
-        }
-
-        if (!empty($settings)) {
-            $this->settingRepository->setBulk($settings);
-        }
+        return array_filter(
+            $this->settingRepository->getAll(),
+            static fn (string $key) => str_starts_with($key, ComplianceService::SETTING_PREFIX)
+                && $key !== ComplianceService::SETTING_LAST_UPDATED,
+            ARRAY_FILTER_USE_KEY,
+        );
     }
 }
