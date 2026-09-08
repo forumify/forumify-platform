@@ -60,14 +60,29 @@
         </main>
     {% endblock %}
 {% endblock %}
-{% block footer %}
-    <footer class="mt-10">
-        <p class="text-small">
-            <!-- Modifying, hiding, or removing this section is forbidden. See LICENSE.md for more information. -->
-            Powered by <a href="https://forumify.net">forumify</a>
-        </p>
+{% set footerLinks %}
+    {% block footer_links %}
+        {% set privacyPolicyPath = privacy_policy_path() %}
+        {% if privacyPolicyPath %}
+            <a href="{{ privacyPolicyPath }}">{{ 'privacy_policy.title'|trans }}</a>
+        {% endif %}
+    {% endblock %}
+{% endset %}
+{% set footerLinks = footerLinks|trim %}
+{% set footerBranding %}
+    {% block footer %}
+        <!-- Modifying, hiding, or removing this section is forbidden. See LICENSE.md for more information. -->
+        Powered by <a href="https://forumify.net">forumify</a>
+    {% endblock %}
+{% endset %}
+{% set footerBranding = footerBranding|trim %}
+{% if footerLinks is not empty or footerBranding is not empty %}
+    <footer class="mt-10 text-small">
+        {% if footerLinks is not empty %}<p>{{ footerLinks|raw }}</p>{% endif %}
+        {% if footerLinks is not empty and footerBranding is not empty %}<span>|</span>{% endif %}
+        {% if footerBranding is not empty %}<p>{{ footerBranding|raw }}</p>{% endif %}
     </footer>
-{% endblock %}
+{% endif %}
 {% block javascripts %}
     {{ encore_entry_script_tags('frontend') }}
 {% endblock %}

@@ -12,6 +12,7 @@
                 {% if form.forumify__mailer__from is defined %}
                     <button type="button" class="btn-link" data-tab-id="emails">{{ 'admin.configuration.emails'|trans }}</button>
                 {% endif %}
+                <button type="button" class="btn-link" data-tab-id="compliance">{{ 'admin.configuration.compliance.title'|trans }}</button>
             {% endblock %}
             {% block tabpanels %}
                 <div id="general">
@@ -60,6 +61,43 @@
                         {{ form_row(form.forumify__mailer__from) }}
                     </div>
                 {% endif %}
+                <div id="compliance" {{ stimulus_controller('forumify/compliance') }}>
+                    {{ form_row(form.forumify__compliance__mode) }}
+
+                    <div
+                        data-compliance-mode="off"
+                        {{ stimulus_target('forumify/compliance', 'section') }}
+                    >
+                        <div class="alert-warning">{{ 'admin.configuration.compliance.off_warning'|trans }}</div>
+                    </div>
+
+                    <div
+                        data-compliance-mode="generated"
+                        {{ stimulus_target('forumify/compliance', 'section') }}
+                    >
+                        <div class="alert-info mb-4">{{ 'admin.configuration.compliance.generated_info'|trans }}</div>
+                        {{ form_row(form.forumify__compliance__controller_name) }}
+                        {{ form_row(form.forumify__compliance__controller_address) }}
+                        {{ form_row(form.forumify__compliance__contact_email) }}
+                        {{ form_row(form.forumify__compliance__dpo_contact) }}
+                        {{ form_row(form.forumify__compliance__eu_representative) }}
+                        {{ form_row(form.forumify__compliance__supervisory_authority) }}
+                        {{ form_row(form.forumify__compliance__minimum_age) }}
+                        {% if form.forumify__compliance__hosting_info is defined %}
+                            {{ form_row(form.forumify__compliance__hosting_info) }}
+                        {% else %}
+                            {{ form_row(form.forumify__compliance__hosting_provider) }}
+                        {% endif %}
+                    </div>
+
+                    <div
+                        data-compliance-mode="cms_page"
+                        {{ stimulus_target('forumify/compliance', 'section') }}
+                    >
+                        <div class="alert-info mb-4">{{ 'admin.configuration.compliance.cms_page_info'|trans }}</div>
+                        {{ form_row(form.forumify__compliance__cms_page) }}
+                    </div>
+                </div>
             {% endblock %}
         {% endembed %}
         <div class="text-center mt-6">
