@@ -1,4 +1,6 @@
 liip_imagine:
+    twig:
+        mode: lazy
     controller:
         redirect_response_code: 301
     default_filter_set_settings:
