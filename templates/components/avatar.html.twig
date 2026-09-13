@@ -7,8 +7,9 @@
         {% set activeFilter = filter|replace({'-': '_'}) %}
     {% endif %}
 {% endfor %}
+{% set avatarClasses = 'avatar ' ~ resolvedClassName %}
 {% if avatar is not empty %}
-    <img class="avatar {{ resolvedClassName }}" src="{{ asset(avatar, 'forumify.avatar')|imagine_filter(activeFilter) }}" alt="">
+    <img class="{{ avatarClasses }}" src="{{ asset(avatar, 'forumify.avatar')|imagine_filter(activeFilter) }}" alt="">
 {% else %}
-    <div class="avatar">&nbsp;</div>
+    <div class="{{ avatarClasses }}">&nbsp;</div>
 {% endif %}
