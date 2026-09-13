@@ -48,7 +48,7 @@ class ForumifyTestKernel extends ForumifyKernel
      */
     public static function configDir(): string
     {
-        return \dirname(__DIR__, 2) . '/testing/config';
+        return \dirname(__DIR__) . '/config';
     }
 
     /**
