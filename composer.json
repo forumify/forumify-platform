@@ -85,7 +85,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Forumify\\": "src/"
+            "Forumify\\": "src/",
+            "Forumify\\Testing\\": "testing/src/"
         }
     },
     "autoload-dev": {

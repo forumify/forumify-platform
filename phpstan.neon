@@ -6,6 +6,7 @@ parameters:
     level: 8
     paths:
         - src
+        - testing/src
     ignoreErrors:
         -
             messages:
@@ -16,7 +17,7 @@ parameters:
         # to use it. The kernel configuration hooks are called by symfony via reflection.
         -
             identifier: trait.unused
-            path: src/Testing/*
+            path: testing/src/*
         -
             identifier: method.unused
-            path: src/Testing/*
+            path: testing/src/*
