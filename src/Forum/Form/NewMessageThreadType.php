@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Form;
 
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Form\RichTextEditorType;
-use Forumify\Core\Form\EntityType;
+use Forumify\Core\Form\UserSelectType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,30 +31,21 @@ class NewMessageThreadType extends AbstractType
     {
         $builder
             ->add('title', TextType::class)
-            ->add('participants', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'displayName',
+            ->add('participants', UserSelectType::class, [
                 'multiple' => true,
-                'autocomplete' => true,
-                'query_builder' => $this->addUserFilter(...),
+                'extra_options' => [
+                    'exclude_users' => $this->getCurrentUserIds(),
+                ],
             ])
             ->add('message', RichTextEditorType::class);
     }
 
     /**
-     * @param EntityRepository<User> $er
+     * @return list<int>
      */
-    private function addUserFilter(EntityRepository $er): QueryBuilder
+    private function getCurrentUserIds(): array
     {
-        $loggedInUser = $this->security->getUser();
-        if ($loggedInUser === null) {
-            return $er->createQueryBuilder('u');
-        }
-
-        return $er->createQueryBuilder('u')
-            ->andWhere('u.username NOT LIKE :currentUsername')
-            ->andWhere('u.banned = 0')
-            ->andWhere('u.emailVerified = 1')
-            ->setParameter('currentUsername', $loggedInUser->getUserIdentifier());
+        $user = $this->security->getUser();
+        return $user instanceof User ? [$user->getId()] : [];
     }
 }

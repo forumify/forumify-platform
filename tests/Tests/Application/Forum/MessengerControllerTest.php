@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Tests\Tests\Application\Forum;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\NotificationRepository;
+use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Entity\Subscription;
 use Forumify\Forum\Notification\MessageReplyNotificationType;
 use Forumify\Forum\Repository\MessageThreadRepository;
@@ -35,7 +37,7 @@ class MessengerControllerTest extends WebTestCase
         $client->click($c);
         self::assertResponseIsSuccessful();
 
-        $client->submitForm('Send message', [
+        $this->submitFormWithoutValidation($client, 'Send message', [
             'new_message_thread[title]' => 'test',
             'new_message_thread[participants]' => [$recipient->getId()],
             'new_message_thread[message]' => '<p>This is a test message</p>',
@@ -120,20 +122,68 @@ class MessengerControllerTest extends WebTestCase
         self::assertNotNull($thread);
 
         $client->request('GET', "/messenger/{$thread->getId()}/add-participant");
-        $client->submitForm('Save', ['form[participants]' => [$newParticipant->getId()]]);
+        $this->submitFormWithoutValidation($client, 'Save', ['form[participants]' => [$newParticipant->getId()]]);
         self::assertResponseIsSuccessful();
 
         self::assertNotNull($this->findSubscription($newParticipant->getId(), $thread->getId()));
     }
 
+    public function testNonParticipantCannotAddThemselvesToThread(): void
+    {
+        $client = static::createClient();
+
+        $attacker = UserFactory::createOne();
+        $client->loginUser($attacker);
+
+        $ownThread = $this->saveThread('own thread', $attacker, UserFactory::createOne());
+        $targetThread = $this->saveThread('target thread', UserFactory::createOne(), UserFactory::createOne());
+
+        $crawler = $client->request('GET', "/messenger/{$ownThread->getId()}/add-participant");
+        self::assertResponseIsSuccessful();
+        $form = $crawler->selectButton('Save')->form();
+        $form->disableValidation();
+        $form->setValues(['form[participants]' => [$attacker->getId()]]);
+
+        $client->request('POST', "/messenger/{$targetThread->getId()}/add-participant", $form->getPhpValues());
+        self::assertResponseStatusCodeSame(403);
+
+        $targetThread = $this->getThreadRepository()->find($targetThread->getId());
+        self::assertNotNull($targetThread);
+        $participantIds = $targetThread->getParticipants()->map(fn (User $user) => $user->getId())->toArray();
+        self::assertNotContains($attacker->getId(), $participantIds);
+    }
+
+    private function saveThread(string $title, User ...$participants): MessageThread
+    {
+        $thread = new MessageThread();
+        $thread->setTitle($title);
+        foreach ($participants as $participant) {
+            $thread->addParticipant($participant);
+        }
+        $this->getThreadRepository()->save($thread);
+
+        return $thread;
+    }
+
     private function createThread(KernelBrowser $client, int $recipientId): void
     {
         $client->request('GET', '/messenger/create');
-        $client->submitForm('Send message', [
+        $this->submitFormWithoutValidation($client, 'Send message', [
             'new_message_thread[title]' => 'test',
             'new_message_thread[participants]' => [$recipientId],
             'new_message_thread[message]' => '<p>This is a test message</p>',
         ]);
+    }
+
+    /**
+     * @param array<string, mixed> $values
+     */
+    private function submitFormWithoutValidation(KernelBrowser $client, string $button, array $values): void
+    {
+        $form = $client->getCrawler()->selectButton($button)->form();
+        $form->disableValidation();
+        $form->setValues($values);
+        $client->submit($form);
     }
 
     private function findSubscription(int $userId, int $threadId): ?Subscription

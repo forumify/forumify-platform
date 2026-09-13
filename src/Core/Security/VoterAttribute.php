@@ -29,4 +29,5 @@ enum VoterAttribute: string
     case MessageThreadCreate = 'MESSAGE_THREAD_CREATE';
     case MessageThreadView = 'MESSAGE_THREAD_VIEW';
     case MessageThreadReply = 'MESSAGE_THREAD_REPLY';
+    case MessageThreadAddParticipant = 'MESSAGE_THREAD_ADD_PARTICIPANT';
 }
