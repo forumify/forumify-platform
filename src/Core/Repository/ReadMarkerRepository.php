@@ -38,29 +38,6 @@ class ReadMarkerRepository extends AbstractRepository
         }
     }
 
-    /**
-     * @param array<int> $subjectIds
-     */
-    public function areAllRead(User $user, string $subject, array $subjectIds): bool
-    {
-        try {
-            $count = $this->createQueryBuilder('rm')
-                ->select('COUNT(rm.subjectId)')
-                ->where('rm.user = :user')
-                ->andWhere('rm.subject = :subject')
-                ->andWhere('rm.subjectId IN (:subjectIds)')
-                ->setParameter('user', $user)
-                ->setParameter('subject', $subject)
-                ->setParameter('subjectIds', $subjectIds)
-                ->getQuery()
-                ->getSingleScalarResult();
-
-            return $count === count($subjectIds);
-        } catch (NoResultException|NonUniqueResultException) {
-            return false;
-        }
-    }
-
     public function read(User $user, string $subject, int $subjectId, bool $flush = true): void
     {
         if ($this->isRead($user, $subject, $subjectId)) {
@@ -76,10 +53,39 @@ class ReadMarkerRepository extends AbstractRepository
      */
     public function markAllRead(User $user, string $subject, array $subjectIds): void
     {
-        foreach ($subjectIds as $subjectId) {
-            $this->read($user, $subject, $subjectId, false);
+        if (empty($subjectIds)) {
+            return;
+        }
+
+        $alreadyRead = $this->findReadSubjectIds($user, $subject, $subjectIds);
+        foreach (array_diff($subjectIds, $alreadyRead) as $subjectId) {
+            $this->save(new ReadMarker($user, $subject, $subjectId), false);
         }
         $this->flush();
+    }
+
+    /**
+     * @param array<int> $subjectIds
+     * @return array<int>
+     */
+    public function findReadSubjectIds(User $user, string $subject, array $subjectIds): array
+    {
+        if (empty($subjectIds)) {
+            return [];
+        }
+
+        $readSubjectIds = $this->createQueryBuilder('rm')
+            ->select('rm.subjectId')
+            ->where('rm.user = :user')
+            ->andWhere('rm.subject = :subject')
+            ->andWhere('rm.subjectId IN (:subjectIds)')
+            ->setParameter('user', $user)
+            ->setParameter('subject', $subject)
+            ->setParameter('subjectIds', $subjectIds)
+            ->getQuery()
+            ->getSingleColumnResult();
+
+        return array_map(intval(...), $readSubjectIds);
     }
 
     public function unread(string $subject, int $subjectId): void

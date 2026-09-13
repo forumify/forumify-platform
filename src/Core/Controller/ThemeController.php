@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Controller;
 
+use DateTimeImmutable;
 use Forumify\Core\Service\ThemeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -18,17 +19,18 @@ class ThemeController extends AbstractController
     public function __invoke(Request $request): Response
     {
         $cookie = $request->cookies->get(ThemeService::CURRENT_THEME_COOKIE);
-        $current = $cookie ?: $request->get('preference', 'default');
+        $current = $cookie ?: $request->query->getString('preference', 'default');
         $new = $current === 'default' ? 'dark' : 'default';
 
-        $target = $request->get('_target_path');
-        $response = $target !== null
+        $target = $request->query->getString('_target_path');
+        $response = !empty($target)
             ? $this->redirect($target)
             : $this->redirectToRoute('forumify_core_index');
 
         $response->headers->setCookie(new Cookie(
             ThemeService::CURRENT_THEME_COOKIE,
             $new,
+            new DateTimeImmutable('+1 year'),
         ));
         return $response;
     }

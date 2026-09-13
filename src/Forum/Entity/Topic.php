@@ -22,6 +22,8 @@ use Forumify\Core\Entity\BlameableEntityTrait;
 use Forumify\Core\Entity\IdentifiableEntityTrait;
 use Forumify\Core\Entity\SluggableEntityTrait;
 use Forumify\Core\Entity\TimestampableEntityTrait;
+use Forumify\Api\Entity\NewAsset;
+use Forumify\Api\Serializer\Attribute\Asset;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -84,11 +86,17 @@ class Topic implements SubscribableInterface, AuditableEntityInterface
     private Forum $forum;
 
     /**
-     * @var Collection<int, TopicImage>
+     * @var list<string>|null
      */
-    #[ORM\OneToMany(mappedBy: 'topic', targetEntity: TopicImage::class, cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(['createdAt' => 'ASC'])]
-    private Collection $images;
+    #[ORM\Column(type: 'simple_array', nullable: true)]
+    #[Groups('Topic')]
+    private ?array $images = null;
+
+    /**
+     * @var list<NewAsset>|null
+     */
+    #[Asset('images', 'forumify.media', 'media.storage')]
+    public ?array $newImages = null;
 
     /**
      * @var Collection<int, Comment>
@@ -136,7 +144,6 @@ class Topic implements SubscribableInterface, AuditableEntityInterface
 
     public function __construct()
     {
-        $this->images = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->tags = new ArrayCollection();
     }
@@ -167,38 +174,29 @@ class Topic implements SubscribableInterface, AuditableEntityInterface
     }
 
     /**
-     * @return Collection<int, TopicImage>
+     * @return list<string>
      */
-    public function getImages(): Collection
+    public function getImages(): array
     {
-        return $this->images;
+        return $this->images ?? [];
     }
 
     /**
-     * @param Collection<int, TopicImage> $images
+     * @param array<string>|null $images
      */
-    public function setImages(Collection $images): void
+    public function setImages(?array $images): void
     {
-        $this->images = $images;
+        $this->images = empty($images) ? null : array_values($images);
     }
 
     public function getImage(): ?string
     {
-        $first = $this->images->first();
-        return $first ? $first->getImage() : null;
+        return $this->images[0] ?? null;
     }
 
     public function setImage(?string $image): void
     {
-        $first = $this->images->first();
-        if (!$first) {
-            $first = new TopicImage();
-            $first->setTopic($this);
-            $this->getImages()->add($first);
-        }
-        if (!empty($image)) {
-            $first->setImage($image);
-        }
+        $this->setImages($image === null ? null : [$image]);
     }
 
     public function getParent(): Forum

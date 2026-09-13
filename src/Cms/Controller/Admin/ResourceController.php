@@ -7,10 +7,7 @@ namespace Forumify\Cms\Controller\Admin;
 use Forumify\Cms\Entity\Resource;
 use Forumify\Cms\Form\ResourceType;
 use Forumify\Cms\Repository\ResourceRepository;
-use Forumify\Core\Service\MediaService;
-use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -22,8 +19,6 @@ class ResourceController extends AbstractController
 {
     public function __construct(
         private readonly ResourceRepository $resourceRepository,
-        private readonly MediaService $mediaService,
-        private readonly FilesystemOperator $resourceStorage,
     ) {
     }
 
@@ -70,12 +65,6 @@ class ResourceController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Resource $resource */
             $resource = $form->getData();
-
-            $file = $form->get('file')->getData();
-            if ($file instanceof UploadedFile) {
-                $path = $this->mediaService->saveToFilesystem($this->resourceStorage, $file);
-                $resource->setPath($path);
-            }
 
             $this->resourceRepository->save($resource);
 

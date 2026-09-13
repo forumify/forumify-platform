@@ -29,6 +29,11 @@
                             </ul>
                         {% endif %}
                     {% endblock %}
+                    {% block comment_list_comment_author_banned %}
+                        {% if item.createdBy.banned %}
+                            <span class="tag tag-error comment-author-banned">{{ 'profile.banned'|trans }}</span>
+                        {% endif %}
+                    {% endblock %}
                     {% block comment_list_comment_author_badges %}
                         <div class="flex flex-wrap justify-center gap-2 mt-4 hide-phone">
                             {% for badge in item.createdBy.badges|filter(b => b.showOnForum) %}
@@ -63,6 +68,17 @@
                             <div class="comment-toolbar">
                                 {% block comment_list_comment_content_toolbar_buttons %}
                                     {% set commentLink = absolute_url(path('forumify_forum_topic', { slug: topic.slug, comment: item.id })) %}
+                                    {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::CommentCreate').value, topic) %}
+                                        <button
+                                            class="btn-link btn-small btn-icon text-secondary"
+                                            type="button"
+                                            aria-label="{{ 'quote.quote'|trans }}"
+                                            title="{{ 'quote.quote'|trans }}"
+                                            {{ stimulus_action('forumify/comment-editor', 'quote', null, { url: path('forumify_forum_comment_quote', { id: item.id }) }) }}
+                                        >
+                                            <i class="ph ph-quotes"></i>
+                                        </button>
+                                    {% endif %}
                                     <button
                                         class="btn-link btn-small btn-icon text-secondary"
                                         type="button"

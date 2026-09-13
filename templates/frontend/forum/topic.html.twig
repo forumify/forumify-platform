@@ -4,8 +4,8 @@
 {% endblock %}
 {% block meta_tags %}
     {{ parent() }}
-    {% if topic.comments.first %}
-        {% set description = topic.comments.first.content|u.truncate(200, '...', false).trim()|striptags %}
+    {% if topic.firstComment %}
+        {% set description = topic.firstComment.content|u.truncate(200, '...', false).trim()|striptags %}
         <meta property="description" content="{{ description }}">
         <meta property="og:description" content="{{ description }}">
         <meta property="twitter:description" content="{{ description }}">
@@ -29,7 +29,7 @@
                         {{ 'created_by'|trans({ author: author })|raw }},
                         {{ topic.createdAt|format_date }}
                     </div>
-                    {% if not topic.tags.empty %}
+                    {% if topic.tags is not empty %}
                         <div class="mt-1 flex flex-wrap gap-1">
                             {% for tag in topic.tags %}
                                 {% include '@Forumify/frontend/forum/forum_tag.html.twig' with {
@@ -107,9 +107,9 @@
                 {% endif %}
             </div>
         </div>
-        {% if topic.image %}
-            <img class="topic-image" src="{{ asset(topic.image, 'forumify.media') }}" alt="topic-image">
-        {% endif %}
+        {% for image in topic.images %}
+            <img class="topic-image" src="{{ asset(image, 'forumify.media') }}" alt="topic-image">
+        {% endfor %}
         <div class="comment-list">
             {{ component('CommentList', { topic: topic }) }}
         </div>

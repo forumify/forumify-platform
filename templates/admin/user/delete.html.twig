@@ -1,0 +1,27 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% block delete_title %}
+        <h1 class="mb-4">{{ 'admin.user.delete.title'|trans({ username: user.displayName }) }}</h1>
+    {% endblock %}
+    <div class="box">
+        {% block delete_warning %}
+            <div class="alert-warning mb-4">
+                <p class="mb-2">{{ 'admin.user.delete.warning'|trans({ username: user.displayName }) }}</p>
+                <p class="mb-2">{{ 'admin.user.delete.consequence_account'|trans }}</p>
+                <p class="mb-2">{{ 'admin.user.delete.consequence_content'|trans }}</p>
+                <p>{{ 'admin.user.delete.consequence_reversible'|trans }}</p>
+            </div>
+        {% endblock %}
+        {{ form_start(form) }}
+        {% block delete_form_widget %}
+            {{ form_widget(form) }}
+        {% endblock %}
+        {% block delete_form_actions %}
+            <div class="flex justify-center items-center gap-2">
+                <button type="submit" class="btn-primary">{{ 'admin.user.actions.delete'|trans }}</button>
+                <a href="{{ path('forumify_admin_users_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+            </div>
+        {% endblock %}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

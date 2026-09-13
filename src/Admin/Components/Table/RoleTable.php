@@ -30,13 +30,7 @@ class RoleTable extends AbstractDoctrineTable
                 'field' => 'title',
                 'renderer' => [$this, 'renderTitleColumn'],
             ])
-            ->addColumn('actions', [
-                'label' => '',
-                'field' => 'id',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => [$this, 'renderActionColumn'],
-            ]);
+            ->addActionColumn($this->renderActionColumn(...));
     }
 
     /**

@@ -10,7 +10,6 @@ use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumTag;
 use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -32,7 +31,6 @@ class ForumTagController extends AbstractCrudController
 
     public function __construct(
         private readonly ForumRepository $forumRepository,
-        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -71,7 +69,7 @@ class ForumTagController extends AbstractCrudController
         }
 
         $forum = null;
-        $forumSlug = $this->requestStack->getCurrentRequest()?->query->get('forum');
+        $forumSlug = $this->getRequest()->query->get('forum');
         if (!empty($forumSlug)) {
             $forum = $this->forumRepository->findOneBy(['slug' => $forumSlug]);
             if ($forum === null) {

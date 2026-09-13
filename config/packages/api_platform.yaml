@@ -20,7 +20,7 @@ api_platform:
         jsonld: [ 'application/ld+json', 'application/json' ]
         multipart: [ 'multipart/form-data' ]
     patch_formats:
-        json: [ 'application/merge-patch+json', 'application/json' ]
+        jsonld: [ 'application/merge-patch+json', 'application/json' ]
     mapping:
         paths:
             - '%kernel.project_dir%/src/'

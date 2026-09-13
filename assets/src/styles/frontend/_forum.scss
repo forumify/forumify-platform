@@ -108,6 +108,7 @@
 
     .comment-author {
         display: flex;
+        flex-wrap: wrap;
         width: 100%;
         align-items: center;
         gap: var(--spacing-2);
@@ -118,6 +119,7 @@
             width: calc(1 / 6) * 100%;
             border-right: var(--border);
             flex-direction: column;
+            flex-wrap: nowrap;
             align-items: center;
             justify-content: flex-start;
             padding: var(--spacing-4);
@@ -135,6 +137,11 @@
             }
         }
 
+        .comment-author-banned {
+            @include breakpoints.min-width-md {
+                margin-top: var(--spacing-4);
+            }
+        }
     }
 
     .comment-content {

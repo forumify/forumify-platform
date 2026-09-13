@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Forumify\Core\Entity;
 
+use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
 class ACLParameters
 {
     /**
-     * @param string $entity
+     * @param class-string $entity
      * @param string $entityId
      * @param string $returnPath
      * @param array<mixed> $returnParameters
@@ -24,11 +25,15 @@ class ACLParameters
 
     public static function fromRequest(Request $request): self
     {
-        return new self(
-            $request->get('entity'),
-            $request->get('entityId'),
-            $request->get('returnPath'),
-            $request->get('returnParameters') ?? [],
-        );
+        $entity = $request->query->get('entity');
+        $entityId = $request->query->get('entityId');
+        if (empty($entity) || !class_exists($entity) || empty($entityId)) {
+            throw new InvalidArgumentException('entity and entityId are required.');
+        }
+
+        $returnPath = $request->query->get('returnPath', '');
+        $returnParams = $request->query->all('returnParameters');
+
+        return new self($entity, $entityId, $returnPath, $returnParams);
     }
 }

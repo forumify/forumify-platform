@@ -9,9 +9,9 @@ use Forumify\Forum\Entity\ForumDisplaySettings;
 use Forumify\Forum\Repository\CommentRepository;
 use Forumify\Forum\Repository\TopicRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Tests\Tests\Traits\ACLTrait;
-use Tests\Tests\Traits\ForumTrait;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\ACLTrait;
+use Forumify\Testing\Traits\ForumTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class CommentRepositoryTest extends KernelTestCase
 {

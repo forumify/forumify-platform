@@ -11,7 +11,7 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Contracts\Service\Attribute\Required;
 
-abstract class AbstractEmailNotificationType implements NotificationTypeInterface
+abstract class AbstractEmailNotificationType implements NotificationTypeInterface, NotificationSubjectAwareInterface
 {
     protected Mailer $mailer;
 
@@ -31,9 +31,18 @@ abstract class AbstractEmailNotificationType implements NotificationTypeInterfac
 
     abstract public function getEmailTemplate(Notification $notification): string;
 
+    public function isSubjectValid(Notification $notification): bool
+    {
+        return true;
+    }
+
     /** @inheritDoc */
     public function handleNotification(Notification $notification): void
     {
+        if (!$this->isSubjectValid($notification)) {
+            throw new NotificationSubjectDeletedException();
+        }
+
         if (!$this->shouldSendEmail($notification)) {
             return;
         }

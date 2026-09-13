@@ -35,6 +35,13 @@
         >
             <i class="ph ph-check"></i>
         </button>
+        <div class="flex-grow flex justify-end">
+            {{ component('SubscribeButton', {
+                entityId: thread.id,
+                subscriptionType: constant('Forumify\\Forum\\Notification\\MessageReplyNotificationType::TYPE'),
+                buttonClass: 'btn-link btn-icon btn-small'
+            }) }}
+        </div>
     </div>
     <ul class="flex flex-wrap items-center">
         {% for participant in otherParticipants %}
@@ -57,16 +64,18 @@
                 </a>
             </li>
         {% endfor %}
-        <li>
-            <a
-                href="{{ path('forumify_forum_messenger_add_participant', { id: thread.id }) }}"
-                class="btn-link btn-icon btn-small"
-                aria-label="{{ 'messenger.add_participant'|trans }}"
-                title="{{ 'messenger.add_participant'|trans }}"
-            >
-                <i class="ph ph-plus-circle"></i>
-            </a>
-        </li>
+        {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::MessageThreadAddParticipant').value, thread) %}
+            <li>
+                <a
+                    href="{{ path('forumify_forum_messenger_add_participant', { id: thread.id }) }}"
+                    class="btn-link btn-icon btn-small"
+                    aria-label="{{ 'messenger.add_participant'|trans }}"
+                    title="{{ 'messenger.add_participant'|trans }}"
+                >
+                    <i class="ph ph-plus-circle"></i>
+                </a>
+            </li>
+        {% endif %}
     </ul>
 </div>
 {{ component('MessageList', { lastPageFirst: true, threadId: thread.id }) }}

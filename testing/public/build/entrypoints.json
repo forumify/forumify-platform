@@ -1,0 +1,12 @@
+{
+  "entrypoints": {
+    "frontend": {
+      "js": [],
+      "css": []
+    },
+    "admin": {
+      "js": [],
+      "css": []
+    }
+  }
+}

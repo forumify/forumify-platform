@@ -10,8 +10,8 @@ use Forumify\Core\Repository\NotificationRepository;
 use Forumify\Core\Scheduler\RemoveSeenNotificationsTask;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Tests\Tests\Factories\Core\NotificationFactory;
-use Tests\Tests\Factories\Core\UserFactory;
+use Forumify\Testing\Factories\Core\NotificationFactory;
+use Forumify\Testing\Factories\Core\UserFactory;
 use Zenstruck\Foundry\Test\Factories;
 
 class RemoveSeenNotificationsTaskTest extends KernelTestCase

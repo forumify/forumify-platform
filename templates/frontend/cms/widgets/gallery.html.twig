@@ -3,7 +3,7 @@
 {% set autoscrollInterval = widget.settings.autoscrollInterval ?? 10 %}
 {% set hideControls = widget.settings.hideControls ?? false %}
 {% if forumId %}
-    {% set images = repository('TopicImage').findByForum(forumId)|map(ti => asset(ti.image, 'forumify.media')) %}
+    {% set images = repository('Topic').findImagesByForum(forumId)|map(image => asset(image, 'forumify.media')) %}
     <div class="gallery" {{ stimulus_controller('forumify/gallery', {
         images: images,
         autoscroll: autoscroll,

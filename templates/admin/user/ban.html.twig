@@ -1,0 +1,28 @@
+{% extends '@Forumify/admin/base.html.twig' %}
+{% block body %}
+    {% block ban_title %}
+        <h1 class="mb-4">{{ 'admin.user.ban.title'|trans({ username: user.displayName }) }}</h1>
+    {% endblock %}
+    <div class="box">
+        {% block ban_warning %}
+            <div class="alert-warning mb-4">
+                <p class="mb-2">{{ 'admin.user.ban.warning'|trans({ username: user.displayName }) }}</p>
+                <p class="mb-2">{{ 'admin.user.ban.consequence_login'|trans }}</p>
+                <p class="mb-2">{{ 'admin.user.ban.consequence_content'|trans }}</p>
+                <p class="mb-2">{{ 'admin.user.ban.consequence_roles'|trans }}</p>
+                <p>{{ 'admin.user.ban.consequence_reversible'|trans }}</p>
+            </div>
+        {% endblock %}
+        {{ form_start(form) }}
+        {% block ban_form_widget %}
+            {{ form_widget(form) }}
+        {% endblock %}
+        {% block ban_form_actions %}
+            <div class="flex justify-center items-center gap-2">
+                <button type="submit" class="btn-primary">{{ 'admin.user.actions.ban'|trans }}</button>
+                <a href="{{ path('forumify_admin_users_list') }}" class="btn-outlined">{{ 'cancel'|trans }}</a>
+            </div>
+        {% endblock %}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

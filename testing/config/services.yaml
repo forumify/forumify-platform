@@ -1,0 +1,5 @@
+parameters:
+    # A test application lives in tests/, so its vendor directory is one level up.
+    forumify.vendor_dir: '%kernel.project_dir%/../vendor'
+    forumify.project_dir: '%forumify.vendor_dir%/forumify/forumify-platform'
+    forumify.testing_dir: '%forumify.project_dir%/testing'

@@ -8,7 +8,8 @@ use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumGroup;
 use Forumify\Forum\ForumType\ForumTypeInterface;
-use Forumify\Forum\Repository\ForumRepository;
+use Forumify\Forum\Service\ForumTreeService;
+use Forumify\Forum\Service\LastCommentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,8 +27,11 @@ class ForumController extends AbstractController
     }
 
     #[Route('/forum/{slug:forum?}', name: 'forum')]
-    public function __invoke(ForumRepository $forumRepository, ?Forum $forum = null): Response
-    {
+    public function __invoke(
+        ForumTreeService $forumTree,
+        LastCommentService $lastCommentService,
+        ?Forum $forum = null,
+    ): Response {
         if ($forum !== null) {
             $this->denyAccessUnlessGranted(VoterAttribute::ACL->value, [
                 'permission' => 'view',
@@ -37,17 +41,22 @@ class ForumController extends AbstractController
 
         $ungroupedForums = [];
         $groups = [];
-        $childForums = $forumRepository->findByParent($forum);
+        $groupedForums = [];
+        $childForums = $forumTree->getChildren($forum);
         foreach ($childForums as $childForum) {
             $group = $childForum->getGroup();
             if ($group === null) {
                 $ungroupedForums[] = $childForum;
                 continue;
             }
+
             $groups[$group->getId()] = $group;
+            // saves lazy loading the group's forum collection in the template
+            $groupedForums[$group->getId()][] = $childForum;
         }
 
         uasort($groups, static fn (ForumGroup $a, ForumGroup $b) => $a->getPosition() - $b->getPosition());
+        $lastCommentService->preload($childForums);
 
         $template = $this
             ->getForumType($forum?->getType())
@@ -57,6 +66,7 @@ class ForumController extends AbstractController
             'forum' => $forum,
             'ungroupedForums' => $ungroupedForums,
             'groups' => $groups,
+            'groupedForums' => $groupedForums,
         ]);
     }
 

@@ -45,13 +45,7 @@ class UsersInRoleTable extends UserTable
     protected function buildTable(): void
     {
         parent::buildTable();
-        $this->addColumn('actions', [
-            'label' => '',
-            'field' => 'id',
-            'searchable' => false,
-            'sortable' => false,
-            'renderer' => [$this, 'renderActionColumn'],
-        ]);
+        $this->addActionColumn($this->renderActionColumn(...));
     }
 
     protected function getQuery(array $search): QueryBuilder

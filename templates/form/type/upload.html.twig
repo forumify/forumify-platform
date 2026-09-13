@@ -1,0 +1,69 @@
+{%- set input_attr = form.file.vars.attr|merge({ class: 'upload-input', 'data-forumify--upload-target': 'input' }) -%}
+{%- if accept -%}
+    {%- set input_attr = input_attr|merge({ accept: accept }) -%}
+{%- endif -%}
+<div class="form-row upload {{ row_attr.class|default('') }}{% if errors|length %} upload-invalid{% endif %}" {{ stimulus_controller('forumify/upload', { multiple: multiple }) }}>
+    {{- form_label(form) -}}
+    <div class="upload-zone" data-forumify--upload-target="dropzone" role="button" tabindex="0" aria-controls="{{ id }}_list">
+        <span class="upload-zone-icon"><i class="ph ph-cloud-arrow-up"></i></span>
+        <span class="upload-zone-text">
+            <span class="upload-zone-title">{{ 'file_upload.drop_text'|trans }}</span>
+            {%- if multiple -%}
+                <span class="upload-zone-hint">{{ 'file_upload.multiple_hint'|trans }}</span>
+            {%- endif -%}
+        </span>
+    </div>
+    {{- form_widget(form.file, { attr: input_attr }) -}}
+    {{- form_widget(form.removed, { attr: { 'data-forumify--upload-target': 'removed' } }) -}}
+    <ul class="upload-list" id="{{ id }}_list" data-forumify--upload-target="list">
+        {%- for file in files -%}
+            <li class="upload-file" data-path="{{ file.path }}">
+                <span class="upload-thumb">
+                    {%- if file.image -%}
+                        <img src="{{ file.url }}" alt="{{ file.name }}" loading="lazy">
+                    {%- else -%}
+                        <span class="upload-ext">{{ file.extension|upper|slice(0, 4) }}</span>
+                    {%- endif -%}
+                </span>
+                <span class="upload-info">
+                    <span class="upload-name" title="{{ file.name }}">{{ file.name }}</span>
+                    {%- if file.size -%}
+                        <span class="upload-sub">{{ file.size }}</span>
+                    {%- endif -%}
+                </span>
+                <span class="upload-actions">
+                    <a class="upload-action" href="{{ file.url }}" download title="{{ 'file_upload.download'|trans }}" aria-label="{{ 'file_upload.download'|trans }}">
+                        <i class="ph ph-download-simple"></i>
+                    </a>
+                    {%- if not required or files|length > 1 -%}
+                        <button class="upload-action upload-action-danger" type="button" data-action="forumify--upload#removeExisting" title="{{ 'file_upload.remove'|trans }}" aria-label="{{ 'file_upload.remove'|trans }}">
+                            <i class="ph ph-x"></i>
+                        </button>
+                    {%- endif -%}
+                </span>
+            </li>
+        {%- endfor -%}
+    </ul>
+    <template data-forumify--upload-target="template">
+        <li class="upload-file upload-file-new">
+            <span class="upload-thumb">
+                <img alt="" hidden>
+                <span class="upload-ext"></span>
+            </span>
+            <span class="upload-info">
+                <span class="upload-name"></span>
+                <span class="upload-sub"></span>
+            </span>
+            <span class="upload-actions">
+                <span class="upload-badge">{{ 'file_upload.new'|trans }}</span>
+                <button class="upload-action upload-action-danger" type="button" data-action="forumify--upload#removePending" title="{{ 'file_upload.remove'|trans }}" aria-label="{{ 'file_upload.remove'|trans }}">
+                    <i class="ph ph-x"></i>
+                </button>
+            </span>
+        </li>
+    </template>
+    {%- if errors|length -%}
+        <div class="upload-errors">{{ form_errors(form) }}</div>
+    {%- endif -%}
+    {{- form_help(form) -}}
+</div>

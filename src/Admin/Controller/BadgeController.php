@@ -33,8 +33,6 @@ class BadgeController extends AbstractCrudController
 
     protected function getForm(?object $data): FormInterface
     {
-        return $this->createForm(BadgeType::class, $data, [
-            'image_required' => $data === null,
-        ]);
+        return $this->createForm(BadgeType::class, $data);
     }
 }

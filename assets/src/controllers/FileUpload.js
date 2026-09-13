@@ -1,11 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-/*
-TODO:
-  - support multiple files
-  - previews for non-image files
-  - ability to clear/remove files
- */
+/** DEPRECATED, use the Upload controller instead. Remove in 2.0 */
 export class FileUpload extends Controller {
   connect() {
     const input = this.element.querySelector('input');

@@ -8,8 +8,8 @@ use Forumify\Core\Entity\Role;
 use Forumify\Core\Repository\RoleRepository;
 use Forumify\Core\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\SettingTrait;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\SettingTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class DashboardControllerTest extends WebTestCase
 {

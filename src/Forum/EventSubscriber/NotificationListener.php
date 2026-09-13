@@ -93,18 +93,24 @@ class NotificationListener
 
     public function sendNotificationsForMessage(Message $message): void
     {
-        $sender = $this->security->getUser();
-        $participants = $message->getThread()->getParticipants();
+        $selfIdentifier = $this->security->getUser()?->getUserIdentifier();
+        $thread = $message->getThread();
+        $subscriptions = $this->getSubscriptions($thread->getId(), MessageReplyNotificationType::TYPE);
 
         $notifications = [];
-        foreach ($participants as $participant) {
-            if ($sender?->getUserIdentifier() === $participant->getUserIdentifier()) {
+        foreach ($subscriptions as $subscription) {
+            $subscriber = $subscription->getUser();
+            if ($subscriber->getUserIdentifier() === $selfIdentifier) {
+                continue;
+            }
+
+            if (!$thread->getParticipants()->contains($subscriber)) {
                 continue;
             }
 
             $notifications[] = new Notification(
                 MessageReplyNotificationType::TYPE,
-                $participant,
+                $subscriber,
                 ['message' => $message]
             );
         }

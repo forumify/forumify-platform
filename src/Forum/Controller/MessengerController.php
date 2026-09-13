@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Forumify\Forum\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityRepository;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Form\UserSelectType;
 use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Security\VoterAttribute;
@@ -16,11 +16,13 @@ use Forumify\Forum\Entity\MessageThread;
 use Forumify\Forum\Form\MessageReplyType;
 use Forumify\Forum\Form\NewMessageThread;
 use Forumify\Forum\Form\NewMessageThreadType;
+use Forumify\Forum\Notification\MessageReplyNotificationType;
 use Forumify\Forum\Notification\MessageUserAddedNotificationType;
 use Forumify\Forum\Repository\MessageRepository;
 use Forumify\Forum\Repository\MessageThreadRepository;
 use Forumify\Forum\Service\MessageService;
-use Forumify\Core\Form\EntityType;
+use Forumify\Forum\Service\QuoteService;
+use Forumify\Forum\Service\SubscriptionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -107,23 +109,22 @@ class MessengerController extends AbstractController
     public function addParticipant(
         Request $request,
         MessageThread $thread,
-        NotificationService $notificationService
+        NotificationService $notificationService,
+        SubscriptionService $subscriptionService,
     ): Response {
+        $this->denyAccessUnlessGranted(VoterAttribute::MessageThreadAddParticipant->value, $thread);
+
         $user = $this->getUser();
         if (!$user instanceof User) {
             throw $this->createAccessDeniedException();
         }
 
         $form = $this->createFormBuilder()
-            ->add('participants', EntityType::class, [
+            ->add('participants', UserSelectType::class, [
                 'multiple' => true,
-                'autocomplete' => true,
-                'class' => User::class,
-                'choice_label' => fn (User $user) => $user->getDisplayName(),
-                'query_builder' => fn (EntityRepository $repository) => $repository
-                    ->createQueryBuilder('u')
-                    ->where('u.id NOT IN (:participants)')
-                    ->setParameter('participants', $thread->getParticipants()),
+                'extra_options' => [
+                    'exclude_users' => $thread->getParticipants()->map(fn (User $participant) => $participant->getId())->getValues(),
+                ],
             ])
             ->getForm();
 
@@ -144,6 +145,11 @@ class MessengerController extends AbstractController
         }
 
         $this->messageThreadRepository->save($thread);
+
+        foreach ($newParticipants as $newParticipant) {
+            $subscriptionService->subscribe($newParticipant, MessageReplyNotificationType::TYPE, $thread->getId());
+        }
+
         $notificationService->sendNotification($notifications);
 
         $this->addFlash('success', 'flashes.messenger_participants_added');
@@ -182,5 +188,17 @@ class MessengerController extends AbstractController
         $messageRepository->save($message);
 
         return new Response($sanitizer->sanitize($message->getContent()));
+    }
+
+    #[Route('/message/{id}/quote', '_message_quote', methods: ['GET'])]
+    public function quoteMessage(Message $message, QuoteService $quoteService): Response
+    {
+        $this->denyAccessUnlessGranted(VoterAttribute::MessageThreadView->value, $message->getThread());
+
+        return new Response($quoteService->createQuote(
+            $message->getContent(),
+            $message->getCreatedBy(),
+            $message->getCreatedAt(),
+        ));
     }
 }

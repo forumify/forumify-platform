@@ -81,7 +81,7 @@ class Comment implements SubscribableInterface
     /**
      * @var Collection<int, Reaction>
      */
-    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: CommentReaction::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'comment', targetEntity: CommentReaction::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     private Collection $reactions;
 
     public function getContent(): string

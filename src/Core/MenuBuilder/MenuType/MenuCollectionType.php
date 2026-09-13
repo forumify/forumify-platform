@@ -42,7 +42,10 @@ class MenuCollectionType extends AbstractMenuType
     {
         $menuHtml = '';
         foreach ($item->getChildren() as $child) {
-            $menuType = $this->menuTypes[$child->getType()] ?? null;
+            $menuType = $child->getType() === $this->getType()
+                ? $this
+                : $this->menuTypes[$child->getType()] ?? null;
+
             if ($menuType === null) {
                 continue;
             }
@@ -52,7 +55,7 @@ class MenuCollectionType extends AbstractMenuType
 
         return $this->twig->render('@Forumify/frontend/menu/collection.html.twig', [
             'name' => $item->getName(),
-            'placement' => $item->getParent() === null ? 'bottom-start' : 'right',
+            'placement' => $item->getParent() === null ? 'bottom-start' : 'right-start',
             'inner' => $menuHtml,
         ]);
     }

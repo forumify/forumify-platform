@@ -10,7 +10,7 @@ use Forumify\Core\Repository\AuditLogRepository;
 use Forumify\Core\Scheduler\RemoveOldAuditLogsTask;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Uid\Ulid;
-use Tests\Tests\Factories\Core\AuditLogFactory;
+use Forumify\Testing\Factories\Core\AuditLogFactory;
 use Zenstruck\Foundry\Test\Factories;
 
 class RemoveOldAuditLogsTaskTest extends KernelTestCase

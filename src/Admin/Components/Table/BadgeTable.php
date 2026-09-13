@@ -27,13 +27,7 @@ class BadgeTable extends AbstractDoctrineTable
             ->addColumn('name', [
                 'field' => 'name',
             ])
-            ->addColumn('actions', [
-                'field' => 'id',
-                'label' => '',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActionColumn(...),
-            ]);
+            ->addActionColumn($this->renderActionColumn(...));
     }
 
     protected function renderActionColumn(int $id): string

@@ -12,14 +12,11 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Repository\RoleRepository;
 use Forumify\Core\Security\VoterAttribute;
-use Forumify\Core\Service\MediaService;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Forum\Notification\NewBadgeNotificationType;
 use Forumify\Forum\Repository\BadgeRepository;
-use League\Flysystem\FilesystemOperator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\FormInterface;
 
 class UserCrudSubscriber implements EventSubscriberInterface
 {
@@ -27,8 +24,6 @@ class UserCrudSubscriber implements EventSubscriberInterface
     private array $preSaveBadges = [];
 
     public function __construct(
-        private readonly MediaService $mediaService,
-        private readonly FilesystemOperator $avatarStorage,
         private readonly RoleRepository $roleRepository,
         private readonly BadgeRepository $badgeRepository,
         private readonly Security $security,
@@ -50,7 +45,6 @@ class UserCrudSubscriber implements EventSubscriberInterface
     public function preSaveUser(PreSaveCrudEvent $event): void
     {
         $user = $event->getEntity();
-        $form = $event->getForm();
 
         $this->preSaveBadges[$user->getId()] = $this->badgeRepository
             ->createQueryBuilder('b')
@@ -61,7 +55,6 @@ class UserCrudSubscriber implements EventSubscriberInterface
             ->getResult();
 
         $this->keepDisabledRoles($user);
-        $this->saveNewAvatar($user, $form);
     }
 
     /**
@@ -96,25 +89,5 @@ class UserCrudSubscriber implements EventSubscriberInterface
                 $user->getRoleEntities()->add($role);
             }
         }
-    }
-
-    /**
-     * @param User $user
-     * @param FormInterface<mixed> $form
-     * @return void
-     */
-    private function saveNewAvatar(User $user, FormInterface $form): void
-    {
-        if (!$form->has('newAvatar')) {
-            return;
-        }
-
-        $newAvatar = $form->get('newAvatar')->getData();
-        if ($newAvatar === null) {
-            return;
-        }
-
-        $avatar = $this->mediaService->saveToFilesystem($this->avatarStorage, $newAvatar);
-        $user->setAvatar($avatar);
     }
 }

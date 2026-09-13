@@ -37,6 +37,17 @@
             </div>
             {% set canEdit = item.createdBy is not null and item.createdBy.userIdentifier == app.user.userIdentifier %}
             <div class="message-toolbar">
+                {% if is_granted(constant('Forumify\\Core\\Security\\VoterAttribute::MessageThreadReply').value, this.thread) %}
+                    <button
+                        class="btn-link btn-small btn-icon"
+                        type="button"
+                        aria-label="{{ 'quote.quote'|trans }}"
+                        title="{{ 'quote.quote'|trans }}"
+                        {{ stimulus_action('forumify/comment-editor', 'quote', null, { url: path('forumify_forum_messenger_message_quote', { id: item.id }) }) }}
+                    >
+                        <i class="ph ph-quotes"></i>
+                    </button>
+                {% endif %}
                 {% if canEdit %}
                     <button class="btn-link btn-small btn-icon" {{ stimulus_action('forumify/comment-editor', 'toggleEdit') }}>
                         <i class="ph ph-pencil"></i>

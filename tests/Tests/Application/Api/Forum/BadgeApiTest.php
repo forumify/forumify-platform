@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\Tests\Application\Api\Forum;
 
-use Tests\Tests\Application\Api\ApiTestCase;
-use Tests\Tests\Application\Api\Crud\DeleteTestTrait;
-use Tests\Tests\Application\Api\Crud\GetCollectionTestTrait;
-use Tests\Tests\Application\Api\Crud\GetTestTrait;
-use Tests\Tests\Application\Api\Crud\PatchTestTrait;
-use Tests\Tests\Application\Api\Crud\PostTestTrait;
-use Tests\Tests\Factories\Forum\BadgeFactory;
+use Forumify\Testing\Api\ApiTestCase;
+use Forumify\Testing\Api\Crud\DeleteTestTrait;
+use Forumify\Testing\Api\Crud\GetCollectionTestTrait;
+use Forumify\Testing\Api\Crud\GetTestTrait;
+use Forumify\Testing\Api\Crud\PatchTestTrait;
+use Forumify\Testing\Api\Crud\PostTestTrait;
+use Forumify\Testing\Factories\Forum\BadgeFactory;
 
 class BadgeApiTest extends ApiTestCase
 {
@@ -52,5 +52,22 @@ class BadgeApiTest extends ApiTestCase
     protected function getPatchBody(): array
     {
         return ['name' => 'Blip Badge'];
+    }
+
+    public function testPatchReplacesImage(): void
+    {
+        $badge = BadgeFactory::createOne(['image' => 'existing.png']);
+
+        $patched = $this->patch(self::endpoint() . "/{$badge->getId()}", [
+            'json' => [
+                'newImage' => [
+                    'filename' => 'replacement.png',
+                    'data' => base64_encode((string) file_get_contents(TEST_DATA_DIR . '/forumify.png')),
+                ],
+            ],
+        ]);
+
+        self::assertStringStartsWith('/storage/assets/', $patched['image']);
+        self::assertStringEndsWith('replacement.png', $patched['image']);
     }
 }

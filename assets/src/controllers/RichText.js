@@ -11,14 +11,13 @@ export class RichText extends Controller {
       mention.dataset.controller = 'forumify--profile-preview';
     });
 
+    const isPlainBlockquote = (element) => element !== undefined
+      && element.tagName === 'BLOCKQUOTE'
+      && !element.classList.contains('forumify-quote');
+
     const children = [...this.element.children];
     children.forEach((child, i) => {
-      if (child.tagName !== 'BLOCKQUOTE') {
-        return;
-      }
-
-      const nextSibling = children[i + 1];
-      if (nextSibling === undefined || nextSibling.tagName !== 'BLOCKQUOTE') {
+      if (isPlainBlockquote(child) && !isPlainBlockquote(children[i + 1])) {
         child.style.marginBottom = 'var(--spacing-2)';
       }
     });

@@ -6,7 +6,7 @@ namespace Tests\Tests\Application\Admin;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class ForumTagControllerTest extends WebTestCase
 {

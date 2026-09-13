@@ -22,7 +22,7 @@ class UserSearchController extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
-        $searchTerm = $request->get('query');
+        $searchTerm = $request->query->get('query');
 
         $result = $this->userRepository->createQueryBuilder('u')
             ->select('u.id', 'u.username', 'u.displayName')

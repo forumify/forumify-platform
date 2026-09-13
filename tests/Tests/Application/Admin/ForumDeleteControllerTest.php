@@ -7,7 +7,7 @@ namespace Tests\Tests\Application\Admin;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Repository\ForumRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class ForumDeleteControllerTest extends WebTestCase
 {

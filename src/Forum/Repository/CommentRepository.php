@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Forumify\Forum\Repository;
 
-use Doctrine\ORM\NonUniqueResultException;
+use DateTime;
 use Forumify\Core\Entity\User;
 use Forumify\Core\Repository\AbstractRepository;
 use Forumify\Core\Security\VoterAttribute;
 use Forumify\Forum\Entity\Comment;
 use Forumify\Forum\Entity\Forum;
+use Forumify\Forum\Entity\Topic;
 
 /**
  * @extends AbstractRepository<Comment>
@@ -57,37 +58,87 @@ class CommentRepository extends AbstractRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findLastCommentForForumAndUserId(
-        Forum $forum,
-        string $userId,
-        bool $canViewAll,
-        bool $canViewHidden,
-    ): ?Comment {
-        $qb = $this->createQueryBuilder('c')
+    /**
+     * Loads comments together with their topic and author.
+     *
+     * @param array<int> $ids
+     * @return array<Comment>
+     */
+    public function findWithTopicAndAuthor(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        return $this->createQueryBuilder('c')
+            ->addSelect('t', 'author')
             ->join('c.topic', 't')
-            ->innerJoin('t.forum', 'f', 'WITH', 'f.id = :forumId')
-            ->setParameter('forumId', $forum->getId())
-            ->orderBy('c.createdAt', 'DESC')
-            ->setMaxResults(1);
+            ->leftJoin('c.createdBy', 'author')
+            ->where('c.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+    }
 
-        if (!$canViewHidden) {
-            $qb->andWhere('t.hidden = 0');
+    /**
+     * @param array<Topic> $topics
+     * @return array<int, Comment> keyed by topic id
+     */
+    public function findLastCommentPerTopic(array $topics): array
+    {
+        if (empty($topics)) {
+            return [];
         }
 
-        if (!$canViewAll) {
-            $qb->join('t.createdBy', 'author')
-                ->andWhere('author.id = :userId')
-                ->setParameter('userId', $userId);
+        $rows = $this->createQueryBuilder('c')
+            ->select('IDENTITY(c.topic) AS topicId', 'MAX(c.id) AS lastCommentId')
+            ->where('c.topic IN (:topics)')
+            ->setParameter('topics', $topics)
+            ->groupBy('c.topic')
+            ->getQuery()
+            ->getScalarResult();
+
+        $topicIdPerComment = [];
+        foreach ($rows as $row) {
+            $topicIdPerComment[(int)$row['lastCommentId']] = (int)$row['topicId'];
         }
 
-        $this->addACLToQuery($qb, 'view', Forum::class, 'f');
-
-        try {
-            return $qb
-                ->getQuery()
-                ->getOneOrNullResult();
-        } catch (NonUniqueResultException) {
-            return null;
+        $lastComments = [];
+        foreach ($this->findWithTopicAndAuthor(array_keys($topicIdPerComment)) as $comment) {
+            $lastComments[$topicIdPerComment[$comment->getId()]] = $comment;
         }
+
+        return $lastComments;
+    }
+
+    /**
+     * Resolves the last comment of every given forum in one query.
+     *
+     * The comment with the highest id is taken as the last one. Comments are only ever appended, so
+     * that is the most recent one, without needing a query per forum to order by creation date.
+     *
+     * @param array<int, TopicVisibility> $visibilityPerForum
+     * @return array<int, array{id: int, createdAt: DateTime}> keyed by forum id
+     */
+    public function findLastCommentPerForum(?User $user, array $visibilityPerForum): array
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('IDENTITY(t.forum) AS forumId', 'MAX(c.id) AS lastCommentId', 'MAX(c.createdAt) AS lastCommentAt')
+            ->join('c.topic', 't')
+            ->groupBy('t.forum');
+
+        if (!TopicVisibility::applyTo($qb, 't', $visibilityPerForum, $user)) {
+            return [];
+        }
+
+        $lastComments = [];
+        foreach ($qb->getQuery()->getScalarResult() as $row) {
+            $lastComments[(int)$row['forumId']] = [
+                'id' => (int)$row['lastCommentId'],
+                'createdAt' => new DateTime($row['lastCommentAt']),
+            ];
+        }
+
+        return $lastComments;
     }
 }

@@ -1,0 +1,120 @@
+{% extends '@Forumify/frontend/base.html.twig' %}
+
+{% set controllerName = setting('forumify.compliance.controller_name') %}
+{% set controllerAddress = setting('forumify.compliance.controller_address') %}
+{% set contactEmail = setting('forumify.compliance.contact_email') %}
+{% set dpoContact = setting('forumify.compliance.dpo_contact') %}
+{% set euRepresentative = setting('forumify.compliance.eu_representative') %}
+{% set supervisoryAuthority = setting('forumify.compliance.supervisory_authority') %}
+{% set minimumAge = setting('forumify.compliance.minimum_age') %}
+{% set lastUpdated = setting('forumify.compliance.last_updated') %}
+
+{% block title_page %}{{ 'privacy_policy.title'|trans }}{% endblock %}
+
+{% block body %}
+    <article class="box privacy-policy rich-text">
+        {% block privacy_header %}
+            <header class="privacy-policy__header">
+                <h1>{{ 'privacy_policy.title'|trans }}</h1>
+                {% if lastUpdated %}
+                    <p class="privacy-policy__meta">{{ 'privacy_policy.last_updated'|trans({ date: lastUpdated }) }}</p>
+                {% endif %}
+                <p class="privacy-policy__lead">{{ 'privacy_policy.intro'|trans({ site: setting('forumify.title') }) }}</p>
+            </header>
+        {% endblock %}
+
+        {% block privacy_controller %}
+            <section class="privacy-policy__section">
+                <h2>{{ 'privacy_policy.controller.title'|trans }}</h2>
+                {% if controllerName is empty %}
+                    <div class="alert-warning">{{ 'privacy_policy.controller.not_configured'|trans }}</div>
+                {% else %}
+                    <p>{{ 'privacy_policy.controller.intro'|trans({ name: controllerName }) }}</p>
+                    <dl class="privacy-policy__terms">
+                        {% if controllerAddress %}
+                            <div>
+                                <dt>{{ 'privacy_policy.controller.address'|trans }}</dt>
+                                <dd>{{ controllerAddress|nl2br }}</dd>
+                            </div>
+                        {% endif %}
+                        {% if contactEmail %}
+                            <div>
+                                <dt>{{ 'privacy_policy.controller.contact'|trans }}</dt>
+                                <dd><a href="mailto:{{ contactEmail }}">{{ contactEmail }}</a></dd>
+                            </div>
+                        {% endif %}
+                        {% if dpoContact %}
+                            <div>
+                                <dt>{{ 'privacy_policy.controller.dpo'|trans }}</dt>
+                                <dd>{{ dpoContact }}</dd>
+                            </div>
+                        {% endif %}
+                        {% if euRepresentative %}
+                            <div>
+                                <dt>{{ 'privacy_policy.controller.eu_representative'|trans }}</dt>
+                                <dd>{{ euRepresentative }}</dd>
+                            </div>
+                        {% endif %}
+                    </dl>
+                {% endif %}
+            </section>
+        {% endblock %}
+
+        {% block privacy_disclosures %}
+            {{ widget('compliance.disclosures') }}
+        {% endblock %}
+
+        {% block privacy_deletion %}
+            <section class="privacy-policy__section">
+                <h2>{{ 'privacy_policy.deletion.title'|trans }}</h2>
+                <p>{{ 'privacy_policy.deletion.body'|trans }}</p>
+            </section>
+        {% endblock %}
+
+        {% block privacy_rights %}
+            <section class="privacy-policy__section">
+                <h2>{{ 'privacy_policy.rights.title'|trans }}</h2>
+                <p>{{ 'privacy_policy.rights.intro'|trans }}</p>
+                <ul>
+                    <li>{{ 'privacy_policy.rights.access'|trans }}</li>
+                    <li>{{ 'privacy_policy.rights.rectification'|trans }}</li>
+                    <li>{{ 'privacy_policy.rights.erasure'|trans }}</li>
+                    <li>{{ 'privacy_policy.rights.portability'|trans }}</li>
+                    <li>{{ 'privacy_policy.rights.objection'|trans }}</li>
+                    <li>{{ 'privacy_policy.rights.withdraw_consent'|trans }}</li>
+                    <li>{{ 'privacy_policy.rights.non_discrimination'|trans }}</li>
+                </ul>
+                {% if contactEmail %}
+                    <p>{{ 'privacy_policy.rights.how_to_exercise'|trans({ email: contactEmail })|raw }}</p>
+                {% endif %}
+                {% if supervisoryAuthority %}
+                    <p>{{ 'privacy_policy.rights.complaint'|trans({ authority: supervisoryAuthority }) }}</p>
+                {% endif %}
+                <p>{{ 'privacy_policy.sale.body'|trans }}</p>
+            </section>
+        {% endblock %}
+
+        {% block privacy_children %}
+            {% if minimumAge %}
+                <section class="privacy-policy__section">
+                    <h2>{{ 'privacy_policy.children.title'|trans }}</h2>
+                    <p>{{ 'privacy_policy.children.body'|trans({ age: minimumAge }) }}</p>
+                </section>
+            {% endif %}
+        {% endblock %}
+
+        {% block privacy_security %}
+            <section class="privacy-policy__section">
+                <h2>{{ 'privacy_policy.security.title'|trans }}</h2>
+                <p>{{ 'privacy_policy.security.body'|trans }}</p>
+            </section>
+        {% endblock %}
+
+        {% block privacy_changes %}
+            <section class="privacy-policy__section">
+                <h2>{{ 'privacy_policy.changes.title'|trans }}</h2>
+                <p>{{ 'privacy_policy.changes.body'|trans }}</p>
+            </section>
+        {% endblock %}
+    </article>
+{% endblock %}

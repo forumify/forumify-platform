@@ -19,11 +19,24 @@ class ForumRepository extends AbstractRepository
     }
 
     /**
-     * @return array<Forum>
+     * Loads every forum in a single query, fetch joining the children and groups so walking the tree
+     * does not lazy load a query per forum.
+     *
+     * @return array<int, Forum> keyed by id
      */
-    public function findByParent(?Forum $parent): array
+    public function findTree(): array
     {
-        return $this->findBy(['parent' => $parent], ['position' => 'ASC']);
+        return $this->createQueryBuilder('f', 'f.id')
+            ->addSelect('children', 'forumGroup')
+            ->leftJoin('f.children', 'children')
+            ->leftJoin('f.group', 'forumGroup')
+            // ordering by the root first keeps the rows of a forum together, so its children are
+            // hydrated into the collection in position order
+            ->orderBy('f.position', 'ASC')
+            ->addOrderBy('f.id', 'ASC')
+            ->addOrderBy('children.position', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**

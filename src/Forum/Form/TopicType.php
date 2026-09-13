@@ -6,15 +6,15 @@ namespace Forumify\Forum\Form;
 
 use Forumify\Core\Form\EntityType;
 use Forumify\Core\Form\RichTextEditorType;
+use Forumify\Core\Form\UploadType;
 use Forumify\Forum\Entity\Forum;
 use Forumify\Forum\Entity\ForumTag;
 use Forumify\Forum\Repository\ForumTagRepository;
-use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @extends AbstractType<TopicData>
@@ -22,7 +22,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TopicType extends AbstractType
 {
     public function __construct(
-        private readonly Packages $packages,
         private readonly ForumTagRepository $forumTagRepository,
     ) {
     }
@@ -39,7 +38,6 @@ class TopicType extends AbstractType
     {
         /** @var TopicData|null $topicData  */
         $topicData = $options['data'] ?? null;
-        $imagePreview = $topicData?->getExistingImage();
 
         /** @var Forum|null $forum */
         $forum = $options['forum'];
@@ -61,13 +59,12 @@ class TopicType extends AbstractType
         }
 
         if (in_array($forumType, [Forum::TYPE_IMAGE, Forum::TYPE_MIXED], true)) {
-            $builder->add('image', FileType::class, [
+            $builder->add('image', UploadType::class, [
                 'required' => $forumType === Forum::TYPE_IMAGE,
-                'attr' => [
-                    'preview' => $imagePreview
-                        ? $this->packages->getUrl($imagePreview, 'forumify.media')
-                        : null,
-                ],
+                'filesystem' => 'media.storage',
+                'asset_package' => 'forumify.media',
+                'accept' => 'image/*',
+                'file_constraints' => [new Assert\Image(maxSize: '10M')],
             ]);
         }
 

@@ -39,13 +39,7 @@ class ResourceTable extends AbstractDoctrineTable
                 'sortable' => false,
                 'renderer' => $this->renderPreview(...),
             ])
-            ->addColumn('actions', [
-                'field' => 'slug',
-                'label' => '',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActionColumn(...),
-            ]);
+            ->addActionColumn($this->renderActionColumn(...), 'slug');
     }
 
     private function renderPreview(string $path, Resource $resource): string

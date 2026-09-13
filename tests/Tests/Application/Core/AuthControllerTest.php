@@ -6,8 +6,8 @@ namespace Application\Core;
 
 use Forumify\Core\Repository\SettingRepository;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Tests\Tests\Traits\SettingTrait;
-use Tests\Tests\Traits\UserTrait;
+use Forumify\Testing\Traits\SettingTrait;
+use Forumify\Testing\Traits\UserTrait;
 
 class AuthControllerTest extends WebTestCase
 {

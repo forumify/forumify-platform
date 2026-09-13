@@ -12,10 +12,10 @@
                             {{ item.title }}
                         </a>
                         <div class="inline-flex gap-2 hide-tablet">
-                            <span>{{ max(0, item.comments.count - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></span>
+                            <span>{{ max(0, item.comments|length - 1)|short_number }} <i class="ph ph-arrow-bend-up-left"></i></span>
                             <span>{{ item.views|short_number }} <i class="ph ph-eye"></i></span>
                             {% if item.firstComment %}
-                                <span>{{ item.firstComment.reactions.count|short_number }} <i class="ph ph-sparkle"></i></span>
+                                <span>{{ item.firstComment.reactions|length|short_number }} <i class="ph ph-sparkle"></i></span>
                             {% endif %}
                         </div>
                     </div>

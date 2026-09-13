@@ -6,10 +6,9 @@ namespace Forumify\Forum\Form;
 
 use Forumify\Core\Entity\User;
 use Forumify\Core\Form\RichTextEditorType;
+use Forumify\Core\Form\UploadType;
 use Forumify\Core\Form\UserNotificationSettingsType;
-use Symfony\Component\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,10 +22,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class AccountSettingsType extends AbstractType
 {
-    public function __construct(private readonly Packages $packages)
-    {
-    }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -36,26 +31,17 @@ class AccountSettingsType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $avatarPreview = $options['data']?->getAvatar();
-
         $builder
             ->add('displayName', TextType::class, [
                 'constraints' => [new Assert\Length(min: 4, max: 32, normalizer: 'trim')],
             ])
-            ->add('newAvatar', FileType::class, [
-                'required' => false,
+            ->add('avatar', UploadType::class, [
                 'label' => 'Avatar',
-                'attr' => [
-                    'preview' => $avatarPreview
-                        ? $this->packages->getUrl($avatarPreview, 'forumify.avatar')
-                        : null,
-                ],
-                'constraints' => [
-                    new Assert\Image(
-                        maxSize: '10M',
-                    ),
-                ],
-                'mapped' => false,
+                'required' => false,
+                'filesystem' => 'avatar.storage',
+                'asset_package' => 'forumify.avatar',
+                'accept' => 'image/*',
+                'file_constraints' => [new Assert\Image(maxSize: '10M')],
             ])
             ->add('signature', RichTextEditorType::class, [
                 'required' => false,

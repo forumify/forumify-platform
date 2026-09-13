@@ -1,0 +1,12 @@
+# Test applications don't build assets. These point at the stub manifests shipped
+# with the test kit so templates using encore_entry_* and asset() keep rendering.
+webpack_encore:
+    output_path: '%forumify.testing_dir%/public/build'
+    strict_mode: false
+
+framework:
+    assets:
+        json_manifest_path: '%forumify.testing_dir%/public/build/manifest.json'
+
+liip_imagine:
+    driver: 'gd'

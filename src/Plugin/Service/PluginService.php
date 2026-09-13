@@ -121,7 +121,15 @@ class PluginService
 
         $foundPlugins = [];
         foreach ($packages as $pluginPackage) {
-            $composerJson = file_get_contents($this->rootDir . '/vendor/' . $pluginPackage . '/composer.json');
+            // Ask composer where the package lives instead of assuming it sits in the
+            // project's vendor directory: when a plugin runs its own test suite, the
+            // plugin is the root package rather than a dependency.
+            $installPath = InstalledVersions::getInstallPath($pluginPackage);
+            if ($installPath === null) {
+                continue;
+            }
+
+            $composerJson = @file_get_contents($installPath . '/composer.json');
             if ($composerJson === false) {
                 continue;
             }

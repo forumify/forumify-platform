@@ -36,13 +36,7 @@ class PageTable extends AbstractDoctrineTable
                 'field' => 'urlKey',
                 'renderer' => $this->renderUrlKey(...),
             ])
-            ->addColumn('actions', [
-                'field' => 'id',
-                'label' => '',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActionColumn(...),
-            ])
+            ->addActionColumn($this->renderActionColumn(...))
         ;
     }
 

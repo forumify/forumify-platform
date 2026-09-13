@@ -45,13 +45,7 @@ class ThemeTable extends AbstractDoctrineTable
                 'searchable' => false,
                 'renderer' => fn (bool $active) => $active ? '<i class="ph ph-check"></i>' : '<i class="ph ph-x"></i>',
             ])
-            ->addColumn('actions', [
-                'label' => '',
-                'field' => 'id',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActions(...),
-            ]);
+            ->addActionColumn($this->renderActions(...));
     }
 
     private function renderActions(int $id): string

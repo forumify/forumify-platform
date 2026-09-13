@@ -20,6 +20,12 @@
             {% endapply %}
         {% endblock %}
     </div>
+    {% set privacyPolicyPath = privacy_policy_path() %}
+    {% if privacyPolicyPath %}
+        <p class="text-small text-center mt-2">
+            {{ 'registration.privacy_notice'|trans({ link: privacyPolicyPath })|raw }}
+        </p>
+    {% endif %}
     {{ form_end(form) }}
 {% endblock %}
 {% block javascripts %}

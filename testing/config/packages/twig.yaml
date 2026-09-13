@@ -1,0 +1,7 @@
+twig:
+    file_name_pattern: '*.twig'
+    strict_variables: true
+
+twig_component:
+    anonymous_template_directory: 'components/'
+    defaults: {}
