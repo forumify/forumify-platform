@@ -30,6 +30,7 @@ class MessageThreadVoter extends Voter
             VoterAttribute::MessageThreadCreate->value,
             VoterAttribute::MessageThreadView->value,
             VoterAttribute::MessageThreadReply->value,
+            VoterAttribute::MessageThreadAddParticipant->value,
         ], true);
     }
 
@@ -44,6 +45,7 @@ class MessageThreadVoter extends Voter
             VoterAttribute::MessageThreadCreate->value => $this->isVerified($user),
             VoterAttribute::MessageThreadView->value => $this->voteOnView($subject, $user),
             VoterAttribute::MessageThreadReply->value => $this->voteOnReply($subject, $user),
+            VoterAttribute::MessageThreadAddParticipant->value => $this->voteOnAddParticipant($subject, $user),
             default => false,
         };
     }
@@ -69,8 +71,13 @@ class MessageThreadVoter extends Voter
 
     public function voteOnReply(?MessageThread $subject, AuthorizableInterface $user): bool
     {
-        return $subject !== null
-            && $this->isVerified($user)
+        return $this->isVerified($user)
+            && $this->voteOnView($subject, $user);
+    }
+
+    private function voteOnAddParticipant(?MessageThread $subject, AuthorizableInterface $user): bool
+    {
+        return $this->isVerified($user)
             && $this->voteOnView($subject, $user);
     }
 

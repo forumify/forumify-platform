@@ -320,6 +320,7 @@ confirm: 'Confirm'
 cancel: 'Cancel'
 select_page: 'Select or create a page to start editing.'
 search: 'Type to search'
+user_select_placeholder: 'Type to search for users'
 save: 'Save'
 flashes:
     acl_saved: 'Access control list saved.'

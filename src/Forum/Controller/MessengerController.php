@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Forumify\Forum\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityRepository;
 use Forumify\Core\Entity\User;
+use Forumify\Core\Form\UserSelectType;
 use Forumify\Core\Notification\NotificationService;
 use Forumify\Core\Repository\UserRepository;
 use Forumify\Core\Security\VoterAttribute;
@@ -23,7 +23,6 @@ use Forumify\Forum\Repository\MessageThreadRepository;
 use Forumify\Forum\Service\MessageService;
 use Forumify\Forum\Service\QuoteService;
 use Forumify\Forum\Service\SubscriptionService;
-use Forumify\Core\Form\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,21 +112,19 @@ class MessengerController extends AbstractController
         NotificationService $notificationService,
         SubscriptionService $subscriptionService,
     ): Response {
+        $this->denyAccessUnlessGranted(VoterAttribute::MessageThreadAddParticipant->value, $thread);
+
         $user = $this->getUser();
         if (!$user instanceof User) {
             throw $this->createAccessDeniedException();
         }
 
         $form = $this->createFormBuilder()
-            ->add('participants', EntityType::class, [
+            ->add('participants', UserSelectType::class, [
                 'multiple' => true,
-                'autocomplete' => true,
-                'class' => User::class,
-                'choice_label' => fn (User $user) => $user->getDisplayName(),
-                'query_builder' => fn (EntityRepository $repository) => $repository
-                    ->createQueryBuilder('u')
-                    ->where('u.id NOT IN (:participants)')
-                    ->setParameter('participants', $thread->getParticipants()),
+                'extra_options' => [
+                    'exclude_users' => $thread->getParticipants()->map(fn (User $participant) => $participant->getId())->getValues(),
+                ],
             ])
             ->getForm();
 
