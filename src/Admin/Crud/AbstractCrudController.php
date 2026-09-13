@@ -13,6 +13,7 @@ use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -34,6 +35,7 @@ abstract class AbstractCrudController extends AbstractController
     protected AbstractRepository $repository;
     protected TranslatorInterface $translator;
     protected EventDispatcherInterface $eventDispatcher;
+    protected RequestStack $requestStack;
 
     // overridable templates
     protected string $listTemplate = '@Forumify/admin/crud/list.html.twig';
@@ -209,8 +211,7 @@ abstract class AbstractCrudController extends AbstractController
 
     protected function getRoute(?string $suffix = null): string
     {
-        $requestRoute = $this->container->get('request_stack')->getCurrentRequest()?->get('_route') ?? '';
-
+        $requestRoute = $this->getRequest()->attributes->getString('_route');
         $route = u($requestRoute)->beforeLast('_');
         if ($suffix !== null) {
             $route = $route->append('_' . $suffix);
@@ -251,11 +252,22 @@ abstract class AbstractCrudController extends AbstractController
         return $permission === null || $this->isGranted($permission);
     }
 
+    protected function getRequest(): Request
+    {
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request === null) {
+            throw new RuntimeException('AbstractController cannot be used outside of request context.');
+        }
+
+        return $request;
+    }
+
     #[Required]
     public function setServices(
         EntityManagerInterface $em,
         TranslatorInterface $translator,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        RequestStack $requestStack,
     ): void {
         $entityClass = $this->getEntityClass();
         $repository = $em->getRepository($entityClass);
@@ -267,5 +279,6 @@ abstract class AbstractCrudController extends AbstractController
         $this->repository = $repository;
         $this->translator = $translator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->requestStack = $requestStack;
     }
 }

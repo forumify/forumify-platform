@@ -83,8 +83,7 @@ class TopicCreateControllerTest extends WebTestCase
 
         $this->createACL(Forum::class, $forum->getId(), 'create_topic');
 
-        $user = $this->createUser();
-        $user->setEmailVerified(false);
+        $user = $this->createUser(requiresEmailValidation: true);
 
         $client->loginUser($user);
         $client->request('GET', "/forum/{$forum->getId()}/topic/create");

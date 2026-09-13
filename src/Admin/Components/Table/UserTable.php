@@ -46,13 +46,7 @@ class UserTable extends AbstractDoctrineTable
                 'field' => 'email',
                 'renderer' => $this->renderEmail(...),
             ])
-            ->addColumn('actions', [
-                'label' => '',
-                'field' => 'id',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActionColumn(...),
-            ]);
+            ->addActionColumn($this->renderActionColumn(...));
     }
 
     protected function getQuery(array $search): QueryBuilder

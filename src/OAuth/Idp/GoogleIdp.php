@@ -83,7 +83,7 @@ class GoogleIdp extends AbstractIdp implements IdentityProviderPrivacyInterface
 
     public function callback(IdentityProvider $idp, Request $request): ?UserInterface
     {
-        $credential = $request->get('credential');
+        $credential = $request->request->getString('credential');
         if (empty($credential)) {
             return null;
         }
@@ -96,6 +96,10 @@ class GoogleIdp extends AbstractIdp implements IdentityProviderPrivacyInterface
                 $this->cache,
             ));
         } catch (Throwable) {
+            return null;
+        }
+
+        if (!isset($decoded['email'], $decoded['email_verified']) || !$decoded['email_verified']) {
             return null;
         }
 

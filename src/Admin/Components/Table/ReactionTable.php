@@ -8,7 +8,6 @@ use Forumify\Core\Component\Table\AbstractDoctrineTable;
 use Forumify\Forum\Entity\Reaction;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Symfony\Component\Asset\Packages;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
@@ -17,7 +16,6 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 class ReactionTable extends AbstractDoctrineTable
 {
     public function __construct(
-        private readonly UrlGeneratorInterface $urlGenerator,
         private readonly Packages $packages,
         private readonly CacheManager $liip,
     ) {
@@ -35,13 +33,8 @@ class ReactionTable extends AbstractDoctrineTable
                 'field' => 'name',
                 'renderer' => $this->renderName(...),
             ])
-            ->addColumn('actions', [
-                'label' => '',
-                'field' => 'id',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActionColumn(...),
-            ]);
+            ->addActionColumn($this->renderActionColumn(...))
+        ;
     }
 
     private function renderName(string $name, Reaction $reaction): string
@@ -57,12 +50,10 @@ class ReactionTable extends AbstractDoctrineTable
             return '';
         }
 
-        $editUrl = $this->urlGenerator->generate('forumify_admin_reactions_edit', ['identifier' => $id]);
-        $deleteUrl = $this->urlGenerator->generate('forumify_admin_reactions_delete', ['identifier' => $id]);
+        $actions = '';
+        $actions .= $this->renderAction('forumify_admin_reactions_edit', ['identifier' => $id], 'pencil-simple-line');
+        $actions .= $this->renderAction('forumify_admin_reactions_delete', ['identifier' => $id], 'x');
 
-        return "
-            <a class='btn-link btn-icon btn-small' href='$editUrl'><i class='ph ph-pencil-simple-line'></i></a>
-            <a class='btn-link btn-icon btn-small' href='$deleteUrl'><i class='ph ph-x'></i></a>
-        ";
+        return $actions;
     }
 }

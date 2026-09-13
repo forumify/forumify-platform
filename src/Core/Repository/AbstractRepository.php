@@ -7,6 +7,7 @@ namespace Forumify\Core\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
@@ -205,7 +206,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
 
         $entity ??= $this->getEntityName();
         $qb
-            ->innerJoin(ACL::class, 'acl', 'WITH', "acl.entity = :entity AND acl.entityId = $alias.$identifier AND acl.permission = :permission")
+            ->innerJoin(ACL::class, 'acl', Join::ON, "acl.entity = :entity AND acl.entityId = $alias.$identifier AND acl.permission = :permission")
             ->innerJoin('acl.roles', 'acl_role')
             ->setParameter('permission', $permission)
             ->setParameter('entity', $entity)

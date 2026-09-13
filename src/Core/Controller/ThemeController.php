@@ -19,11 +19,11 @@ class ThemeController extends AbstractController
     public function __invoke(Request $request): Response
     {
         $cookie = $request->cookies->get(ThemeService::CURRENT_THEME_COOKIE);
-        $current = $cookie ?: $request->get('preference', 'default');
+        $current = $cookie ?: $request->query->getString('preference', 'default');
         $new = $current === 'default' ? 'dark' : 'default';
 
-        $target = $request->get('_target_path');
-        $response = $target !== null
+        $target = $request->query->getString('_target_path');
+        $response = !empty($target)
             ? $this->redirect($target)
             : $this->redirectToRoute('forumify_core_index');
 

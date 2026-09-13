@@ -27,13 +27,7 @@ class SnippetTable extends AbstractDoctrineTable
             ->addColumn('slug', [
                 'field' => 'slug',
             ])
-            ->addColumn('actions', [
-                'field' => 'slug',
-                'label' => '',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActionColumn(...),
-            ]);
+            ->addActionColumn($this->renderActionColumn(...), 'slug');
     }
 
     private function renderActionColumn(string $slug): string

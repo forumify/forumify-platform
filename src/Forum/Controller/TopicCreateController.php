@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\RateLimiter\Exception\RateLimitExceededException;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Translation\TranslatableMessage;
 
 class TopicCreateController extends AbstractController
@@ -24,7 +23,6 @@ class TopicCreateController extends AbstractController
     }
 
     #[Route('/forum/{id}/topic/create', name: 'topic_create', requirements: ['forumId' => '\d+'])]
-    #[IsGranted('ROLE_USER')]
     public function __invoke(Forum $forum, Request $request): Response
     {
         $this->denyAccessUnlessGranted(VoterAttribute::TopicCreate->value, $forum);

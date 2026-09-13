@@ -35,13 +35,7 @@ class AutomationTable extends AbstractDoctrineTable
                 'searchable' => false,
                 'renderer' => fn (bool $enabled) => '<input type="checkbox" disabled="disabled" ' . ($enabled ? 'checked' : '') . ' />',
             ])
-            ->addColumn('actions', [
-                'field' => 'id',
-                'label' => '',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActions(...),
-            ])
+            ->addActionColumn($this->renderActions(...))
         ;
     }
 

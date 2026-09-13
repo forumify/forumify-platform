@@ -41,13 +41,7 @@ class OAuthClientTable extends AbstractDoctrineTable
                     ? $this->coreRuntime->formatDate($lastActivity)
                     : 'Never',
             ])
-            ->addColumn('actions', [
-                'field' => 'id',
-                'label' => '',
-                'searchable' => false,
-                'sortable' => false,
-                'renderer' => $this->renderActions(...),
-            ])
+            ->addActionColumn($this->renderActions(...))
         ;
     }
 

@@ -121,7 +121,7 @@ class TopicRepository extends AbstractRepository
             ->leftJoin(
                 ReadMarker::class,
                 'rm',
-                Join::WITH,
+                Join::ON,
                 'rm.user = :readMarkerUser AND rm.subject = :readMarkerSubject AND rm.subjectId = t.id'
             )
             ->andWhere('rm.subjectId IS NULL')

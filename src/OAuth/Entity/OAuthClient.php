@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Forumify\OAuth\Entity;
 
 use DateTime;
+use Deprecated;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Forumify\Core\Entity\AuditableEntityInterface;
@@ -108,6 +109,7 @@ class OAuthClient implements AuthorizableInterface, AuditableEntityInterface
         return ['ROLE_USER', 'ROLE_OAUTH_CLIENT'];
     }
 
+    #[Deprecated]
     public function eraseCredentials(): void
     {
     }
