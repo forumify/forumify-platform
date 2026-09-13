@@ -3,7 +3,6 @@ import 'quill/dist/quill.snow.css';
 import 'quill-mention/autoregister';
 import TableUp, {
   defaultCustomSelect,
-  TableAlign,
   TableMenuContextmenu,
   TableResizeLine,
   TableResizeScale,
@@ -13,6 +12,7 @@ import 'quill-table-up/index.css';
 import 'quill-table-up/table-creator.css';
 import { Quote } from './blots/Quote';
 import { ImageResizer } from './modules/ImageResizer';
+import { UnclippedTableAlign } from './modules/UnclippedTableAlign';
 
 Quill.register(Quote);
 Quill.register('modules/imageResizer', ImageResizer);
@@ -41,7 +41,7 @@ export const QuillEditor = (element) => {
         full: true,
         customSelect: defaultCustomSelect,
         modules: [
-          { module: TableAlign },
+          { module: UnclippedTableAlign },
           { module: TableResizeLine },
           { module: TableResizeScale },
           { module: TableSelection },

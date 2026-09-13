@@ -35,7 +35,7 @@ abstract class AbstractCrudController extends AbstractController
     protected AbstractRepository $repository;
     protected TranslatorInterface $translator;
     protected EventDispatcherInterface $eventDispatcher;
-    protected RequestStack $requestStack;
+    private RequestStack $requestStack;
 
     // overridable templates
     protected string $listTemplate = '@Forumify/admin/crud/list.html.twig';
