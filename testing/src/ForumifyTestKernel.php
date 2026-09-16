@@ -37,7 +37,32 @@ class ForumifyTestKernel extends ForumifyKernel
             mkdir($projectDir . '/src', 0777, true);
         }
 
+        self::linkVendorDir($projectDir);
+
         parent::__construct(['APP_ENV' => $env, 'APP_DEBUG' => $debug], $projectDir);
+    }
+
+    /**
+     * Symlinks the real vendor directory into the test application.
+     *
+     * Plugins configure doctrine mappings, migrations and api resources relative to
+     * %kernel.project_dir%/vendor, which is where they live in a forumify application.
+     * In a test application the project dir is the package's tests/ directory, one level
+     * below the vendor directory, so without this link those paths point nowhere and the
+     * kernel refuses to boot.
+     */
+    private static function linkVendorDir(string $projectDir): void
+    {
+        $link = $projectDir . '/vendor';
+        $vendorDir = \dirname($projectDir) . '/vendor';
+
+        if (is_link($link) && readlink($link) !== $vendorDir) {
+            unlink($link);
+        }
+
+        if (!file_exists($link) && is_dir($vendorDir)) {
+            @symlink($vendorDir, $link);
+        }
     }
 
     /**
