@@ -6,8 +6,53 @@ import { uploadEmbeddedImages } from '../services/media';
 
 export const QUOTE_EVENT = 'forumify:quote';
 
+const EMPTY_VALUE = '<p></p>';
+
+const editorsByForm = new WeakMap();
+
+const submitForm = (e) => {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const editors = [...editorsByForm.get(form)];
+  const values = editors.map((editor) => editor.quill.getSemanticHTML());
+
+  if (editors.some((editor, i) => editor.isRequired && values[i] === EMPTY_VALUE)) {
+    return;
+  }
+
+  Promise
+    .all(editors.map((editor, i) => uploadEmbeddedImages(values[i]).then((value) => {
+      editor.input.value = value;
+    })))
+    .finally(() => form.submit());
+};
+
+const registerEditor = (form, editor) => {
+  if (!editorsByForm.has(form)) {
+    editorsByForm.set(form, new Set());
+    form.addEventListener('submit', submitForm);
+  }
+
+  editorsByForm.get(form).add(editor);
+};
+
+const unregisterEditor = (form, editor) => {
+  const editors = editorsByForm.get(form);
+  if (editors === undefined) {
+    return;
+  }
+
+  editors.delete(editor);
+  if (editors.size === 0) {
+    editorsByForm.delete(form);
+    form.removeEventListener('submit', submitForm);
+  }
+};
+
 export class RichTextEditor extends Controller {
   quill = null;
+  form = null;
 
   initialize() {
     const editor = this.element.querySelector('#editor');
@@ -19,9 +64,9 @@ export class RichTextEditor extends Controller {
     this.onQuote = this.insertQuote.bind(this);
     window.addEventListener(QUOTE_EVENT, this.onQuote);
 
-    const form = this.getParentForm();
+    this.form = this.getParentForm() ?? null;
 
-    if (!form) {
+    if (this.form === null) {
       // could not find form, we have to update the input any time the editor changes.
       this.quill.on('text-change', () => {
         this.input.value = this.quill.getSemanticHTML();
@@ -33,11 +78,17 @@ export class RichTextEditor extends Controller {
     this.isRequired = this.input.required;
     this.input.required = false;
 
-    form.addEventListener('submit', this.handleFormSubmit.bind(this));
+    registerEditor(this.form, this);
   }
 
   disconnect() {
     window.removeEventListener(QUOTE_EVENT, this.onQuote);
+
+    if (this.form !== null) {
+      unregisterEditor(this.form, this);
+      this.form = null;
+    }
+
     this.quill.setContents([{ insert: '' }]);
     this.quill.off('text-change');
   }
@@ -68,21 +119,5 @@ export class RichTextEditor extends Controller {
       }
     }
     return form;
-  }
-
-  handleFormSubmit(e) {
-    e.preventDefault();
-    const value = this.quill.getSemanticHTML();
-    if (this.isRequired && value === '<p></p>') {
-      return;
-    }
-
-    uploadEmbeddedImages(value)
-      .then((transformedValue) => {
-        this.input.value = transformedValue;
-      })
-      .finally(() => {
-        e.target.submit();
-      });
   }
 }
