@@ -7,6 +7,7 @@ namespace Forumify\Admin\Form;
 use Forumify\Core\Entity\User;
 use Forumify\Forum\Entity\Badge;
 use Forumify\Core\Form\EntityType;
+use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Core\Form\UploadType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -45,6 +46,9 @@ class UserType extends AbstractType
                 'asset_package' => 'forumify.avatar',
                 'accept' => 'image/*',
                 'file_constraints' => [new Assert\Image(maxSize: '10M')],
+            ])
+            ->add('signature', RichTextEditorType::class, [
+                'required' => false,
             ])
             ->add('roleEntities', UserRoleType::class, [
                 'label' => 'Roles',

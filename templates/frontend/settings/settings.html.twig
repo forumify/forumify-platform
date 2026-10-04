@@ -11,9 +11,13 @@
             {% endblock %}
             {% block tabpanels %}
                 <div id="account-settings">
-                    {{ form_row(form.displayName) }}
+                    {% if form.displayName is defined %}
+                        {{ form_row(form.displayName) }}
+                    {% endif %}
                     {{ form_row(form.avatar) }}
-                    {{ form_row(form.signature) }}
+                    {% if form.signature is defined %}
+                        {{ form_row(form.signature) }}
+                    {% endif %}
                     {{ form_row(form.timezone) }}
                 </div>
                 <div id="security-settings">

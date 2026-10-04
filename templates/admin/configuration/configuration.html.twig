@@ -27,6 +27,9 @@
                     {{ form_row(form.forumify__login_method) }}
                     {{ form_row(form.forumify__enable_registrations) }}
                     {{ form_row(form.forumify__hide_usernames) }}
+                    <h3 class="mt-6 mb-2">{{ 'admin.configuration.profile'|trans }}</h3>
+                    {{ form_row(form.forumify__disable_display_name_editing) }}
+                    {{ form_row(form.forumify__disable_signature_editing) }}
                 </div>
                 <div id="spam-protection">
                     {{ form_row(form.forumify__readonly) }}

@@ -64,6 +64,16 @@ class ConfigurationType extends AbstractType
                 'label' => 'admin.configuration.hide_usernames',
                 'required' => false,
             ])
+            ->add('forumify__disable_display_name_editing', CheckboxType::class, [
+                'label' => 'admin.configuration.disable_display_name_editing',
+                'help' => 'admin.configuration.disable_display_name_editing_help',
+                'required' => false,
+            ])
+            ->add('forumify__disable_signature_editing', CheckboxType::class, [
+                'label' => 'admin.configuration.disable_signature_editing',
+                'help' => 'admin.configuration.disable_signature_editing_help',
+                'required' => false,
+            ])
             ->add('forumify__login_method', ChoiceType::class, [
                 'label' => 'admin.configuration.login_method',
                 'help' => 'admin.configuration.login_method_help',
