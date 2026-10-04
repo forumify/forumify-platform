@@ -8,6 +8,7 @@ use Forumify\Core\Entity\User;
 use Forumify\Core\Form\RichTextEditorType;
 use Forumify\Core\Form\UploadType;
 use Forumify\Core\Form\UserNotificationSettingsType;
+use Forumify\Core\Repository\SettingRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -22,6 +23,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class AccountSettingsType extends AbstractType
 {
+    public const SETTING_DISABLE_DISPLAY_NAME_EDITING = 'forumify.disable_display_name_editing';
+    public const SETTING_DISABLE_SIGNATURE_EDITING = 'forumify.disable_signature_editing';
+
+    public function __construct(private readonly SettingRepository $settingRepository)
+    {
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -32,9 +40,6 @@ class AccountSettingsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('displayName', TextType::class, [
-                'constraints' => [new Assert\Length(min: 4, max: 32, normalizer: 'trim')],
-            ])
             ->add('avatar', UploadType::class, [
                 'label' => 'Avatar',
                 'required' => false,
@@ -42,9 +47,6 @@ class AccountSettingsType extends AbstractType
                 'asset_package' => 'forumify.avatar',
                 'accept' => 'image/*',
                 'file_constraints' => [new Assert\Image(maxSize: '10M')],
-            ])
-            ->add('signature', RichTextEditorType::class, [
-                'required' => false,
             ])
             ->add('timezone', TimezoneType::class, [
                 'required' => false,
@@ -62,5 +64,17 @@ class AccountSettingsType extends AbstractType
             ->add('notificationSettings', UserNotificationSettingsType::class, [
                 'label' => false,
             ]);
+
+        if (!$this->settingRepository->get(self::SETTING_DISABLE_DISPLAY_NAME_EDITING)) {
+            $builder->add('displayName', TextType::class, [
+                'constraints' => [new Assert\Length(min: 4, max: 32, normalizer: 'trim')],
+            ]);
+        }
+
+        if (!$this->settingRepository->get(self::SETTING_DISABLE_SIGNATURE_EDITING)) {
+            $builder->add('signature', RichTextEditorType::class, [
+                'required' => false,
+            ]);
+        }
     }
 }
