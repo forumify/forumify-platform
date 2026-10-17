@@ -7,6 +7,7 @@ namespace Forumify\Api\Serializer;
 use ApiPlatform\Metadata\IriConverterInterface;
 use ArrayObject;
 use DateTimeInterface;
+use Forumify\Core\Entity\SortableEntityInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 use Symfony\Component\PropertyAccess\PropertyAccessorBuilder;
@@ -50,7 +51,9 @@ class TraitSerializer implements NormalizerInterface, DenormalizerInterface, Ser
         $this->setIfExists($data, $result, 'updatedAt');
 
         // SortableEntityTrait
-        $this->setIfExists($data, $result, 'position');
+        if ($data instanceof SortableEntityInterface) {
+            $result['position'] = $data->getPosition();
+        }
 
         // HierarchicalEntityInterface
         $this->setIfExists($data, $result, 'parent');
