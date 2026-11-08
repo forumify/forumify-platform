@@ -70,7 +70,7 @@ class AuditLogTable extends AbstractDoctrineTable
         }
 
         $profileUrl = $this->urlGenerator->generate('forumify_forum_profile', ['username' => $username]);
-        return "<a href='$profileUrl' target='_blank'>$username</a>";
+        return "<a href='$profileUrl' target='_blank'>{$this->escape($username)}</a>";
     }
 
     private function renderActions(Ulid $_, AuditLog $log): string

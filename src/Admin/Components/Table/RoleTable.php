@@ -50,8 +50,8 @@ class RoleTable extends AbstractDoctrineTable
     protected function renderTitleColumn(string $title, Role $role): string
     {
         return "
-            <p>$title</p>
-            <p class='text-small'>{$role->getDescription()}</p>
+            <p>{$this->escape($title)}</p>
+            <p class='text-small'>{$this->escape($role->getDescription())}</p>
         ";
     }
 

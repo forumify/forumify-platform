@@ -44,9 +44,9 @@ class ResourceTable extends AbstractDoctrineTable
 
     private function renderPreview(string $path, Resource $resource): string
     {
-        $url = $this->packages->getUrl($path, 'forumify.resource');
+        $url = $this->escape($this->packages->getUrl($path, 'forumify.resource'));
         return "<a class='flex justify-center items-center' style='width: 64px; height: 64px' href='$url' target='_blank'>
-            <img src='$url' width='100%' height='auto' alt='{$resource->getName()}'>
+            <img src='$url' width='100%' height='auto' alt='{$this->escape($resource->getName())}'>
         </a>";
     }
 
