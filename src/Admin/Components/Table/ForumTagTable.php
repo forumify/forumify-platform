@@ -107,7 +107,7 @@ class ForumTagTable extends AbstractTable
             $routeParams['slug'] = $forum->getSlug();
         }
 
-        $forumTitle ??= 'All';
+        $forumTitle = $this->escape($forumTitle ?? 'All');
         if ($this->forum !== null) {
             if ($this->forum->getId() !== $tag->forum?->getId()) {
                 $forumTitle .= ' (inherited)';

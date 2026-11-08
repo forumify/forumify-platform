@@ -43,7 +43,7 @@ class PageTable extends AbstractDoctrineTable
     private function renderUrlKey(string $urlKey): string
     {
         $url = $this->urlGenerator->generate('forumify_cms_page', ['urlKey' => $urlKey]);
-        return "$urlKey <a href='$url' target='_blank'><i class='ph ph-arrow-square-out'></i></a>";
+        return "{$this->escape($urlKey)} <a href='$url' target='_blank'><i class='ph ph-arrow-square-out'></i></a>";
     }
 
     private function renderActionColumn(int $id, Page $page): string

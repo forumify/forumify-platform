@@ -41,7 +41,7 @@ class ReactionTable extends AbstractDoctrineTable
     {
         $reactionImg = $this->packages->getUrl($reaction->image, 'forumify.asset');
         $img = $this->liip->getBrowserPath($reactionImg, 'reaction');
-        return "<div class='flex items-center gap-2'><img class='reaction' src='$img'><span>$name</span></div>";
+        return "<div class='flex items-center gap-2'><img class='reaction' src='$img'><span>{$this->escape($name)}</span></div>";
     }
 
     private function renderActionColumn(int $id): string

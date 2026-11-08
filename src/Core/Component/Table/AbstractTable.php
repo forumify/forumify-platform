@@ -184,6 +184,11 @@ abstract class AbstractTable
         return $rows;
     }
 
+    protected function escape(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+    }
+
     /**
      * Helper that sets defaults for action columns. The renderer callable should produce HTML for the actions.
      * You can use the renderAction function to render individual action buttons in your callable.

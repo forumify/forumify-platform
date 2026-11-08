@@ -75,15 +75,16 @@ class UserTable extends AbstractDoctrineTable
     private function renderUsername(string $username, User $user): string
     {
         if (!$user->isBanned()) {
-            return $username;
+            return $this->escape($username);
         }
 
         $banned = $this->translator->trans('admin.user.banned');
-        return "$username <span class='tag tag-error'>$banned</span>";
+        return "{$this->escape($username)} <span class='tag tag-error'>$banned</span>";
     }
 
     private function renderEmail(string $email, User $user): string
     {
+        $email = $this->escape($email);
         if (!$user->isEmailVerified()) {
             $warning = $this->translator->trans('admin.user.email_unverified');
             $email .= " <i class='ph ph-warning' title='$warning'></i> ";
